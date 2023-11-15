@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import InitialScreen from "./src/screens/InitialScreen";
 
-export default function App() {
+// Create a stack navigator
+const Stack = createStackNavigator();
+
+function LoginFlow() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen name="Initial" component={InitialScreen} />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// Main App Component
+export default function App() {
+  return (
+    <NavigationContainer>
+      <LoginFlow />
+    </NavigationContainer>
+  );
+}
+
+/* POSIBLES PRAGMENTOS DE CODIGO QUE SE PUEDAN USAR DESPUES PARA LA NAVIGATION
+    REUBICAR LAS LLAVES Y PARENTESIS DE ANTES 
+    //
+    //Signup: SignupScreen,
+    //Signin: SigninScreen,
+  mainFlow: createMaterialBottomTabNavigator({
+    trackListFlow: createStackNavigator({
+      TrackList: TrackListScreen,
+      TrackDetail: TrackDetailScreen,
+    }),
+    TrackCreate: TrackCreateScreen,
+    Account: AccountScreen,
+  }),
+});*/
