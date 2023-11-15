@@ -9,7 +9,11 @@ const Stack = createStackNavigator();
 function LoginFlow() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Initial" component={InitialScreen} />
+      <Stack.Screen
+        name="Initial"
+        component={InitialScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
