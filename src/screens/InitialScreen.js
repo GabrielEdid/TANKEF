@@ -8,16 +8,9 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState } from "react";
-import CountryPicker from "react-native-country-picker-modal";
-import { AntDesign } from "@expo/vector-icons";
 import SpecialInput from "../components/SpecialInput";
 
 const Registro1 = ({ navigation }) => {
-  const [countryCode, setCountryCode] = useState("MX");
-  const [callingCode, setCallingCode] = useState("52");
-  const [number, setNumber] = useState("");
-  const [pickerVisible, setPickerVisible] = useState(false);
-
   return (
     //Imagen de Fondo
     <ImageBackground
