@@ -19,16 +19,27 @@ const Registro4 = ({ navigation }) => {
     return correo !== "" && contraseña !== "" && confirmarContraseña !== "";
   };
 
+  const verificarContraseñas = () => {
+    return contraseña === confirmarContraseña ? true : false;
+  };
+
   const handleSiguiente = () => {
     if (!verificarCampos()) {
       Alert.alert(
-        "Campos Incompletos", // Aquí puedes poner el título que desees
+        "Campos Incompletos",
         "Introduce todos tus datos para continuar.",
         [{ text: "Entendido" }],
         { cancelable: true }
       );
+    } else if (!verificarContraseñas()) {
+      Alert.alert(
+        "Contraseñas no Coinciden",
+        "Las contraseñas deben coincidir.",
+        [{ text: "Entendido" }],
+        { cancelable: true }
+      );
     } else {
-      navigation.navigate("Registro1");
+      navigation.navigate("Main");
     }
   };
 
@@ -60,9 +71,17 @@ const Registro4 = ({ navigation }) => {
             height: 100,
           }}
         >
-          <SpecialInput field="Correo" editable={true} />
-          <SpecialInput field="Contraseña" editable={true} />
-          <SpecialInput field="Confirmar Contraseña" editable={true} />
+          <SpecialInput field="Correo" editable={true} set={setCorreo} />
+          <SpecialInput
+            field="Contraseña"
+            editable={true}
+            set={setContraseña}
+          />
+          <SpecialInput
+            field="Confirmar Contraseña"
+            editable={true}
+            set={setConfirmarContraseña}
+          />
         </View>
       </View>
       {/* Boton Craer Cuenta */}

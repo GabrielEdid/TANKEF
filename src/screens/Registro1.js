@@ -6,6 +6,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import CountryPicker from "react-native-country-picker-modal";
@@ -23,14 +24,6 @@ const Registro1 = ({ navigation }) => {
       source={require("../../assets/images/Fondo.png")}
       style={styles.background}
     >
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <AntDesign
-          name="arrowleft"
-          size={40}
-          color="#29364d"
-          style={styles.back}
-        />
-      </TouchableOpacity>
       {/* Logo, Titulo y Avance */}
       <Image
         source={require("../../assets/images/Logo_Tankef.png")}
@@ -88,7 +81,10 @@ const Registro1 = ({ navigation }) => {
           />
         </View>
         {/* Boton Tengo Cuenta */}
-        <TouchableOpacity style={styles.botonTengoCuenta}>
+        <TouchableOpacity
+          style={styles.botonTengoCuenta}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={styles.textoBoton}>Ya tengo una cuenta</Text>
         </TouchableOpacity>
         {/* Boton Craer Cuenta */}
@@ -166,7 +162,6 @@ const styles = StyleSheet.create({
     left: 135,
     height: 50,
     width: 230,
-    alignItems: "",
     borderColor: "#29364d",
     borderWidth: 1,
     borderRadius: 15,

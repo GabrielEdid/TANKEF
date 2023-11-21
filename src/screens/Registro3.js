@@ -83,6 +83,7 @@ const Registro3 = ({ navigation }) => {
             marginTop: 80,
             height: 100,
           }}
+          automaticallyAdjustKeyboardInsets={true}
         >
           <SpecialInput field="Nombre" editable={true} set={setNombre} />
           <SpecialInput field="CURP" editable={true} set={setCURP} />
