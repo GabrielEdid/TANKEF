@@ -6,7 +6,9 @@ import {
   ImageBackground,
   TouchableOpacity,
   TextInput,
-  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState } from "react";
 import CountryPicker from "react-native-country-picker-modal";
@@ -20,83 +22,89 @@ const Registro1 = ({ navigation }) => {
 
   return (
     //Imagen de Fondo
-    <ImageBackground
-      source={require("../../assets/images/Fondo.png")}
-      style={styles.background}
-    >
-      {/* Logo, Titulo y Avance */}
-      <Image
-        source={require("../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
-      <Text style={styles.titulo}>TANKEF</Text>
-      <Image
-        source={require("../../assets/images/LoginFlow1.png")}
-        style={styles.imagenAvance}
-      />
-      {/* Fin Logo, Titulo y Avance */}
-      {/* Contenedor */}
-      <View style={styles.container}>
-        <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>
-        {/* Seleccionar Pais */}
-        <TouchableOpacity
-          style={styles.botonPais}
-          onPress={() => setPickerVisible(true)}
-        >
-          <AntDesign
-            name="caretdown"
-            size={20}
-            color="black"
-            style={{ position: "absolute", right: 60, top: 12 }}
-          />
-          <CountryPicker
-            withFilter
-            countryCode={countryCode}
-            withCallingCode
-            withCloseButton
-            onSelect={(country) => {
-              const { cca2, callingCode } = country;
-              setCountryCode(cca2);
-              setCallingCode(callingCode[0]);
-            }}
-            visible={pickerVisible}
-            onClose={() => setPickerVisible(false)}
-          />
-        </TouchableOpacity>
-        {/* Visualizacion de Codigo de Celular y Telefono */}
-        <View style={styles.inputContainer}>
-          <Text>
-            <Text style={{ fontSize: 18, color: "grey" }}>+{callingCode} </Text>
-            <Text style={{ fontSize: 30, color: "#29364d", letterSpacing: 5 }}>
-              {" "}
-              |
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <ImageBackground
+        source={require("../../assets/images/Fondo.png")}
+        style={styles.background}
+      >
+        {/* Logo, Titulo y Avance */}
+        <Image
+          source={require("../../assets/images/Logo_Tankef.png")}
+          style={styles.imagen}
+        />
+        <Text style={styles.titulo}>TANKEF</Text>
+        <Image
+          source={require("../../assets/images/LoginFlow1.png")}
+          style={styles.imagenAvance}
+        />
+        {/* Fin Logo, Titulo y Avance */}
+        {/* Contenedor */}
+        <View style={styles.container}>
+          <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>
+          {/* Seleccionar Pais */}
+          <TouchableOpacity
+            style={styles.botonPais}
+            onPress={() => setPickerVisible(true)}
+          >
+            <AntDesign
+              name="caretdown"
+              size={20}
+              color="black"
+              style={{ position: "absolute", right: 60, top: 12 }}
+            />
+            <CountryPicker
+              withFilter
+              countryCode={countryCode}
+              withCallingCode
+              withCloseButton
+              onSelect={(country) => {
+                const { cca2, callingCode } = country;
+                setCountryCode(cca2);
+                setCallingCode(callingCode[0]);
+              }}
+              visible={pickerVisible}
+              onClose={() => setPickerVisible(false)}
+            />
+          </TouchableOpacity>
+          {/* Visualizacion de Codigo de Celular y Telefono */}
+          <View style={styles.inputContainer}>
+            <Text>
+              <Text style={{ fontSize: 18, color: "grey" }}>
+                +{callingCode}{" "}
+              </Text>
+              <Text
+                style={{ fontSize: 30, color: "#29364d", letterSpacing: 5 }}
+              >
+                {" "}
+                |
+              </Text>
             </Text>
-          </Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={number}
-            placeholder={"55 1234 5678"}
-            onChangeText={(text) => setNumber(text)}
-          />
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={number}
+              placeholder={"55 1234 5678"}
+              onChangeText={(text) => setNumber(text)}
+            />
+          </View>
+          {/* Boton Tengo Cuenta */}
+          <TouchableOpacity
+            style={styles.botonTengoCuenta}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.textoBoton}>Ya tengo una cuenta</Text>
+          </TouchableOpacity>
+          {/* Boton Craer Cuenta */}
+          <TouchableOpacity
+            style={styles.boton}
+            onPress={() => navigation.navigate("Registro2", { number })}
+          >
+            <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
+          </TouchableOpacity>
         </View>
-        {/* Boton Tengo Cuenta */}
-        <TouchableOpacity
-          style={styles.botonTengoCuenta}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.textoBoton}>Ya tengo una cuenta</Text>
-        </TouchableOpacity>
-        {/* Boton Craer Cuenta */}
-        <TouchableOpacity
-          style={styles.boton}
-          onPress={() => navigation.navigate("Registro2", { number })}
-        >
-          <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
-        </TouchableOpacity>
-      </View>
-      {/* Fin Contenedor */}
-    </ImageBackground>
+        {/* Fin Contenedor */}
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 
