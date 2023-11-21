@@ -5,7 +5,8 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useState } from "react";
 import SpecialInput from "../components/SpecialInput";
@@ -13,44 +14,46 @@ import SpecialInput from "../components/SpecialInput";
 const Registro1 = ({ navigation }) => {
   return (
     //Imagen de Fondo
-    <ImageBackground
-      source={require("../../assets/images/Fondo.png")}
-      style={styles.background}
-    >
-      {/* Logo, Titulo */}
-      <Image
-        source={require("../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
-      <Text style={styles.titulo}>TANKEF</Text>
-      {/* Fin Logo, Titulo y Avance */}
-      {/* Contenedor */}
-      <View style={styles.container}>
-        <Text style={styles.welcome}>WELCOME BACK</Text>
-        {/* Entradas de Input */}
-        <View style={styles.input}>
-          <SpecialInput field="Correo" editable={true} />
-          <SpecialInput field="Contraseña" editable={true} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <ImageBackground
+        source={require("../../assets/images/Fondo.png")}
+        style={styles.background}
+      >
+        {/* Logo, Titulo */}
+        <Image
+          source={require("../../assets/images/Logo_Tankef.png")}
+          style={styles.imagen}
+        />
+        <Text style={styles.titulo}>TANKEF</Text>
+        {/* Fin Logo, Titulo y Avance */}
+        {/* Contenedor */}
+        <View style={styles.container}>
+          <Text style={styles.welcome}>WELCOME BACK</Text>
+          {/* Entradas de Input */}
+          <View style={styles.input}>
+            <SpecialInput field="Correo" editable={true} />
+            <SpecialInput field="Contraseña" editable={true} />
+          </View>
         </View>
-      </View>
-      {/* Boton Craer Cuenta */}
-      <TouchableOpacity
-        style={[styles.boton, { marginTop: 670, backgroundColor: "white" }]}
-        onPress={() => navigation.navigate("Registro1")}
-      >
-        <Text style={[styles.textoBotonCuenta, { color: "#29364d" }]}>
-          CREAR UNA CUENTA
-        </Text>
-      </TouchableOpacity>
-      {/* Boton Iniciar Sesion */}
-      <TouchableOpacity
-        style={styles.boton}
-        onPress={() => navigation.navigate("Main")}
-      >
-        <Text style={styles.textoBotonCuenta}>INICIAR SESIÓN</Text>
-      </TouchableOpacity>
-      {/* Fin Contenedor */}
-    </ImageBackground>
+        {/* Boton Craer Cuenta */}
+        <TouchableOpacity
+          style={[styles.boton, { marginTop: 670, backgroundColor: "white" }]}
+          onPress={() => navigation.navigate("Registro1")}
+        >
+          <Text style={[styles.textoBotonCuenta, { color: "#29364d" }]}>
+            CREAR UNA CUENTA
+          </Text>
+        </TouchableOpacity>
+        {/* Boton Iniciar Sesion */}
+        <TouchableOpacity
+          style={styles.boton}
+          onPress={() => navigation.navigate("Main")}
+        >
+          <Text style={styles.textoBotonCuenta}>INICIAR SESIÓN</Text>
+        </TouchableOpacity>
+        {/* Fin Contenedor */}
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 

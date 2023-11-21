@@ -5,6 +5,8 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -44,54 +46,56 @@ const Registro4 = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.background}>
-      {/* Logo, Titulo y Avance */}
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <AntDesign
-          name="arrowleft"
-          size={40}
-          color="#29364d"
-          style={styles.back}
-        />
-      </TouchableOpacity>
-      <Image
-        source={require("../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
-      <Text style={styles.titulo}>TANKEF</Text>
-      <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.background}>
+        {/* Logo, Titulo y Avance */}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign
+            name="arrowleft"
+            size={40}
+            color="#29364d"
+            style={styles.back}
+          />
+        </TouchableOpacity>
         <Image
-          source={require("../../assets/images/LoginFlow4.png")}
-          style={styles.imagenAvance}
+          source={require("../../assets/images/Logo_Tankef.png")}
+          style={styles.imagen}
         />
-        {/* Entradas de Input */}
-        <View
-          style={{
-            marginTop: 80,
-            height: 100,
-          }}
-        >
-          <SpecialInput field="Correo" editable={true} set={setCorreo} />
-          <SpecialInput
-            field="Contraseña"
-            editable={true}
-            set={setContraseña}
+        <Text style={styles.titulo}>TANKEF</Text>
+        <View style={styles.container}>
+          <Image
+            source={require("../../assets/images/LoginFlow4.png")}
+            style={styles.imagenAvance}
           />
-          <SpecialInput
-            field="Confirmar Contraseña"
-            editable={true}
-            set={setConfirmarContraseña}
-          />
+          {/* Entradas de Input */}
+          <View
+            style={{
+              marginTop: 80,
+              height: 100,
+            }}
+          >
+            <SpecialInput field="Correo" editable={true} set={setCorreo} />
+            <SpecialInput
+              field="Contraseña"
+              editable={true}
+              set={setContraseña}
+            />
+            <SpecialInput
+              field="Confirmar Contraseña"
+              editable={true}
+              set={setConfirmarContraseña}
+            />
+          </View>
         </View>
+        {/* Boton Craer Cuenta */}
+        <TouchableOpacity
+          style={styles.botonGrande}
+          onPress={() => handleSiguiente()}
+        >
+          <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
+        </TouchableOpacity>
       </View>
-      {/* Boton Craer Cuenta */}
-      <TouchableOpacity
-        style={styles.botonGrande}
-        onPress={() => handleSiguiente()}
-      >
-        <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

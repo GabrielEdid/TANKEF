@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -57,78 +59,84 @@ const Registro3 = ({ navigation }) => {
   }, [CURP]);
 
   return (
-    <View style={styles.background}>
-      {/* Logo, Titulo y Avance */}
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <AntDesign
-          name="arrowleft"
-          size={40}
-          color="#29364d"
-          style={styles.back}
-        />
-      </TouchableOpacity>
-      <Image
-        source={require("../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
-      <Text style={styles.titulo}>TANKEF</Text>
-      <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.background}>
+        {/* Logo, Titulo y Avance */}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign
+            name="arrowleft"
+            size={40}
+            color="#29364d"
+            style={styles.back}
+          />
+        </TouchableOpacity>
         <Image
-          source={require("../../assets/images/LoginFlow3.png")}
-          style={styles.imagenAvance}
+          source={require("../../assets/images/Logo_Tankef.png")}
+          style={styles.imagen}
         />
-        {/* Entradas de Input */}
-        <ScrollView
-          style={{
-            marginTop: 80,
-            height: 100,
-          }}
-          automaticallyAdjustKeyboardInsets={true}
-        >
-          <SpecialInput field="Nombre" editable={true} set={setNombre} />
-          <SpecialInput field="CURP" editable={true} set={setCURP} />
-          {CURP.length === 18 && (
-            <ChecarCURP
-              curp={CURP}
-              fecha={setFechaNacimiento}
-              estado={setEstadoNacimiento}
-              sexo={setSexo}
+        <Text style={styles.titulo}>TANKEF</Text>
+        <View style={styles.container}>
+          <Image
+            source={require("../../assets/images/LoginFlow3.png")}
+            style={styles.imagenAvance}
+          />
+          {/* Entradas de Input */}
+          <ScrollView
+            style={{
+              marginTop: 80,
+              height: 100,
+            }}
+            automaticallyAdjustKeyboardInsets={true}
+          >
+            <SpecialInput field="Nombre" editable={true} set={setNombre} />
+            <SpecialInput field="CURP" editable={true} set={setCURP} />
+            {CURP.length === 18 && (
+              <ChecarCURP
+                curp={CURP}
+                fecha={setFechaNacimiento}
+                estado={setEstadoNacimiento}
+                sexo={setSexo}
+              />
+            )}
+            <SpecialInput
+              field="Fecha de Nacimiento"
+              editable={false}
+              value={fechaNacimiento}
+              set={setFechaNacimiento}
             />
-          )}
-          <SpecialInput
-            field="Fecha de Nacimiento"
-            editable={false}
-            value={fechaNacimiento}
-            set={setFechaNacimiento}
-          />
-          <SpecialInput
-            field="Estado de Nacimiento"
-            editable={false}
-            value={estadoNacimiento}
-            set={setEstadoNacimiento}
-          />
-          <SpecialInput
-            field="Sexo"
-            editable={false}
-            set={setSexo}
-            value={sexo}
-          />
-          <SpecialInput
-            field="Estado Civil"
-            editable={true}
-            set={setEstadoCivil}
-          />
-          <SpecialInput field="Ocupación" editable={true} set={setOcupacion} />
-        </ScrollView>
+            <SpecialInput
+              field="Estado de Nacimiento"
+              editable={false}
+              value={estadoNacimiento}
+              set={setEstadoNacimiento}
+            />
+            <SpecialInput
+              field="Sexo"
+              editable={false}
+              set={setSexo}
+              value={sexo}
+            />
+            <SpecialInput
+              field="Estado Civil"
+              editable={true}
+              set={setEstadoCivil}
+            />
+            <SpecialInput
+              field="Ocupación"
+              editable={true}
+              set={setOcupacion}
+            />
+          </ScrollView>
+        </View>
+        {/* Boton Craer Cuenta */}
+        <TouchableOpacity
+          style={styles.botonGrande}
+          onPress={() => handleSiguiente()}
+        >
+          <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
+        </TouchableOpacity>
       </View>
-      {/* Boton Craer Cuenta */}
-      <TouchableOpacity
-        style={styles.botonGrande}
-        onPress={() => handleSiguiente()}
-      >
-        <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
