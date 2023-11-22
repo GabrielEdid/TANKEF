@@ -8,7 +8,6 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState } from "react";
 import CountryPicker from "react-native-country-picker-modal";

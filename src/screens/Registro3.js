@@ -120,11 +120,13 @@ const Registro3 = ({ navigation }) => {
               field="Estado Civil"
               editable={true}
               set={setEstadoCivil}
+              dropdown={"civil"}
             />
             <SpecialInput
               field="Ocupación"
               editable={true}
               set={setOcupacion}
+              dropdown={"ocupacion"}
             />
           </ScrollView>
         </View>
