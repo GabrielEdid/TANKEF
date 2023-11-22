@@ -12,7 +12,8 @@ import { AntDesign } from "@expo/vector-icons";
 import CodigoSMS from "../components/CodigoSMS";
 
 const Registro2 = ({ navigation, route }) => {
-  const { number: phoneNumber } = route.params;
+  const { callingCode, number } = route.params;
+  const phoneNumber = "+" + callingCode + " " + number;
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

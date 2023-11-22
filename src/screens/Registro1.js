@@ -96,7 +96,9 @@ const Registro1 = ({ navigation }) => {
           {/* Boton Craer Cuenta */}
           <TouchableOpacity
             style={styles.boton}
-            onPress={() => navigation.navigate("Registro2", { number })}
+            onPress={() =>
+              navigation.navigate("Registro2", { callingCode, number })
+            }
           >
             <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
           </TouchableOpacity>
