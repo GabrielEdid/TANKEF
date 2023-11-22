@@ -32,7 +32,7 @@ const Registro1 = ({ navigation }) => {
           {/* Entradas de Input */}
           <View style={styles.input}>
             <SpecialInput field="Correo" editable={true} />
-            <SpecialInput field="Contraseña" editable={true} />
+            <SpecialInput field="Contraseña" editable={true} password={true} />
           </View>
         </View>
         {/* Boton Craer Cuenta */}

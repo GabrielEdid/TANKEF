@@ -79,11 +79,13 @@ const Registro4 = ({ navigation }) => {
               field="Contraseña"
               editable={true}
               set={setContraseña}
+              password={true}
             />
             <SpecialInput
               field="Confirmar Contraseña"
               editable={true}
               set={setConfirmarContraseña}
+              password={true}
             />
           </View>
         </View>

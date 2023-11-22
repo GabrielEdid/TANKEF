@@ -12,6 +12,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import SpecialInput from "../components/SpecialInput";
+import DropDown from "../components/DropDown";
 import ChecarCURP from "../hooks/ChecarCURP";
 
 const Registro3 = ({ navigation }) => {
@@ -31,7 +32,8 @@ const Registro3 = ({ navigation }) => {
       estadoNacimiento !== "" &&
       sexo !== "" &&
       estadoCivil !== "" &&
-      ocupacion !== ""
+      ocupacion !== "" &&
+      CURP !== "CURP incorrecto"
     );
   };
 
@@ -81,14 +83,18 @@ const Registro3 = ({ navigation }) => {
             style={styles.imagenAvance}
           />
           {/* Entradas de Input */}
-          <ScrollView
+          <View
             style={{
               marginTop: 80,
               height: 100,
             }}
             automaticallyAdjustKeyboardInsets={true}
           >
-            <SpecialInput field="Nombre" editable={true} set={setNombre} />
+            <SpecialInput
+              field="Nombre Completo"
+              editable={true}
+              set={setNombre}
+            />
             <SpecialInput field="CURP" editable={true} set={setCURP} />
             {CURP.length === 18 && (
               <ChecarCURP
@@ -116,19 +122,17 @@ const Registro3 = ({ navigation }) => {
               set={setSexo}
               value={sexo}
             />
-            <SpecialInput
+            <DropDown
               field="Estado Civil"
-              editable={true}
               set={setEstadoCivil}
               dropdown={"civil"}
             />
-            <SpecialInput
+            <DropDown
               field="Ocupación"
-              editable={true}
               set={setOcupacion}
               dropdown={"ocupacion"}
             />
-          </ScrollView>
+          </View>
         </View>
         {/* Boton Craer Cuenta */}
         <TouchableOpacity
