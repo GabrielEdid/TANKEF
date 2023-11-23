@@ -9,6 +9,7 @@ import Registro2 from "./src/screens/Registro2";
 import Registro3 from "./src/screens/Registro3";
 import Registro4 from "./src/screens/Registro4";
 import Main from "./src/screens/Main.js";
+import PinPad from "./src/screens/PinPad.js";
 
 // Create a stack navigator
 const Stack = createStackNavigator();
@@ -19,6 +20,11 @@ function LoginFlow() {
       <Stack.Screen
         name="InitialScreen"
         component={InitialScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PinPad"
+        component={PinPad}
         options={{ headerShown: false }}
       />
       <Stack.Screen

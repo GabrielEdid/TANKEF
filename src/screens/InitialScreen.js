@@ -47,7 +47,7 @@ const Registro1 = ({ navigation }) => {
         {/* Boton Iniciar Sesion */}
         <TouchableOpacity
           style={styles.boton}
-          onPress={() => navigation.navigate("Main")}
+          onPress={() => navigation.navigate("PinPad")}
         >
           <Text style={styles.textoBotonCuenta}>INICIAR SESIÓN</Text>
         </TouchableOpacity>
