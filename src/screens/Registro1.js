@@ -10,14 +10,66 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState } from "react";
+import { auth } from "../../firebaseConfig";
+//import auth from "@react-native-firebase/auth";
 import CountryPicker from "react-native-country-picker-modal";
 import { AntDesign } from "@expo/vector-icons";
+import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 
 const Registro1 = ({ navigation }) => {
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
   const [number, setNumber] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
+
+  const sendOTP = async () => {
+    try {
+      const appVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
+      const confirmation = await signInWithPhoneNumber(
+        auth,
+        "+525568182757",
+        appVerifier
+      );
+      console.log(confirmation);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* // If null, no SMS has been sent
+  const [confirm, setConfirm] = useState(null);
+
+  // verification code (OTP - One-Time-Passcode)
+  const [code, setCode] = useState("");
+
+  // Handle login
+  function onAuthStateChanged(user) {
+    if (user) {
+      // Some Android devices can automatically process the verification code (OTP) message, and the user would NOT need to enter the code.
+      // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
+      // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
+      // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  // Handle the button press
+  async function signInWithPhoneNumber(phoneNumber) {
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    setConfirm(confirmation);
+  }
+
+  async function confirmCode() {
+    try {
+      await confirm.confirm(code);
+    } catch (error) {
+      console.log("Invalid code.");
+    }
+  }*/
 
   return (
     //Imagen de Fondo
@@ -96,9 +148,9 @@ const Registro1 = ({ navigation }) => {
           {/* Boton Craer Cuenta */}
           <TouchableOpacity
             style={styles.boton}
-            onPress={() =>
-              navigation.navigate("Registro2", { callingCode, number })
-            }
+            onPress={() => sendOTP()}
+            /*navigation.navigate("Registro2", { callingCode, number }),
+            ]}*/
           >
             <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
           </TouchableOpacity>

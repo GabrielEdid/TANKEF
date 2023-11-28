@@ -9,15 +9,13 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
 const PinPad = ({ navigation }) => {
   const [pin, setPin] = useState("");
 
   const addDigit = (digit) => {
-    if (pin.length < 4) {
+    if (pin.length < 6) {
       setPin((prevPin) => prevPin + digit);
     }
   };
@@ -39,14 +37,14 @@ const PinPad = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (pin.length === 4) {
+    if (pin.length === 6) {
       onFullPinEntered(pin);
     }
   }, [pin]);
 
   const renderPinIndicators = () => {
     const indicators = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 6; i++) {
       indicators.push(
         <View
           key={i}
@@ -78,7 +76,6 @@ const PinPad = ({ navigation }) => {
         />
         <Text style={styles.titulo}>TANKEF</Text>
 
-        {/* A continuación tu implementación */}
         <View style={styles.pinContainer}>{renderPinIndicators()}</View>
 
         {Array.from({ length: 3 }, (_, rowIndex) => (
@@ -162,7 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 7.5,
     borderWidth: 1,
     borderColor: "#29364d",
-    margin: 10,
+    margin: 15,
   },
   pinIndicatorFilled: {
     backgroundColor: "#29364d",

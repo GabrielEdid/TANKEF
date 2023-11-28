@@ -9,9 +9,33 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState } from "react";
+import { auth } from "../../firebaseConfig";
 import SpecialInput from "../components/SpecialInput";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 
 const Registro1 = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  function handleLogin() {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user.uid);
+        navigation.navigate("PinPad");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Error");
+        console.log(errorCode);
+        console.log(errorMessage);
+        // ..
+      });
+    signInWithEmailAndPassword(auth, email, password);
+  }
   return (
     //Imagen de Fondo
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -31,8 +55,13 @@ const Registro1 = ({ navigation }) => {
           <Text style={styles.welcome}>WELCOME BACK</Text>
           {/* Entradas de Input */}
           <View style={styles.input}>
-            <SpecialInput field="Correo" editable={true} />
-            <SpecialInput field="Contraseña" editable={true} password={true} />
+            <SpecialInput field="Correo" editable={true} set={setEmail} />
+            <SpecialInput
+              field="Contraseña"
+              editable={true}
+              password={true}
+              set={setPassword}
+            />
           </View>
         </View>
         {/* Boton Craer Cuenta */}
@@ -47,7 +76,7 @@ const Registro1 = ({ navigation }) => {
         {/* Boton Iniciar Sesion */}
         <TouchableOpacity
           style={styles.boton}
-          onPress={() => navigation.navigate("PinPad")}
+          onPress={() => [console.log(email), handleLogin()]}
         >
           <Text style={styles.textoBotonCuenta}>INICIAR SESIÓN</Text>
         </TouchableOpacity>
