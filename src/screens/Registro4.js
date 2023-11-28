@@ -29,7 +29,7 @@ const Registro4 = ({ navigation }) => {
     if (!verificarCampos()) {
       Alert.alert(
         "Campos Incompletos",
-        "Introduce todos tus datos para continuar si gracias.",
+        "Introduce todos tus datos para continuar.",
         [{ text: "Entendido" }],
         { cancelable: true }
       );
