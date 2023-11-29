@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
+import { UserProvider } from "./src/hooks/UserContext";
 import InitialScreen from "./src/screens/InitialScreen";
 import Registro1 from "./src/screens/Registro1";
 import Registro2 from "./src/screens/Registro2";
@@ -16,43 +17,45 @@ const Stack = createStackNavigator();
 
 function LoginFlow() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="InitialScreen"
-        component={InitialScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="PinPad"
-        component={PinPad}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Registro1"
-        component={Registro1}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Registro2"
-        component={Registro2}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Registro3"
-        component={Registro3}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Registro4"
-        component={Registro4}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Main"
-        component={Main}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+    <UserProvider>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="InitialScreen"
+          component={InitialScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PinPad"
+          component={PinPad}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Registro1"
+          component={Registro1}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Registro2"
+          component={Registro2}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Registro3"
+          component={Registro3}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Registro4"
+          component={Registro4}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </UserProvider>
   );
 }
 

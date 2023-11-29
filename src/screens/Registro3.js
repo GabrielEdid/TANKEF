@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView,
   Alert,
   TouchableWithoutFeedback,
   Keyboard,

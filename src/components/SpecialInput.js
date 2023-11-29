@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   TextInput,
@@ -7,9 +7,11 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
+import { UserContext } from "./UserContext";
 import { Ionicons } from "@expo/vector-icons";
 
 const SpecialInput = (props) => {
+  const { user, setUser } = useContext(UserContext);
   const [field, setField] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const animation = useState(new Animated.Value(0))[0];
@@ -31,10 +33,7 @@ const SpecialInput = (props) => {
   };
 
   const handleChangeText = (nuevoTexto) => {
-    setField(nuevoTexto);
-    if (props.set) {
-      props.set(nuevoTexto);
-    }
+    setField(...user, props.field, nuevoTexto);
   };
 
   const togglePasswordVisibility = () => {
