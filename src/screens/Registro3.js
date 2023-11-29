@@ -8,13 +8,15 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../hooks/UserContext";
 import { AntDesign } from "@expo/vector-icons";
 import SpecialInput from "../components/SpecialInput";
 import DropDown from "../components/DropDown";
 import ChecarCURP from "../hooks/ChecarCURP";
 
 const Registro3 = ({ navigation }) => {
+  const { user, setUser } = useContext(UserContext);
   const [nombre, setNombre] = useState("");
   const [CURP, setCURP] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
@@ -91,10 +93,16 @@ const Registro3 = ({ navigation }) => {
           >
             <SpecialInput
               field="Nombre Completo"
+              context="nombre"
               editable={true}
               set={setNombre}
             />
-            <SpecialInput field="CURP" editable={true} set={setCURP} />
+            <SpecialInput
+              field="CURP"
+              context="CURP"
+              editable={true}
+              set={setCURP}
+            />
             {CURP.length === 18 && (
               <ChecarCURP
                 curp={CURP}
@@ -105,29 +113,34 @@ const Registro3 = ({ navigation }) => {
             )}
             <SpecialInput
               field="Fecha de Nacimiento"
+              context="fechaNacimiento"
               editable={false}
-              value={fechaNacimiento}
+              value={{ ...user, fechaNacimiento }}
               set={setFechaNacimiento}
             />
             <SpecialInput
               field="Estado de Nacimiento"
+              context="estadoNacimiento"
               editable={false}
-              value={estadoNacimiento}
+              value={{ ...user, estadoNacimiento }}
               set={setEstadoNacimiento}
             />
             <SpecialInput
               field="Sexo"
+              context="sexo"
               editable={false}
               set={setSexo}
-              value={sexo}
+              value={{ ...user, sexo }}
             />
             <DropDown
               field="Estado Civil"
+              context="estadoCivil"
               set={setEstadoCivil}
               dropdown={"civil"}
             />
             <DropDown
               field="Ocupación"
+              context="ocupacion"
               set={setOcupacion}
               dropdown={"ocupacion"}
             />

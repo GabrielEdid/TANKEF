@@ -22,7 +22,7 @@ const Registro1 = ({ navigation }) => {
   const [number, setNumber] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
 
-  const sendOTP = async () => {
+  /*const sendOTP = async () => {
     try {
       const appVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
       const confirmation = await signInWithPhoneNumber(
@@ -34,7 +34,7 @@ const Registro1 = ({ navigation }) => {
     } catch (error) {
       console.error(error);
     }
-  };
+  };*/
 
   /* // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
@@ -148,9 +148,10 @@ const Registro1 = ({ navigation }) => {
           {/* Boton Craer Cuenta */}
           <TouchableOpacity
             style={styles.boton}
-            onPress={() => sendOTP()}
-            /*navigation.navigate("Registro2", { callingCode, number }),
-            ]}*/
+            onPress={() =>
+              /*sendOTP()}*/
+              navigation.navigate("Registro2", { callingCode, number })
+            }
           >
             <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
           </TouchableOpacity>

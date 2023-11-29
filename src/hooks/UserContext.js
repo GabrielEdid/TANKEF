@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -8,7 +9,7 @@ export const UserProvider = ({ children }) => {
     fechaNacimiento: "",
     estadoNacimiento: "",
     sexo: "",
-    profesion: "",
+    ocupacion: "",
     estadoCivil: "",
     email: "",
     password: "",

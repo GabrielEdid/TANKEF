@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../hooks/UserContext";
 import { Ionicons } from "@expo/vector-icons";
 
 const SpecialInput = (props) => {
@@ -33,7 +33,8 @@ const SpecialInput = (props) => {
   };
 
   const handleChangeText = (nuevoTexto) => {
-    setField(...user, props.field, nuevoTexto);
+    setField(nuevoTexto);
+    setUser({ ...user, [props.context]: nuevoTexto });
   };
 
   const togglePasswordVisibility = () => {
@@ -54,7 +55,7 @@ const SpecialInput = (props) => {
     <View style={styles.container}>
       <TextInput
         onChangeText={handleChangeText}
-        value={props.editable ? field : props.value}
+        value={props.editable ? field : user}
         style={[
           styles.input,
           !props.editable && { borderColor: "grey" },
