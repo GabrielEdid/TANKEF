@@ -18,6 +18,26 @@ const Registro1 = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  /*function signIn() {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user.uid);
+        navigation.navigate("PinPad");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Error")
+        console.log(errorCode);
+        console.log(errorMessage);
+        // ..
+      });
+      signInWithEmailAndPassword(auth, email, password);
+  }*/
+
   const signIn = async () => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);

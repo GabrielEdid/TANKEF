@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../hooks/UserContext";
 import { auth } from "../../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -18,26 +18,6 @@ import SpecialInput from "../components/SpecialInput";
 const Registro4 = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  /*function createUser() {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user.uid);
-        navigation.navigate("PinPad");
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error")
-        console.log(errorCode);
-        console.log(errorMessage);
-        // ..
-      });
-      createUserWithEmailAndPassword(auth, email, password);
-  }*/
 
   const createUser = async () => {
     try {
