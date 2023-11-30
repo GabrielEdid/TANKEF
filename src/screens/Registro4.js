@@ -48,6 +48,7 @@ const Registro4 = ({ navigation }) => {
       );
       console.log(response);
       alert("Check Your Emails!");
+      navigation.navigate("PinPad");
     } catch (error) {
       console.log(error);
       alert("Registration Failed: " + error.message);
