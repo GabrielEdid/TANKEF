@@ -11,8 +11,11 @@ export const UserProvider = ({ children }) => {
     sexo: "",
     ocupacion: "",
     estadoCivil: "",
+    loogedIn: false,
     email: "",
     password: "",
+    confirmPassword: "",
+    pin: "",
   });
 
   return (

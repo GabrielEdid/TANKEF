@@ -8,21 +8,59 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../hooks/UserContext";
+import { auth } from "../../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AntDesign } from "@expo/vector-icons";
 import SpecialInput from "../components/SpecialInput";
 
 const Registro4 = ({ navigation }) => {
-  const [correo, setCorreo] = useState("");
-  const [contraseña, setContraseña] = useState("");
-  const [confirmarContraseña, setConfirmarContraseña] = useState("");
+  const { user, setUser } = useContext(UserContext);
+
+  /*function createUser() {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user.uid);
+        navigation.navigate("PinPad");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Error")
+        console.log(errorCode);
+        console.log(errorMessage);
+        // ..
+      });
+      createUserWithEmailAndPassword(auth, email, password);
+  }*/
+
+  const createUser = async () => {
+    try {
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        user.email,
+        user.password
+      );
+      console.log(response);
+      alert("Check Your Emails!");
+    } catch (error) {
+      console.log(error);
+      alert("Registration Failed: " + error.message);
+    }
+  };
 
   const verificarCampos = () => {
-    return correo !== "" && contraseña !== "" && confirmarContraseña !== "";
+    return (
+      user.email !== "" && user.password !== "" && user.confirmPassword !== ""
+    );
   };
 
   const verificarContraseñas = () => {
-    return contraseña === confirmarContraseña ? true : false;
+    return user.password === user.confirmPassword ? true : false;
   };
 
   const handleSiguiente = () => {
@@ -41,7 +79,7 @@ const Registro4 = ({ navigation }) => {
         { cancelable: true }
       );
     } else {
-      navigation.navigate("Main");
+      createUser();
     }
   };
 
@@ -74,18 +112,18 @@ const Registro4 = ({ navigation }) => {
               height: 100,
             }}
           >
-            <SpecialInput field="Correo" editable={true} set={setCorreo} />
+            <SpecialInput field="Correo" editable={true} context={"email"} />
             <SpecialInput
               field="Contraseña"
               editable={true}
-              set={setContraseña}
               password={true}
+              context={"password"}
             />
             <SpecialInput
               field="Confirmar Contraseña"
               editable={true}
-              set={setConfirmarContraseña}
               password={true}
+              context={"confirmPassword"}
             />
           </View>
         </View>

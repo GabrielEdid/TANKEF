@@ -35,6 +35,7 @@ const SpecialInput = (props) => {
   const handleChangeText = (nuevoTexto) => {
     setField(nuevoTexto);
     setUser({ ...user, [props.context]: nuevoTexto });
+    props.set(nuevoTexto);
   };
 
   const togglePasswordVisibility = () => {
