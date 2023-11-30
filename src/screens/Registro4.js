@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { UserContext } from "../hooks/UserContext";
+import AsyncStorage from "../hooks/AsyncStorage";
 import { auth } from "../../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AntDesign } from "@expo/vector-icons";
@@ -18,8 +19,10 @@ import SpecialInput from "../components/SpecialInput";
 const Registro4 = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const createUser = async () => {
+    setIsLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
@@ -33,6 +36,7 @@ const Registro4 = ({ navigation }) => {
       console.log(error);
       alert("Registration Failed: " + error.message);
     }
+    setIsLoading(false);
   };
 
   const verificarCampos = () => {
@@ -112,6 +116,7 @@ const Registro4 = ({ navigation }) => {
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => handleSiguiente()}
+          disabled={isLoading}
         >
           <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
         </TouchableOpacity>

@@ -13,7 +13,7 @@ import { UserContext } from "../hooks/UserContext";
 import { AntDesign } from "@expo/vector-icons";
 import SpecialInput from "../components/SpecialInput";
 import DropDown from "../components/DropDown";
-import ChecarCURP from "../hooks/ChecarCURP";
+import { ChecarCURP } from "../hooks/ChecarCURP";
 
 const Registro3 = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
@@ -22,12 +22,15 @@ const Registro3 = ({ navigation }) => {
     return (
       user.nombre !== "" &&
       user.CURP !== "" &&
+      user.CURP !== "CURP incorrecto" &&
       user.fechaNacimiento !== "" &&
+      user.fechaNacimiento !== "CURP incorrecto" &&
       user.estadoNacimiento !== "" &&
+      user.estadoNacimiento !== "CURP incorrecto" &&
       user.sexo !== "" &&
+      user.sexo !== "CURP incorrecto" &&
       user.estadoCivil !== "" &&
-      user.ocupacion !== "" &&
-      user.CURP !== "CURP incorrecto"
+      user.ocupacion !== ""
     );
   };
 
@@ -45,6 +48,18 @@ const Registro3 = ({ navigation }) => {
   };
 
   useEffect(() => {
+    if (user.CURP && user.CURP.length === 18) {
+      const { fechaNacimiento, sexo, estadoNacimiento } = ChecarCURP(user.CURP);
+      setUser({
+        ...user,
+        fechaNacimiento,
+        sexo,
+        estadoNacimiento,
+      });
+    }
+  }, [user.CURP, setUser]);
+
+  /*useEffect(() => {
     if (user.CRUP === 18) {
       // Ejecutar lógica para procesar CURP
     } else {
@@ -54,7 +69,7 @@ const Registro3 = ({ navigation }) => {
     }
   }, [user.CURP]);
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (user.CURP && user.CURP.length === 18) {
       ChecarCURP();
     }
@@ -94,27 +109,21 @@ const Registro3 = ({ navigation }) => {
               field="Nombre Completo"
               context="nombre"
               editable={true}
+              set=""
             />
             <SpecialInput field="CURP" context="CURP" editable={true} />
-            <ChecarCURP />
+            {/*<ChecarCURP />*/}
             <SpecialInput
               field="Fecha de Nacimiento"
               context="fechaNacimiento"
               editable={false}
-              value={user.fechaNacimiento}
             />
             <SpecialInput
               field="Estado de Nacimiento"
               context="estadoNacimiento"
               editable={false}
-              value={user.estadoNacimiento}
             />
-            <SpecialInput
-              field="Sexo"
-              context="sexo"
-              editable={false}
-              value={user.sexo}
-            />
+            <SpecialInput field="Sexo" context="sexo" editable={false} />
             <DropDown
               field="Estado Civil"
               context="estadoCivil"

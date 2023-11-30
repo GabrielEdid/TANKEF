@@ -17,6 +17,7 @@ import { initializeApp } from "firebase/app";
 const Registro1 = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Nuevo estado para manejar el proceso de carga
 
   /*function signIn() {
     signInWithEmailAndPassword(auth, email, password)
@@ -39,6 +40,7 @@ const Registro1 = ({ navigation }) => {
   }*/
 
   const signIn = async () => {
+    setIsLoading(true); // Inicia el proceso de carga
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
@@ -47,6 +49,7 @@ const Registro1 = ({ navigation }) => {
       console.log(error);
       alert("Sign In Failed: " + error.message);
     }
+    setIsLoading(false); // Finaliza el proceso de carga
   };
 
   return (
@@ -90,6 +93,7 @@ const Registro1 = ({ navigation }) => {
         <TouchableOpacity
           style={styles.boton}
           onPress={() => [console.log(email), signIn()]}
+          disabled={isLoading} // Desactiva el botón cuando isLoading es true
         >
           <Text style={styles.textoBotonCuenta}>INICIAR SESIÓN</Text>
         </TouchableOpacity>
