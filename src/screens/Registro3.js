@@ -17,31 +17,24 @@ import ChecarCURP from "../hooks/ChecarCURP";
 
 const Registro3 = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
-  const [nombre, setNombre] = useState("");
-  const [CURP, setCURP] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
-  const [estadoNacimiento, setEstadoNacimiento] = useState("");
-  const [sexo, setSexo] = useState("");
-  const [estadoCivil, setEstadoCivil] = useState("");
-  const [ocupacion, setOcupacion] = useState("");
 
   const verificarCampos = () => {
     return (
-      nombre !== "" &&
-      CURP !== "" &&
-      fechaNacimiento !== "" &&
-      estadoNacimiento !== "" &&
-      sexo !== "" &&
-      estadoCivil !== "" &&
-      ocupacion !== "" &&
-      CURP !== "CURP incorrecto"
+      user.nombre !== "" &&
+      user.CURP !== "" &&
+      user.fechaNacimiento !== "" &&
+      user.estadoNacimiento !== "" &&
+      user.sexo !== "" &&
+      user.estadoCivil !== "" &&
+      user.ocupacion !== "" &&
+      user.CURP !== "CURP incorrecto"
     );
   };
 
   const handleSiguiente = () => {
     if (!verificarCampos()) {
       Alert.alert(
-        "Campos Incompletos", // Aquí puedes poner el título que desees
+        "Campos Incompletos",
         "Introduce todos tus datos para continuar.",
         [{ text: "Entendido" }],
         { cancelable: true }
@@ -52,14 +45,20 @@ const Registro3 = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (CURP.length === 18) {
+    if (user.CRUP === 18) {
       // Ejecutar lógica para procesar CURP
     } else {
-      setFechaNacimiento("");
-      setEstadoNacimiento("");
-      setSexo("");
+      setUser({ ...user, fechaNacimiento: "" });
+      setUser({ ...user, estadoNacimiento: "" });
+      setUser({ ...user, sexo: "" });
     }
-  }, [CURP]);
+  }, [user.CURP]);
+
+  /*useEffect(() => {
+    if (user.CURP && user.CURP.length === 18) {
+      ChecarCURP();
+    }
+  }, [user.CURP]);*/
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -95,53 +94,35 @@ const Registro3 = ({ navigation }) => {
               field="Nombre Completo"
               context="nombre"
               editable={true}
-              set={setNombre}
             />
-            <SpecialInput
-              field="CURP"
-              context="CURP"
-              editable={true}
-              set={setCURP}
-            />
-            {CURP.length === 18 && (
-              <ChecarCURP
-                curp={CURP}
-                fecha={setFechaNacimiento}
-                estado={setEstadoNacimiento}
-                sexo={setSexo}
-              />
-            )}
+            <SpecialInput field="CURP" context="CURP" editable={true} />
+            <ChecarCURP />
             <SpecialInput
               field="Fecha de Nacimiento"
               context="fechaNacimiento"
               editable={false}
-              value={{ ...user, fechaNacimiento }}
-              set={setFechaNacimiento}
+              value={user.fechaNacimiento}
             />
             <SpecialInput
               field="Estado de Nacimiento"
               context="estadoNacimiento"
               editable={false}
-              value={{ ...user, estadoNacimiento }}
-              set={setEstadoNacimiento}
+              value={user.estadoNacimiento}
             />
             <SpecialInput
               field="Sexo"
               context="sexo"
               editable={false}
-              set={setSexo}
-              value={{ ...user, sexo }}
+              value={user.sexo}
             />
             <DropDown
               field="Estado Civil"
               context="estadoCivil"
-              set={setEstadoCivil}
               dropdown={"civil"}
             />
             <DropDown
               field="Ocupación"
               context="ocupacion"
-              set={setOcupacion}
               dropdown={"ocupacion"}
             />
           </View>
@@ -149,7 +130,7 @@ const Registro3 = ({ navigation }) => {
         {/* Boton Craer Cuenta */}
         <TouchableOpacity
           style={styles.botonGrande}
-          onPress={() => handleSiguiente()}
+          onPress={() => [handleSiguiente(), console.log(user)]}
         >
           <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
         </TouchableOpacity>

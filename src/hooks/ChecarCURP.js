@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "./UserContext"; // Asegúrate de que la ruta sea correcta
 
-const ChecarCURP = (props) => {
-  let fechaNacimiento = props.curp.substring(4, 10);
-  let sexo = props.curp.substring(10, 11);
-  let estado = props.curp.substring(11, 13);
+const ChecarCURP = () => {
+  const { user, setUser } = useContext(UserContext);
+  const curp = user.CURP;
+  const incorrecto = "CURP incorrecto";
 
-  let auxFechaNacimiento = "";
-  for (let i = 0; i < fechaNacimiento.length; i += 2) {
-    auxFechaNacimiento += fechaNacimiento.substring(i, i + 2);
-    if (i + 2 < fechaNacimiento.length) {
-      auxFechaNacimiento += "/";
-    }
+  // Verificar si la CURP está definida y tiene la longitud adecuada
+  if (!curp || curp.length !== 18) {
+    console.log("CURP inválida o no definida");
+    return;
   }
 
-  const partes = auxFechaNacimiento.split("/");
-  fechaNacimiento = partes[2] + "/" + partes[1] + "/" + partes[0];
+  // Extracción y procesamiento de datos de la CURP
+  let fechaNacimiento = curp.substring(4, 10);
+  let sexo = curp.substring(10, 11);
+  let estadoCodigo = curp.substring(11, 13);
+
+  // Convertir fecha de nacimiento a formato YYYY-MM-DD
+  fechaNacimiento =
+    "19" + fechaNacimiento.replace(/^(\d{2})(\d{2})(\d{2})$/, "$3-$2-$1");
+
+  // Convertir código de sexo a descripción completa
+  sexo = sexo === "H" ? "Hombre" : sexo === "M" ? "Mujer" : incorrecto;
 
   // Mapeo de códigos de estado a nombres de estado
   const estados = {
@@ -52,17 +60,19 @@ const ChecarCURP = (props) => {
     ZS: "Zacatecas",
   };
 
-  const incorrecto = "CURP incorrecto";
+  let estadoNacimiento = estados[estadoCodigo] || incorrecto;
 
-  if (sexo === "H") {
-    sexo = "Hombre";
-  } else if (sexo === "M") {
-    sexo = "Mujer";
-  } else {
-    sexo = incorrecto;
-  }
+  // Actualizar el contexto del usuario
+  setUser({
+    ...user,
+    fechaNacimiento: fechaNacimiento,
+    sexo: sexo,
+    estadoNacimiento: estadoNacimiento,
+  });
+};
 
-  if (estados[estado]) {
+export default ChecarCURP;
+/*if (estados[estado]) {
     props.fecha(fechaNacimiento);
     props.sexo(sexo);
     props.estado(estados[estado]);
@@ -71,6 +81,4 @@ const ChecarCURP = (props) => {
     props.sexo(incorrecto);
     props.estado(incorrecto);
   }
-};
-
-export default ChecarCURP;
+};*/

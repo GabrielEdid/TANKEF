@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, Animated } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import { UserContext } from "../hooks/UserContext";
 
 const DropDown = (props) => {
   const animation = useState(new Animated.Value(0))[0];
-
+  const { user, setUser } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+
+  const onSelectItem = (itemValue) => {
+    moveUpAnimation();
+    if (props.dropdown === "civil") {
+      setUser({ ...user, estadoCivil: itemValue.value });
+    } else if (props.dropdown === "ocupacion") {
+      setUser({ ...user, ocupacion: itemValue.value });
+    }
+  };
+
   const [dataEstadoCivil, setDataEstadoCivil] = useState([
     { label: "Soltero/a", value: "Soltero/a" },
     { label: "Casado/a", value: "Casado/a" },
@@ -101,10 +112,7 @@ const DropDown = (props) => {
             setOpen={setOpen}
             setValue={setValue}
             setItems={setDataEstadoCivil}
-            onSelectItem={(itemValue) => {
-              moveUpAnimation(); // Call the animation function
-              props.set(itemValue); // Call the set function with the selected value
-            }}
+            onSelectItem={onSelectItem}
           />
           <Animated.Text
             style={[styles.texto, { transform: [{ translateY: animation }] }]}
@@ -126,10 +134,7 @@ const DropDown = (props) => {
             setOpen={setOpen}
             setValue={setValue}
             setItems={setDataOcupacion}
-            onSelectItem={(itemValue) => {
-              moveUpAnimation(); // Call the animation function
-              props.set(itemValue); // Call the set function with the selected value
-            }}
+            onSelectItem={onSelectItem}
           />
           <Animated.Text
             style={[styles.texto, { transform: [{ translateY: animation }] }]}

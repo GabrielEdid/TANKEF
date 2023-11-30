@@ -42,24 +42,23 @@ const SpecialInput = (props) => {
   };
 
   useEffect(() => {
-    if (!props.editable) {
-      if (props.value) {
-        moveUpAnimation();
-      } else {
-        moveDownAnimation();
-      }
+    const currentValue = props.editable ? field : user[props.context];
+    if (currentValue) {
+      moveUpAnimation();
+    } else {
+      moveDownAnimation();
     }
-  }, [props.value, props.editable]);
+  }, [field, user, props.context, props.editable]);
 
   return (
     <View style={styles.container}>
       <TextInput
         onChangeText={handleChangeText}
-        value={props.editable ? field : user}
+        value={props.editable ? field : user[props.context]}
         style={[
           styles.input,
           !props.editable && { borderColor: "grey" },
-          props.password && { paddingRight: 40 }, // Ajuste para el botón de mostrar/ocultar
+          props.password && { paddingRight: 40 },
         ]}
         onFocus={moveUpAnimation}
         onBlur={() => {
