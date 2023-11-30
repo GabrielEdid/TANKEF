@@ -17,6 +17,7 @@ import SpecialInput from "../components/SpecialInput";
 
 const Registro4 = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   /*function createUser() {
     createUserWithEmailAndPassword(auth, email, password)
@@ -54,13 +55,11 @@ const Registro4 = ({ navigation }) => {
   };
 
   const verificarCampos = () => {
-    return (
-      user.email !== "" && user.password !== "" && user.confirmPassword !== ""
-    );
+    return user.email !== "" && user.password !== "" && confirmPassword !== "";
   };
 
   const verificarContraseñas = () => {
-    return user.password === user.confirmPassword ? true : false;
+    return user.password === confirmPassword ? true : false;
   };
 
   const handleSiguiente = () => {
@@ -121,6 +120,7 @@ const Registro4 = ({ navigation }) => {
             />
             <SpecialInput
               field="Confirmar Contraseña"
+              set={setConfirmPassword}
               editable={true}
               password={true}
               context={"confirmPassword"}

@@ -14,7 +14,6 @@ export const UserProvider = ({ children }) => {
     loogedIn: false,
     email: "",
     password: "",
-    confirmPassword: "",
     pin: "",
   });
 
