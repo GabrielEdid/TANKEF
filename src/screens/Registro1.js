@@ -9,12 +9,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState } from "react";
-import { auth } from "../../firebaseConfig";
-//import auth from "@react-native-firebase/auth";
+import React, { useRef, useState } from 'react'
+import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import { firebaseConfig, auth } from '../../firebaseConfig'
+import firebase from 'firebase/compat/app';
 import CountryPicker from "react-native-country-picker-modal";
 import { AntDesign } from "@expo/vector-icons";
-import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 
 const Registro1 = ({ navigation }) => {
   const [countryCode, setCountryCode] = useState("MX");
@@ -22,6 +22,20 @@ const Registro1 = ({ navigation }) => {
   const [number, setNumber] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
 
+
+  
+    
+  const [verificationId, setVerificationId] = useState(null);
+  const recaptchaVerifier = useRef(null);
+
+  const sendVerification = () => {
+      const phoneProvider = new firebase.auth.PhoneAuthProvider();
+      phoneProvider
+        .verifyPhoneNumber("+"+callingCode+number, recaptchaVerifier.current)
+        .then(setVerificationId);
+  };
+
+    
   /*const sendOTP = async () => {
     try {
       const appVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
@@ -91,6 +105,10 @@ const Registro1 = ({ navigation }) => {
         {/* Fin Logo, Titulo y Avance */}
         {/* Contenedor */}
         <View style={styles.container}>
+          <FirebaseRecaptchaVerifierModal
+                  ref={recaptchaVerifier}
+                  firebaseConfig={firebaseConfig}
+              />
           <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>
           {/* Seleccionar Pais */}
           <TouchableOpacity
@@ -149,8 +167,8 @@ const Registro1 = ({ navigation }) => {
           <TouchableOpacity
             style={styles.boton}
             onPress={() =>
-              /*sendOTP()}*/
-              navigation.navigate("Registro2", { callingCode, number })
+              [sendVerification(),
+              navigation.navigate("Registro2", { callingCode, number, verificationId })]
             }
           >
             <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>

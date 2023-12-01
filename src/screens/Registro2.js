@@ -6,14 +6,46 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert
 } from "react-native";
-import React from "react";
+import React, {useState, useRef} from "react";
 import { AntDesign } from "@expo/vector-icons";
 import CodigoSMS from "../components/CodigoSMS";
+import firebase from 'firebase/compat/app';
 
 const Registro2 = ({ navigation, route }) => {
-  const { callingCode, number } = route.params;
+  const { callingCode, number, verificationId } = route.params;
   const phoneNumber = "+" + callingCode + " " + number;
+  const [code, setCode] = useState('');
+
+
+  const recaptchaVerifier = useRef(null);
+
+  const sendVerification = () => {
+      const phoneProvider = new firebase.auth.PhoneAuthProvider();
+      phoneProvider
+        .verifyPhoneNumber("+"+callingCode+number, recaptchaVerifier.current)
+        .then(verificationId);
+  };
+
+  const confirmCode = () => {
+    const credential = firebase.auth.PhoneAuthProvider.credential(
+      verificationId,
+      code
+    );
+    firebase
+      .auth()
+      .signInWithCredential(credential)
+      .then(() => {
+        setCode('');
+        navigation.navigate("Registro3");
+    })
+    .catch((error) => {
+      // show an alert in case of error
+      alert(error);
+    })
+    
+};
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -44,13 +76,14 @@ const Registro2 = ({ navigation, route }) => {
             <CodigoSMS />
           </View>
         </View>
-        <TouchableOpacity style={styles.botonChico}>
+        <TouchableOpacity style={styles.botonChico} onPress={()=> sendVerification}>
           <Text style={styles.textoBotonChico}>No recibí el codigo</Text>
         </TouchableOpacity>
         {/* Boton Craer Cuenta */}
         <TouchableOpacity
           style={styles.botonGrande}
-          onPress={() => navigation.navigate("Registro3")}
+          onPress={() =>
+            confirmCode()}
         >
           <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
         </TouchableOpacity>
