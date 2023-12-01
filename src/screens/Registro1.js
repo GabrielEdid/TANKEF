@@ -9,10 +9,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useRef, useState } from 'react'
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { firebaseConfig, auth } from '../../firebaseConfig'
-import firebase from 'firebase/compat/app';
+import React, { useRef, useState } from "react";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { firebaseConfig, auth } from "../../firebaseConfig";
+import firebase from "firebase/compat/app";
 import CountryPicker from "react-native-country-picker-modal";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -22,20 +22,24 @@ const Registro1 = ({ navigation }) => {
   const [number, setNumber] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
 
-
-  
-    
-  const [verificationId, setVerificationId] = useState(null);
+  const [verificationId, setVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);
 
   const sendVerification = () => {
-      const phoneProvider = new firebase.auth.PhoneAuthProvider();
-      phoneProvider
-        .verifyPhoneNumber("+"+callingCode+number, recaptchaVerifier.current)
-        .then(setVerificationId);
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    phoneProvider
+      .verifyPhoneNumber("+" + callingCode + number, recaptchaVerifier.current)
+      .then(
+        setVerificationId,
+        console.log("Hola" + verificationId),
+        navigation.navigate("Registro2", {
+          callingCode,
+          number,
+          verificationId,
+        })
+      );
   };
 
-    
   /*const sendOTP = async () => {
     try {
       const appVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
@@ -106,9 +110,9 @@ const Registro1 = ({ navigation }) => {
         {/* Contenedor */}
         <View style={styles.container}>
           <FirebaseRecaptchaVerifierModal
-                  ref={recaptchaVerifier}
-                  firebaseConfig={firebaseConfig}
-              />
+            ref={recaptchaVerifier}
+            firebaseConfig={firebaseConfig}
+          />
           <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>
           {/* Seleccionar Pais */}
           <TouchableOpacity
@@ -166,10 +170,7 @@ const Registro1 = ({ navigation }) => {
           {/* Boton Craer Cuenta */}
           <TouchableOpacity
             style={styles.boton}
-            onPress={() =>
-              [sendVerification(),
-              navigation.navigate("Registro2", { callingCode, number, verificationId })]
-            }
+            onPress={() => sendVerification()}
           >
             <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
           </TouchableOpacity>

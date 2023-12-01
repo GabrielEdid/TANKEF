@@ -6,29 +6,22 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert
+  Alert,
 } from "react-native";
-import React, {useState, useRef} from "react";
+import React, { useState, useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { UserContext } from "../hooks/UserContext";
 import CodigoSMS from "../components/CodigoSMS";
-import firebase from 'firebase/compat/app';
+import firebase from "firebase/compat/app";
 
 const Registro2 = ({ navigation, route }) => {
   const { callingCode, number, verificationId } = route.params;
+  const { user, setUser } = useContext(UserContext);
+  const [code, setCode] = useState("");
   const phoneNumber = "+" + callingCode + " " + number;
-  const [code, setCode] = useState('');
-
-
-  const recaptchaVerifier = useRef(null);
-
-  const sendVerification = () => {
-      const phoneProvider = new firebase.auth.PhoneAuthProvider();
-      phoneProvider
-        .verifyPhoneNumber("+"+callingCode+number, recaptchaVerifier.current)
-        .then(verificationId);
-  };
 
   const confirmCode = () => {
+    console.log(code);
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verificationId,
       code
@@ -36,16 +29,18 @@ const Registro2 = ({ navigation, route }) => {
     firebase
       .auth()
       .signInWithCredential(credential)
-      .then(() => {
-        setCode('');
+      .then((response) => {
+        console.log(response.user.uid);
+        setUser({ ...user, FireBaseUIDCell: response.user.uid });
+        console.log(user);
+        setCode("");
         navigation.navigate("Registro3");
-    })
-    .catch((error) => {
-      // show an alert in case of error
-      alert(error);
-    })
-    
-};
+      })
+      .catch((error) => {
+        // show an alert in case of error
+        alert(error);
+      });
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -73,17 +68,19 @@ const Registro2 = ({ navigation, route }) => {
             Introduce el código de 6 dígitos enviado al {phoneNumber}
           </Text>
           <View style={styles.codigo}>
-            <CodigoSMS />
+            <CodigoSMS setCode={setCode} />
           </View>
         </View>
-        <TouchableOpacity style={styles.botonChico} onPress={()=> sendVerification}>
+        <TouchableOpacity
+          style={styles.botonChico}
+          onPress={() => sendVerification}
+        >
           <Text style={styles.textoBotonChico}>No recibí el codigo</Text>
         </TouchableOpacity>
         {/* Boton Craer Cuenta */}
         <TouchableOpacity
           style={styles.botonGrande}
-          onPress={() =>
-            confirmCode()}
+          onPress={() => confirmCode()}
         >
           <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
         </TouchableOpacity>

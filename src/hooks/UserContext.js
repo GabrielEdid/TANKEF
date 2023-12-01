@@ -15,7 +15,8 @@ export const UserProvider = ({ children }) => {
     email: "",
     password: "",
     pin: "",
-    FireBaseUID: "",
+    FireBaseUIDMail: "",
+    FireBaseUIDCell: "",
   });
 
   return (

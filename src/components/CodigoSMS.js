@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
-const CodigoSMS = () => {
+const CodigoSMS = ({ setCode }) => {
   const [digit1, setDigit1] = useState("");
   const [digit2, setDigit2] = useState("");
   const [digit3, setDigit3] = useState("");
@@ -83,6 +83,7 @@ const CodigoSMS = () => {
         value={digit6}
         onChangeText={(text) => {
           setDigit6(text);
+          setCode(digit1 + digit2 + digit3 + digit4 + digit5 + text);
           if (!text) digit5Ref.current.focus();
         }}
         style={styles.input}

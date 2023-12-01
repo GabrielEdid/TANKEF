@@ -29,8 +29,7 @@ const Registro4 = ({ navigation }) => {
         user.email,
         user.password
       );
-      const uid = response.user.uid;
-      setUser({ ...user, uid: uid });
+      setUser({ ...user, FireBaseUIDMail: response.user.uid });
       navigation.navigate("SetPinPad");
     } catch (error) {
       console.log(error);
