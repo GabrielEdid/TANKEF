@@ -29,17 +29,6 @@ const PinPad = ({ navigation, ...props }) => {
     );
   };
 
-  const onFullPinEntered = (enteredPin) => {
-    // Aquí validarías el PIN
-    Alert.alert("PIN Ingresado", `El PIN ingresado es: ${enteredPin}`);
-  };
-
-  useEffect(() => {
-    if (props.get.length === 6) {
-      onFullPinEntered(props.get);
-    }
-  }, [props.get]);
-
   const renderPinIndicators = () => {
     const indicators = [];
     for (let i = 0; i < 6; i++) {

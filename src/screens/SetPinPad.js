@@ -13,6 +13,10 @@ import { AntDesign } from "@expo/vector-icons";
 const SetPinPad = ({ navigation }) => {
   const [pin, setPin] = useState("");
 
+  const handleSetPin = (newPin) => {
+    setPin(newPin);
+  };
+
   return (
     <View>
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -27,7 +31,13 @@ const SetPinPad = ({ navigation }) => {
       {pin.length === 6 ? (
         <TouchableOpacity
           style={styles.botonGrande}
-          onPress={() => [navigation.navigate("Main"), console.log(pin)]}
+          onPress={() => [
+            navigation.navigate("ConfirmSetPinPad", {
+              pin: pin,
+              onSetPin: handleSetPin,
+            }),
+            console.log(pin),
+          ]}
         >
           <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
         </TouchableOpacity>
@@ -41,7 +51,6 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginLeft: 20,
     position: "absolute",
-    zIndex: 50000000000,
   },
   botonGrande: {
     marginTop: 750,

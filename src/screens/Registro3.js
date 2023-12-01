@@ -59,22 +59,6 @@ const Registro3 = ({ navigation }) => {
     }
   }, [user.CURP, setUser]);
 
-  /*useEffect(() => {
-    if (user.CRUP === 18) {
-      // Ejecutar lógica para procesar CURP
-    } else {
-      setUser({ ...user, fechaNacimiento: "" });
-      setUser({ ...user, estadoNacimiento: "" });
-      setUser({ ...user, sexo: "" });
-    }
-  }, [user.CURP]);
-
-  useEffect(() => {
-    if (user.CURP && user.CURP.length === 18) {
-      ChecarCURP();
-    }
-  }, [user.CURP]);*/
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
@@ -139,7 +123,7 @@ const Registro3 = ({ navigation }) => {
         {/* Boton Craer Cuenta */}
         <TouchableOpacity
           style={styles.botonGrande}
-          onPress={() => [handleSiguiente(), console.log(user)]}
+          onPress={() => handleSiguiente()}
         >
           <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
         </TouchableOpacity>

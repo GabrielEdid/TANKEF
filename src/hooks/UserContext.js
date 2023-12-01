@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
     sexo: "",
     ocupacion: "",
     estadoCivil: "",
-    loogedIn: false,
+    loggedIn: false,
     email: "",
     password: "",
     pin: "",
