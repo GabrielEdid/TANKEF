@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PinPad from "../components/PinPad";
 import { UserContext } from "../hooks/UserContext";
 import { AntDesign } from "@expo/vector-icons";
@@ -12,7 +12,6 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   const handleConfirmPin = () => {
     if (confirmPin === pin) {
       setUser({ ...user, pin: confirmPin, loggedIn: true });
-      console.log(user);
       navigation.navigate("Main");
     } else {
       alert("Los Pines no Coinciden");
@@ -31,13 +30,14 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
           style={styles.back}
         />
       </TouchableOpacity>
+      <Text style={styles.titulo}>Confirma tu PIN</Text>
       <PinPad id={false} get={confirmPin} set={setConfirmPin} />
       {confirmPin.length === 6 ? (
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => [handleConfirmPin(), console.log(confirmPin)]}
         >
-          <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
+          <Text style={styles.textoBotonGrande}>GUARDAR PIN</Text>
         </TouchableOpacity>
       ) : null}
     </View>
@@ -49,7 +49,13 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginLeft: 20,
     position: "absolute",
-    zIndex: 50000000000,
+  },
+  titulo: {
+    marginTop: 210,
+    fontSize: 15,
+    alignSelf: "center",
+    position: "absolute",
+    color: "#29364d",
   },
   botonGrande: {
     marginTop: 750,

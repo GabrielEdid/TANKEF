@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
     email: "",
     password: "",
     pin: "",
+    FireBaseUID: "",
   });
 
   return (

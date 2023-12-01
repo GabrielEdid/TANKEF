@@ -27,6 +27,7 @@ const SetPinPad = ({ navigation }) => {
           style={styles.back}
         />
       </TouchableOpacity>
+      <Text style={styles.titulo}>Crea tu PIN</Text>
       <PinPad id={false} get={pin} set={setPin} />
       {pin.length === 6 ? (
         <TouchableOpacity
@@ -51,6 +52,13 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginLeft: 20,
     position: "absolute",
+  },
+  titulo: {
+    marginTop: 210,
+    fontSize: 15,
+    alignSelf: "center",
+    position: "absolute",
+    color: "#29364d",
   },
   botonGrande: {
     marginTop: 750,

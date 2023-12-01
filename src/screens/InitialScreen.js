@@ -43,8 +43,7 @@ const InitialScreen = ({ navigation }) => {
     setIsLoading(true); // Inicia el proceso de carga
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
-      navigation.navigate("PinPad");
+      navigation.navigate("Main");
     } catch (error) {
       console.log(error);
       alert("Sign In Failed: " + error.message);

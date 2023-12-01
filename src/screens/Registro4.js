@@ -21,7 +21,7 @@ const Registro4 = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  /*const createUser = async () => {
+  const createUser = async () => {
     setIsLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(
@@ -29,15 +29,15 @@ const Registro4 = ({ navigation }) => {
         user.email,
         user.password
       );
-      console.log(response);
-      alert("Check Your Emails!");
+      const uid = response.user.uid;
+      setUser({ ...user, uid: uid });
       navigation.navigate("SetPinPad");
     } catch (error) {
       console.log(error);
       alert("Registration Failed: " + error.message);
     }
     setIsLoading(false);
-  };*/
+  };
 
   const verificarCampos = () => {
     return user.email !== "" && user.password !== "" && confirmPassword !== "";
@@ -64,7 +64,7 @@ const Registro4 = ({ navigation }) => {
       );
     } else {
       navigation.navigate("SetPinPad");
-      //createUser();
+      createUser();
     }
   };
 

@@ -21,11 +21,6 @@ function LoginFlow() {
     <UserProvider>
       <Stack.Navigator>
         <Stack.Screen
-          name="SetPinPad"
-          component={SetPinPad}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
           name="InitialScreen"
           component={InitialScreen}
           options={{ headerShown: false }}
@@ -35,11 +30,11 @@ function LoginFlow() {
           component={ConfirmSetPinPad}
           options={{ headerShown: false }}
         />
-        {/*<Stack.Screen
+        <Stack.Screen
           name="SetPinPad"
           component={SetPinPad}
           options={{ headerShown: false }}
-  />*/}
+        />
         <Stack.Screen
           name="Registro1"
           component={Registro1}
