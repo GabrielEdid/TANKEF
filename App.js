@@ -10,7 +10,8 @@ import Registro2 from "./src/screens/Registro2";
 import Registro3 from "./src/screens/Registro3";
 import Registro4 from "./src/screens/Registro4";
 import Main from "./src/screens/Main.js";
-import PinPad from "./src/screens/PinPad.js";
+import SetPinPad from "./src/screens/SetPinPad";
+import ConfirmSetPinPad from "./src/screens/ConfirmSetPinPad";
 
 // Create a stack navigator
 const Stack = createStackNavigator();
@@ -20,15 +21,25 @@ function LoginFlow() {
     <UserProvider>
       <Stack.Navigator>
         <Stack.Screen
+          name="SetPinPad"
+          component={SetPinPad}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="InitialScreen"
           component={InitialScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="PinPad"
-          component={PinPad}
+          name="ConfirmSetPinPad"
+          component={ConfirmSetPinPad}
           options={{ headerShown: false }}
         />
+        {/*<Stack.Screen
+          name="SetPinPad"
+          component={SetPinPad}
+          options={{ headerShown: false }}
+  />*/}
         <Stack.Screen
           name="Registro1"
           component={Registro1}

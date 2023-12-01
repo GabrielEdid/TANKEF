@@ -11,17 +11,15 @@ import {
 } from "react-native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
-const PinPad = ({ navigation }) => {
-  const [pin, setPin] = useState("");
-
+const PinPad = ({ navigation, ...props }) => {
   const addDigit = (digit) => {
-    if (pin.length < 6) {
-      setPin((prevPin) => prevPin + digit);
+    if (props.get.length < 6) {
+      props.set((prevPin) => prevPin + digit);
     }
   };
 
   const removeLastDigit = () => {
-    setPin((prevPin) => prevPin.slice(0, -1));
+    props.set((prevPin) => prevPin.slice(0, -1));
   };
 
   const onForgotPin = () => {
@@ -37,10 +35,10 @@ const PinPad = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (pin.length === 6) {
-      onFullPinEntered(pin);
+    if (props.get.length === 6) {
+      onFullPinEntered(props.get);
     }
-  }, [pin]);
+  }, [props.get]);
 
   const renderPinIndicators = () => {
     const indicators = [];
@@ -50,7 +48,7 @@ const PinPad = ({ navigation }) => {
           key={i}
           style={[
             styles.pinIndicator,
-            pin.length > i && styles.pinIndicatorFilled,
+            props.get.length > i && styles.pinIndicatorFilled,
           ]}
         />
       );
@@ -62,14 +60,6 @@ const PinPad = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
         {/* Logo, Titulo y Avance */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={40}
-            color="#29364d"
-            style={styles.back}
-          />
-        </TouchableOpacity>
         <Image
           source={require("../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
@@ -96,7 +86,9 @@ const PinPad = ({ navigation }) => {
         ))}
         <View style={styles.keypadRow}>
           <TouchableOpacity style={styles.keypadButton} onPress={onForgotPin}>
-            <Ionicons name="finger-print-outline" size={24} color="#29364d" />
+            {props.id === true ? (
+              <Ionicons name="finger-print-outline" size={24} color="#29364d" />
+            ) : null}
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.keypadButton}
@@ -111,9 +103,11 @@ const PinPad = ({ navigation }) => {
             <Feather name="delete" size={24} color="#29364d" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={onForgotPin}>
-          <Text style={styles.forgotPinText}>Olvidé mi PIN</Text>
-        </TouchableOpacity>
+        {props.id === true ? (
+          <TouchableOpacity onPress={onForgotPin}>
+            <Text style={styles.forgotPinText}>Olvidé mi PIN</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -121,14 +115,7 @@ const PinPad = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   // Tus estilos existentes
-  back: {
-    marginTop: 80,
-    marginLeft: -160,
-    position: "absolute",
-  },
   background: {
-    backgroundColor: "white",
-    flex: 1,
     alignItems: "center",
   },
   imagen: {
@@ -146,8 +133,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
   },
-
-  // Nuevos estilos que agregué
   pinContainer: {
     flexDirection: "row",
     marginTop: 240,

@@ -14,7 +14,7 @@ import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-const Registro1 = ({ navigation }) => {
+const InitialScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Nuevo estado para manejar el proceso de carga
@@ -169,4 +169,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Registro1;
+export default InitialScreen;
