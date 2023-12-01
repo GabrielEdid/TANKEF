@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig, auth } from "../../firebaseConfig";
 import firebase from "firebase/compat/app";
@@ -25,21 +25,35 @@ const Registro1 = ({ navigation }) => {
   const [verificationId, setVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);
 
+
+  useEffect(() => {
+    // This code will run whenever `verificationId` changes
+    console.log('Verification ID changed:', verificationId);
+    console.log("Hola" + verificationId);
+    if (verificationId != undefined && verificationId != null && verificationId != "") {
+      // Any additional logic you want to run when the text changes
+      navigation.navigate("Registro2", {
+        callingCode,
+        number,
+        verificationId,
+      })
+    }
+    // Place your logic here
+    // For example, you might want to enable a button when verificationId is not empty
+  }, [verificationId]); 
+  
+  
+  
   const sendVerification = () => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider
       .verifyPhoneNumber("+" + callingCode + number, recaptchaVerifier.current)
       .then(
         setVerificationId,
-        console.log("Hola" + verificationId),
-        navigation.navigate("Registro2", {
-          callingCode,
-          number,
-          verificationId,
-        })
-      );
+      )
   };
 
+    
   /*const sendOTP = async () => {
     try {
       const appVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
@@ -111,6 +125,7 @@ const Registro1 = ({ navigation }) => {
         <View style={styles.container}>
           <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
+            onVerify={(token) => []}
             firebaseConfig={firebaseConfig}
           />
           <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>
