@@ -6,20 +6,32 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PinPad from "../components/PinPad";
+import { auth } from "../../firebaseConfig";
 import { AntDesign } from "@expo/vector-icons";
+import { UserContext } from "../hooks/UserContext";
 
 const SetPinPad = ({ navigation }) => {
+  const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
 
   const handleSetPin = (newPin) => {
     setPin(newPin);
   };
 
+  const handleGoBack = () => {
+    navigation.goBack();
+    let user = auth.currentUser;
+    user
+      .delete()
+      .then(() => console.log("User deleted"))
+      .catch((error) => console.log(error));
+  };
+
   return (
     <View>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={() => handleGoBack()} style={{ zIndex: 10 }}>
         <AntDesign
           name="arrowleft"
           size={40}

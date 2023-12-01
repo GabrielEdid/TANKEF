@@ -17,7 +17,6 @@ const useAsyncStorage = ({ key, initialValue }) => {
         console.error(`useAsyncStorage getItem ${key} error:`, error);
       }
     };
-
     if (key) {
       fetchData();
     }

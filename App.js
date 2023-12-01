@@ -12,54 +12,67 @@ import Registro4 from "./src/screens/Registro4";
 import Main from "./src/screens/Main.js";
 import SetPinPad from "./src/screens/SetPinPad";
 import ConfirmSetPinPad from "./src/screens/ConfirmSetPinPad";
+import useAsyncStorage from "./src/hooks/AsyncStorage";
 
 // Create a stack navigator
 const Stack = createStackNavigator();
 
 function LoginFlow() {
+  const [userData] = useAsyncStorage({ key: "userData", initialValue: null });
+
   return (
     <UserProvider>
       <Stack.Navigator>
-        <Stack.Screen
-          name="InitialScreen"
-          component={InitialScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ConfirmSetPinPad"
-          component={ConfirmSetPinPad}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SetPinPad"
-          component={SetPinPad}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro1"
-          component={Registro1}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro2"
-          component={Registro2}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro3"
-          component={Registro3}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro4"
-          component={Registro4}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Main"
-          component={Main}
-          options={{ headerShown: false }}
-        />
+        {userData && userData?.loggedIn ? (
+          <Stack.Screen
+            name="Main"
+            component={Main}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <>
+            <Stack.Screen
+              name="InitialScreen"
+              component={InitialScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ConfirmSetPinPad"
+              component={ConfirmSetPinPad}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SetPinPad"
+              component={SetPinPad}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Registro1"
+              component={Registro1}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Registro2"
+              component={Registro2}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Registro3"
+              component={Registro3}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Registro4"
+              component={Registro4}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Main"
+              component={Main}
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </UserProvider>
   );

@@ -35,6 +35,7 @@ const Registro4 = ({ navigation }) => {
     } catch (error) {
       console.log(error);
       alert("Registration Failed: " + error.message);
+      navigation.navigate("Registro4");
     }
     setIsLoading(false);
   };

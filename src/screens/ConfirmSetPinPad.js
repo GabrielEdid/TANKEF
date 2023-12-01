@@ -2,16 +2,27 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import PinPad from "../components/PinPad";
 import { UserContext } from "../hooks/UserContext";
+import useAsyncStorage from "../hooks/AsyncStorage";
 import { AntDesign } from "@expo/vector-icons";
 
 const ConfirmSetPinPad = ({ navigation, route }) => {
   const { user, setUser } = useContext(UserContext);
   const { pin, onSetPin } = route.params;
+  const [userData, setUserData] = useAsyncStorage({
+    key: "userData",
+    initialValue: null,
+  });
   const [confirmPin, setConfirmPin] = useState("");
 
   const handleConfirmPin = () => {
     if (confirmPin === pin) {
       setUser({ ...user, pin: confirmPin, loggedIn: true });
+      setUserData({
+        uid: user.uid,
+        pin: user.pin,
+        loggedIn: user.loggedIn,
+      });
+
       navigation.navigate("Main");
     } else {
       alert("Los Pines no Coinciden");
@@ -22,7 +33,10 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
 
   return (
     <View>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{ zIndex: 10 }}
+      >
         <AntDesign
           name="arrowleft"
           size={40}
@@ -49,6 +63,7 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginLeft: 20,
     position: "absolute",
+    zIndex: 10000000,
   },
   titulo: {
     marginTop: 210,
