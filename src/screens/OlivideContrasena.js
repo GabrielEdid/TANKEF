@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  Alert,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
@@ -12,14 +13,14 @@ import React, { useState, useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { UserContext } from "../hooks/UserContext";
 import { auth } from "../../firebaseConfig";
+import { sendPasswordResetEmail } from "firebase/auth";
 
-const OlvideContraseña = ({ navigation }) => {
+const OlvideContrasena = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
 
   const sendResetPasswordEmail = (email) => {
-    auth
-      .sendPasswordResetEmail(email)
+    sendPasswordResetEmail(auth, email)
       .then(() => {
         Alert.alert(
           "Correo Enviado",
@@ -29,12 +30,7 @@ const OlvideContraseña = ({ navigation }) => {
         );
       })
       .catch((error) => {
-        Alert.alert(
-          "Error al Enviar el Correo",
-          error,
-          [{ text: "Entendido" }],
-          { cancelable: true }
-        );
+        alert("No se pudo enviar el correo: " + error.message);
       });
   };
 
@@ -171,4 +167,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OlvideContraseña;
+export default OlvideContrasena;

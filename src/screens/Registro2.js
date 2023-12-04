@@ -42,7 +42,11 @@ const Registro2 = ({ navigation, route }) => {
       .signInWithCredential(credential)
       .then((response) => {
         let UID = response.user.uid;
-        setUser({ ...user, FireBaseUIDCell: UID });
+        setUser({
+          ...user,
+          FireBaseUIDTel: UID,
+          telefono: "+" + callingCode + number,
+        });
         setCode("");
         navigation.navigate("Registro3");
       })

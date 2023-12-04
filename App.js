@@ -12,7 +12,7 @@ import Registro4 from "./src/screens/Registro4";
 import Main from "./src/screens/Main.js";
 import SetPinPad from "./src/screens/SetPinPad";
 import ConfirmSetPinPad from "./src/screens/ConfirmSetPinPad";
-import OlvideContraseña from "./src/screens/OlivideContraseña";
+import OlvideContrasena from "./src/screens/OlivideContrasena.js";
 import useAsyncStorage from "./src/hooks/AsyncStorage";
 
 // Create a stack navigator
@@ -38,8 +38,8 @@ function LoginFlow() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="OlvideContraseña"
-              component={OlvideContraseña}
+              name="OlvideContrasena"
+              component={OlvideContrasena}
               options={{ headerShown: false }}
             />
             <Stack.Screen

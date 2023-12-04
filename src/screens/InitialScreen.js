@@ -12,8 +12,6 @@ import React, { useState } from "react";
 import SpecialInput from "../components/SpecialInput";
 import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import Typography from "react-native-ui-lib/src/style/typographyPresets";
 
 const InitialScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -59,7 +57,7 @@ const InitialScreen = ({ navigation }) => {
               set={setPassword}
             />
             <TouchableOpacity
-              onPress={() => navigation.navigate("OlvideContraseña")}
+              onPress={() => navigation.navigate("OlvideContrasena")}
             >
               <Text style={styles.textoOlvideContraseña}>
                 Olvide mi Contraseña

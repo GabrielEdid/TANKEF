@@ -12,11 +12,12 @@ export const UserProvider = ({ children }) => {
     ocupacion: "",
     estadoCivil: "",
     loggedIn: false,
+    telefono: "",
     email: "",
     password: "",
     pin: "",
     FireBaseUIDMail: "",
-    FireBaseUIDCell: "",
+    FireBaseUIDTel: "",
   });
 
   return (

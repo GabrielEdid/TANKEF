@@ -12,7 +12,10 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "../hooks/UserContext";
 import AsyncStorage from "../hooks/AsyncStorage";
 import { auth } from "../../firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { AntDesign } from "@expo/vector-icons";
 import SpecialInput from "../components/SpecialInput";
 
@@ -29,7 +32,15 @@ const Registro4 = ({ navigation }) => {
         user.email,
         user.password
       );
-      setUser({ ...user, FireBaseUIDMail: response.user.uid });
+      const newUser = response.user;
+      setUser({ ...user, FireBaseUIDMail: newUser.uid });
+      sendEmailVerification(newUser);
+      Alert.alert(
+        "Correo de Confirmación Enviado",
+        "Checa tu buzon de entrada para confirmar tu correo.",
+        [{ text: "Entendido" }],
+        { cancelable: true }
+      );
       navigation.navigate("SetPinPad");
     } catch (error) {
       console.log(error);
