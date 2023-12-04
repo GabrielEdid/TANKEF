@@ -13,31 +13,12 @@ import SpecialInput from "../components/SpecialInput";
 import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import Typography from "react-native-ui-lib/src/style/typographyPresets";
 
 const InitialScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Nuevo estado para manejar el proceso de carga
-
-  /*function signIn() {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user.uid);
-        navigation.navigate("PinPad");
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error")
-        console.log(errorCode);
-        console.log(errorMessage);
-        // ..
-      });
-      signInWithEmailAndPassword(auth, email, password);
-  }*/
 
   const signIn = async () => {
     setIsLoading(true); // Inicia el proceso de carga
@@ -77,6 +58,13 @@ const InitialScreen = ({ navigation }) => {
               password={true}
               set={setPassword}
             />
+            <TouchableOpacity
+              onPress={() => navigation.navigate("OlvideContraseña")}
+            >
+              <Text style={styles.textoOlvideContraseña}>
+                Olvide mi Contraseña
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         {/* Boton Craer Cuenta */}
@@ -165,6 +153,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontFamily: "conthrax",
+  },
+  textoOlvideContraseña: {
+    color: "#29364d",
+    textAlign: "center",
+    fontSize: 15,
+    marginTop: 10,
+    fontWeight: "bold",
   },
 });
 
