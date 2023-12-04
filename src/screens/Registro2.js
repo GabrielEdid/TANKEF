@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { UserContext } from "../hooks/UserContext";
 import CodigoSMS from "../components/CodigoSMS";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { firebaseConfig, auth } from "../../firebaseConfig";
 import firebase from "firebase/compat/app";
 
 const Registro2 = ({ navigation, route }) => {
@@ -19,28 +20,47 @@ const Registro2 = ({ navigation, route }) => {
   const { user, setUser } = useContext(UserContext);
   const [code, setCode] = useState("");
   const phoneNumber = "+" + callingCode + " " + number;
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [timer, setTimer] = useState(60);
+  const [newVerificationId, setNewVerificationId] = useState("");
+  const recaptchaVerifier = useRef(null);
+
+  const sendVerification = () => {
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    phoneProvider
+      .verifyPhoneNumber("+" + callingCode + number, recaptchaVerifier.current)
+      .then(setNewVerificationId);
+  };
 
   const confirmCode = () => {
-    console.log(code);
     const credential = firebase.auth.PhoneAuthProvider.credential(
-      verificationId,
+      verificationId || newVerificationId,
       code
     );
     firebase
       .auth()
       .signInWithCredential(credential)
       .then((response) => {
-        console.log(response.user.uid);
-        setUser({ ...user, FireBaseUIDCell: response.user.uid });
-        console.log(user);
+        let UID = response.user.uid;
+        setUser({ ...user, FireBaseUIDCell: UID });
         setCode("");
         navigation.navigate("Registro3");
       })
       .catch((error) => {
-        // show an alert in case of error
         alert(error);
       });
   };
+
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setIsButtonEnabled(true);
+    }
+  }, [timer]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -60,6 +80,10 @@ const Registro2 = ({ navigation, route }) => {
         />
         <Text style={styles.titulo}>TANKEF</Text>
         <View style={styles.container}>
+          <FirebaseRecaptchaVerifierModal
+            ref={recaptchaVerifier}
+            firebaseConfig={firebaseConfig}
+          />
           <Image
             source={require("../../assets/images/LoginFlow2.png")}
             style={styles.imagenAvance}
@@ -73,9 +97,21 @@ const Registro2 = ({ navigation, route }) => {
         </View>
         <TouchableOpacity
           style={styles.botonChico}
-          onPress={() => sendVerification}
+          onPress={() => sendVerification()}
+          disabled={!isButtonEnabled}
         >
-          <Text style={styles.textoBotonChico}>No recibí el codigo</Text>
+          {!isButtonEnabled ? (
+            <Text
+              style={[
+                styles.textoBotonChico,
+                !isButtonEnabled && { color: "grey" },
+              ]}
+            >
+              No recibí el codigo (Espera {timer} segundos)
+            </Text>
+          ) : (
+            <Text style={styles.textoBotonChico}>No recibí el codigo</Text>
+          )}
         </TouchableOpacity>
         {/* Boton Craer Cuenta */}
         <TouchableOpacity

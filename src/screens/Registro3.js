@@ -63,7 +63,7 @@ const Registro3 = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
         {/* Logo, Titulo y Avance */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.navigate("Registro1")}>
           <AntDesign
             name="arrowleft"
             size={40}

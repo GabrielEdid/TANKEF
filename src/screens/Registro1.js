@@ -21,87 +21,30 @@ const Registro1 = ({ navigation }) => {
   const [callingCode, setCallingCode] = useState("52");
   const [number, setNumber] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
-
   const [verificationId, setVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);
 
-
   useEffect(() => {
-    // This code will run whenever `verificationId` changes
-    console.log('Verification ID changed:', verificationId);
-    console.log("Hola" + verificationId);
-    if (verificationId != undefined && verificationId != null && verificationId != "") {
-      // Any additional logic you want to run when the text changes
+    if (
+      verificationId != undefined &&
+      verificationId != null &&
+      verificationId != ""
+    ) {
       navigation.navigate("Registro2", {
         callingCode,
         number,
         verificationId,
-      })
+        sendVerification,
+      });
     }
-    // Place your logic here
-    // For example, you might want to enable a button when verificationId is not empty
-  }, [verificationId]); 
-  
-  
-  
+  }, [verificationId]);
+
   const sendVerification = () => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider
       .verifyPhoneNumber("+" + callingCode + number, recaptchaVerifier.current)
-      .then(
-        setVerificationId,
-      )
+      .then(setVerificationId);
   };
-
-    
-  /*const sendOTP = async () => {
-    try {
-      const appVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
-      const confirmation = await signInWithPhoneNumber(
-        auth,
-        "+525568182757",
-        appVerifier
-      );
-      console.log(confirmation);
-    } catch (error) {
-      console.error(error);
-    }
-  };*/
-
-  /* // If null, no SMS has been sent
-  const [confirm, setConfirm] = useState(null);
-
-  // verification code (OTP - One-Time-Passcode)
-  const [code, setCode] = useState("");
-
-  // Handle login
-  function onAuthStateChanged(user) {
-    if (user) {
-      // Some Android devices can automatically process the verification code (OTP) message, and the user would NOT need to enter the code.
-      // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
-      // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
-      // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
-    }
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-
-  // Handle the button press
-  async function signInWithPhoneNumber(phoneNumber) {
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-    setConfirm(confirmation);
-  }
-
-  async function confirmCode() {
-    try {
-      await confirm.confirm(code);
-    } catch (error) {
-      console.log("Invalid code.");
-    }
-  }*/
 
   return (
     //Imagen de Fondo
@@ -125,7 +68,6 @@ const Registro1 = ({ navigation }) => {
         <View style={styles.container}>
           <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
-            onVerify={(token) => []}
             firebaseConfig={firebaseConfig}
           />
           <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>

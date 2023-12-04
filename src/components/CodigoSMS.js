@@ -16,18 +16,40 @@ const CodigoSMS = ({ setCode }) => {
   const digit5Ref = useRef(null);
   const digit6Ref = useRef(null);
 
+  const handlePaste = (text) => {
+    // Divide el texto en dígitos individuales
+    const digits = text.split("");
+
+    // Asigna los dígitos a cada campo de texto
+    if (digits.length === 6) {
+      setDigit1(digits[0]);
+      setDigit2(digits[1]);
+      setDigit3(digits[2]);
+      setDigit4(digits[3]);
+      setDigit5(digits[4]);
+      setDigit6(digits[5]);
+      setCode(digits.join(""));
+      // Mueve el enfoque al final
+      digit6Ref.current.focus();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
         ref={digit1Ref}
         value={digit1}
         onChangeText={(text) => {
-          setDigit1(text);
-          if (text) digit2Ref.current.focus();
+          if (text.length === 1) {
+            setDigit1(text);
+            digit2Ref.current.focus();
+          } else if (text.length === 6) {
+            handlePaste(text);
+          }
         }}
         style={styles.input}
         keyboardType="numeric"
-        maxLength={1}
+        maxLength={6} // Cambia esto a 6 para permitir pegar el código completo
       />
       <TextInput
         ref={digit2Ref}

@@ -5,7 +5,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 
 const Registro1 = ({ navigation }) => {
@@ -15,7 +15,7 @@ const Registro1 = ({ navigation }) => {
       source={require("../../assets/images/Fondo.png")}
       style={styles.background}
     >
-      <TouchableOpacity onPress={() => navigation.navigate("InitialScreen")}>
+      <TouchableOpacity onPress={() => [navigation.navigate("InitialScreen")]}>
         <AntDesign
           name="arrowleft"
           size={40}
