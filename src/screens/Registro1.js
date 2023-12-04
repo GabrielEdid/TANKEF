@@ -10,6 +10,7 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
+import { Animated } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig, auth } from "../../firebaseConfig";
 import firebase from "firebase/compat/app";
@@ -20,21 +21,38 @@ const Registro1 = ({ navigation }) => {
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
   const [number, setNumber] = useState("");
+  const [inputFocused, setInputFocused] = useState(false);
+  const animatedHeight = useRef(new Animated.Value(0)).current;
   const [pickerVisible, setPickerVisible] = useState(false);
   const [verificationId, setVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);
 
+  const handleFocus = () => {
+    setInputFocused(true);
+    Animated.timing(animatedHeight, {
+      toValue: -150, // Valor final de la animación (ajustar según sea necesario)
+      duration: 200, // Duración en milisegundos
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleBlur = () => {
+    setInputFocused(false);
+    Animated.timing(animatedHeight, {
+      toValue: 0, // Vuelve a la posición original
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
   useEffect(() => {
-    if (
-      verificationId != undefined &&
-      verificationId != null &&
-      verificationId != ""
-    ) {
+    if (verificationId) {
+      // Chequea que verificationId tenga un valor válido
       navigation.navigate("Registro2", {
         callingCode,
         number,
         verificationId,
-        sendVerification,
+        sendVerification, // Esto probablemente no funcionará como esperas. Ver punto 4.
       });
     }
   }, [verificationId]);
@@ -65,7 +83,12 @@ const Registro1 = ({ navigation }) => {
         />
         {/* Fin Logo, Titulo y Avance */}
         {/* Contenedor */}
-        <View style={styles.container}>
+        <Animated.View
+          style={[
+            styles.container,
+            { transform: [{ translateY: animatedHeight }] },
+          ]}
+        >
           <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
@@ -98,15 +121,14 @@ const Registro1 = ({ navigation }) => {
           </TouchableOpacity>
           {/* Visualizacion de Codigo de Celular y Telefono */}
           <View style={styles.inputContainer}>
-            <Text>
+            <Text style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={{ fontSize: 18, color: "grey" }}>
-                +{callingCode}{" "}
+                +{callingCode}
               </Text>
               <Text
                 style={{ fontSize: 30, color: "#29364d", letterSpacing: 5 }}
               >
-                {" "}
-                |
+                {" |"}
               </Text>
             </Text>
             <TextInput
@@ -115,6 +137,8 @@ const Registro1 = ({ navigation }) => {
               value={number}
               placeholder={"55 1234 5678"}
               onChangeText={(text) => setNumber(text)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </View>
           {/* Boton Tengo Cuenta */}
@@ -131,7 +155,7 @@ const Registro1 = ({ navigation }) => {
           >
             <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
         {/* Fin Contenedor */}
       </ImageBackground>
     </TouchableWithoutFeedback>
@@ -171,6 +195,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 600,
+    height: 300,
     backgroundColor: "white",
     flex: 1,
   },
@@ -209,6 +234,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 18,
+    backgroundColor: "white",
     color: "#29364d",
     position: "absolute",
     marginTop: 15,
