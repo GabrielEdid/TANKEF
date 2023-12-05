@@ -2,31 +2,42 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import PinPad from "../components/PinPad";
 import { UserContext } from "../hooks/UserContext";
-import useAsyncStorage from "../hooks/AsyncStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 
 const ConfirmSetPinPad = ({ navigation, route }) => {
   const { user, setUser } = useContext(UserContext);
   const { pin, onSetPin } = route.params;
-  const [userData, setUserData] = useAsyncStorage({
-    key: "userData",
-    initialValue: null,
-  });
   const [confirmPin, setConfirmPin] = useState("");
+
+  useEffect(() => {
+    const updateAsyncStorage = async () => {
+      try {
+        const userInfo = {
+          FireBaseUIDMail: user.FireBaseUIDMail,
+          FireBaseUIDTel: user.FireBaseUIDTel,
+          pin: user.pin,
+          loggedIn: user.loggedIn,
+        };
+        await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+        console.log("Informacion guardada con exito");
+      } catch (error) {
+        console.error("Error guardando la información", error);
+      }
+    };
+
+    if (user.loggedIn) {
+      updateAsyncStorage();
+    }
+  }, [user]);
 
   const handleConfirmPin = () => {
     if (confirmPin === pin) {
       setUser({ ...user, pin: confirmPin, loggedIn: true });
-      setUserData({
-        uid: user.uid,
-        pin: user.pin,
-        loggedIn: user.loggedIn,
-      });
-
       navigation.navigate("Main");
     } else {
       alert("Los Pines no Coinciden");
-      onSetPin("");
+      setConfirmPin(""); // Aquí asumo que quieres resetear confirmPin
       navigation.navigate("SetPinPad");
     }
   };
