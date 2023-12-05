@@ -11,23 +11,19 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   const [confirmPin, setConfirmPin] = useState("");
 
   useEffect(() => {
-    const updateAsyncStorage = async () => {
-      try {
-        const userInfo = {
-          FireBaseUIDMail: user.FireBaseUIDMail,
-          FireBaseUIDTel: user.FireBaseUIDTel,
-          pin: user.pin,
-          loggedIn: user.loggedIn,
-        };
-        await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-        console.log("Informacion guardada con exito");
-      } catch (error) {
-        console.error("Error guardando la información", error);
-      }
-    };
+    if (user && user.loggedIn) {
+      const userInfo = {
+        FireBaseUIDMail: user.FireBaseUIDMail,
+        FireBaseUIDTel: user.FireBaseUIDTel,
+        pin: user.pin,
+        loggedIn: user.loggedIn,
+      };
 
-    if (user.loggedIn) {
-      updateAsyncStorage();
+      AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
+        .then(() => console.log("Información guardada con éxito"))
+        .catch((error) =>
+          console.error("Error guardando la información", error)
+        );
     }
   }, [user]);
 

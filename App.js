@@ -10,39 +10,46 @@ import Registro1 from "./src/screens/Registro1";
 import Registro2 from "./src/screens/Registro2";
 import Registro3 from "./src/screens/Registro3";
 import Registro4 from "./src/screens/Registro4";
-import Main from "./src/screens/Main.js";
+import Main from "./src/screens/Main";
 import SetPinPad from "./src/screens/SetPinPad";
 import ConfirmSetPinPad from "./src/screens/ConfirmSetPinPad";
-import OlvideContrasena from "./src/screens/OlivideContrasena.js";
+import OlvideContrasena from "./src/screens/OlivideContrasena";
+import AuthPinPad from "./src/screens/AuthPinPad";
 
 // Create a stack navigator
 const Stack = createStackNavigator();
 
 function LoginFlow() {
   const [userInfo, setUserInfo] = useState(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const loadUserData = async () => {
     try {
       const value = await AsyncStorage.getItem("userInfo");
       if (value !== null) {
-        console.log("Información recuperada con exito");
+        console.log("Información recuperada con éxito");
         console.log(value);
-        return JSON.parse(value); // Retorna el objeto userInfo
+        return JSON.parse(value);
       }
     } catch (error) {
       console.error("Error recuperando la información de usuario", error);
     }
-    return null; // Retorna null si no hay datos o en caso de error
+    return null;
   };
 
   useEffect(() => {
     loadUserData().then((data) => {
-      setUserInfo(data); // Actualiza el estado con los datos obtenidos
+      setUserInfo(data);
+      setIsDataLoaded(true);
     });
   }, []);
 
+  if (!isDataLoaded) {
+    return <AppLoading />;
+  }
+
   const initialRouteName =
-    userInfo && userInfo.loggedIn === true ? "Main" : "InitialScreen";
+    userInfo && userInfo.loggedIn === true ? "AuthPinPad" : "InitialScreen";
 
   return (
     <UserProvider>
@@ -55,6 +62,11 @@ function LoginFlow() {
         <Stack.Screen
           name="OlvideContrasena"
           component={OlvideContrasena}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AuthPinPad"
+          component={AuthPinPad}
           options={{ headerShown: false }}
         />
         <Stack.Screen

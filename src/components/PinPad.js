@@ -9,6 +9,7 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
+import * as LocalAuthentication from "expo-local-authentication";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
 const PinPad = ({ navigation, ...props }) => {
@@ -27,6 +28,31 @@ const PinPad = ({ navigation, ...props }) => {
       "Recuperación de PIN",
       "Función para recuperar el PIN no implementada."
     );
+  };
+
+  const handleAuthentication = async () => {
+    try {
+      // Checking if device is compatible
+      const isCompatible = await LocalAuthentication.hasHardwareAsync();
+
+      if (!isCompatible) {
+        throw new Error("Your device isn't compatible.");
+      }
+
+      // Checking if device has biometrics records
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+      if (!isEnrolled) {
+        throw new Error("No Faces / Fingers found.");
+      }
+
+      // Authenticate user
+      await LocalAuthentication.authenticateAsync();
+
+      Alert.alert("Authenticated", "Welcome back !");
+    } catch (error) {
+      Alert.alert("An error as occured", error?.message);
+    }
   };
 
   const renderPinIndicators = () => {
@@ -74,7 +100,10 @@ const PinPad = ({ navigation, ...props }) => {
           </View>
         ))}
         <View style={styles.keypadRow}>
-          <TouchableOpacity style={styles.keypadButton} onPress={onForgotPin}>
+          <TouchableOpacity
+            style={styles.keypadButton}
+            onPress={handleAuthentication}
+          >
             {props.id === true ? (
               <Ionicons name="finger-print-outline" size={24} color="#29364d" />
             ) : null}
