@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 35,
     alignSelf: "center",
-    marginTop: 220,
+    marginTop: 230,
     position: "absolute",
   },
   container: {
