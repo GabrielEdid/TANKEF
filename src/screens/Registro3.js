@@ -107,7 +107,7 @@ const Registro3 = ({ navigation }) => {
           {/* Entradas de Input */}
           <View
             style={{
-              marginTop: 80,
+              marginTop: 75,
               height: 100,
             }}
             automaticallyAdjustKeyboardInsets={true}

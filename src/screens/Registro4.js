@@ -157,7 +157,7 @@ const Registro4 = ({ navigation }) => {
           {/* Entradas de Input */}
           <View
             style={{
-              marginTop: 80,
+              marginTop: 75,
               height: 100,
             }}
           >
@@ -175,6 +175,11 @@ const Registro4 = ({ navigation }) => {
               password={true}
               context={"confirmPassword"}
             />
+            <Text style={styles.texto}>
+              * La contraseña debe contener al menos 7 caracteres, incluyendo
+              una letra mayúscula, una minúscula, un número y un carácter
+              especial.
+            </Text>
           </View>
         </View>
         {/* Boton Craer Cuenta */}
@@ -238,11 +243,11 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   texto: {
-    fontSize: 16,
-    color: "#29364d",
-    marginTop: 100,
-    alignSelf: "center",
+    color: "grey",
+    fontSize: 10.5,
+    paddingHorizontal: 20,
     position: "absolute",
+    marginTop: 180,
   },
   botonGrande: {
     marginTop: 750,
