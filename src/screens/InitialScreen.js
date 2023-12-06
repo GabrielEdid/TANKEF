@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { UserContext } from "../hooks/UserContext";
@@ -45,16 +46,28 @@ const InitialScreen = ({ navigation }) => {
         }),
       }
     )
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Success:", data);
-        //setUser({ ...user, FireBaseUIDMail: response.user.uid });
+        // Aquí manejas la respuesta exitosa
         navigation.navigate("SetPinPad");
       })
-      .catch((error) => {
-        console.error("Error:", error);
+      .catch((errorResponse) => {
+        errorResponse.json().then((errorData) => {
+          console.error("Error:", errorData);
+          // Aquí puedes juntar los mensajes de error en un string
+          const errorMessages = Object.values(errorData).flat().join(". ");
+          Alert.alert("Error de Inicio de Sesión", errorMessages);
+        });
+      })
+      .finally(() => {
+        setIsLoading(false); // Finaliza el proceso de carga
       });
-    setIsLoading(false); // Finaliza el proceso de carga
   };
 
   return (

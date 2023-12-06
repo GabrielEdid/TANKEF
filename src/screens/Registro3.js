@@ -17,20 +17,21 @@ import { ChecarCURP } from "../hooks/ChecarCURP";
 
 const Registro3 = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
+  const [isCurpVerified, setIsCurpVerified] = useState(false);
 
   const verificarCampos = () => {
     return (
       user.nombre !== "" &&
+      user.apellidoPaterno !== "" &&
+      user.apellidoMaterno !== "" &&
       user.CURP !== "" &&
-      user.CURP !== "CURP incorrecto" &&
+      user.CURP !== "CURP Invalido" &&
       user.fechaNacimiento !== "" &&
-      user.fechaNacimiento !== "CURP incorrecto" &&
+      user.fechaNacimiento !== "CURP Invalido" &&
       user.estadoNacimiento !== "" &&
       user.estadoNacimiento !== "CURP incorrecto" &&
       user.sexo !== "" &&
-      user.sexo !== "CURP incorrecto" &&
-      user.estadoCivil !== "" &&
-      user.ocupacion !== ""
+      user.sexo !== "CURP Invalido"
     );
   };
 
@@ -47,6 +48,20 @@ const Registro3 = ({ navigation }) => {
     }
   };
 
+  const handleGoBack = () => {
+    setUser({
+      ...user,
+      nombre: "",
+      apellidoPaterno: "",
+      apellidoMaterno: "",
+      CURP: "",
+      fechaNacimiento: "",
+      sexo: "",
+      estadoNacimiento: "",
+    });
+    navigation.navigate("Registro1");
+  };
+
   useEffect(() => {
     if (user.CURP && user.CURP.length === 18) {
       const { fechaNacimiento, sexo, estadoNacimiento } = ChecarCURP(user.CURP);
@@ -56,6 +71,14 @@ const Registro3 = ({ navigation }) => {
         sexo,
         estadoNacimiento,
       });
+      setIsCurpVerified(true);
+    } else if (isCurpVerified && user.CURP && user.CURP.length !== 18) {
+      setUser({
+        ...user,
+        fechaNacimiento: "CURP Invalido",
+        sexo: "CURP Invalido",
+        estadoNacimiento: "CURP Invalido",
+      });
     }
   }, [user.CURP, setUser]);
 
@@ -63,7 +86,7 @@ const Registro3 = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
         {/* Logo, Titulo y Avance */}
-        <TouchableOpacity onPress={() => navigation.navigate("Registro1")}>
+        <TouchableOpacity onPress={() => handleGoBack()}>
           <AntDesign
             name="arrowleft"
             size={40}
@@ -90,8 +113,20 @@ const Registro3 = ({ navigation }) => {
             automaticallyAdjustKeyboardInsets={true}
           >
             <SpecialInput
-              field="Nombre Completo"
+              field="Nombre(s)"
               context="nombre"
+              editable={true}
+              set=""
+            />
+            <SpecialInput
+              field="Apellido Paterno"
+              context="apellidoPaterno"
+              editable={true}
+              set=""
+            />
+            <SpecialInput
+              field="Apellido Materno"
+              context="apellidoMaterno"
               editable={true}
               set=""
             />
@@ -108,16 +143,6 @@ const Registro3 = ({ navigation }) => {
               editable={false}
             />
             <SpecialInput field="Sexo" context="sexo" editable={false} />
-            <DropDown
-              field="Estado Civil"
-              context="estadoCivil"
-              dropdown={"civil"}
-            />
-            <DropDown
-              field="Ocupación"
-              context="ocupacion"
-              dropdown={"ocupacion"}
-            />
           </View>
         </View>
         {/* Boton Craer Cuenta */}

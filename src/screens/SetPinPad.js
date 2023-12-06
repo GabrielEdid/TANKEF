@@ -22,11 +22,11 @@ const SetPinPad = ({ navigation }) => {
 
   const handleGoBack = () => {
     navigation.goBack();
-    let user = auth.currentUser;
+    /*let user = auth.currentUser;
     user
       .delete()
       .then(() => console.log("User deleted"))
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error));*/
   };
 
   return (

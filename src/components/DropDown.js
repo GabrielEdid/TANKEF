@@ -3,6 +3,28 @@ import { View, StyleSheet, Animated } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { UserContext } from "../hooks/UserContext";
 
+/*
+USO DE DROPDOWN PICKER:
+
+<DropDown
+field="Estado Civil"
+context="estadoCivil"
+dropdown={"civil"}
+/>
+
+<DropDown
+field="Ocupación"
+context="ocupacion"
+dropdown={"ocupacion"}
+/>
+
+En estos dos ejemplos cada parametro significa lo siguiente:
+field: El texto que aparece en el dropdown picker y que subira o bajara al seleccionar una opcion.
+context: El nombre del campo en el context donde se guardara la opcion seleccionada. Por ejemplo, si el campo es "estadoCivil", la opcion seleccionada se guardara en el campo "estadoCivil" del context.
+dropdown: El nombre del dropdown. Si es "civil", se mostraran las opciones de estado civil. Si es "ocupacion", se mostraran las opciones de ocupacion.
+
+*/
+
 const DropDown = (props) => {
   const animation = useState(new Animated.Value(0))[0];
   const { user, setUser } = useContext(UserContext);

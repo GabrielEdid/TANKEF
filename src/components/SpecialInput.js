@@ -63,7 +63,7 @@ const SpecialInput = (props) => {
         value={props.editable ? field : user[props.context]}
         style={[
           styles.input,
-          !props.editable && { borderColor: "grey" },
+          !props.editable && { borderColor: "grey", color: "grey" },
           props.password && { paddingRight: 40 },
         ]}
         onFocus={moveUpAnimation}
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     alignSelf: "center",
     borderRadius: 17,
-    marginBottom: 10,
+    marginBottom: 14,
     paddingLeft: 10,
   },
   label: {

@@ -5,6 +5,8 @@ export const UserContext = createContext();
 // Estado inicial definido fuera del componente
 const initialState = {
   nombre: "",
+  apellidoPaterno: "",
+  apellidoMaterno: "",
   CURP: "",
   fechaNacimiento: "",
   estadoNacimiento: "",

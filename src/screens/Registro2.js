@@ -45,7 +45,7 @@ const Registro2 = ({ navigation, route }) => {
         setUser({
           ...user,
           FireBaseUIDTel: UID,
-          telefono: "+" + callingCode + number,
+          telefono: callingCode + number,
         });
         setCode("");
         navigation.navigate("Registro3");

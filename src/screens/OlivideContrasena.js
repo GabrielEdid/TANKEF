@@ -20,7 +20,7 @@ const OlvideContrasena = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
   const sendResetPasswordEmail = (email) => {
-    sendPasswordResetEmail(auth, email)
+    /*sendPasswordResetEmail(auth, email)
       .then(() => {
         Alert.alert(
           "Correo Enviado",
@@ -31,7 +31,14 @@ const OlvideContrasena = ({ navigation }) => {
       })
       .catch((error) => {
         alert("No se pudo enviar el correo: " + error.message);
-      });
+      });*/
+    // Aqui se va a tener la logica de Jesus
+    Alert.alert(
+      "Faltante",
+      "Aqui va la logica de Jesus.",
+      [{ text: "Entendido" }],
+      { cancelable: true }
+    );
   };
 
   return (

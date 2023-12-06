@@ -25,7 +25,7 @@ const Registro4 = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const createUser = async () => {
-    setIsLoading(true);
+    /*setIsLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
@@ -46,8 +46,61 @@ const Registro4 = ({ navigation }) => {
       console.log(error);
       alert("Registration Failed: " + error.message);
       navigation.navigate("Registro4");
-    }
-    setIsLoading(false);
+    }*/
+    setIsLoading(true);
+    fetch(
+      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/registrations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          account_registration: {
+            email: user.email,
+            email_confirmation: user.email,
+            password: user.password,
+            password_confirmation: user.password,
+            full_name: user.nombre,
+            last_name_1: user.apellidoPaterno,
+            last_name_2: user.apellidoMaterno,
+            dob: user.fechaNacimiento,
+            curp: user.CURP,
+            phone: user.telefono,
+          },
+        }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Success:", data);
+        Alert.alert(
+          "Correo de Confirmación Enviado",
+          "Checa tu buzon de entrada para confirmar tu correo.",
+          [{ text: "Entendido" }],
+          { cancelable: true }
+        );
+        navigation.navigate("SetPinPad");
+      })
+      .catch((errorResponse) => {
+        errorResponse.json().then((errorData) => {
+          console.error("Error:", errorData);
+          // Aquí puedes juntar los mensajes de error en un string
+          const errorMessages = Object.values(errorData.errors)
+            .flat()
+            .join(". ");
+          Alert.alert("Error al Registrarse", errorMessages);
+        });
+        navigation.navigate("Registro4");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const verificarCampos = () => {
