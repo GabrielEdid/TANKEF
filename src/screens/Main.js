@@ -5,31 +5,48 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
-import { AntDesign } from "@expo/vector-icons";
+import React, { useContext, useEffect } from "react";
+import { UserContext } from "../hooks/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Registro1 = ({ navigation }) => {
+const Main = ({ navigation }) => {
+  const { user, setUser, resetUser } = useContext(UserContext);
+
+  const handleOnPress = async () => {
+    resetUser();
+    // Espera a que el estado se actualice antes de guardar en AsyncStorage
+    await AsyncStorage.setItem("userInfo", JSON.stringify(user));
+    console.log("Información reseteada y guardada con éxito");
+    navigation.navigate("InitialScreen");
+  };
+
   return (
     //Imagen de Fondo
     <ImageBackground
       source={require("../../assets/images/Fondo.png")}
       style={styles.background}
     >
-      <TouchableOpacity onPress={() => [navigation.navigate("InitialScreen")]}>
-        <AntDesign
-          name="arrowleft"
-          size={40}
-          color="#29364d"
-          style={styles.back}
-        />
-      </TouchableOpacity>
       {/* Logo, Titulo */}
       <Image
         source={require("../../assets/images/Logo_Tankef.png")}
         style={styles.imagen}
       />
       <Text style={styles.titulo}>TANKEF</Text>
-      {/* Fin Logo, Titulo y Avance */}
+      {/* Fin Logo y Titulo */}
+      <TouchableOpacity
+        style={{
+          marginTop: 600,
+          alignSelf: "center",
+          alignItems: "center",
+        }}
+        onPress={() => handleOnPress()}
+      >
+        <Text
+          style={{ fontSize: 40, fontFamily: "conthrax", color: "#29364d" }}
+        >
+          Cerrar Sesión
+        </Text>
+      </TouchableOpacity>
     </ImageBackground>
   );
 };
@@ -60,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Registro1;
+export default Main;

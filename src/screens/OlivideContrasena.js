@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 40,
     paddingLeft: 10,
+    fontSize: 16,
   },
   botonGrande: {
     marginTop: 750,

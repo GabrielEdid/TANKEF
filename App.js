@@ -67,6 +67,7 @@ function LoginFlow() {
         <Stack.Screen
           name="AuthPinPad"
           component={AuthPinPad}
+          initialParams={{ userPin: userInfo.pin }}
           options={{ headerShown: false }}
         />
         <Stack.Screen

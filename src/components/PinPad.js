@@ -10,9 +10,12 @@ import {
   Alert,
 } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
-const PinPad = ({ navigation, ...props }) => {
+const PinPad = ({ ...props }) => {
+  const navigation = useNavigation();
+
   const addDigit = (digit) => {
     if (props.get.length < 6) {
       props.set((prevPin) => prevPin + digit);
@@ -26,8 +29,9 @@ const PinPad = ({ navigation, ...props }) => {
   const onForgotPin = () => {
     Alert.alert(
       "Recuperación de PIN",
-      "Función para recuperar el PIN no implementada."
+      "Porfavor vuelve a iniciar sesión para recuperar tu PIN"
     );
+    navigation.navigate("InitialScreen");
   };
 
   const handleAuthentication = async () => {

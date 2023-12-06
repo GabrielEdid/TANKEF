@@ -8,7 +8,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../hooks/UserContext";
 import SpecialInput from "../components/SpecialInput";
 import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -17,17 +18,42 @@ const InitialScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Nuevo estado para manejar el proceso de carga
+  const { user, setUser } = useContext(UserContext);
 
   const signIn = async () => {
     setIsLoading(true); // Inicia el proceso de carga
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate("Main");
+      setUser({ ...user, FireBaseUIDMail: response.user.uid });
+      navigation.navigate("SetPinPad");
     } catch (error) {
       console.log(error);
       alert("Sign In Failed: " + error.message);
     }
     setIsLoading(false); // Finaliza el proceso de carga
+
+    fetch(
+      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/sessions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          session: {
+            email: email,
+            password: password,
+          },
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
