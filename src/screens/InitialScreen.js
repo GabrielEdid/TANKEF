@@ -21,17 +21,15 @@ const InitialScreen = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
 
   const signIn = async () => {
-    setIsLoading(true); // Inicia el proceso de carga
-    try {
+    /*try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       setUser({ ...user, FireBaseUIDMail: response.user.uid });
       navigation.navigate("SetPinPad");
     } catch (error) {
       console.log(error);
       alert("Sign In Failed: " + error.message);
-    }
-    setIsLoading(false); // Finaliza el proceso de carga
-
+    }*/
+    setIsLoading(true); // Inicia el proceso de carga
     fetch(
       "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/sessions",
       {
@@ -50,10 +48,13 @@ const InitialScreen = ({ navigation }) => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        //setUser({ ...user, FireBaseUIDMail: response.user.uid });
+        navigation.navigate("SetPinPad");
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+    setIsLoading(false); // Finaliza el proceso de carga
   };
 
   return (
