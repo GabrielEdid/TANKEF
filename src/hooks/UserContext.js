@@ -1,5 +1,7 @@
+// Importaciones de React
 import React, { createContext, useState } from "react";
 
+// Creación del contexto UserContext
 export const UserContext = createContext();
 
 // Estado inicial definido fuera del componente
@@ -22,6 +24,7 @@ const initialState = {
   FireBaseUIDTel: "",
 };
 
+// Componente UserProvider
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(initialState);
 
@@ -30,6 +33,7 @@ export const UserProvider = ({ children }) => {
     setUser(initialState);
   };
 
+  // Proporcionar user, setUser y resetUser a través del contexto a todo el árbol de pantallas
   return (
     <UserContext.Provider value={{ user, setUser, resetUser }}>
       {children}

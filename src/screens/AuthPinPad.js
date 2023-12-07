@@ -1,11 +1,15 @@
+// Importaciones de React Native y React
 import { Text, View, StyleSheet, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
+// Importaciones de Componentes
 import PinPad from "../components/PinPad";
 
 const AuthPinPad = ({ navigation, route }) => {
-  const { userPin } = route.params;
+  // Estado local y el pin obtenido del AsyncStorage
+  const { userPin } = route.params; // Se obtiene el pin del AsyncStorage
   const [pin, setPin] = useState("");
 
+  // Función para comparar el pin introducido con el pin del AsyncStorage
   useEffect(() => {
     if (pin.length === 6) {
       if (pin === userPin) {
@@ -17,14 +21,18 @@ const AuthPinPad = ({ navigation, route }) => {
     }
   }, [pin, userPin, navigation]);
 
+  // Componente visual
   return (
     <View>
+      {/* Texto de Introduce tu PIN */}
       <Text style={styles.titulo}>Introduce tu PIN</Text>
+      {/* Componente de PinPad, ahí mismo aparece el logo, titulo de Tankef, faceID y olvide mi PIN */}
       <PinPad id={true} get={pin} set={setPin} />
     </View>
   );
 };
 
+// Estilos de la pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

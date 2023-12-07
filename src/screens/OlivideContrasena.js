@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import {
   View,
   Text,
@@ -10,15 +11,19 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState, useContext } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import { UserContext } from "../hooks/UserContext";
+// Importaciones de Firebase
 import { auth } from "../../firebaseConfig";
 import { sendPasswordResetEmail } from "firebase/auth";
+// Importaciones de Hooks y Componentes
+import { UserContext } from "../hooks/UserContext";
+import { AntDesign } from "@expo/vector-icons";
 
 const OlvideContrasena = ({ navigation }) => {
+  // Estados locales y contexto global
   const { user, setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
 
+  // Función para enviar el correo de restablecimiento de contraseña
   const sendResetPasswordEmail = (email) => {
     /*sendPasswordResetEmail(auth, email)
       .then(() => {
@@ -41,10 +46,11 @@ const OlvideContrasena = ({ navigation }) => {
     );
   };
 
+  // Componente visual
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/* Logo, Titulo y Avance */}
+        {/* Logo, Titulo y Imagen de Avance y Regresar */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign
             name="arrowleft"
@@ -58,7 +64,9 @@ const OlvideContrasena = ({ navigation }) => {
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
+        {/* Contenedor Principal */}
         <View style={styles.container}>
+          {/* Texto de Bienvenida a Olvide mi Contraseña */}
           <Text
             style={[
               styles.texto,
@@ -71,6 +79,7 @@ const OlvideContrasena = ({ navigation }) => {
             ¡No te preocupes! Introduce tu correo y se te enviaran instrucciones
             para modificar tu contraseña.
           </Text>
+          {/* Input de Correo al que enviar el correo de restablecimiento */}
           <TextInput
             style={styles.input}
             placeholder="Ingresa tu correo electrónico"
@@ -80,7 +89,7 @@ const OlvideContrasena = ({ navigation }) => {
           />
         </View>
 
-        {/* Boton Craer Cuenta */}
+        {/* Boton de Enviar Correo */}
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => sendResetPasswordEmail(email)}
@@ -92,6 +101,7 @@ const OlvideContrasena = ({ navigation }) => {
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

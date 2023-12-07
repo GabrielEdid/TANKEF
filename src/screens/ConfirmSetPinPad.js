@@ -1,24 +1,29 @@
+// Importaciones de React Native y React
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
+// Importaciones de Hooks y Componentes
 import PinPad from "../components/PinPad";
 import { UserContext } from "../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 
 const ConfirmSetPinPad = ({ navigation, route }) => {
+  // Estados locales y contexto global
   const { user, setUser } = useContext(UserContext);
   const { pin, onSetPin } = route.params;
   const [confirmPin, setConfirmPin] = useState("");
 
+  // Función para guardar valores en el AsyncStorage
   useEffect(() => {
     if (user && user.loggedIn) {
+      // Se define la información a guardar en el AsyncStorage y se extrae la información del contexto
       const userInfo = {
         FireBaseUIDMail: user.FireBaseUIDMail,
         FireBaseUIDTel: user.FireBaseUIDTel,
         pin: user.pin,
         loggedIn: user.loggedIn,
       };
-
+      // Se guarda la información en el AsyncStorage como userInfo
       AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
         .then(() => console.log("Información guardada con éxito"))
         .catch((error) =>
@@ -27,19 +32,22 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
     }
   }, [user]);
 
+  // Función para guardar el pin en el contexto y navegar a la pantalla siguiente
   const handleConfirmPin = () => {
     if (confirmPin === pin) {
       setUser({ ...user, pin: confirmPin, loggedIn: true });
       navigation.navigate("Main");
     } else {
       alert("Los Pines no Coinciden");
-      setConfirmPin(""); // Aquí asumo que quieres resetear confirmPin
-      navigation.navigate("SetPinPad");
+      setConfirmPin("");
+      navigation.navigate("SetPinPad"); // Se regresa a la pantalla de SetPinPad
     }
   };
 
+  // Componente visual
   return (
     <View>
+      {/* Boton de Regresar */}
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{ zIndex: 10 }}
@@ -51,8 +59,11 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
           style={styles.back}
         />
       </TouchableOpacity>
+      {/* Texto de Confirma el PIN */}
       <Text style={styles.titulo}>Confirma tu PIN</Text>
+      {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
       <PinPad id={false} get={confirmPin} set={setConfirmPin} />
+      {/* Logica para activar el boton de Guardar PIN si el PIN tiene el largo esperado */}
       {confirmPin.length === 6 ? (
         <TouchableOpacity
           style={styles.botonGrande}
@@ -65,6 +76,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

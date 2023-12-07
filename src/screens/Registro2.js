@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import {
   View,
   Text,
@@ -8,16 +9,21 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useRef, useState, useContext, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import { UserContext } from "../hooks/UserContext";
-import CodigoSMS from "../components/CodigoSMS";
+// Importaciones de Firebase
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig, auth } from "../../firebaseConfig";
 import firebase from "firebase/compat/app";
+// Importaciones de Componentes y Hooks
+import { UserContext } from "../hooks/UserContext";
+import CodigoSMS from "../components/CodigoSMS";
+import { AntDesign } from "@expo/vector-icons";
 
 const Registro2 = ({ navigation, route }) => {
+  // Obteniendo parámetros de la ruta y estado global del context
   const { callingCode, number, verificationId } = route.params;
   const { user, setUser } = useContext(UserContext);
+
+  // Estados locales
   const [code, setCode] = useState("");
   const phoneNumber = "+" + callingCode + " " + number;
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
@@ -25,6 +31,7 @@ const Registro2 = ({ navigation, route }) => {
   const [newVerificationId, setNewVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);
 
+  // Función para enviar código de verificación por si presiona el botón "No recibí el código"
   const sendVerification = () => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider
@@ -32,6 +39,7 @@ const Registro2 = ({ navigation, route }) => {
       .then(setNewVerificationId);
   };
 
+  // Función para confirmar código de verificación
   const confirmCode = () => {
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verificationId || newVerificationId,
@@ -42,6 +50,7 @@ const Registro2 = ({ navigation, route }) => {
       .signInWithCredential(credential)
       .then((response) => {
         let UID = response.user.uid;
+        // Actualizar contexto del usuario con la respuesta de Firebase
         setUser({
           ...user,
           FireBaseUIDTel: UID,
@@ -55,6 +64,7 @@ const Registro2 = ({ navigation, route }) => {
       });
   };
 
+  // Efecto para el temporizador y habilitación de botón de reenvío de código
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -66,10 +76,12 @@ const Registro2 = ({ navigation, route }) => {
     }
   }, [timer]);
 
+  // Componente visual
   return (
+    // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/* Logo, Titulo y Avance */}
+        {/* Logo, Titulo, Imagen de Avance y Regresar */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign
             name="arrowleft"
@@ -83,7 +95,9 @@ const Registro2 = ({ navigation, route }) => {
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
+        {/* Contenedor principal */}
         <View style={styles.container}>
+          {/* Re-Captcha Verifier con Firebase */}
           <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
@@ -95,10 +109,12 @@ const Registro2 = ({ navigation, route }) => {
           <Text style={styles.texto}>
             Introduce el código de 6 dígitos enviado al {phoneNumber}
           </Text>
+          {/* Componente para ingresar código SMS */}
           <View style={styles.codigo}>
             <CodigoSMS setCode={setCode} />
           </View>
         </View>
+        {/* Botón para reenviar código */}
         <TouchableOpacity
           style={styles.botonChico}
           onPress={() => sendVerification()}
@@ -117,7 +133,7 @@ const Registro2 = ({ navigation, route }) => {
             <Text style={styles.textoBotonChico}>No recibí el codigo</Text>
           )}
         </TouchableOpacity>
-        {/* Boton Craer Cuenta */}
+        {/* Botón para confirmar código o "siguiente" */}
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => confirmCode()}
@@ -129,6 +145,7 @@ const Registro2 = ({ navigation, route }) => {
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

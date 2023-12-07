@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import {
   View,
   Text,
@@ -8,16 +9,18 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  Animated,
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
-import { Animated } from "react-native";
+import CountryPicker from "react-native-country-picker-modal";
+// Importaciones de Firebase y mas
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig, auth } from "../../firebaseConfig";
 import firebase from "firebase/compat/app";
-import CountryPicker from "react-native-country-picker-modal";
 import { AntDesign } from "@expo/vector-icons";
 
 const Registro1 = ({ navigation }) => {
+  // Estados para manejar la información del formulario y la animación
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
   const [number, setNumber] = useState("");
@@ -27,10 +30,11 @@ const Registro1 = ({ navigation }) => {
   const [verificationId, setVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);
 
+  // Funciones para manejar el focus del input y la animación
   const handleFocus = () => {
     setInputFocused(true);
     Animated.timing(animatedHeight, {
-      toValue: -150, // Valor final de la animación (ajustar según sea necesario)
+      toValue: -150, // Valor final de la animación
       duration: 200, // Duración en milisegundos
       useNativeDriver: true,
     }).start();
@@ -45,6 +49,7 @@ const Registro1 = ({ navigation }) => {
     }).start();
   };
 
+  // Efecto para navegar a la siguiente pantalla al obtener un ID de verificación
   useEffect(() => {
     if (verificationId) {
       // Chequea que verificationId tenga un valor válido
@@ -52,11 +57,11 @@ const Registro1 = ({ navigation }) => {
         callingCode,
         number,
         verificationId,
-        sendVerification, // Esto probablemente no funcionará como esperas. Ver punto 4.
       });
     }
   }, [verificationId]);
 
+  // Función para enviar la verificación del número de teléfono
   const sendVerification = () => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider
@@ -64,14 +69,16 @@ const Registro1 = ({ navigation }) => {
       .then(setVerificationId);
   };
 
+  // Componente visual
   return (
-    //Imagen de Fondo
+    // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      {/* Contenedor del fondo */}
       <ImageBackground
         source={require("../../assets/images/Fondo.png")}
         style={styles.background}
       >
-        {/* Logo, Titulo y Avance */}
+        {/* Logo, Titulo e Imagen de Avance */}
         <Image
           source={require("../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
@@ -81,20 +88,20 @@ const Registro1 = ({ navigation }) => {
           source={require("../../assets/images/LoginFlow1.png")}
           style={styles.imagenAvance}
         />
-        {/* Fin Logo, Titulo y Avance */}
-        {/* Contenedor */}
+        {/* Contenedor principal */}
         <Animated.View
           style={[
             styles.container,
             { transform: [{ translateY: animatedHeight }] },
           ]}
         >
+          {/* Re-Captcha Verifier con Firebase */}
           <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
           />
           <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>
-          {/* Seleccionar Pais */}
+          {/* Boton para Seleccionar Pais */}
           <TouchableOpacity
             style={styles.botonPais}
             onPress={() => setPickerVisible(true)}
@@ -119,9 +126,10 @@ const Registro1 = ({ navigation }) => {
               onClose={() => setPickerVisible(false)}
             />
           </TouchableOpacity>
-          {/* Visualizacion de Codigo de Celular y Telefono */}
+          {/* Botones y campos de entrada para seleccionar el país y el número de teléfono */}
           <View style={styles.inputContainer}>
-            <Text style={{ flexDirection: "row", alignItems: "center" }}>
+            {/* Manejo del country code al lado del telefono y la barra "|" */}
+            <Text>
               <Text style={{ fontSize: 18, color: "grey" }}>
                 +{callingCode}
               </Text>
@@ -141,27 +149,26 @@ const Registro1 = ({ navigation }) => {
               onBlur={handleBlur}
             />
           </View>
-          {/* Boton Tengo Cuenta */}
+          {/* Botones de "tengo cuenta" y "siguiente" */}
           <TouchableOpacity
             style={styles.botonTengoCuenta}
             onPress={() => navigation.goBack()}
           >
             <Text style={styles.textoBoton}>Ya tengo una cuenta</Text>
           </TouchableOpacity>
-          {/* Boton Craer Cuenta */}
           <TouchableOpacity
             style={styles.boton}
             onPress={() => sendVerification()}
           >
-            <Text style={styles.textoBotonCuenta}>CREAR CUENTA</Text>
+            <Text style={styles.textoBotonCuenta}>SIGUIENTE</Text>
           </TouchableOpacity>
         </Animated.View>
-        {/* Fin Contenedor */}
       </ImageBackground>
     </TouchableWithoutFeedback>
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

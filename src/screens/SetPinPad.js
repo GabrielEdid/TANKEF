@@ -1,25 +1,24 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
+// Importaciones de React Native y React
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext } from "react";
-import PinPad from "../components/PinPad";
+// Importaciones de Firebase
 import { auth } from "../../firebaseConfig";
+// Importaciones de Hooks y Componentes
+import PinPad from "../components/PinPad";
 import { AntDesign } from "@expo/vector-icons";
 import { UserContext } from "../hooks/UserContext";
 
 const SetPinPad = ({ navigation }) => {
+  // Estados locales y contexto global
   const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
 
+  // Función para guardar el pin
   const handleSetPin = (newPin) => {
     setPin(newPin);
   };
 
+  // Función para regresar y borrar el usuario para evitar duplicados
   const handleGoBack = () => {
     navigation.goBack();
     /*let user = auth.currentUser;
@@ -29,8 +28,10 @@ const SetPinPad = ({ navigation }) => {
       .catch((error) => console.log(error));*/
   };
 
+  // Componente visual
   return (
     <View>
+      {/* Boton de Regresar */}
       <TouchableOpacity onPress={() => handleGoBack()} style={{ zIndex: 10 }}>
         <AntDesign
           name="arrowleft"
@@ -39,8 +40,11 @@ const SetPinPad = ({ navigation }) => {
           style={styles.back}
         />
       </TouchableOpacity>
+      {/* Texto de Crear el PIN */}
       <Text style={styles.titulo}>Crea tu PIN</Text>
+      {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
       <PinPad id={false} get={pin} set={setPin} />
+      {/* Logica para activar el boton de Siguiente si el PIN tiene el largo esperado */}
       {pin.length === 6 ? (
         <TouchableOpacity
           style={styles.botonGrande}
@@ -59,6 +63,7 @@ const SetPinPad = ({ navigation }) => {
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

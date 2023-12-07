@@ -1,10 +1,21 @@
+// Importaciones de React Native y React
 import React, { useState, useContext } from "react";
 import { View, StyleSheet, Animated } from "react-native";
+// Importacion de Hooks y Componentes
 import DropDownPicker from "react-native-dropdown-picker";
 import { UserContext } from "../hooks/UserContext";
 
 /*
-USO DE DROPDOWN PICKER:
+* Componente DropDown:
+* Este componente es una implementación personalizada del DropDownPicker. 
+* Se utiliza para seleccionar y mostrar opciones en un menú desplegable.
+*
+* Props:
+* - field: Texto que aparece en el dropdown picker y que se desplaza al seleccionar una opción.
+* - context: Nombre del campo en el contexto donde se guardará la opción seleccionada.
+* - dropdown: Nombre del dropdown, determina las opciones a mostrar.
+* 
+* Ejemplo de uso:
 
 <DropDown
 field="Estado Civil"
@@ -18,19 +29,17 @@ context="ocupacion"
 dropdown={"ocupacion"}
 />
 
-En estos dos ejemplos cada parametro significa lo siguiente:
-field: El texto que aparece en el dropdown picker y que subira o bajara al seleccionar una opcion.
-context: El nombre del campo en el context donde se guardara la opcion seleccionada. Por ejemplo, si el campo es "estadoCivil", la opcion seleccionada se guardara en el campo "estadoCivil" del context.
-dropdown: El nombre del dropdown. Si es "civil", se mostraran las opciones de estado civil. Si es "ocupacion", se mostraran las opciones de ocupacion.
-
 */
 
 const DropDown = (props) => {
+  // Estado y animación para el despliegue del dropdown
   const animation = useState(new Animated.Value(0))[0];
+  // Estado local y contexto global
   const { user, setUser } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
 
+  // Función para seleccionar un item y actualizar el contexto de usuario segun el parametro dropdown
   const onSelectItem = (itemValue) => {
     moveUpAnimation();
     if (props.dropdown === "civil") {
@@ -40,6 +49,7 @@ const DropDown = (props) => {
     }
   };
 
+  // Datos para las opciones de estado civil
   const [dataEstadoCivil, setDataEstadoCivil] = useState([
     { label: "Soltero/a", value: "Soltero/a" },
     { label: "Casado/a", value: "Casado/a" },
@@ -52,6 +62,7 @@ const DropDown = (props) => {
     { label: "Concubinato", value: "Concubinato" },
   ]);
 
+  // Datos para las opciones de ocupación
   const [dataOcupacion, setDataOcupacion] = useState([
     { label: "Estudiante", value: "Estudiante" },
     { label: "Profesor/Académico", value: "Profesor/Académico" },
@@ -110,6 +121,7 @@ const DropDown = (props) => {
     { label: "Otro", value: "Otro" },
   ]);
 
+  // Función para animación de subida del texto
   const moveUpAnimation = () => {
     Animated.timing(animation, {
       toValue: -25,
@@ -118,11 +130,14 @@ const DropDown = (props) => {
     }).start();
   };
 
+  // Renderiza el componente
   return (
     <View style={{ marginTop: 8 }}>
       {props.dropdown === "civil" ? (
         <View>
+          {/* Dropdown para estado civil */}
           <DropDownPicker
+            // Props y estilos para DropDownPicker
             dropDownContainerStyle={styles.DropDownContainer}
             style={styles.DropDownPicker}
             textStyle={styles.DropDownText}
@@ -136,6 +151,7 @@ const DropDown = (props) => {
             setItems={setDataEstadoCivil}
             onSelectItem={onSelectItem}
           />
+          {/* Texto que se desplaza al seleccionar una opción */}
           <Animated.Text
             style={[styles.texto, { transform: [{ translateY: animation }] }]}
           >
@@ -144,7 +160,9 @@ const DropDown = (props) => {
         </View>
       ) : props.dropdown === "ocupacion" ? (
         <View>
+          {/* Dropdown para ocupación */}
           <DropDownPicker
+            // Props y estilos para DropDownPicker
             dropDownContainerStyle={styles.DropDownContainer}
             style={styles.DropDownPicker}
             textStyle={styles.DropDownText}
@@ -158,6 +176,7 @@ const DropDown = (props) => {
             setItems={setDataOcupacion}
             onSelectItem={onSelectItem}
           />
+          {/* Texto que se desplaza al seleccionar una opción */}
           <Animated.Text
             style={[styles.texto, { transform: [{ translateY: animation }] }]}
           >
@@ -169,6 +188,7 @@ const DropDown = (props) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   texto: {
     paddingHorizontal: 5,

@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import {
   Text,
   StyleSheet,
@@ -6,12 +7,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useContext, useEffect } from "react";
+// Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Main = ({ navigation }) => {
+  // Estado global
   const { user, setUser, resetUser } = useContext(UserContext);
 
+  // Función para salir de la sesión
   const handleOnPress = async () => {
     resetUser();
     // Espera a que el estado se actualice antes de guardar en AsyncStorage
@@ -20,6 +24,7 @@ const Main = ({ navigation }) => {
     navigation.navigate("InitialScreen");
   };
 
+  // Componente visual
   return (
     //Imagen de Fondo
     <ImageBackground
@@ -32,7 +37,7 @@ const Main = ({ navigation }) => {
         style={styles.imagen}
       />
       <Text style={styles.titulo}>TANKEF</Text>
-      {/* Fin Logo y Titulo */}
+      {/* Boton de Cerrar Sesion */}
       <TouchableOpacity
         style={{
           marginTop: 600,
@@ -51,6 +56,7 @@ const Main = ({ navigation }) => {
   );
 };
 
+// Estilos de la pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -5,27 +6,38 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
   Alert,
 } from "react-native";
+// Importacion de Hooks y Componentes
 import * as LocalAuthentication from "expo-local-authentication";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
+/**
+ * Componente PinPad: Permite al usuario ingresar un PIN.
+ *
+ * Props:
+ * - id: Booleano que indica si se debe mostrar la opción de autenticación biométrica.
+ * - get: Función para obtener el valor actual del PIN.
+ * - set: Función para actualizar el valor del PIN.
+ */
+
 const PinPad = ({ ...props }) => {
   const navigation = useNavigation();
 
+  // Agrega un dígito al PIN actual
   const addDigit = (digit) => {
     if (props.get.length < 6) {
       props.set((prevPin) => prevPin + digit);
     }
   };
 
+  // Elimina el último dígito del PIN actual
   const removeLastDigit = () => {
     props.set((prevPin) => prevPin.slice(0, -1));
   };
 
+  // Navega a la pantalla inicial en caso de olvidar el PIN
   const onForgotPin = () => {
     Alert.alert(
       "Recuperación de PIN",
@@ -34,23 +46,24 @@ const PinPad = ({ ...props }) => {
     navigation.navigate("InitialScreen");
   };
 
+  // Maneja la autenticación biométrica
   const handleAuthentication = async () => {
     try {
-      // Checking if device is compatible
+      // Checa si el dispositivo es compatible
       const isCompatible = await LocalAuthentication.hasHardwareAsync();
 
       if (!isCompatible) {
         throw new Error("Your device isn't compatible.");
       }
 
-      // Checking if device has biometrics records
+      // Checa si el dispositivo tiene huellas o reconocimiento facial
       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
 
       if (!isEnrolled) {
         throw new Error("No Faces / Fingers found.");
       }
 
-      // Authenticate user
+      // Autentica al usuario
       await LocalAuthentication.authenticateAsync();
 
       Alert.alert("Authenticated", "Welcome back !");
@@ -59,6 +72,7 @@ const PinPad = ({ ...props }) => {
     }
   };
 
+  // Renderiza los indicadores del PIN (las bolitas que se llenan)
   const renderPinIndicators = () => {
     const indicators = [];
     for (let i = 0; i < 6; i++) {
@@ -75,68 +89,69 @@ const PinPad = ({ ...props }) => {
     return indicators;
   };
 
+  // Renderiza el componente
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.background}>
-        {/* Logo, Titulo y Avance */}
-        <Image
-          source={require("../../assets/images/Logo_Tankef.png")}
-          style={styles.imagen}
-        />
-        <Text style={styles.titulo}>TANKEF</Text>
+    <View style={styles.background}>
+      {/* Logo y Titulo */}
+      <Image
+        source={require("../../assets/images/Logo_Tankef.png")}
+        style={styles.imagen}
+      />
+      <Text style={styles.titulo}>TANKEF</Text>
+      {/* Indicadores de PIN */}
+      <View style={styles.pinContainer}>{renderPinIndicators()}</View>
 
-        <View style={styles.pinContainer}>{renderPinIndicators()}</View>
-
-        {Array.from({ length: 3 }, (_, rowIndex) => (
-          <View key={rowIndex} style={styles.keypadRow}>
-            {Array.from({ length: 3 }, (_, buttonIndex) => {
-              const digit = rowIndex * 3 + buttonIndex + 1;
-              return (
-                <TouchableOpacity
-                  key={digit}
-                  style={styles.keypadButton}
-                  onPress={() => addDigit(digit.toString())}
-                >
-                  <Text style={styles.keypadButtonText}>{digit}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        ))}
-        <View style={styles.keypadRow}>
-          <TouchableOpacity
-            style={styles.keypadButton}
-            onPress={handleAuthentication}
-          >
-            {props.id === true ? (
-              <Ionicons name="finger-print-outline" size={24} color="#29364d" />
-            ) : null}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.keypadButton}
-            onPress={() => addDigit("0")}
-          >
-            <Text style={styles.keypadButtonText}>0</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.keypadButton}
-            onPress={removeLastDigit}
-          >
-            <Feather name="delete" size={24} color="#29364d" />
-          </TouchableOpacity>
+      {/* Teclado numérico */}
+      {Array.from({ length: 3 }, (_, rowIndex) => (
+        <View key={rowIndex} style={styles.keypadRow}>
+          {Array.from({ length: 3 }, (_, buttonIndex) => {
+            const digit = rowIndex * 3 + buttonIndex + 1;
+            return (
+              <TouchableOpacity
+                key={digit}
+                style={styles.keypadButton}
+                onPress={() => addDigit(digit.toString())}
+              >
+                <Text style={styles.keypadButtonText}>{digit}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
-        {props.id === true ? (
-          <TouchableOpacity onPress={onForgotPin}>
-            <Text style={styles.forgotPinText}>Olvidé mi PIN</Text>
-          </TouchableOpacity>
-        ) : null}
+      ))}
+      <View style={styles.keypadRow}>
+        {/* Botón de autenticación biométrica, solo activada con el prop id */}
+        <TouchableOpacity
+          style={styles.keypadButton}
+          onPress={handleAuthentication}
+        >
+          {props.id === true ? (
+            <Ionicons name="finger-print-outline" size={24} color="#29364d" />
+          ) : null}
+        </TouchableOpacity>
+        {/* Botón para añadir el dígito '0' */}
+        <TouchableOpacity
+          style={styles.keypadButton}
+          onPress={() => addDigit("0")}
+        >
+          <Text style={styles.keypadButtonText}>0</Text>
+        </TouchableOpacity>
+        {/* Botón para borrar el último dígito */}
+        <TouchableOpacity style={styles.keypadButton} onPress={removeLastDigit}>
+          <Feather name="delete" size={24} color="#29364d" />
+        </TouchableOpacity>
       </View>
-    </TouchableWithoutFeedback>
+      {/* Opción para recuperar PIN olvidado, solo activada con el prop id */}
+      {props.id === true ? (
+        <TouchableOpacity onPress={onForgotPin}>
+          <Text style={styles.forgotPinText}>Olvidé mi PIN</Text>
+        </TouchableOpacity>
+      ) : null}
+    </View>
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
-  // Tus estilos existentes
   background: {
     alignItems: "center",
   },

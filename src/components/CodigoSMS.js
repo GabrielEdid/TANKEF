@@ -1,7 +1,16 @@
+// Importaciones de React Native y React
 import React, { useState, useRef } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
+/**
+ * Componente CodigoSMS para aparecer los 6 espacios de digitos para ingresar un código SMS de verificación.
+ *
+ * Props:
+ * - setCode: Función para establecer el código ingresado en el componente padre.
+ */
+
 const CodigoSMS = ({ setCode }) => {
+  // Estados para cada dígito del código SMS
   const [digit1, setDigit1] = useState("");
   const [digit2, setDigit2] = useState("");
   const [digit3, setDigit3] = useState("");
@@ -9,6 +18,7 @@ const CodigoSMS = ({ setCode }) => {
   const [digit5, setDigit5] = useState("");
   const [digit6, setDigit6] = useState("");
 
+  // Referencias para enfocar automáticamente el siguiente TextInput
   const digit1Ref = useRef(null);
   const digit2Ref = useRef(null);
   const digit3Ref = useRef(null);
@@ -17,10 +27,8 @@ const CodigoSMS = ({ setCode }) => {
   const digit6Ref = useRef(null);
 
   const handlePaste = (text) => {
-    // Divide el texto en dígitos individuales
+    // Lógica para manejar el pegado del código completo
     const digits = text.split("");
-
-    // Asigna los dígitos a cada campo de texto
     if (digits.length === 6) {
       setDigit1(digits[0]);
       setDigit2(digits[1]);
@@ -34,8 +42,10 @@ const CodigoSMS = ({ setCode }) => {
     }
   };
 
+  // Renderiza el componente
   return (
     <View style={styles.container}>
+      {/* Cada TextInput representa un dígito del código SMS, hay 6 de ellos */}
       <TextInput
         ref={digit1Ref}
         value={digit1}
@@ -49,7 +59,7 @@ const CodigoSMS = ({ setCode }) => {
         }}
         style={styles.input}
         keyboardType="numeric"
-        maxLength={6} // Cambia esto a 6 para permitir pegar el código completo
+        maxLength={6}
       />
       <TextInput
         ref={digit2Ref}
@@ -75,6 +85,7 @@ const CodigoSMS = ({ setCode }) => {
         keyboardType="numeric"
         maxLength={1}
       />
+      {/* Guion visual entre dígitos */}
       <Text style={styles.guion}>-</Text>
       <TextInput
         ref={digit4Ref}
@@ -116,6 +127,7 @@ const CodigoSMS = ({ setCode }) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",

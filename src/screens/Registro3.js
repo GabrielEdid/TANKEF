@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import {
   View,
   Text,
@@ -9,16 +10,19 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
+// Importaciones de Hooks
 import { UserContext } from "../hooks/UserContext";
-import { AntDesign } from "@expo/vector-icons";
-import SpecialInput from "../components/SpecialInput";
-import DropDown from "../components/DropDown";
 import { ChecarCURP } from "../hooks/ChecarCURP";
+// Importaciones de Componentes
+import SpecialInput from "../components/SpecialInput";
+import { AntDesign } from "@expo/vector-icons";
 
 const Registro3 = ({ navigation }) => {
+  // Estados locales y contexto global
   const { user, setUser } = useContext(UserContext);
   const [isCurpVerified, setIsCurpVerified] = useState(false);
 
+  // Función para verificar si los campos están completos
   const verificarCampos = () => {
     return (
       user.nombre !== "" &&
@@ -35,6 +39,7 @@ const Registro3 = ({ navigation }) => {
     );
   };
 
+  // Manejador para el botón Siguiente
   const handleSiguiente = () => {
     if (!verificarCampos()) {
       Alert.alert(
@@ -48,7 +53,9 @@ const Registro3 = ({ navigation }) => {
     }
   };
 
+  // Manejador para volver a la pantalla anterior
   const handleGoBack = () => {
+    // Reinicia los valores del usuario
     setUser({
       ...user,
       nombre: "",
@@ -62,6 +69,7 @@ const Registro3 = ({ navigation }) => {
     navigation.navigate("Registro1");
   };
 
+  // Efecto para verificar el CURP y actualizar el estado en el contexto global
   useEffect(() => {
     if (user.CURP && user.CURP.length === 18) {
       const { fechaNacimiento, sexo, estadoNacimiento } = ChecarCURP(user.CURP);
@@ -82,10 +90,12 @@ const Registro3 = ({ navigation }) => {
     }
   }, [user.CURP, setUser]);
 
+  // Componente visual
   return (
+    // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/* Logo, Titulo y Avance */}
+        {/* Logo, Titulo y Regresar */}
         <TouchableOpacity onPress={() => handleGoBack()}>
           <AntDesign
             name="arrowleft"
@@ -99,12 +109,13 @@ const Registro3 = ({ navigation }) => {
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
+        {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
         <View style={styles.container}>
           <Image
             source={require("../../assets/images/LoginFlow3.png")}
             style={styles.imagenAvance}
           />
-          {/* Entradas de Input */}
+          {/* Sección de campos de entrada */}
           <View
             style={{
               marginTop: 75,
@@ -112,26 +123,20 @@ const Registro3 = ({ navigation }) => {
             }}
             automaticallyAdjustKeyboardInsets={true}
           >
-            <SpecialInput
-              field="Nombre(s)"
-              context="nombre"
-              editable={true}
-              set=""
-            />
+            {/* Campos de entrada para datos del usuario */}
+            <SpecialInput field="Nombre(s)" context="nombre" editable={true} />
             <SpecialInput
               field="Apellido Paterno"
               context="apellidoPaterno"
               editable={true}
-              set=""
             />
             <SpecialInput
               field="Apellido Materno"
               context="apellidoMaterno"
               editable={true}
-              set=""
             />
             <SpecialInput field="CURP" context="CURP" editable={true} />
-            {/*<ChecarCURP />*/}
+            {/* Campos de información generados a partir del CURP */}
             <SpecialInput
               field="Fecha de Nacimiento"
               context="fechaNacimiento"
@@ -145,7 +150,7 @@ const Registro3 = ({ navigation }) => {
             <SpecialInput field="Sexo" context="sexo" editable={false} />
           </View>
         </View>
-        {/* Boton Craer Cuenta */}
+        {/* Botón de Continuar */}
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => handleSiguiente()}
@@ -157,6 +162,7 @@ const Registro3 = ({ navigation }) => {
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   back: {
     marginTop: 60,

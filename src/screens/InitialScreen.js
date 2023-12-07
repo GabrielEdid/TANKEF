@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import {
   View,
   Text,
@@ -10,17 +11,19 @@ import {
   Alert,
 } from "react-native";
 import React, { useState, useContext } from "react";
-import { UserContext } from "../hooks/UserContext";
-import SpecialInput from "../components/SpecialInput";
+import { UserContext } from "../hooks/UserContext"; // Contexto para manejar el estado del usuario
+import SpecialInput from "../components/SpecialInput"; // Componente para entradas de texto especializadas
 import { auth } from "../../firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth"; // Método para autenticación con Firebase
 
+// Componente de pantalla inicial
 const InitialScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Nuevo estado para manejar el proceso de carga
-  const { user, setUser } = useContext(UserContext);
+  const [email, setEmail] = useState(""); // Estado para manejar el email del usuario
+  const [password, setPassword] = useState(""); // Estado para manejar la contraseña del usuario
+  const [isLoading, setIsLoading] = useState(false); // Estado para manejar el indicador de carga
+  const { user, setUser } = useContext(UserContext); // Consumir el contexto del usuario
 
+  // Función para iniciar sesión
   const signIn = async () => {
     /*try {
       const response = await signInWithEmailAndPassword(auth, email, password);
@@ -30,64 +33,59 @@ const InitialScreen = ({ navigation }) => {
       console.log(error);
       alert("Sign In Failed: " + error.message);
     }*/
-    setIsLoading(true); // Inicia el proceso de carga
+    setIsLoading(true); // Activar el indicador de carga
+
+    // Petición al servidor para iniciar sesión
     fetch(
       "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/sessions",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          session: {
-            email: email,
-            password: password,
-          },
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session: { email: email, password: password } }),
       }
     )
       .then((response) => {
         if (!response.ok) {
-          throw response;
+          throw response; // Lanzar un error si la respuesta no es exitosa
         }
         return response.json();
       })
       .then((data) => {
         console.log("Success:", data);
-        // Aquí manejas la respuesta exitosa
-        navigation.navigate("SetPinPad");
+        navigation.navigate("SetPinPad"); // Navegar a la siguiente pantalla en caso de éxito
       })
       .catch((errorResponse) => {
+        // Manejar los errores de la petición
         errorResponse.json().then((errorData) => {
           console.error("Error:", errorData);
-          // Aquí puedes juntar los mensajes de error en un string
           const errorMessages = Object.values(errorData).flat().join(". ");
-          Alert.alert("Error de Inicio de Sesión", errorMessages);
+          Alert.alert("Error de Inicio de Sesión", errorMessages); // Mostrar alerta de error
         });
       })
-      .finally(() => {
-        setIsLoading(false); // Finaliza el proceso de carga
-      });
+      .finally(() => setIsLoading(false)); // Finalizar el indicador de carga
   };
 
+  // Componente visual
   return (
-    //Imagen de Fondo
+    // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      {/* Contenedor del fondo */}
       <ImageBackground
         source={require("../../assets/images/Fondo.png")}
         style={styles.background}
       >
-        {/* Logo, Titulo */}
+        {/* Logo y título de la aplicación */}
         <Image
           source={require("../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
-        {/* Fin Logo, Titulo y Avance */}
-        {/* Contenedor */}
+
+        {/* Contenedor con campos de entrada y botones */}
         <View style={styles.container}>
           <Text style={styles.welcome}>WELCOME BACK</Text>
-          {/* Entradas de Input */}
+
+          {/* Campos de entrada para correo y contraseña */}
           <View style={styles.input}>
             <SpecialInput field="Correo" editable={true} set={setEmail} />
             <SpecialInput
@@ -105,7 +103,8 @@ const InitialScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        {/* Boton Craer Cuenta */}
+
+        {/* Botones para crear cuenta e iniciar sesión */}
         <TouchableOpacity
           style={[styles.boton, { marginTop: 670, backgroundColor: "white" }]}
           onPress={() => navigation.navigate("Registro1")}
@@ -114,20 +113,19 @@ const InitialScreen = ({ navigation }) => {
             CREAR UNA CUENTA
           </Text>
         </TouchableOpacity>
-        {/* Boton Iniciar Sesion */}
         <TouchableOpacity
           style={styles.boton}
-          onPress={() => [console.log(email), signIn()]}
-          disabled={isLoading} // Desactiva el botón cuando isLoading es true
+          onPress={() => signIn()}
+          disabled={isLoading}
         >
           <Text style={styles.textoBotonCuenta}>INICIAR SESIÓN</Text>
         </TouchableOpacity>
-        {/* Fin Contenedor */}
       </ImageBackground>
     </TouchableWithoutFeedback>
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   background: {
     flex: 1,
