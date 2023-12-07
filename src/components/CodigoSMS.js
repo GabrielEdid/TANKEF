@@ -6,7 +6,7 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
  * Componente CodigoSMS para aparecer los 6 espacios de digitos para ingresar un código SMS de verificación.
  *
  * Props:
- * - setCode: Función para establecer el código ingresado en el componente padre.
+ * - setCode: Función para establecer el código ingresado en el componente padre, se le pasa un useState (setter).
  */
 
 const CodigoSMS = ({ setCode }) => {
