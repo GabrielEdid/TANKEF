@@ -7,7 +7,6 @@ import { View, TextInput, StyleSheet } from "react-native";
  *
  * Props:
  * - setCode: Función para actualizar el código completo en el componente padre.
- *
  */
 
 const CodigoSMS = ({ setCode }) => {
