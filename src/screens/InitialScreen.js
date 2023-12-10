@@ -9,6 +9,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  Modal,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { UserContext } from "../hooks/UserContext"; // Contexto para manejar el estado del usuario
@@ -101,6 +103,11 @@ const InitialScreen = ({ navigation }) => {
                 Olvide mi Contraseña
               </Text>
             </TouchableOpacity>
+            <Modal transparent={true} animationType="fade" visible={isLoading}>
+              <View style={styles.overlay}>
+                <ActivityIndicator size="large" color="#2ff690" />
+              </View>
+            </Modal>
           </View>
         </View>
 
@@ -183,6 +190,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.37,
     shadowRadius: 5,
     elevation: 8,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent background
   },
   textoBotonCuenta: {
     color: "white",

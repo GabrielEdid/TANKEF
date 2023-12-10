@@ -8,6 +8,8 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
+  Modal,
 } from "react-native";
 import React, { useState, useContext } from "react";
 // Importaciones de Firebase
@@ -201,6 +203,11 @@ const Registro4 = ({ navigation }) => {
               especial.
             </Text>
           </View>
+          <Modal transparent={true} animationType="fade" visible={isLoading}>
+            <View style={styles.overlay}>
+              <ActivityIndicator size="large" color="#2ff690" />
+            </View>
+          </Modal>
         </View>
         {/* Boton para Crear Cuenta */}
         <TouchableOpacity
@@ -269,6 +276,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     position: "absolute",
     marginTop: 180,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent background
   },
   botonGrande: {
     marginTop: 750,
