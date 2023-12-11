@@ -22,7 +22,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"; // Método para aute
 const InitialScreen = ({ navigation }) => {
   const [email, setEmail] = useState(""); // Estado para manejar el email del usuario
   const [password, setPassword] = useState(""); // Estado para manejar la contraseña del usuario
-  const [isLoading, setIsLoading] = useState(true); // Estado para manejar el indicador de carga
+  const [isLoading, setIsLoading] = useState(false); // Estado para manejar el indicador de carga
   const { user, setUser } = useContext(UserContext); // Consumir el contexto del usuario
 
   // Función para iniciar sesión
