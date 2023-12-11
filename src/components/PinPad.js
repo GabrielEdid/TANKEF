@@ -53,22 +53,23 @@ const PinPad = ({ ...props }) => {
       const isCompatible = await LocalAuthentication.hasHardwareAsync();
 
       if (!isCompatible) {
-        throw new Error("Your device isn't compatible.");
+        throw new Error("Tu dispositivo no es compatible.");
       }
 
       // Checa si el dispositivo tiene huellas o reconocimiento facial
       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
 
       if (!isEnrolled) {
-        throw new Error("No Faces / Fingers found.");
+        throw new Error("No se han encontrado Caras/Dedos para autenticar.");
       }
 
       // Autentica al usuario
       await LocalAuthentication.authenticateAsync();
 
-      Alert.alert("Authenticated", "Welcome back !");
+      Alert.alert("Autenticado", "Bienvenido de vuelta!");
+      navigation.navigate("Main");
     } catch (error) {
-      Alert.alert("An error as occured", error?.message);
+      Alert.alert("Ha ocurrido un error", error?.message);
     }
   };
 
