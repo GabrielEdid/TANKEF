@@ -22,7 +22,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"; // Método para aute
 const InitialScreen = ({ navigation }) => {
   const [email, setEmail] = useState(""); // Estado para manejar el email del usuario
   const [password, setPassword] = useState(""); // Estado para manejar la contraseña del usuario
-  const [isLoading, setIsLoading] = useState(false); // Estado para manejar el indicador de carga
+  const [isLoading, setIsLoading] = useState(true); // Estado para manejar el indicador de carga
   const { user, setUser } = useContext(UserContext); // Consumir el contexto del usuario
 
   // Función para iniciar sesión
@@ -105,7 +105,7 @@ const InitialScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Modal transparent={true} animationType="fade" visible={isLoading}>
               <View style={styles.overlay}>
-                <ActivityIndicator size={75} color="#2ff690" />
+                <ActivityIndicator size={75} color="white" />
               </View>
             </Modal>
           </View>
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   textoBotonCuenta: {
     color: "white",

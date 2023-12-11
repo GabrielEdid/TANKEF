@@ -20,7 +20,6 @@ const initialState = {
   email: "",
   password: "",
   pin: "",
-  FireBaseUIDMail: "",
   FireBaseUIDTel: "",
 };
 

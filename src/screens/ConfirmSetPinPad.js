@@ -18,8 +18,6 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
     if (user && user.loggedIn) {
       // Se define la información a guardar en el AsyncStorage y se extrae la información del contexto
       const userInfo = {
-        FireBaseUIDMail: user.FireBaseUIDMail,
-        FireBaseUIDTel: user.FireBaseUIDTel,
         pin: user.pin,
         loggedIn: user.loggedIn,
       };
