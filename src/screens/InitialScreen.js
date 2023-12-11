@@ -10,9 +10,9 @@ import {
   Keyboard,
   Alert,
   Modal,
-  ActivityIndicator,
 } from "react-native";
 import React, { useState, useContext } from "react";
+import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../hooks/UserContext"; // Contexto para manejar el estado del usuario
 import SpecialInput from "../components/SpecialInput"; // Componente para entradas de texto especializadas
 import { auth } from "../../firebaseConfig";
@@ -105,7 +105,7 @@ const InitialScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Modal transparent={true} animationType="fade" visible={isLoading}>
               <View style={styles.overlay}>
-                <ActivityIndicator size="large" color="#2ff690" />
+                <ActivityIndicator size={75} color="#2ff690" />
               </View>
             </Modal>
           </View>

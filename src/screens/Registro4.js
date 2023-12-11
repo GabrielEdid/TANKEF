@@ -8,10 +8,10 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
-  ActivityIndicator,
   Modal,
 } from "react-native";
 import React, { useState, useContext } from "react";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Firebase
 import { auth } from "../../firebaseConfig";
 import {
@@ -205,7 +205,7 @@ const Registro4 = ({ navigation }) => {
           </View>
           <Modal transparent={true} animationType="fade" visible={isLoading}>
             <View style={styles.overlay}>
-              <ActivityIndicator size="large" color="#2ff690" />
+              <ActivityIndicator size={75} color="#2ff690" />
             </View>
           </Modal>
         </View>
