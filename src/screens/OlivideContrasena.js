@@ -11,9 +11,6 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState, useContext } from "react";
-// Importaciones de Firebase
-import { auth } from "../../firebaseConfig";
-import { sendPasswordResetEmail } from "firebase/auth";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
 import { AntDesign } from "@expo/vector-icons";
@@ -24,20 +21,7 @@ const OlvideContrasena = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
   // Función para enviar el correo de restablecimiento de contraseña
-  const sendResetPasswordEmail = (email) => {
-    /*sendPasswordResetEmail(auth, email)
-      .then(() => {
-        Alert.alert(
-          "Correo Enviado",
-          "Checa tu buzon de entrada para restablecer tu contraseña.",
-          [{ text: "Entendido" }],
-          { cancelable: true }
-        );
-      })
-      .catch((error) => {
-        alert("No se pudo enviar el correo: " + error.message);
-      });*/
-    // Aqui se va a tener la logica de Jesus
+  const sendResetPasswordEmail = async (email) => {
     fetch(
       "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/password_resets",
       {

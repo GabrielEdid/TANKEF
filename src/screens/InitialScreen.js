@@ -15,8 +15,6 @@ import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../hooks/UserContext"; // Contexto para manejar el estado del usuario
 import SpecialInput from "../components/SpecialInput"; // Componente para entradas de texto especializadas
-import { auth } from "../../firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth"; // Método para autenticación con Firebase
 
 // Componente de pantalla inicial
 const InitialScreen = ({ navigation }) => {
@@ -27,16 +25,7 @@ const InitialScreen = ({ navigation }) => {
 
   // Función para iniciar sesión
   const signIn = async () => {
-    /*try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      setUser({ ...user, FireBaseUIDMail: response.user.uid });
-      navigation.navigate("SetPinPad");
-    } catch (error) {
-      console.log(error);
-      alert("Sign In Failed: " + error.message);
-    }*/
     setIsLoading(true); // Activar el indicador de carga
-
     // Petición al servidor para iniciar sesión
     fetch(
       "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/sessions",

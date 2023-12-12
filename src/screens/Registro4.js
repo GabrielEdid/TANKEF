@@ -12,12 +12,6 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
-// Importaciones de Firebase
-import { auth } from "../../firebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
 import SpecialInput from "../components/SpecialInput";
@@ -31,28 +25,6 @@ const Registro4 = ({ navigation }) => {
 
   // Función para crear usuario y manejar el registro
   const createUser = async () => {
-    /*setIsLoading(true);
-    try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        user.email,
-        user.password
-      );
-      const newUser = response.user;
-      setUser({ ...user, FireBaseUIDMail: newUser.uid });
-      sendEmailVerification(newUser);
-      Alert.alert(
-        "Correo de Confirmación Enviado",
-        "Checa tu buzon de entrada para confirmar tu correo.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
-      );
-      navigation.navigate("SetPinPad");
-    } catch (error) {
-      console.log(error);
-      alert("Registration Failed: " + error.message);
-      navigation.navigate("Registro4");
-    }*/
     setIsLoading(true); // Activar el indicador de carga
     // Llamada a la API para registrar usuario
     fetch(
