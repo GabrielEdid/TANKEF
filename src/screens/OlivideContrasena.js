@@ -88,7 +88,6 @@ const OlvideContrasena = ({ navigation }) => {
             autoCapitalize="none"
           />
         </View>
-
         {/* Boton de Enviar Correo */}
         <TouchableOpacity
           style={styles.botonGrande}
