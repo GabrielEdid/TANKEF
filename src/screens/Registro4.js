@@ -198,7 +198,7 @@ const Registro4 = ({ navigation }) => {
             />
             {/* Texto informativo sobre requisitos de contraseña */}
             <Text style={styles.texto}>
-              * La contraseña debe contener al menos 7 caracteres, incluyendo
+              * La contraseña debe contener al menos 8 caracteres, incluyendo
               una letra mayúscula, una minúscula, un número y un carácter
               especial.
             </Text>

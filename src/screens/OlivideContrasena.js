@@ -38,12 +38,34 @@ const OlvideContrasena = ({ navigation }) => {
         alert("No se pudo enviar el correo: " + error.message);
       });*/
     // Aqui se va a tener la logica de Jesus
-    Alert.alert(
-      "Faltante",
-      "Aqui va la logica de Jesus.",
-      [{ text: "Entendido" }],
-      { cancelable: true }
-    );
+    fetch(
+      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/password_resets",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password_reset: {
+            email: email,
+          },
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        navigation.navigate("InitialScreen");
+        Alert.alert(
+          "Correo Enviado",
+          "Checa tu buzon de entrada para restablecer tu contraseña.",
+          [{ text: "Entendido" }],
+          { cancelable: true }
+        );
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   // Componente visual
