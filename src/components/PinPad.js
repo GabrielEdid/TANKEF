@@ -25,6 +25,9 @@ import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 const PinPad = ({ ...props }) => {
   const navigation = useNavigation();
 
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   // Agrega un dígito al PIN actual
   const addDigit = (digit) => {
     if (props.get.length < 6) {
@@ -47,7 +50,7 @@ const PinPad = ({ ...props }) => {
   };
 
   // Maneja la autenticación biométrica
-  const handleAuthentication = async () => {
+  /*const handleAuthentication = async () => {
     try {
       // Checa si el dispositivo es compatible
       const isCompatible = await LocalAuthentication.hasHardwareAsync();
@@ -71,7 +74,30 @@ const PinPad = ({ ...props }) => {
     } catch (error) {
       Alert.alert("Ha ocurrido un error", error?.message);
     }
-  };
+  };*/
+
+  useEffect(() => {
+    (async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      setIsBiometricSupported(compatible);
+      console.log("Esta: " + isBiometricSupported);
+    })();
+  });
+
+  function handleAuthentication() {
+    const auth = LocalAuthentication.authenticateAsync({
+      promptMessage: "Authenticate",
+      fallbackLabel: "Enter Password",
+    });
+    auth.then((result) => {
+      setIsAuthenticated(result.success);
+      console.log(result);
+      if (result.success === true) {
+        Alert.alert("Autenticado", "Bienvenido de vuelta!");
+        navigation.navigate("Main");
+      }
+    });
+  }
 
   // Renderiza los indicadores del PIN (las bolitas que se llenan)
   const renderPinIndicators = () => {
