@@ -65,7 +65,10 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
       {confirmPin.length === 6 ? (
         <TouchableOpacity
           style={styles.botonGrande}
-          onPress={() => [handleConfirmPin(), console.log(confirmPin)]}
+          onPress={() => [
+            handleConfirmPin(),
+            console.log("El Pin es: " + confirmPin),
+          ]}
         >
           <Text style={styles.textoBotonGrande}>GUARDAR PIN</Text>
         </TouchableOpacity>

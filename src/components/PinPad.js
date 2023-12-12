@@ -80,7 +80,6 @@ const PinPad = ({ ...props }) => {
     (async () => {
       const compatible = await LocalAuthentication.hasHardwareAsync();
       setIsBiometricSupported(compatible);
-      console.log("Esta: " + isBiometricSupported);
     })();
   });
 

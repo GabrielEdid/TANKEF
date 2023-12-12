@@ -53,7 +53,7 @@ const SetPinPad = ({ navigation }) => {
               pin: pin,
               onSetPin: handleSetPin,
             }),
-            console.log(pin),
+            console.log("El pin es: " + pin),
           ]}
         >
           <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>

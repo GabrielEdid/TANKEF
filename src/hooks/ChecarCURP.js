@@ -5,12 +5,6 @@ export const ChecarCURP = (curp) => {
   let sexo; // Variable para almacenar el sexo
   let estadoCodigo; // Variable para almacenar el código del estado
 
-  // Verifica si la CURP tiene la longitud correcta (18 caracteres)
-  if (curp.length !== 18) {
-    console.log("CURP inválida o no definida");
-    return;
-  }
-
   // Extrae y procesa los datos de la CURP
   const año = curp.substring(4, 6);
   const mes = curp.substring(6, 8);
