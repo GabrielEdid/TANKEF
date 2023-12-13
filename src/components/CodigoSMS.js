@@ -1,9 +1,21 @@
+// Importaciones de React y React Native
 import React, { useState } from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
 
+/*
+ * Componente CodigoSMS:
+ * Este componente renderiza un input invisible y 6 recuadros en los que aparecen los 6 digitos del usuario.
+ *
+ * Props:
+ * - setCode: un useState o set que se le pasa para que pueda ser guardado en la pantalla en la que se renderizan los recuadros.
+ *
+ */
+
 const CodigoSMS = ({ setCode }) => {
+  // Estado para guardar el código
   const [code, setCodeInternal] = useState("");
 
+  // Función para actualizar el código
   const updateCode = (newCode) => {
     if (newCode.length <= 6) {
       setCodeInternal(newCode);
@@ -24,6 +36,7 @@ const CodigoSMS = ({ setCode }) => {
     return digits;
   };
 
+  // Componente visual
   return (
     <View style={styles.container}>
       <View style={styles.digitsWrapper}>
