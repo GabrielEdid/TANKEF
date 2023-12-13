@@ -151,7 +151,7 @@ const PinPad = ({ ...props }) => {
           onPress={handleAuthentication}
         >
           {props.id === true ? (
-            <Ionicons name="finger-print-outline" size={24} color="#29364d" />
+            <Ionicons name="finger-print-outline" size={30} color="#29364d" />
           ) : null}
         </TouchableOpacity>
         {/* Botón para añadir el dígito '0' */}
@@ -163,7 +163,7 @@ const PinPad = ({ ...props }) => {
         </TouchableOpacity>
         {/* Botón para borrar el último dígito */}
         <TouchableOpacity style={styles.keypadButton} onPress={removeLastDigit}>
-          <Feather name="delete" size={24} color="#29364d" />
+          <Feather name="delete" size={30} color="#29364d" />
         </TouchableOpacity>
       </View>
       {/* Opción para recuperar PIN olvidado, solo activada con el prop id */}
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   keypadButtonText: {
-    fontSize: 22,
+    fontSize: 35,
     fontFamily: "conthrax",
     color: "#29364d",
   },
