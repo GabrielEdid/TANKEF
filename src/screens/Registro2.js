@@ -33,6 +33,10 @@ const Registro2 = ({ navigation, route }) => {
 
   // Función para enviar código de verificación por si presiona el botón "No recibí el código"
   const sendVerification = () => {
+    // Se reinicia el temporizador y se re-deshabilita el botón
+    setTimer(60);
+    setIsButtonEnabled(false);
+
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider
       .verifyPhoneNumber("+" + callingCode + number, recaptchaVerifier.current)
