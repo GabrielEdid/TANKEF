@@ -1,13 +1,14 @@
 {
   "expo": {
     "name": "TANKEF",
-    "slug": "TANKEF",
+    "slug": "TANKEF-app",
+    "description": "Invierte y obten créditos con el app de TANKEF y comienza a crecer tu red de conexiónes.",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/App-Icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/App-Splash-Screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,12 +21,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/App-Icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/App-Splash-Screen.png"
     }
   }
 }
