@@ -26,6 +26,16 @@ function LoginFlow() {
   const [userInfo, setUserInfo] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+  // Ignorar advertencias específicas en modo de desarrollo (Utilizar unicamente en demostraciones y descomentar en desarollo)
+  if (__DEV__) {
+    const originalConsoleWarn = console.warn;
+    console.warn = (message) => {
+      if (message.indexOf("Some specific warning to ignore") <= -1) {
+        originalConsoleWarn(message);
+      }
+    };
+  }
+
   // Función para cargar los datos del usuario desde AsyncStorage
   const loadUserData = async () => {
     try {
