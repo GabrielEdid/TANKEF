@@ -12,7 +12,7 @@ import Registro1 from "./src/screens/LogIn/Registro1";
 import Registro2 from "./src/screens/LogIn/Registro2";
 import Registro3 from "./src/screens/LogIn/Registro3";
 import Registro4 from "./src/screens/LogIn/Registro4";
-import Main from "./src/screens/Main";
+import Main from "./src/screens/Main/Main";
 import SetPinPad from "./src/screens/LogIn/SetPinPad";
 import ConfirmSetPinPad from "./src/screens/LogIn/ConfirmSetPinPad";
 import OlvideContrasena from "./src/screens/LogIn/OlivideContrasena";

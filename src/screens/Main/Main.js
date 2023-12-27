@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useContext, useEffect } from "react";
 // Importaciones de Hooks y Componentes
-import { UserContext } from "../hooks/UserContext";
+import { UserContext } from "../../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Main = ({ navigation }) => {
@@ -28,12 +28,12 @@ const Main = ({ navigation }) => {
   return (
     //Imagen de Fondo
     <ImageBackground
-      source={require("../../assets/images/Fondo.png")}
+      source={require("../../../assets/images/Fondo.png")}
       style={styles.background}
     >
       {/* Logo, Titulo */}
       <Image
-        source={require("../../assets/images/Logo_Tankef.png")}
+        source={require("../../../assets/images/Logo_Tankef.png")}
         style={styles.imagen}
       />
       <Text style={styles.titulo}>TANKEF</Text>
