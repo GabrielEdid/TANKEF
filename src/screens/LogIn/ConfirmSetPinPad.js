@@ -2,8 +2,8 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 // Importaciones de Hooks y Componentes
-import PinPad from "../components/PinPad";
-import { UserContext } from "../hooks/UserContext";
+import PinPad from "../../components/PinPad";
+import { UserContext } from "../../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 

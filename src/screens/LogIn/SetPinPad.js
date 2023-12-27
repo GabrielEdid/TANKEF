@@ -2,11 +2,11 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext } from "react";
 // Importaciones de Firebase
-import { auth } from "../../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
 // Importaciones de Hooks y Componentes
-import PinPad from "../components/PinPad";
+import PinPad from "../../components/PinPad";
 import { AntDesign } from "@expo/vector-icons";
-import { UserContext } from "../hooks/UserContext";
+import { UserContext } from "../../hooks/UserContext";
 
 const SetPinPad = ({ navigation }) => {
   // Estados locales y contexto global

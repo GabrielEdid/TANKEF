@@ -2,7 +2,7 @@
 import { Text, View, StyleSheet, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 // Importaciones de Componentes
-import PinPad from "../components/PinPad";
+import PinPad from "../../components/PinPad";
 
 const AuthPinPad = ({ navigation, route }) => {
   // Estado local y el pin obtenido del AsyncStorage

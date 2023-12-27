@@ -13,8 +13,8 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
-import { UserContext } from "../hooks/UserContext"; // Contexto para manejar el estado del usuario
-import SpecialInput from "../components/SpecialInput"; // Componente para entradas de texto especializadas
+import { UserContext } from "../../hooks/UserContext"; // Contexto para manejar el estado del usuario
+import SpecialInput from "../../components/SpecialInput"; // Componente para entradas de texto especializadas
 
 // Componente de pantalla inicial
 const InitialScreen = ({ navigation }) => {
@@ -62,12 +62,12 @@ const InitialScreen = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       {/* Contenedor del fondo */}
       <ImageBackground
-        source={require("../../assets/images/Fondo.png")}
+        source={require("../../../assets/images/Fondo.png")}
         style={styles.background}
       >
         {/* Logo y título de la aplicación */}
         <Image
-          source={require("../../assets/images/Logo_Tankef.png")}
+          source={require("../../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>

@@ -13,8 +13,8 @@ import {
 import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
-import { UserContext } from "../hooks/UserContext";
-import SpecialInput from "../components/SpecialInput";
+import { UserContext } from "../../hooks/UserContext";
+import SpecialInput from "../../components/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
 const Registro4 = ({ navigation }) => {
@@ -136,14 +136,14 @@ const Registro4 = ({ navigation }) => {
           />
         </TouchableOpacity>
         <Image
-          source={require("../../assets/images/Logo_Tankef.png")}
+          source={require("../../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
         {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
         <View style={styles.container}>
           <Image
-            source={require("../../assets/images/LoginFlow4.png")}
+            source={require("../../../assets/images/LoginFlow4.png")}
             style={styles.imagenAvance}
           />
           {/* Sección para ingreso de datos y requerimientos de contraseña */}

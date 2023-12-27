@@ -7,16 +7,16 @@ import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "./src/hooks/UserContext"; // Contexto para manejar el estado del usuario
 // Importar pantallas de la aplicación
-import InitialScreen from "./src/screens/InitialScreen";
-import Registro1 from "./src/screens/Registro1";
-import Registro2 from "./src/screens/Registro2";
-import Registro3 from "./src/screens/Registro3";
-import Registro4 from "./src/screens/Registro4";
+import InitialScreen from "./src/screens/LogIn/InitialScreen";
+import Registro1 from "./src/screens/LogIn/Registro1";
+import Registro2 from "./src/screens/LogIn/Registro2";
+import Registro3 from "./src/screens/LogIn/Registro3";
+import Registro4 from "./src/screens/LogIn/Registro4";
 import Main from "./src/screens/Main";
-import SetPinPad from "./src/screens/SetPinPad";
-import ConfirmSetPinPad from "./src/screens/ConfirmSetPinPad";
-import OlvideContrasena from "./src/screens/OlivideContrasena";
-import AuthPinPad from "./src/screens/AuthPinPad";
+import SetPinPad from "./src/screens/LogIn/SetPinPad";
+import ConfirmSetPinPad from "./src/screens/LogIn/ConfirmSetPinPad";
+import OlvideContrasena from "./src/screens/LogIn/OlivideContrasena";
+import AuthPinPad from "./src/screens/LogIn/AuthPinPad";
 
 // Crear un Stack Navigator para la navegación
 const Stack = createStackNavigator();

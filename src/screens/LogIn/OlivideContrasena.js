@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 // Importaciones de Hooks y Componentes
-import { UserContext } from "../hooks/UserContext";
+import { UserContext } from "../../hooks/UserContext";
 import { AntDesign } from "@expo/vector-icons";
 
 const OlvideContrasena = ({ navigation }) => {
@@ -66,7 +66,7 @@ const OlvideContrasena = ({ navigation }) => {
           />
         </TouchableOpacity>
         <Image
-          source={require("../../assets/images/Logo_Tankef.png")}
+          source={require("../../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>

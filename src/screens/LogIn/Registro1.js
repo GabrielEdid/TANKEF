@@ -15,7 +15,7 @@ import React, { useRef, useState, useEffect } from "react";
 import CountryPicker from "react-native-country-picker-modal";
 // Importaciones de Firebase y mas
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { firebaseConfig, auth } from "../../firebaseConfig";
+import { firebaseConfig, auth } from "../../../firebaseConfig";
 import firebase from "firebase/compat/app";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -75,17 +75,17 @@ const Registro1 = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       {/* Contenedor del fondo */}
       <ImageBackground
-        source={require("../../assets/images/Fondo.png")}
+        source={require("../../../assets/images/Fondo.png")}
         style={styles.background}
       >
         {/* Logo, Titulo e Imagen de Avance */}
         <Image
-          source={require("../../assets/images/Logo_Tankef.png")}
+          source={require("../../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
         <Image
-          source={require("../../assets/images/LoginFlow1.png")}
+          source={require("../../../assets/images/LoginFlow1.png")}
           style={styles.imagenAvance}
         />
         {/* Contenedor principal */}

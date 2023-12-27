@@ -11,11 +11,11 @@ import {
 import React, { useRef, useState, useContext, useEffect } from "react";
 // Importaciones de Firebase
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { firebaseConfig, auth } from "../../firebaseConfig";
+import { firebaseConfig, auth } from "../../../firebaseConfig";
 import firebase from "firebase/compat/app";
 // Importaciones de Componentes y Hooks
-import { UserContext } from "../hooks/UserContext";
-import CodigoSMS from "../components/CodigoSMS";
+import { UserContext } from "../../hooks/UserContext";
+import CodigoSMS from "../../components/CodigoSMS";
 import { AntDesign } from "@expo/vector-icons";
 
 const Registro2 = ({ navigation, route }) => {
@@ -95,7 +95,7 @@ const Registro2 = ({ navigation, route }) => {
           />
         </TouchableOpacity>
         <Image
-          source={require("../../assets/images/Logo_Tankef.png")}
+          source={require("../../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
@@ -107,7 +107,7 @@ const Registro2 = ({ navigation, route }) => {
             firebaseConfig={firebaseConfig}
           />
           <Image
-            source={require("../../assets/images/LoginFlow2.png")}
+            source={require("../../../assets/images/LoginFlow2.png")}
             style={styles.imagenAvance}
           />
           <Text style={styles.texto}>

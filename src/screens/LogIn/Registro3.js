@@ -11,10 +11,10 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 // Importaciones de Hooks
-import { UserContext } from "../hooks/UserContext";
-import { ChecarCURP } from "../hooks/ChecarCURP";
+import { UserContext } from "../../hooks/UserContext";
+import { ChecarCURP } from "../../hooks/ChecarCURP";
 // Importaciones de Componentes
-import SpecialInput from "../components/SpecialInput";
+import SpecialInput from "../../components/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
 const Registro3 = ({ navigation }) => {
@@ -105,14 +105,14 @@ const Registro3 = ({ navigation }) => {
           />
         </TouchableOpacity>
         <Image
-          source={require("../../assets/images/Logo_Tankef.png")}
+          source={require("../../../assets/images/Logo_Tankef.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>TANKEF</Text>
         {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
         <View style={styles.container}>
           <Image
-            source={require("../../assets/images/LoginFlow3.png")}
+            source={require("../../../assets/images/LoginFlow3.png")}
             style={styles.imagenAvance}
           />
           {/* Sección de campos de entrada */}
