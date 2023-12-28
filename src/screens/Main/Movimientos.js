@@ -13,7 +13,7 @@ const MisMovimientos = () => {
         source={require("../../../assets/images/Logo_Tankef.png")}
         style={styles.imagen}
       />
-      <Text style={styles.titulo}>Mis Movimientos</Text>
+      <Text style={styles.titulo}>Movimientos</Text>
     </View>
   );
 };

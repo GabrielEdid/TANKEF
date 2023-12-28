@@ -1,4 +1,5 @@
 // Importaciones de React Native y React
+import { Image, Text } from "react-native";
 import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -20,12 +21,43 @@ import AuthPinPad from "./src/screens/LogIn/AuthPinPad";
 import Inicio from "./src/screens/Main/Inicio";
 import MiRed from "./src/screens/Main/MiRed";
 import Crear from "./src/screens/Main/Crear";
-import MisMovimientos from "./src/screens/Main/MisMovimientos";
+import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
+import { MARGIN_KEY_PATTERN } from "react-native-ui-lib/src/commons/modifiers";
 
 // Crear un Stack y Tab Navigator para la navegación
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+// Estilos comunes para los íconos y textos de la tabBar
+const createTabScreenOptions = (
+  iconSource,
+  label,
+  iconWidth = 25,
+  iconHeight = 25
+) => ({
+  headerShown: false,
+  tabBarLabel: ({ focused, color }) => (
+    <Text
+      style={{
+        color: focused ? "#29364d" : color,
+        fontSize: 13,
+      }}
+    >
+      {label}
+    </Text>
+  ),
+  tabBarIcon: ({ focused, color, size }) => (
+    <Image
+      source={iconSource}
+      style={{
+        width: focused ? iconWidth * 1.2 : iconWidth, // Aumentar tamaño si está enfocado
+        height: focused ? iconHeight * 1.2 : iconHeight,
+        tintColor: focused ? "#29364d" : color,
+      }}
+    />
+  ),
+});
 
 function MainFlow() {
   return (
@@ -33,27 +65,44 @@ function MainFlow() {
       <Tab.Screen
         name="Inicio"
         component={Inicio}
-        options={{ headerShown: false }}
+        options={createTabScreenOptions(
+          require("./assets/images/Inicio.png"),
+          "Inicio"
+        )}
       />
       <Tab.Screen
         name="Mi Red"
         component={MiRed}
-        options={{ headerShown: false }}
+        options={createTabScreenOptions(
+          require("./assets/images/MiRed.png"),
+          "Mi Red",
+          35,
+          25
+        )}
       />
       <Tab.Screen
         name="Crear"
         component={Crear}
-        options={{ headerShown: false }}
+        options={createTabScreenOptions(
+          require("./assets/images/Crear.png"),
+          "Crear"
+        )}
       />
       <Tab.Screen
-        name="Mis Movimientos"
-        component={MisMovimientos}
-        options={{ headerShown: false }}
+        name="Movimientos"
+        component={Movimientos}
+        options={createTabScreenOptions(
+          require("./assets/images/Movimientos.png"),
+          "Movimientos"
+        )}
       />
       <Tab.Screen
         name="Perfil"
         component={Perfil}
-        options={{ headerShown: false }}
+        options={createTabScreenOptions(
+          require("./assets/images/Perfil.png"),
+          "Perfil"
+        )}
       />
     </Tab.Navigator>
   );
@@ -200,18 +249,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-/* POSIBLES PRAGMENTOS DE CODIGO QUE SE PUEDAN USAR DESPUES PARA LA NAVIGATION
-    REUBICAR LAS LLAVES Y PARENTESIS DE ANTES 
-    //
-    //Signup: SignupScreen,
-    //Signin: SigninScreen,
-  mainFlow: createMaterialBottomTabNavigator({
-    trackListFlow: createStackNavigator({
-      TrackList: TrackListScreen,
-      TrackDetail: TrackDetailScreen,
-    }),
-    TrackCreate: TrackCreateScreen,
-    Account: AccountScreen,
-  }),
-});*/
