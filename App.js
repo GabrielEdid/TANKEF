@@ -13,11 +13,15 @@ import Registro1 from "./src/screens/LogIn/Registro1";
 import Registro2 from "./src/screens/LogIn/Registro2";
 import Registro3 from "./src/screens/LogIn/Registro3";
 import Registro4 from "./src/screens/LogIn/Registro4";
-import Perfil from "./src/screens/Main/Perfil";
 import SetPinPad from "./src/screens/LogIn/SetPinPad";
 import ConfirmSetPinPad from "./src/screens/LogIn/ConfirmSetPinPad";
 import OlvideContrasena from "./src/screens/LogIn/OlivideContrasena";
 import AuthPinPad from "./src/screens/LogIn/AuthPinPad";
+import Inicio from "./src/screens/Main/Inicio";
+import MiRed from "./src/screens/Main/MiRed";
+import Crear from "./src/screens/Main/Crear";
+import MisMovimientos from "./src/screens/Main/MisMovimientos";
+import Perfil from "./src/screens/Main/Perfil";
 
 // Crear un Stack y Tab Navigator para la navegación
 const Stack = createStackNavigator();
@@ -26,9 +30,31 @@ const Tab = createBottomTabNavigator();
 function MainFlow() {
   return (
     <Tab.Navigator>
-      {/* Aquí puedes añadir otras pantallas como pestañas si lo deseas */}
-      <Tab.Screen name="Perfil" component={Perfil} />
-      {/* Ejemplo de otra pantalla: <Tab.Screen name="OtraPantalla" component={OtraPantalla} /> */}
+      <Tab.Screen
+        name="Inicio"
+        component={Inicio}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Mi Red"
+        component={MiRed}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Crear"
+        component={Crear}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Mis Movimientos"
+        component={MisMovimientos}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 }
@@ -134,11 +160,11 @@ function LoginFlow() {
           component={Registro4}
           options={{ headerShown: false }}
         />
-        <Tab.Navigator>
-          {/* Aquí puedes añadir otras pantallas como pestañas si lo deseas */}
-          <Tab.Screen name="Perfil" component={Perfil} />
-          {/* Ejemplo de otra pantalla: <Tab.Screen name="OtraPantalla" component={OtraPantalla} /> */}
-        </Tab.Navigator>
+        <Stack.Screen
+          name="MainFlow"
+          component={MainFlow}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </UserProvider>
   );

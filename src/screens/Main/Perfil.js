@@ -27,7 +27,7 @@ const Perfil = ({ navigation }) => {
         source={require("../../../assets/images/Logo_Tankef.png")}
         style={styles.imagen}
       />
-      <Text style={styles.titulo}>TANKEF</Text>
+      <Text style={styles.titulo}>Perfil</Text>
       {/* Boton de Cerrar Sesion */}
       <TouchableOpacity
         style={{
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontFamily: "conthrax",
-    fontSize: 60,
-    color: "white",
+    fontSize: 30,
+    color: "#29364d",
     marginTop: 450,
     alignSelf: "center",
     position: "absolute",
