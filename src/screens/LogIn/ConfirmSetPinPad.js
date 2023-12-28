@@ -34,7 +34,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   const handleConfirmPin = () => {
     if (confirmPin === pin) {
       setUser({ ...user, pin: confirmPin, loggedIn: true });
-      navigation.navigate("Main");
+      navigation.navigate("Perfil");
     } else {
       alert("Los Pines no Coinciden");
       setConfirmPin("");

@@ -1,17 +1,11 @@
 // Importaciones de React Native y React
-import {
-  Text,
-  StyleSheet,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect } from "react";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Main = ({ navigation }) => {
+const Perfil = ({ navigation }) => {
   // Estado global
   const { user, setUser, resetUser } = useContext(UserContext);
 
@@ -27,10 +21,7 @@ const Main = ({ navigation }) => {
   // Componente visual
   return (
     //Imagen de Fondo
-    <ImageBackground
-      source={require("../../../assets/images/Fondo.png")}
-      style={styles.background}
-    >
+    <View style={styles.background}>
       {/* Logo, Titulo */}
       <Image
         source={require("../../../assets/images/Logo_Tankef.png")}
@@ -52,7 +43,7 @@ const Main = ({ navigation }) => {
           Cerrar Sesión
         </Text>
       </TouchableOpacity>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -65,6 +56,7 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
+    backgroundColor: "white",
   },
   imagen: {
     width: 150,
@@ -83,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Main;
+export default Perfil;
