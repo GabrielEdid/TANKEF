@@ -23,11 +23,7 @@ const Perfil = ({ navigation }) => {
     //Imagen de Fondo
     <View style={styles.background}>
       {/* Logo, Titulo */}
-      <Image
-        source={require("../../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
-      <Text style={styles.titulo}>Perfil</Text>
+      <Text style={styles.titulo}>TANKEF</Text>
       {/* Boton de Cerrar Sesion */}
       <TouchableOpacity
         style={{
@@ -37,9 +33,7 @@ const Perfil = ({ navigation }) => {
         }}
         onPress={() => handleOnPress()}
       >
-        <Text
-          style={{ fontSize: 40, fontFamily: "conthrax", color: "#29364d" }}
-        >
+        <Text style={{ fontSize: 20, fontFamily: "conthrax", color: "red" }}>
           Cerrar Sesión
         </Text>
       </TouchableOpacity>
@@ -67,10 +61,10 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontFamily: "conthrax",
-    fontSize: 30,
+    fontSize: 27,
     color: "#29364d",
-    marginTop: 450,
-    alignSelf: "center",
+    marginTop: 70,
+    marginLeft: 20,
     position: "absolute",
   },
 });
