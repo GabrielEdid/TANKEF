@@ -23,7 +23,6 @@ import MiRed from "./src/screens/Main/MiRed";
 import Crear from "./src/screens/Main/Crear";
 import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
-import { MARGIN_KEY_PATTERN } from "react-native-ui-lib/src/commons/modifiers";
 
 // Crear un Stack y Tab Navigator para la navegación
 const Stack = createStackNavigator();

@@ -1,6 +1,8 @@
 // Importaciones de React Native y React
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,6 +19,32 @@ const Perfil = ({ navigation }) => {
     console.log("Información reseteada y guardada con éxito");
     navigation.navigate("InitialScreen");
   };
+
+  function DrawerContent() {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Button
+          title="Action 1"
+          onPress={() => console.log("Acción 1 ejecutada")}
+        />
+        <Button
+          title="Action 2"
+          onPress={() => console.log("Acción 2 ejecutada")}
+        />
+        {/* Más botones según sea necesario */}
+      </View>
+    );
+  }
+
+  const Drawer = createDrawerNavigator();
+
+  function MyDrawer() {
+    return (
+      <Drawer.Navigator drawerContent={() => <DrawerContent />}>
+        <Drawer.Screen name="Movimientos" component={Movimientos} />
+      </Drawer.Navigator>
+    );
+  }
 
   // Componente visual
   return (
@@ -37,6 +65,7 @@ const Perfil = ({ navigation }) => {
           Cerrar Sesión
         </Text>
       </TouchableOpacity>
+      <MyDrawer />
     </View>
   );
 };
