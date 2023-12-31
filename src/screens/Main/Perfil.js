@@ -1,71 +1,25 @@
 // Importaciones de React Native y React
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import React, { useContext, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import React, { useContext } from "react";
+import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
-import { UserContext } from "../../hooks/UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Feather } from "@expo/vector-icons";
 
-const Perfil = ({ navigation }) => {
-  // Estado global
-  const { user, setUser, resetUser } = useContext(UserContext);
-
-  // Función para salir de la sesión
-  const handleOnPress = async () => {
-    resetUser();
-    // Espera a que el estado se actualice antes de guardar en AsyncStorage
-    await AsyncStorage.setItem("userInfo", JSON.stringify(user));
-    console.log("Información reseteada y guardada con éxito");
-    navigation.navigate("InitialScreen");
-  };
-
-  function DrawerContent() {
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Button
-          title="Action 1"
-          onPress={() => console.log("Acción 1 ejecutada")}
-        />
-        <Button
-          title="Action 2"
-          onPress={() => console.log("Acción 2 ejecutada")}
-        />
-        {/* Más botones según sea necesario */}
-      </View>
-    );
-  }
-
-  const Drawer = createDrawerNavigator();
-
-  function MyDrawer() {
-    return (
-      <Drawer.Navigator drawerContent={() => <DrawerContent />}>
-        <Drawer.Screen name="Movimientos" component={Movimientos} />
-      </Drawer.Navigator>
-    );
-  }
+const Perfil = () => {
+  const navigation = useNavigation();
 
   // Componente visual
   return (
     //Imagen de Fondo
     <View style={styles.background}>
-      {/* Logo, Titulo */}
-      <Text style={styles.titulo}>TANKEF</Text>
-      {/* Boton de Cerrar Sesion */}
       <TouchableOpacity
-        style={{
-          marginTop: 600,
-          alignSelf: "center",
-          alignItems: "center",
-        }}
-        onPress={() => handleOnPress()}
+        onPress={() => navigation.openDrawer()}
+        style={styles.settings}
       >
-        <Text style={{ fontSize: 20, fontFamily: "conthrax", color: "red" }}>
-          Cerrar Sesión
-        </Text>
+        <Feather name="settings" size={30} color="#29364d" />
       </TouchableOpacity>
-      <MyDrawer />
+      {/* Titulo */}
+      <Text style={styles.titulo}>TANKEF</Text>
     </View>
   );
 };
@@ -94,6 +48,14 @@ const styles = StyleSheet.create({
     color: "#29364d",
     marginTop: 70,
     marginLeft: 20,
+    position: "absolute",
+  },
+  settings: {
+    height: 32,
+    width: 35,
+    marginTop: 70,
+    marginLeft: 340,
+    alignItems: "center",
     position: "absolute",
   },
 });

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,10 +24,13 @@ import MiRed from "./src/screens/Main/MiRed";
 import Crear from "./src/screens/Main/Crear";
 import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
+// Importar Componnetes de la aplicación
+import SettingsDrawer from "./src/components/SettingsDrawer";
 
 // Crear un Stack y Tab Navigator para la navegación
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 // Estilos comunes para los íconos y textos de la tabBar
 const createTabScreenOptions = (
@@ -107,6 +111,15 @@ function MainFlow() {
   );
 }
 
+function MyDrawer() {
+  return (
+    <Drawer.Navigator drawerContent={(props) => <SettingsDrawer />}>
+      {/* Your Drawer Screens */}
+      <Drawer.Screen name="Perfil" component={Perfil} />
+    </Drawer.Navigator>
+  );
+}
+
 function LoginFlow() {
   // Estados para manejar la información del usuario y la carga de datos
   const [userInfo, setUserInfo] = useState(null);
@@ -159,62 +172,60 @@ function LoginFlow() {
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (
-    <UserProvider>
-      <Stack.Navigator initialRouteName={initialRouteName}>
-        {/* Configuración de las pantallas y sus opciones */}
-        <Stack.Screen
-          name="InitialScreen"
-          component={InitialScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="OlvideContrasena"
-          component={OlvideContrasena}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AuthPinPad"
-          component={AuthPinPad}
-          initialParams={{ userPin: userInfo ? userInfo.pin : undefined }}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ConfirmSetPinPad"
-          component={ConfirmSetPinPad}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SetPinPad"
-          component={SetPinPad}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro1"
-          component={Registro1}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro2"
-          component={Registro2}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro3"
-          component={Registro3}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registro4"
-          component={Registro4}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="MainFlow"
-          component={MainFlow}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </UserProvider>
+    <Stack.Navigator initialRouteName={initialRouteName}>
+      {/* Configuración de las pantallas y sus opciones */}
+      <Stack.Screen
+        name="InitialScreen"
+        component={InitialScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OlvideContrasena"
+        component={OlvideContrasena}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AuthPinPad"
+        component={AuthPinPad}
+        initialParams={{ userPin: userInfo ? userInfo.pin : undefined }}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ConfirmSetPinPad"
+        component={ConfirmSetPinPad}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SetPinPad"
+        component={SetPinPad}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Registro1"
+        component={Registro1}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Registro2"
+        component={Registro2}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Registro3"
+        component={Registro3}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Registro4"
+        component={Registro4}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MainFlow"
+        component={MainFlow}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
   );
 }
 
@@ -243,8 +254,21 @@ export default function App() {
 
   // Contenedor de navegación para la aplicación
   return (
-    <NavigationContainer>
-      <LoginFlow />
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer>
+        <Drawer.Navigator
+          screenOptions={{
+            drawerPosition: "right",
+          }}
+          drawerContent={(props) => <SettingsDrawer {...props} />}
+        >
+          <Drawer.Screen
+            name="LoginFlow"
+            component={LoginFlow}
+            options={{ headerShown: false }}
+          />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </UserProvider>
   );
 }
