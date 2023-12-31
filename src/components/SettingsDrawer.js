@@ -10,7 +10,7 @@ const SettingsDrawer = ({ navigation }) => {
   const { user, setUser, resetUser } = useContext(UserContext);
 
   // Función para salir de la sesión
-  const CerrarSesion = async () => {
+  const cerrarSesion = async () => {
     resetUser();
     // Espera a que el estado se actualice antes de guardar en AsyncStorage
     await AsyncStorage.setItem("userInfo", JSON.stringify(user));
@@ -30,7 +30,7 @@ const SettingsDrawer = ({ navigation }) => {
       <TouchableOpacity onPress={() => {}}>
         <Text style={styles.texto}>FAQs</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={() => cerrarSesion()}>
         <Text style={styles.cerrarSesion}>Cerrar Sesión</Text>
       </TouchableOpacity>
 

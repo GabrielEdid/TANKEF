@@ -111,15 +111,6 @@ function MainFlow() {
   );
 }
 
-function MyDrawer() {
-  return (
-    <Drawer.Navigator drawerContent={(props) => <SettingsDrawer />}>
-      {/* Your Drawer Screens */}
-      <Drawer.Screen name="Perfil" component={Perfil} />
-    </Drawer.Navigator>
-  );
-}
-
 function LoginFlow() {
   // Estados para manejar la información del usuario y la carga de datos
   const [userInfo, setUserInfo] = useState(null);
@@ -172,7 +163,12 @@ function LoginFlow() {
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (
-    <Stack.Navigator initialRouteName={initialRouteName}>
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={{
+        gestureEnabled: false, // Deshabilita el gesto de deslizar para volver en todas las pantallas
+      }}
+    >
       {/* Configuración de las pantallas y sus opciones */}
       <Stack.Screen
         name="InitialScreen"
