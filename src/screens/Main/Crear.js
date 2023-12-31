@@ -6,14 +6,9 @@ import React from "react";
 const Crear = () => {
   // Componente visual
   return (
-    //Imagen de Fondo
     <View style={styles.background}>
-      {/* Logo, Titulo */}
-      <Image
-        source={require("../../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
-      <Text style={styles.titulo}>Crear</Text>
+      {/* Titulo Superior */}
+      <Text style={styles.titulo}>TANKEF</Text>
     </View>
   );
 };
@@ -24,19 +19,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  imagen: {
-    width: 150,
-    height: 150,
-    alignSelf: "center",
-    marginTop: 300,
-    position: "absolute",
-  },
   titulo: {
     fontFamily: "conthrax",
-    fontSize: 30,
+    fontSize: 27,
     color: "#29364d",
-    marginTop: 450,
-    alignSelf: "center",
+    marginTop: 70,
+    marginLeft: 20,
     position: "absolute",
   },
 });

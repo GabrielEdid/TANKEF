@@ -13,7 +13,8 @@ const MisMovimientos = () => {
         source={require("../../../assets/images/Logo_Tankef.png")}
         style={styles.imagen}
       />
-      <Text style={styles.titulo}>Movimientos</Text>
+      <Text style={styles.titulo}>TANKEF</Text>
+      <Text style={styles.texto}>Movimientos</Text>
     </View>
   );
 };
@@ -31,12 +32,20 @@ const styles = StyleSheet.create({
     marginTop: 300,
     position: "absolute",
   },
-  titulo: {
+  texto: {
     fontFamily: "conthrax",
     fontSize: 30,
     color: "#29364d",
     marginTop: 450,
     alignSelf: "center",
+    position: "absolute",
+  },
+  titulo: {
+    fontFamily: "conthrax",
+    fontSize: 27,
+    color: "#29364d",
+    marginTop: 70,
+    marginLeft: 20,
     position: "absolute",
   },
 });
