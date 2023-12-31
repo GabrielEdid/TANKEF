@@ -82,7 +82,7 @@ const Crear = () => {
         <View
           style={{
             backgroundColor: "#cccccc",
-            marginTop: 5,
+            marginTop: 10,
             height: 1,
             width: 320,
             alignSelf: "center",
