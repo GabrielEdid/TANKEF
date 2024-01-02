@@ -75,7 +75,7 @@ const Perfil = () => {
               textAlign: "center",
             }}
           >
-            COMPLETAR PERFIL{" "}
+            COMPLETAR PERFIL
           </Text>
         </LinearGradient>
       </TouchableOpacity>
@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
   },
   botonGradient: {
     justifyContent: "center",
-    alignItems: "center",
     width: 180,
     height: 44,
     alignSelf: "center",
