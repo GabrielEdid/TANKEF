@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 45,
     tintColor: "#29364d",
-    marginTop: 120,
+    marginTop: 115,
     left: 20,
   },
   imagenInvertir: {
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     width: 110,
     fontFamily: "conthrax",
     color: "#29364d",
-    marginTop: 120,
+    marginTop: 123.5,
     left: 100,
     position: "absolute",
   },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     left: 240,
-    marginTop: 130,
+    marginTop: 125,
   },
   textoBoton: {
     fontSize: 10,

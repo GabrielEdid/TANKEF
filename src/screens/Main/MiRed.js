@@ -1,5 +1,12 @@
 // Importaciones de React Native y React
-import { View, Text, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 // Importaciones de Hooks y Componentes
 
@@ -8,13 +15,9 @@ const MiRed = () => {
   return (
     //Imagen de Fondo
     <View style={styles.background}>
-      {/* Logo, Titulo */}
-      <Image
-        source={require("../../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
+      {/* Titulo */}
       <Text style={styles.titulo}>TANKEF</Text>
-      <Text style={styles.texto}>Mi Red</Text>
+      <TextInput style={styles.input} />
     </View>
   );
 };
@@ -25,21 +28,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  imagen: {
-    width: 150,
-    height: 150,
-    alignSelf: "center",
-    marginTop: 300,
-    position: "absolute",
-  },
-  texto: {
-    fontFamily: "conthrax",
-    fontSize: 30,
-    color: "#29364d",
-    marginTop: 450,
-    alignSelf: "center",
-    position: "absolute",
-  },
   titulo: {
     fontFamily: "conthrax",
     fontSize: 27,
@@ -47,6 +35,15 @@ const styles = StyleSheet.create({
     marginTop: 70,
     marginLeft: 20,
     position: "absolute",
+  },
+  input: {
+    height: 40,
+    width: 354,
+    borderColor: "#D5D5D5",
+    borderWidth: 1,
+    marginTop: 115,
+    alignSelf: "center",
+    borderRadius: 15,
   },
 });
 
