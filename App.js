@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import { Image, Text } from "react-native";
+import { Image, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -36,29 +36,48 @@ const Drawer = createDrawerNavigator();
 const createTabScreenOptions = (
   iconSource,
   label,
-  iconWidth = 25,
-  iconHeight = 25
+  iconWidth = 20,
+  iconHeight = 20
 ) => ({
   headerShown: false,
   tabBarLabel: ({ focused, color }) => (
     <Text
       style={{
+        marginBottom: -7,
         color: focused ? "#29364d" : color,
-        fontSize: 13,
+        fontSize: 12,
+        fontWeight: "500",
+        alignSelf: "center"
       }}
     >
       {label}
     </Text>
   ),
   tabBarIcon: ({ focused, color, size }) => (
-    <Image
-      source={iconSource}
-      style={{
-        width: focused ? iconWidth * 1.2 : iconWidth, // Aumentar tamaño si está enfocado
-        height: focused ? iconHeight * 1.2 : iconHeight,
-        tintColor: focused ? "#29364d" : color,
-      }}
-    />
+    <View
+    style={{alignContent: "center", alignItems: "flex-start"}}>
+      <Image
+        style={{
+          height: 5,
+          width: 78,
+          marginTop: -1,
+          color: focused ? "#29364d" : "#ffffff",
+          backgroundColor: focused ? "#29364d" : "#ffffff",
+        }}
+      />
+      <Image
+        source={iconSource}
+        style={{
+          marginTop: 10,
+          marginBottom: 5,
+          alignSelf: "center",
+          width: iconWidth, // Aumentar tamaño si está enfocado
+          height: iconHeight,
+          tintColor: focused ? "#29364d" : color,
+        }}
+      />
+    </View>
+    
   ),
 });
 
@@ -70,7 +89,9 @@ function MainFlow() {
         component={Inicio}
         options={createTabScreenOptions(
           require("./assets/images/Inicio.png"),
-          "Inicio"
+          "Inicio",
+          20,
+          20
         )}
       />
       <Tab.Screen
@@ -79,8 +100,8 @@ function MainFlow() {
         options={createTabScreenOptions(
           require("./assets/images/MiRed.png"),
           "Mi Red",
-          35,
-          25
+          25,
+          20
         )}
       />
       <Tab.Screen
@@ -88,7 +109,9 @@ function MainFlow() {
         component={Crear}
         options={createTabScreenOptions(
           require("./assets/images/Crear.png"),
-          "Crear"
+          "Crear",
+          20,
+          20
         )}
       />
       <Tab.Screen
@@ -96,7 +119,9 @@ function MainFlow() {
         component={Movimientos}
         options={createTabScreenOptions(
           require("./assets/images/Movimientos.png"),
-          "Movimientos"
+          "Movimientos",
+          18,
+          20
         )}
       />
       <Tab.Screen
@@ -104,7 +129,9 @@ function MainFlow() {
         component={Perfil}
         options={createTabScreenOptions(
           require("./assets/images/Perfil.png"),
-          "Perfil"
+          "Perfil",
+          20,
+          20
         )}
       />
     </Tab.Navigator>

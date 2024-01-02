@@ -60,7 +60,7 @@ const Perfil = () => {
           </Text>
           !
         </Text>
-        <ProgressBar progress={0.6} />
+        <ProgressBar progress={0.7} />
         {/* Boton del Recuadro */}
         <LinearGradient
           colors={["#2FF690", "#21B6D5"]}
