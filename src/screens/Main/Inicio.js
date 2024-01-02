@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     height: 80,
     width: 353,
     left: 20,
-    top: 235,
+    top: 230,
     borderRadius: 15,
   },
   cuadroCredito: {
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     height: 80,
     width: 353,
     left: 20,
-    top: 245,
+    top: 240,
     borderRadius: 15,
     borderColor: "#D5D5D5",
     borderWidth: 1.5,
