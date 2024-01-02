@@ -3,18 +3,28 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 // Importaciones de Hooks y Componentes
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import Notificacion from "../../components/Notificacion";
 
 const MiRed = () => {
   // Estados y Contexto
   const [text, setText] = useState("");
+
+  // Mapa para cargar todas las imagenes
+  const imageMap = {
+    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
+    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
+    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
+    // ... más imágenes
+  };
+
   // Componente visual
   return (
     //Imagen de Fondo
@@ -43,6 +53,32 @@ const MiRed = () => {
           style={styles.arrow}
         />
       </TouchableOpacity>
+      <ScrollView style={styles.scroll}>
+        <Notificacion
+          nombre="Natahsa Ocasio Romanoff"
+          body="ha dado me gusta a tu ultima publicación."
+          imagen={imageMap["Natasha"]}
+          tiempo="45 minutos"
+        />
+        <Notificacion
+          nombre="Jose Antonio Quill"
+          body="ha dado me gusta a tu ultima publicación."
+          imagen={imageMap["Quill"]}
+          tiempo="1 hora"
+        />
+        <Notificacion
+          nombre="Clint Branton López"
+          body="ha dado me gusta a tu ultima publicación."
+          imagen={imageMap["Clint"]}
+          tiempo="1 hora"
+        />
+        <Notificacion
+          nombre="Clint Branton López"
+          body="ha comentado en ultima publicación."
+          imagen={imageMap["Clint"]}
+          tiempo="1 hora"
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -89,9 +125,9 @@ const styles = StyleSheet.create({
     paddingLeft: 40,
   },
   texto: {
-    fontSize: 19,
+    fontSize: 18,
     color: "#29364d",
-    marginTop: 12.5,
+    marginTop: 13,
     marginLeft: 20,
     position: "absolute",
   },
@@ -99,13 +135,21 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: "#C0C0C0",
     marginTop: 17.5,
-    right: 50,
+    right: 55,
     position: "absolute",
   },
   arrow: {
     position: "absolute",
     top: 10,
     right: 20,
+  },
+  scroll: {
+    flex: 1,
+    width: 353,
+    left: 20,
+    paddingTop: 6,
+    position: "absolute",
+    top: 215,
   },
 });
 
