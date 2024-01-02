@@ -74,7 +74,7 @@ const MiRed = () => {
         />
         <Notificacion
           nombre="Clint Branton López"
-          body="ha comentado en ultima publicación."
+          body="ha comentado en tu ultima publicación."
           imagen={imageMap["Clint"]}
           tiempo="1 hora"
         />
