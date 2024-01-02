@@ -47,15 +47,14 @@ const createTabScreenOptions = (
         color: focused ? "#29364d" : color,
         fontSize: 12,
         fontWeight: "500",
-        alignSelf: "center"
+        alignSelf: "center",
       }}
     >
       {label}
     </Text>
   ),
   tabBarIcon: ({ focused, color, size }) => (
-    <View
-    style={{alignContent: "center", alignItems: "flex-start"}}>
+    <View style={{ alignContent: "center", alignItems: "flex-start" }}>
       <Image
         style={{
           height: 5,
@@ -77,13 +76,23 @@ const createTabScreenOptions = (
         }}
       />
     </View>
-    
   ),
 });
 
 function MainFlow() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          shadowOffset: { width: 0, height: -2 }, // Desplazamiento de la sombra
+          shadowOpacity: 0.3, // Opacidad de la sombra
+          shadowRadius: 4, // Radio de la sombra
+          elevation: 5, // Elevación para Android
+          shadowColor: "#000000", // Color de la sombra
+          borderTopColor: "transparent", // Color del borde superior
+        },
+      }}
+    >
       <Tab.Screen
         name="Inicio"
         component={Inicio}
@@ -100,7 +109,7 @@ function MainFlow() {
         options={createTabScreenOptions(
           require("./assets/images/MiRed.png"),
           "Mi Red",
-          25,
+          27,
           20
         )}
       />
