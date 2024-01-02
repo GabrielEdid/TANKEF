@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 // Importaciones de Hooks y Componentes
 
-const MisMovimientos = () => {
+const Movimientos = () => {
   // Componente visual
   return (
     <View style={styles.background}>
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MisMovimientos;
+export default Movimientos;
