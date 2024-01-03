@@ -2,6 +2,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import Movimiento from "../../components/Movimiento";
+import { ScrollView } from "react-native-gesture-handler";
 
 // Importaciones de Hooks y Componentes
 
@@ -21,8 +22,12 @@ const Movimientos = () => {
       <TouchableOpacity style={styles.boton}>
         <Text style={[styles.textoBoton]}>NUEVO CRÉDITO</Text>
       </TouchableOpacity>
+      <View style={{height:215, marginTop:10}}>
+      <ScrollView style={{height: 215}}>
       <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
-
+      <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
+      </ScrollView>
+      </View>
       <TouchableOpacity style={styles.verMas}>
         <Text style={styles.textoVerMas}>VER MÁS</Text>
       </TouchableOpacity>
@@ -38,6 +43,12 @@ const Movimientos = () => {
       <TouchableOpacity style={[styles.boton, { marginTop: 440 }]}>
         <Text style={[styles.textoBoton]}>INVERTIR</Text>
       </TouchableOpacity>
+      <View style={{height:245, marginTop:10}}>
+      <ScrollView style={{height: 245}}>
+      <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
+      <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
+      </ScrollView>
+      </View>
       <TouchableOpacity style={[styles.verMas, { marginTop: 730 }]}>
         <Text style={styles.textoVerMas}>VER MÁS</Text>
       </TouchableOpacity>
@@ -70,7 +81,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 34,
     tintColor: "#29364d",
-    marginTop: 148,
+    marginTop: 48,
     left: 20,
   },
   texto: {
