@@ -22,8 +22,8 @@ const Movimientos = () => {
       <TouchableOpacity style={styles.boton}>
         <Text style={[styles.textoBoton]}>NUEVO CRÉDITO</Text>
       </TouchableOpacity>
-      <View style={{ height: 215, marginTop: 10 }}>
-        <ScrollView style={{ height: 215 }}>
+      <View style={{ height: 260 }}>
+        <ScrollView style={{ flex: 1 }}>
           <Movimiento
             tag={["TANKEF", "En Espera"]}
             titulo="Pago de Tarjeta de Crédito"
@@ -38,23 +38,24 @@ const Movimientos = () => {
           />
         </ScrollView>
       </View>
-      <TouchableOpacity style={styles.verMas}>
+      {/* Boton de VerMas*/}
+      {/*<TouchableOpacity style={styles.verMas}>
         <Text style={styles.textoVerMas}>VER MÁS</Text>
-      </TouchableOpacity>
+        </TouchableOpacity>*/}
       {/* Seccion de las Inversiones del Usuario */}
       <Image
         style={styles.imagenInvertir}
         source={require("../../../assets/images/Invertir.png")}
       />
-      <Text style={[styles.texto, { width: 150, marginTop: 435 }]}>
+      <Text style={[styles.texto, { width: 150, marginTop: 440 }]}>
         Mis Inversiones
       </Text>
       {/* Boton de Invertir y Ver Más */}
       <TouchableOpacity style={[styles.boton, { marginTop: 440 }]}>
         <Text style={[styles.textoBoton]}>INVERTIR</Text>
       </TouchableOpacity>
-      <View style={{ height: 245, marginTop: 10 }}>
-        <ScrollView style={{ height: 245 }}>
+      <View style={{ height: 260, marginTop: 10 }}>
+        <ScrollView style={{ flex: 1 }}>
           <Movimiento
             tag={["TANKEF", "En Espera"]}
             titulo="Pago de Tarjeta de Crédito"
@@ -69,9 +70,10 @@ const Movimientos = () => {
           />
         </ScrollView>
       </View>
-      <TouchableOpacity style={[styles.verMas, { marginTop: 730 }]}>
+      {/* Boton de VerMas*/}
+      {/* <TouchableOpacity style={[styles.verMas, { marginTop: 730 }]}>
         <Text style={styles.textoVerMas}>VER MÁS</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 34,
     tintColor: "#29364d",
-    marginTop: 48,
+    marginTop: 22,
     left: 20,
   },
   texto: {
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     position: "absolute",
-    marginTop: 390,
+    marginTop: 400,
   },
   textoVerMas: {
     fontSize: 10,
