@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 34,
     tintColor: "#29364d",
-    marginTop: 145,
+    marginTop: 148,
     left: 20,
   },
   texto: {
