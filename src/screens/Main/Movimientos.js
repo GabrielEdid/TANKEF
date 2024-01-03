@@ -22,11 +22,21 @@ const Movimientos = () => {
       <TouchableOpacity style={styles.boton}>
         <Text style={[styles.textoBoton]}>NUEVO CRÉDITO</Text>
       </TouchableOpacity>
-      <View style={{height:215, marginTop:10}}>
-      <ScrollView style={{height: 215}}>
-      <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
-      <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
-      </ScrollView>
+      <View style={{ height: 215, marginTop: 10 }}>
+        <ScrollView style={{ height: 215 }}>
+          <Movimiento
+            tag={["TANKEF", "En Espera"]}
+            titulo="Pago de Tarjeta de Crédito"
+            fecha="14 Nov 9:08 AM"
+            body="$253,500.00"
+          />
+          <Movimiento
+            tag={["TANKEF", "En Espera"]}
+            titulo="Pago de Tarjeta de Crédito"
+            fecha="14 Nov 9:08 AM"
+            body="$253,500.00"
+          />
+        </ScrollView>
       </View>
       <TouchableOpacity style={styles.verMas}>
         <Text style={styles.textoVerMas}>VER MÁS</Text>
@@ -43,11 +53,21 @@ const Movimientos = () => {
       <TouchableOpacity style={[styles.boton, { marginTop: 440 }]}>
         <Text style={[styles.textoBoton]}>INVERTIR</Text>
       </TouchableOpacity>
-      <View style={{height:245, marginTop:10}}>
-      <ScrollView style={{height: 245}}>
-      <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
-      <Movimiento tag={["TANKEF", "En Espera"]} titulo="Pago de Tarjeta de Crédito" fecha="14 Nov 9:08 AM" body="$253,500.00" />
-      </ScrollView>
+      <View style={{ height: 245, marginTop: 10 }}>
+        <ScrollView style={{ height: 245 }}>
+          <Movimiento
+            tag={["TANKEF", "En Espera"]}
+            titulo="Pago de Tarjeta de Crédito"
+            fecha="14 Nov 9:08 AM"
+            body="$253,500.00"
+          />
+          <Movimiento
+            tag={["TANKEF", "En Espera"]}
+            titulo="Pago de Tarjeta de Crédito"
+            fecha="14 Nov 9:08 AM"
+            body="$253,500.00"
+          />
+        </ScrollView>
       </View>
       <TouchableOpacity style={[styles.verMas, { marginTop: 730 }]}>
         <Text style={styles.textoVerMas}>VER MÁS</Text>
