@@ -4,19 +4,19 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const Movimiento = (props) => {
   return (
-    <View style={styles.CuadroMovimiento}>
+    <TouchableOpacity style={styles.CuadroMovimiento}>
       <Text style={styles.textoTitulo}>{props.titulo}</Text>
       <Text style={styles.textoFecha}>{props.fecha}</Text>
       <Text style={styles.textoBody}>{props.body}</Text>
-      <View style={{marginLeft:60, marginTop: 15, flexDirection:"row"}}>
+      <View style={{ marginLeft: 60, marginTop: 15, flexDirection: "row" }}>
         <View style={styles.Tag}>
-            <Text style={styles.textoTag}>{props.tag[0]}</Text>
+          <Text style={styles.textoTag}>{props.tag[0]}</Text>
         </View>
         <View style={styles.Tag}>
-            <Text style={styles.textoTag}>{props.tag[1]}</Text>
+          <Text style={styles.textoTag}>{props.tag[1]}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     paddingTop: 45,
     paddingRight: 25,
-    position: "absolute"
+    position: "absolute",
   },
 });
 
