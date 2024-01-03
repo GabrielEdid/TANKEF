@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -19,118 +21,120 @@ const Crear = () => {
 
   // Componente visual
   return (
-    <View style={styles.background}>
-      {/* Titulo Superior */}
-      <Text style={styles.titulo}>TANKEF</Text>
-      {/* Opciones para Crear */}
-      <Text style={styles.texto}>¡Realiza un Movimiento!</Text>
-      {/* Boton de Invertir */}
-      <TouchableOpacity style={styles.cuadros}>
-        <LinearGradient
-          colors={["#2FF690", "#21B6D5"]}
-          start={{ x: 0.2, y: 0.2 }} // Inicio del gradiente
-          end={{ x: 1.5, y: 1.5 }} // Fin del gradiente
-          style={styles.gradient}
-        >
-          <Image
-            style={{
-              height: 70,
-              width: 90,
-              tintColor: "white",
-              marginBottom: 10,
-            }}
-            source={require("../../../assets/images/Invertir.png")}
-          />
-          <Text style={styles.textoAcciones}>INVERTIR</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-      {/* Boton de Crédito */}
-      <TouchableOpacity style={[styles.cuadros, { left: 183 }]}>
-        <LinearGradient
-          colors={["#2FF690", "#21B6D5"]}
-          start={{ x: -0.7, y: -0.7 }} // Inicio del gradiente
-          end={{ x: 0.9, y: 0.9 }} // Fin del gradiente
-          style={styles.gradient}
-        >
-          <Image
-            style={{
-              height: 70,
-              width: 110,
-              tintColor: "white",
-              marginBottom: 10,
-            }}
-            source={require("../../../assets/images/Credito.png")}
-          />
-          <Text style={styles.textoAcciones}>CRÉDITO</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-      {/* Crear una publicación */}
-      <Text style={[styles.texto, { marginTop: 300 }]}>
-        Comparte algo con tu red
-      </Text>
-      {/* Input de texto */}
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder="En que estas pensando..."
-          onChangeText={setText}
-          value={text}
-          maxLength={textLimit}
-          multiline={true}
-        />
-        {/* Linea delgada para dividir el TextInput del boton para la imagen */}
-        <View
-          style={{
-            backgroundColor: "#cccccc",
-            marginTop: 10,
-            height: 1,
-            width: 320,
-            alignSelf: "center",
-          }}
-        ></View>
-        <Text style={{ left: 163, marginTop: 5, color: "#cccccc" }}>
-          {textLimit - text.length} caracteres restantes
-        </Text>
-        {/* Boton para la imagen */}
-        <TouchableOpacity
-          style={{
-            width: 50,
-            height: 50,
-            position: "absolute",
-            marginTop: 290,
-            left: 10,
-            alignSelf: "center",
-          }}
-        >
-          <EvilIcons
-            name="image"
-            size={60}
-            color="#cccccc"
-            style={{ right: 5 }}
-          />
-        </TouchableOpacity>
-      </View>
-      {/* Boton para publicar */}
-      <TouchableOpacity
-        style={styles.boton}
-        onPress={() => {}}
-        disabled={!text}
-      >
-        {/* Se evalua si hay texto y activa el boton con gradiente */}
-        {text ? (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.background}>
+        {/* Titulo Superior */}
+        <Text style={styles.titulo}>TANKEF</Text>
+        {/* Opciones para Crear */}
+        <Text style={styles.texto}>¡Realiza un Movimiento!</Text>
+        {/* Boton de Invertir */}
+        <TouchableOpacity style={styles.cuadros}>
           <LinearGradient
             colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.botonGradient}
+            start={{ x: 0.2, y: 0.2 }} // Inicio del gradiente
+            end={{ x: 1.5, y: 1.5 }} // Fin del gradiente
+            style={styles.gradient}
           >
-            <Text style={styles.textoBoton}>PUBLICAR</Text>
+            <Image
+              style={{
+                height: 70,
+                width: 90,
+                tintColor: "white",
+                marginBottom: 10,
+              }}
+              source={require("../../../assets/images/Invertir.png")}
+            />
+            <Text style={styles.textoAcciones}>INVERTIR</Text>
           </LinearGradient>
-        ) : (
-          <Text style={[styles.textoBoton, { color: "grey" }]}>PUBLICAR</Text>
-        )}
-      </TouchableOpacity>
-    </View>
+        </TouchableOpacity>
+        {/* Boton de Crédito */}
+        <TouchableOpacity style={[styles.cuadros, { left: 183 }]}>
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: -0.7, y: -0.7 }} // Inicio del gradiente
+            end={{ x: 0.9, y: 0.9 }} // Fin del gradiente
+            style={styles.gradient}
+          >
+            <Image
+              style={{
+                height: 70,
+                width: 110,
+                tintColor: "white",
+                marginBottom: 10,
+              }}
+              source={require("../../../assets/images/Credito.png")}
+            />
+            <Text style={styles.textoAcciones}>CRÉDITO</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        {/* Crear una publicación */}
+        <Text style={[styles.texto, { marginTop: 300 }]}>
+          Comparte algo con tu red
+        </Text>
+        {/* Input de texto */}
+        <View style={styles.container}>
+          <TextInput
+            style={styles.input}
+            placeholder="En que estas pensando..."
+            onChangeText={setText}
+            value={text}
+            maxLength={textLimit}
+            multiline={true}
+          />
+          {/* Linea delgada para dividir el TextInput del boton para la imagen */}
+          <View
+            style={{
+              backgroundColor: "#cccccc",
+              marginTop: 10,
+              height: 1,
+              width: 320,
+              alignSelf: "center",
+            }}
+          ></View>
+          <Text style={{ left: 163, marginTop: 5, color: "#cccccc" }}>
+            {textLimit - text.length} caracteres restantes
+          </Text>
+          {/* Boton para la imagen */}
+          <TouchableOpacity
+            style={{
+              width: 50,
+              height: 50,
+              position: "absolute",
+              marginTop: 290,
+              left: 10,
+              alignSelf: "center",
+            }}
+          >
+            <EvilIcons
+              name="image"
+              size={60}
+              color="#cccccc"
+              style={{ right: 5 }}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* Boton para publicar */}
+        <TouchableOpacity
+          style={styles.boton}
+          onPress={() => {}}
+          disabled={!text}
+        >
+          {/* Se evalua si hay texto y activa el boton con gradiente */}
+          {text ? (
+            <LinearGradient
+              colors={["#2FF690", "#21B6D5"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.botonGradient}
+            >
+              <Text style={styles.textoBoton}>PUBLICAR</Text>
+            </LinearGradient>
+          ) : (
+            <Text style={[styles.textoBoton, { color: "grey" }]}>PUBLICAR</Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
