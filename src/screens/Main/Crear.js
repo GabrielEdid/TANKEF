@@ -204,11 +204,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#cccccc",
     borderRadius: 15,
     position: "absolute",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
   },
   botonGradient: {
     flex: 1,
