@@ -32,6 +32,22 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
+// Pantalla Perfil con Drawer
+function PerfilDrawer() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{ drawerPosition: "right" }}
+      drawerContent={(props) => <SettingsDrawer {...props} />}
+    >
+      <Drawer.Screen
+        name="PerfilScreen"
+        component={Perfil}
+        options={{ headerShown: false }}
+      />
+    </Drawer.Navigator>
+  );
+}
+
 // Estilos comunes para los íconos y textos de la tabBar
 const createTabScreenOptions = (
   iconSource,
@@ -135,7 +151,7 @@ function MainFlow() {
       />
       <Tab.Screen
         name="Perfil"
-        component={Perfil}
+        component={PerfilDrawer}
         options={createTabScreenOptions(
           require("./assets/images/Perfil.png"),
           "Perfil",
@@ -262,7 +278,7 @@ function LoginFlow() {
 }
 
 // Componente principal de la aplicación
-export default function App() {
+export default App = () => {
   // Estado para manejar la carga de fuentes
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -288,19 +304,22 @@ export default function App() {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Drawer.Navigator
-          screenOptions={{
-            drawerPosition: "right",
-          }}
-          drawerContent={(props) => <SettingsDrawer {...props} />}
+        <Stack.Navigator
+          initialRouteName="LoginFlow"
+          screenOptions={{ gestureEnabled: false }}
         >
-          <Drawer.Screen
+          <Stack.Screen
             name="LoginFlow"
             component={LoginFlow}
             options={{ headerShown: false }}
           />
-        </Drawer.Navigator>
+          <Stack.Screen
+            name="MainFlow"
+            component={MainFlow}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
   );
-}
+};
