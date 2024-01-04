@@ -3,19 +3,22 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const MovimientoInversion = (props) => {
-  <TouchableOpacity style={styles.CuadroMovimiento}>
-    <Text style={styles.textoTitulo}>{props.titulo}</Text>
-    <Text style={styles.textoFecha}>{props.fecha}</Text>
-    <Text style={styles.textoBody}>{props.body}</Text>
-    <View style={{ marginLeft: 60, marginTop: 15, flexDirection: "row" }}>
-      <View style={styles.Tag}>
-        <Text style={styles.textoTag}>{props.tag[0]}</Text>
+  return (
+    <TouchableOpacity style={styles.CuadroMovimiento}>
+      <Text style={styles.textoTitulo}>{props.titulo}</Text>
+      <Text style={styles.textoFecha}>{props.fecha}</Text>
+      <Text style={styles.textoInicial}>{props.inicial}</Text>
+      <Text style={styles.textoActual}>{props.actual}</Text>
+      <View style={{ marginLeft: 60, marginTop: 15, flexDirection: "row" }}>
+        <View style={styles.Tag}>
+          <Text style={styles.textoTag}>{props.tag[0]}</Text>
+        </View>
+        <View style={styles.Tag}>
+          <Text style={styles.textoTag}>{props.tag[1]}</Text>
+        </View>
       </View>
-      <View style={styles.Tag}>
-        <Text style={styles.textoTag}>{props.tag[1]}</Text>
-      </View>
-    </View>
-  </TouchableOpacity>;
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -57,10 +60,19 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingLeft: 60,
   },
-  textoBody: {
+  textoActual: {
     fontSize: 18,
     color: "#29364d",
     fontWeight: "bold",
+    textAlign: "right",
+    alignSelf: "flex-end",
+    paddingTop: 70,
+    paddingRight: 25,
+    position: "absolute",
+  },
+  textoInicial: {
+    fontSize: 16,
+    color: "#29364d",
     textAlign: "right",
     alignSelf: "flex-end",
     paddingTop: 45,

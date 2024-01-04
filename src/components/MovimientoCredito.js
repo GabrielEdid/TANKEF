@@ -3,19 +3,21 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const MovimientoCredito = (props) => {
-  <TouchableOpacity style={styles.CuadroMovimiento}>
-    <Text style={styles.textoTitulo}>{props.titulo}</Text>
-    <Text style={styles.textoFecha}>{props.fecha}</Text>
-    <Text style={styles.textoBody}>{props.body}</Text>
-    <View style={{ marginLeft: 60, marginTop: 15, flexDirection: "row" }}>
-      <View style={styles.Tag}>
-        <Text style={styles.textoTag}>{props.tag[0]}</Text>
+  return (
+    <TouchableOpacity style={styles.CuadroMovimiento}>
+      <Text style={styles.textoTitulo}>{props.titulo}</Text>
+      <Text style={styles.textoFecha}>{props.fecha}</Text>
+      <Text style={styles.textoBody}>{props.body}</Text>
+      <View style={{ marginLeft: 60, marginTop: 15, flexDirection: "row" }}>
+        <View style={styles.Tag}>
+          <Text style={styles.textoTag}>{props.tag[0]}</Text>
+        </View>
+        <View style={styles.Tag}>
+          <Text style={styles.textoTag}>{props.tag[1]}</Text>
+        </View>
       </View>
-      <View style={styles.Tag}>
-        <Text style={styles.textoTag}>{props.tag[1]}</Text>
-      </View>
-    </View>
-  </TouchableOpacity>;
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({

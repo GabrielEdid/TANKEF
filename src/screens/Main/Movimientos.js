@@ -29,13 +29,13 @@ const Movimientos = () => {
             tag={["TANKEF", "En Espera"]}
             titulo="Pago de Tarjeta de Crédito"
             fecha="14 Nov 9:08 AM"
-            body="$253,500.00"
+            body="$9,000.00"
           />
           <MovimientoCredito
             tag={["TANKEF", "En Espera"]}
-            titulo="Pago de Tarjeta de Crédito"
-            fecha="14 Nov 9:08 AM"
-            body="$253,500.00"
+            titulo="Préstamo Colegiatura"
+            fecha="20 Sep 11:08 AM"
+            body="$16,500.00"
           />
         </ScrollView>
       </View>
@@ -58,16 +58,18 @@ const Movimientos = () => {
       <View style={{ height: 260, marginTop: 10 }}>
         <ScrollView style={{ flex: 1 }}>
           <MovimientoInversion
-            tag={["TANKEF", "En Espera"]}
-            titulo="Pago de Tarjeta de Crédito"
+            tag={["13.20%", "En Curso"]}
+            titulo="Reinversión: Ahorro Aguinaldo"
             fecha="14 Nov 9:08 AM"
-            body="$253,500.00"
+            actual="$18,195.00"
+            inicial="$16,325.00"
           />
           <MovimientoInversion
-            tag={["TANKEF", "En Espera"]}
-            titulo="Pago de Tarjeta de Crédito"
-            fecha="14 Nov 9:08 AM"
-            body="$253,500.00"
+            tag={["13.51%", "Completado"]}
+            titulo="Ahorro Aguinaldo"
+            fecha="20 Sep 11:08 AM"
+            actual="$16,325.00"
+            inicial="$15,000.00"
           />
         </ScrollView>
       </View>
