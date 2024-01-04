@@ -1,8 +1,23 @@
 // Importaciones de React Native y React
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+// Importaciones de Componentes y Hooks
+import { Feather } from "@expo/vector-icons";
 
 const MovimientoInversion = (props) => {
+  let colorTag;
+  switch (props.tag[1]) {
+    case "Completado":
+      colorTag = "#59B335";
+      break;
+    case "En Curso":
+      colorTag = "#4294F7";
+      break;
+    default:
+      colorTag = "#29364d";
+      break;
+  }
+
   return (
     <TouchableOpacity style={styles.CuadroMovimiento}>
       <Text style={styles.textoTitulo}>{props.titulo}</Text>
@@ -13,10 +28,16 @@ const MovimientoInversion = (props) => {
         <View style={styles.Tag}>
           <Text style={styles.textoTag}>{props.tag[0]}</Text>
         </View>
-        <View style={styles.Tag}>
+        <View style={[styles.Tag, { backgroundColor: colorTag }]}>
           <Text style={styles.textoTag}>{props.tag[1]}</Text>
         </View>
       </View>
+      <Feather
+        name="arrow-up-right"
+        size={35}
+        color="#29364d"
+        style={styles.arrow}
+      />
     </TouchableOpacity>
   );
 };
@@ -78,6 +99,11 @@ const styles = StyleSheet.create({
     paddingTop: 45,
     paddingRight: 25,
     position: "absolute",
+  },
+  arrow: {
+    position: "absolute",
+    top: 15,
+    left: 15,
   },
 });
 

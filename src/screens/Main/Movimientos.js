@@ -32,7 +32,7 @@ const Movimientos = () => {
             body="$9,000.00"
           />
           <MovimientoCredito
-            tag={["TANKEF", "En Espera"]}
+            tag={["TANKEF", "Completado"]}
             titulo="Préstamo Colegiatura"
             fecha="20 Sep 11:08 AM"
             body="$16,500.00"
