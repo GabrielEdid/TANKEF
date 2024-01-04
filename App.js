@@ -24,6 +24,7 @@ import MiRed from "./src/screens/Main/MiRed";
 import Crear from "./src/screens/Main/Crear";
 import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
+import SolicitudesConexion from "./src/screens/Main/SolicitudesConexion";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -159,6 +160,11 @@ function MainFlow() {
           20
         )}
       />
+      <Tab.Screen
+        name="SolicitudesConexion"
+        component={SolicitudesConexion}
+        options={{ tabBarButton: () => null, headerShown: false }} // Ocultar la pestaña de Solicitudes de Conexión
+      />
     </Tab.Navigator>
   );
 }
@@ -277,6 +283,16 @@ function LoginFlow() {
   );
 }
 
+function AppNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="LoginFlow" component={LoginFlow} />
+      <Stack.Screen name="MainFlow" component={MainFlow} />
+      {/* Agrega otras pantallas aquí si es necesario */}
+    </Stack.Navigator>
+  );
+}
+
 // Componente principal de la aplicación
 export default App = () => {
   // Estado para manejar la carga de fuentes
@@ -304,21 +320,7 @@ export default App = () => {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="LoginFlow"
-          screenOptions={{ gestureEnabled: false }}
-        >
-          <Stack.Screen
-            name="LoginFlow"
-            component={LoginFlow}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MainFlow"
-            component={MainFlow}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
+        <AppNavigator />
       </NavigationContainer>
     </UserProvider>
   );

@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import Notificacion from "../../components/Notificacion";
 
-const MiRed = () => {
+const MiRed = ({ navigation }) => {
   // Estados y Contexto
   const [text, setText] = useState("");
 
@@ -43,7 +43,10 @@ const MiRed = () => {
         color="#D5D5D5"
         style={styles.search}
       />
-      <TouchableOpacity style={styles.administrar}>
+      <TouchableOpacity
+        style={styles.administrar}
+        onPress={() => navigation.navigate("SolicitudesConexion")}
+      >
         <Text style={styles.texto}>Administar mi Red</Text>
         <Text style={styles.subTexto}>3 conexiones nuevas</Text>
         <AntDesign
