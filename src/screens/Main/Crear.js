@@ -11,13 +11,31 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
 import { EvilIcons } from "@expo/vector-icons";
 
 const Crear = () => {
   // Estados y Contexto
   const [text, setText] = useState("");
+  const [image, setImage] = useState(null);
   const textLimit = 500;
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 3,
+    });
+
+    // Verifica si la selección fue cancelada
+    if (!result.canceled) {
+      // Accede a la primera imagen seleccionada del array 'assets'
+      const selectedImage = result.assets[0];
+      setImage(selectedImage.uri);
+    }
+  };
 
   // Componente visual
   return (
@@ -81,30 +99,22 @@ const Crear = () => {
             maxLength={textLimit}
             multiline={true}
           />
+
           {/* Linea delgada para dividir el TextInput del boton para la imagen */}
-          <View
+          <View style={styles.linea}></View>
+          {/* Contador de Caracteres Restantes */}
+          <Text
             style={{
-              backgroundColor: "#cccccc",
-              marginTop: 10,
-              height: 1,
-              width: 320,
-              alignSelf: "center",
+              left: 163,
+              marginTop: 15,
+              marginBottom: 5,
+              color: "#cccccc",
             }}
-          ></View>
-          <Text style={{ left: 163, marginTop: 5, color: "#cccccc" }}>
+          >
             {textLimit - text.length} caracteres restantes
           </Text>
           {/* Boton para la imagen */}
-          <TouchableOpacity
-            style={{
-              width: 50,
-              height: 50,
-              position: "absolute",
-              marginTop: 290,
-              left: 10,
-              alignSelf: "center",
-            }}
-          >
+          <TouchableOpacity style={styles.selectImagen} onPress={pickImage}>
             <EvilIcons
               name="image"
               size={60}
@@ -112,6 +122,7 @@ const Crear = () => {
               style={{ right: 5 }}
             />
           </TouchableOpacity>
+          {image && <Image source={{ uri: image }} style={styles.imagen} />}
         </View>
         {/* Boton para publicar */}
         <TouchableOpacity
@@ -184,6 +195,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 10,
+    paddingBottom: 20,
     height: 340,
     width: 353,
     borderColor: "#cccccc",
@@ -193,11 +205,18 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   input: {
-    height: 270,
+    flex: 1,
     width: 330,
-    paddingBottom: 230,
     color: "#29364d",
     fontSize: 18,
+  },
+  linea: {
+    backgroundColor: "#cccccc",
+    position: "absolute",
+    top: 290,
+    height: 1,
+    width: 320,
+    alignSelf: "center",
   },
   boton: {
     marginTop: 705,
@@ -220,6 +239,22 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "conthrax",
     color: "white",
+  },
+  selectImagen: {
+    width: 100,
+    height: 100,
+    position: "absolute",
+    marginTop: 290,
+    left: 10,
+    alignSelf: "center",
+  },
+  imagen: {
+    width: 47,
+    height: 35,
+    position: "absolute",
+    borderRadius: 10,
+    top: 296,
+    left: 65,
   },
 });
 

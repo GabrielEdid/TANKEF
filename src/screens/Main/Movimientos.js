@@ -1,7 +1,8 @@
 // Importaciones de React Native y React
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import Movimiento from "../../components/Movimiento";
+import MovimientoCredito from "../../components/MovimientoCredito";
+import MovimientoInversion from "../../components/MovimientoInversion";
 import { ScrollView } from "react-native-gesture-handler";
 
 // Importaciones de Hooks y Componentes
@@ -24,13 +25,13 @@ const Movimientos = () => {
       </TouchableOpacity>
       <View style={{ height: 260 }}>
         <ScrollView style={{ flex: 1 }}>
-          <Movimiento
+          <MovimientoCredito
             tag={["TANKEF", "En Espera"]}
             titulo="Pago de Tarjeta de Crédito"
             fecha="14 Nov 9:08 AM"
             body="$253,500.00"
           />
-          <Movimiento
+          <MovimientoCredito
             tag={["TANKEF", "En Espera"]}
             titulo="Pago de Tarjeta de Crédito"
             fecha="14 Nov 9:08 AM"
@@ -56,13 +57,13 @@ const Movimientos = () => {
       </TouchableOpacity>
       <View style={{ height: 260, marginTop: 10 }}>
         <ScrollView style={{ flex: 1 }}>
-          <Movimiento
+          <MovimientoInversion
             tag={["TANKEF", "En Espera"]}
             titulo="Pago de Tarjeta de Crédito"
             fecha="14 Nov 9:08 AM"
             body="$253,500.00"
           />
-          <Movimiento
+          <MovimientoInversion
             tag={["TANKEF", "En Espera"]}
             titulo="Pago de Tarjeta de Crédito"
             fecha="14 Nov 9:08 AM"
