@@ -11,9 +11,8 @@ import {
 import React, { useState } from "react";
 // Importaciones de Hooks y Componentes
 import { Ionicons } from "@expo/vector-icons";
-import Request from "../../components/Request";
 
-const SolicitudesConexion = ({ navigation }) => {
+const MisConexiones = () => {
   // Estados y Contexto
   const [text, setText] = useState("");
 
@@ -43,22 +42,11 @@ const SolicitudesConexion = ({ navigation }) => {
         color="#D5D5D5"
         style={styles.search}
       />
-      <TouchableOpacity
-        style={styles.misConexiones}
-        onPress={() => navigation.navigate("MisConexiones")}
-      >
-        <Image
-          source={require("../../../assets/images/MiRed.png")}
-          style={styles.imagen}
-        />
-        <Text style={styles.texto}>Mis Conexiones</Text>
-        <Text style={[styles.texto, { right: 30 }]}>15</Text>
-      </TouchableOpacity>
-      <Text style={styles.header}>Solicitudes de Conexión Nuevas</Text>
+      <Text style={styles.header}>Mis Conexiones</Text>
       <ScrollView style={styles.scroll}>
-        <Request imagen={imageMap["Bruce"]} nombre={"Bruce García Banner"} />
-        <Request imagen={imageMap["Carol"]} nombre={"Carol Danvers Miller"} />
-        <Request imagen={imageMap["Jane"]} nombre={"Jane Foster Cruz"} />
+        <Text style={styles.texto}>
+          Componente para mostrar nombres de conexiones
+        </Text>
       </ScrollView>
     </View>
   );
@@ -94,32 +82,11 @@ const styles = StyleSheet.create({
     top: 122.5,
     left: 30,
   },
-  misConexiones: {
-    height: 50,
-    width: 354,
-    borderColor: "#D5D5D5",
-    borderWidth: 1,
-    marginTop: 15,
-    alignSelf: "center",
-    borderRadius: 15,
-    color: "#29364d",
-    paddingLeft: 40,
-  },
   texto: {
     fontSize: 18,
     color: "#29364d",
     marginTop: 13,
-    marginLeft: 60,
     position: "absolute",
-  },
-  imagen: {
-    height: 25,
-    width: 35,
-    position: "absolute",
-    left: 15,
-    top: 10,
-    tintColor: "#29364d",
-    transform: [{ scaleX: -1 }],
   },
   header: {
     fontSize: 20,
@@ -133,9 +100,8 @@ const styles = StyleSheet.create({
     width: 353,
     left: 20,
     paddingTop: 6,
-    position: "absolute",
-    top: 255,
+    top: 20,
   },
 });
 
-export default SolicitudesConexion;
+export default MisConexiones;

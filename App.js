@@ -25,6 +25,7 @@ import Crear from "./src/screens/Main/Crear";
 import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
 import SolicitudesConexion from "./src/screens/Main/SolicitudesConexion";
+import MisConexiones from "./src/screens/Main/MisConexiones";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -163,6 +164,11 @@ function MainFlow() {
       <Tab.Screen
         name="SolicitudesConexion"
         component={SolicitudesConexion}
+        options={{ tabBarButton: () => null, headerShown: false }} // Ocultar la pestaña de Solicitudes de Conexión
+      />
+      <Tab.Screen
+        name="MisConexiones"
+        component={MisConexiones}
         options={{ tabBarButton: () => null, headerShown: false }} // Ocultar la pestaña de Solicitudes de Conexión
       />
     </Tab.Navigator>
