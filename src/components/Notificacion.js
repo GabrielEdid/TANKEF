@@ -13,6 +13,7 @@ const Notificacion = (props) => {
         </Text>
         <Text style={styles.textoTiempo}>Hace {props.tiempo}</Text>
       </TouchableOpacity>
+      {/* Linea delgada para dividr cada Notificacion */}
       <View
         style={{
           backgroundColor: "#cccccc",

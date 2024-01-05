@@ -11,10 +11,19 @@ import {
 import React, { useState } from "react";
 // Importaciones de Hooks y Componentes
 import { Ionicons } from "@expo/vector-icons";
+import Request from "../../components/Request";
 
 const SolicitudesConexion = () => {
   // Estados y Contexto
   const [text, setText] = useState("");
+
+  // Mapa para cargar todas las imagenes
+  const imageMap = {
+    Bruce: require("../../../assets/images/Fotos_Personas/Bruce.png"),
+    Carol: require("../../../assets/images/Fotos_Personas/Carol.png"),
+    Jane: require("../../../assets/images/Fotos_Personas/Jane.png"),
+    // ... más imágenes
+  };
 
   // Componente visual
   return (
@@ -42,7 +51,12 @@ const SolicitudesConexion = () => {
         <Text style={styles.texto}>Mis Conexiones</Text>
         <Text style={[styles.texto, { right: 30 }]}>15</Text>
       </TouchableOpacity>
-      <ScrollView style={styles.scroll}></ScrollView>
+      <Text style={styles.header}>Solicitudes de Conexión Nuevas</Text>
+      <ScrollView style={styles.scroll}>
+        <Request imagen={imageMap["Bruce"]} nombre={"Bruce García Banner"} />
+        <Request imagen={imageMap["Carol"]} nombre={"Carol Danvers Miller"} />
+        <Request imagen={imageMap["Jane"]} nombre={"Jane Foster Cruz"} />
+      </ScrollView>
     </View>
   );
 };
@@ -104,13 +118,20 @@ const styles = StyleSheet.create({
     tintColor: "#29364d",
     transform: [{ scaleX: -1 }],
   },
+  header: {
+    fontSize: 20,
+    color: "#29364d",
+    fontWeight: "bold",
+    left: 20,
+    top: 15,
+  },
   scroll: {
     flex: 1,
     width: 353,
     left: 20,
     paddingTop: 6,
     position: "absolute",
-    top: 215,
+    top: 255,
   },
 });
 
