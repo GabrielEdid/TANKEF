@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     height: 40,
     paddingTop: 10,
     paddingLeft: 10,
-    fontSize: 16,
+    fontSize: 10,
     color: "#29364d",
   },
   like: {

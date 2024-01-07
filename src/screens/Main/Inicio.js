@@ -116,7 +116,6 @@ const Inicio = () => {
             imagen={imageMap["Natasha"]}
             perfil={imageMap["Steve"]}
           />
-          <Post />
         </ScrollView>
       </TouchableWithoutFeedback>
     </>
