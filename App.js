@@ -33,6 +33,7 @@ import SettingsDrawer from "./src/components/SettingsDrawer";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+const MiRedStack = createStackNavigator();
 
 // Pantalla Perfil con Drawer
 function PerfilDrawer() {
@@ -97,6 +98,19 @@ const createTabScreenOptions = (
   ),
 });
 
+function MiRedStackScreen() {
+  return (
+    <MiRedStack.Navigator screenOptions={{ headerShown: false }}>
+      <MiRedStack.Screen name="MiRedMain" component={MiRed} />
+      <MiRedStack.Screen
+        name="SolicitudesConexion"
+        component={SolicitudesConexion}
+      />
+      <MiRedStack.Screen name="MisConexiones" component={MisConexiones} />
+    </MiRedStack.Navigator>
+  );
+}
+
 function MainFlow() {
   return (
     <Tab.Navigator
@@ -123,7 +137,7 @@ function MainFlow() {
       />
       <Tab.Screen
         name="Mi Red"
-        component={MiRed}
+        component={MiRedStackScreen}
         options={createTabScreenOptions(
           require("./assets/images/MiRed.png"),
           "Mi Red",
@@ -160,16 +174,6 @@ function MainFlow() {
           20,
           20
         )}
-      />
-      <Tab.Screen
-        name="SolicitudesConexion"
-        component={SolicitudesConexion}
-        options={{ tabBarButton: () => null, headerShown: false }} // Ocultar la pestaña de Solicitudes de Conexión
-      />
-      <Tab.Screen
-        name="MisConexiones"
-        component={MisConexiones}
-        options={{ tabBarButton: () => null, headerShown: false }} // Ocultar la pestaña de Solicitudes de Conexión
       />
     </Tab.Navigator>
   );
