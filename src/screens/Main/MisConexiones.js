@@ -1,16 +1,9 @@
 // Importaciones de React Native y React
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, TextInput, ScrollView } from "react-native";
 import React, { useState } from "react";
 // Importaciones de Hooks y Componentes
 import { Ionicons } from "@expo/vector-icons";
+import Conexion from "../../components/Conexion";
 
 const MisConexiones = () => {
   // Estados y Contexto
@@ -18,9 +11,12 @@ const MisConexiones = () => {
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
-    Bruce: require("../../../assets/images/Fotos_Personas/Bruce.png"),
-    Carol: require("../../../assets/images/Fotos_Personas/Carol.png"),
-    Jane: require("../../../assets/images/Fotos_Personas/Jane.png"),
+    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
+    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
+    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
+    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
+    Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
+    Test: require("../../../assets/images/Test.png"),
     // ... más imágenes
   };
 
@@ -44,9 +40,15 @@ const MisConexiones = () => {
       />
       <Text style={styles.header}>Mis Conexiones</Text>
       <ScrollView style={styles.scroll}>
-        <Text style={styles.texto}>
-          Componente para mostrar nombres de conexiones
-        </Text>
+        <Conexion
+          nombre={"Natasha Ocasio Romanoff"}
+          imagen={imageMap["Natasha"]}
+        />
+        <Conexion
+          nombre={"Antonio Stark Rivera"}
+          imagen={imageMap["Antonio"]}
+        />
+        <Conexion nombre={"Jose Antonio Quill"} imagen={imageMap["Quill"]} />
       </ScrollView>
     </View>
   );
