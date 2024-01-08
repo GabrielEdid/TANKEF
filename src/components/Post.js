@@ -9,8 +9,10 @@ import {
   Dimensions,
   TextInput,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { AntDesign } from "@expo/vector-icons";
+import ProgressBar from "./ProgressBar";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -20,6 +22,10 @@ const Post = (props) => {
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
   const [like, setLike] = useState(false);
+
+  // Calculo del porcentaje de la barra de progreso para un Credito
+  const porcentaje =
+    parseFloat(props.contribuidos) / parseFloat(props.solicitado);
 
   // Funcion para Obtener un tamaño adaptado para cada imagen
   const onImageLoad = (event) => {
@@ -53,7 +59,7 @@ const Post = (props) => {
   return (
     // Cuadro del Post
     <View style={styles.Cuadro}>
-      {/* Header del Post, Incluye Foto, Nombre y Tiempo */}
+      {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
       <View style={styles.header}>
         <Image source={props.foto} style={styles.fotoPerfil} />
         <View style={styles.headerText}>
@@ -61,18 +67,73 @@ const Post = (props) => {
           <Text style={styles.textoTiempo}>Hace {props.tiempo}</Text>
         </View>
       </View>
-      {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto */}
-      <Text style={styles.textoBody}>{displayedText}</Text>
-      {needsMoreButton && (
-        <TouchableOpacity onPress={toggleShowFullText}>
-          <Text style={styles.verMas}>Ver Más</Text>
-        </TouchableOpacity>
+
+      {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
+      {props.tipo === "compartir" && (
+        <>
+          <Text style={styles.textoBody}>{displayedText}</Text>
+          {needsMoreButton && (
+            <TouchableOpacity onPress={toggleShowFullText}>
+              <Text style={styles.verMas}>Ver Más</Text>
+            </TouchableOpacity>
+          )}
+          {/* Se evalua si se necesita el espacio para la imagen */}
+          {props.imagen ? (
+            <Image
+              source={props.imagen}
+              style={[styles.imagen, imageSize]}
+              onLoad={onImageLoad} // Asegúrate de usar onLoad
+            />
+          ) : null}
+        </>
       )}
-      <Image
-        source={props.imagen}
-        style={[styles.imagen, imageSize]}
-        onLoad={onImageLoad} // Asegúrate de usar onLoad
-      />
+
+      {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  */}
+      {props.tipo === "credito" && (
+        <>
+          <Text style={styles.titulo}>{props.titulo}</Text>
+          <Text style={styles.textoBody}>{displayedText}</Text>
+          {needsMoreButton && (
+            <TouchableOpacity onPress={toggleShowFullText}>
+              <Text style={styles.verMas}>Ver Más</Text>
+            </TouchableOpacity>
+          )}
+          <Text style={styles.textSolicitado}>
+            Credito Solicitado: ${props.solicitado}
+          </Text>
+          <ProgressBar progress={porcentaje} />
+          <Text style={styles.textContribuidos}>
+            Contribuidos: ${props.contribuidos}
+          </Text>
+          <TouchableOpacity style={styles.cuadroGradient}>
+            <LinearGradient
+              colors={["#2FF690", "#21B6D5"]}
+              start={{ x: 1, y: 1 }} // Inicio del gradiente
+              end={{ x: 0, y: 0 }} // Fin del gradiente
+              style={styles.gradient}
+            >
+              <Text
+                style={{ fontFamily: "conthrax", color: "white", fontSize: 17 }}
+              >
+                CONTRIBUIR
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </>
+      )}
+
+      {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion */}
+      {props.tipo === "invertir" && (
+        <>
+          <Text style={styles.titulo}>¡Realice una Inversión!</Text>
+          <Text style={styles.textoBody}>
+            Acabo de hacer una inversión en Tankef con un rendimiento de{" "}
+            <Text style={{ fontWeight: "bold" }}>{props.body}</Text>
+          </Text>
+        </>
+      )}
+
+      {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
       <View style={styles.linea}></View>
       <View style={styles.interactionContainer}>
         <TouchableOpacity style={styles.like} onPress={() => setLike(!like)}>
@@ -91,6 +152,14 @@ const Post = (props) => {
           multiline={true}
           maxLength={80}
         />
+        {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
+        {comentario ? (
+          <TouchableOpacity style={styles.publicarContainer}>
+            <Text style={{ fontSize: 10, color: "#00A2FF", paddingTop: 10 }}>
+              Publicar
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
@@ -132,9 +201,45 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "grey",
   },
+  titulo: {
+    fontSize: 13,
+    color: "#29364d",
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
   textoBody: {
     fontSize: 13,
     color: "#29364d",
+  },
+  textSolicitado: {
+    fontSize: 13,
+    marginBottom: -10,
+    left: 5,
+    color: "#29364d",
+    marginTop: 10,
+  },
+  textContribuidos: {
+    fontSize: 13,
+    left: 5,
+    top: -5,
+    color: "#29364d",
+    marginTop: 10,
+  },
+  cuadroGradient: {
+    width: 317,
+    height: 34,
+    alignSelf: "center",
+    borderRadius: 15,
+    top: 5,
+    marginBottom: 5,
+  },
+  gradient: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    width: 317,
+    height: 34,
+    borderRadius: 15,
   },
   verMas: {
     color: "#00A2FF",
@@ -169,12 +274,19 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     paddingTop: 10,
-    paddingLeft: 10,
+    paddingRight: 7,
+    paddingLeft: 3,
     fontSize: 10,
     color: "#29364d",
   },
   like: {
     padding: 10,
+  },
+  publicarContainer: {
+    width: 40,
+    height: 32,
+    alignItems: "center",
+    right: 5,
   },
 });
 

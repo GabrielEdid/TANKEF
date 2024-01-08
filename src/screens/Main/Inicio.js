@@ -99,6 +99,7 @@ const Inicio = () => {
             </LinearGradient>
           </TouchableOpacity>
           <Post
+            tipo={"compartir"}
             nombre={"Antonio Stark Rivera"}
             tiempo={"3 horas"}
             foto={imageMap["Antonio"]}
@@ -109,12 +110,56 @@ const Inicio = () => {
             perfil={imageMap["Steve"]}
           />
           <Post
+            tipo={"credito"}
             nombre={"Natasha Ocasio Romanoff"}
-            tiempo={"2 días"}
+            tiempo={"1 día"}
             foto={imageMap["Natasha"]}
-            body={"Hola a todos! Esta soy yo en mi primer día de trabajo! 😁"}
-            imagen={imageMap["Natasha"]}
+            titulo={"¡Ayudame a pagar mi tarjeta de crédito!"}
+            body={
+              "Mi tarjeta corta el 27 y a mi me pagan quincena el 30. Necesito flujo para cerrar el mes y no deber."
+            }
             perfil={imageMap["Steve"]}
+            solicitado={"25,000.00"}
+            contribuidos={"10,000.00"}
+          />
+          <Post
+            tipo={"compartir"}
+            nombre={"Jose Antonio Quill"}
+            tiempo={"2 días"}
+            foto={imageMap["Quill"]}
+            body={
+              "Invertir es dar el primer paso hacia la libertad financiera. Al elegir sabiamente, tus ahorros pueden crecer exponencialmente. ¿Sabías que empezar joven y con constancia es clave para el éxito? Diversifica tus inversiones para minimizar riesgos y maximizar ganancias. ¡No esperes más, comienza hoy mismo a construir tu futuro! #Inversiones #LibertadFinanciera #CrecimientoEconómico 📈💼🌟"
+            }
+            perfil={imageMap["Steve"]}
+          />
+          <Post
+            tipo={"invertir"}
+            nombre={"Jose Antonio Quill"}
+            tiempo={"3 días"}
+            foto={imageMap["Quill"]}
+            body={"13.5%"}
+            perfil={imageMap["Steve"]}
+          />
+          <Post
+            tipo={"invertir"}
+            nombre={"Natasha Ocasio Romanoff"}
+            tiempo={"3 días"}
+            foto={imageMap["Natasha"]}
+            body={"13.5%"}
+            perfil={imageMap["Steve"]}
+          />
+          <Post
+            tipo={"credito"}
+            nombre={"Antonio Stark Rivera"}
+            tiempo={"4 día"}
+            foto={imageMap["Antonio"]}
+            titulo={"Quiero empezar mi empresa, ¡me falta un poco más!"}
+            body={
+              "Estoy muy cerca de empezar mi empresa, pero me falta un poco más para poder hacerlo. ¡Ayudame a cumplir mi sueño! Prometo pagar a todos lo antes posible y lograr consolidarme como se debe. ¡Gracias por su apoyo! Veran que no se arrepentiran."
+            }
+            perfil={imageMap["Steve"]}
+            solicitado={"50,000.00"}
+            contribuidos={"38,000.00"}
           />
         </ScrollView>
       </TouchableWithoutFeedback>
