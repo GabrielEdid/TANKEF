@@ -44,23 +44,29 @@ const Conexion = (props) => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalView}>
-          <Text style={{ fontSize: 13 }}>
-            Si eliminas las conexión deberás volver a solicitarla.
-          </Text>
-          <TouchableOpacity
-            style={styles.buttonModal}
-            onPress={() => handleRemove()}
-          >
-            <Text style={{ color: "red" }}>Eliminar Conexión</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ marginTop: 10 }}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text>Cancelar</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.fullScreenButton}
+          activeOpacity={1}
+          onPressOut={() => setModalVisible(false)}
+        >
+          <View style={styles.modalView}>
+            <Text style={{ fontSize: 13 }}>
+              Si eliminas las conexión deberás volver a solicitarla.
+            </Text>
+            <TouchableOpacity
+              style={styles.buttonModal}
+              onPress={() => handleRemove()}
+            >
+              <Text style={{ color: "red" }}>Eliminar Conexión</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginTop: 10 }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </Modal>
       {/* Linea delgada para dividr cada Request */}
       <View style={styles.linea}></View>
@@ -104,6 +110,14 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     top: 80,
+  },
+  fullScreenButton: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    justifyContent: "flex-end",
   },
   modalView: {
     margin: 20,
