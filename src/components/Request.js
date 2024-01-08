@@ -1,12 +1,20 @@
 // Importaciones de React Native y React
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Request = (props) => {
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [estado, setEstado] = useState("inicial"); // Estados: "inicial", "solicitarConexion", "solicitudEnviada"
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Para cuando se desee eliminar el Request
   const handleRemove = () => {
@@ -17,21 +25,18 @@ const Request = (props) => {
     return null;
   }
 
-  // Para cuando se confirma la conexión ofrecer enviar solicitud
-  const confirmar = () => {
-    setEstado("solicitarConexion");
-  };
-
   // Para cuando se envía la solicitud de conexión mostrar que la solicitud fue enviada
-  const solicitarConexion = () => {
+  const confirmar = () => {
     setEstado("solicitudEnviada");
   };
 
+  // Componente visual
   return (
+    // Contendedor de cada Request
     <View style={styles.container}>
+      {/* Imagen y Nombre de la persona */}
       <Image source={props.imagen} style={styles.icon} />
       <Text style={styles.textoNombre}>{props.nombre}</Text>
-
       {/* Para Mostrar Botones de Confirmar y Eliminar */}
       {estado === "inicial" && (
         <>
@@ -57,35 +62,41 @@ const Request = (props) => {
           </TouchableOpacity>
         </>
       )}
-
-      {/* Para Mostrar Boton de Solicitar Conexion */}
-      {estado === "solicitarConexion" && (
-        <TouchableOpacity
-          style={styles.botonSolicitar}
-          onPress={solicitarConexion}
-        >
-          <LinearGradient
-            colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={[styles.botonGradient, { width: 200 }]}
-          >
-            <Text style={styles.textoBoton}>SOLICITAR CONEXIÓN</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      )}
-
       {/* Para Mostrar Boton de Solicitud Enviada */}
       {estado === "solicitudEnviada" && (
         <TouchableOpacity
-          style={styles.botonSolicitudEnviada}
-          onPress={confirmar}
+          style={styles.botonConectado}
+          onPress={() => setModalVisible(true)}
         >
-          <Text style={[styles.textoBoton, { color: "grey" }]}>
-            SOLICITUD ENVIADA
-          </Text>
+          <Text style={[styles.textoBoton, { color: "grey" }]}>CONECTADO</Text>
         </TouchableOpacity>
       )}
+
+      {/* Modal para mostrar si se presióna el boton de CONECTADO*/}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <Text style={{ fontSize: 13 }}>
+            Si eliminas las conexión deberás volver a solicitarla.
+          </Text>
+          <TouchableOpacity
+            style={styles.buttonModal}
+            onPress={() => handleRemove()}
+          >
+            <Text style={{ color: "red" }}>Eliminar Conexión</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginTop: 10 }}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
 
       {/* Linea delgada para dividr cada Request */}
       <View style={styles.linea}></View>
@@ -146,16 +157,9 @@ const styles = StyleSheet.create({
     paddingTop: 1,
     color: "white",
   },
-  botonSolicitar: {
+  botonConectado: {
     height: 31,
-    width: 200,
-    position: "absolute",
-    top: 36,
-    left: 70,
-  },
-  botonSolicitudEnviada: {
-    height: 31,
-    width: 185,
+    width: 140,
     paddingTop: 7,
     borderRadius: 8,
     backgroundColor: "#D5D5D5",
@@ -170,6 +174,31 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     top: 80,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position: "absolute",
+    bottom: 0,
+    width: "90%",
+    alignSelf: "center",
+  },
+  buttonModal: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginVertical: 5,
   },
 });
 
