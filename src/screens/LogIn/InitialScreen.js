@@ -58,26 +58,24 @@ const InitialScreen = ({ navigation }) => {
 
   // Componente visual
   return (
-    // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      {/* Contenedor del fondo */}
       <ImageBackground
         source={require("../../../assets/images/Fondo.png")}
         style={styles.background}
       >
-        {/* Logo y título de la aplicación */}
-        <Image
-          source={require("../../../assets/images/Logo_Tankef.png")}
-          style={styles.imagen}
-        />
-        <Text style={styles.titulo}>TANKEF</Text>
+        <View style={styles.contentContainer}>
+          {/* Logo y título */}
+          <View style={styles.header}>
+            <Image
+              source={require("../../../assets/images/Logo_Tankef.png")}
+              style={styles.logo}
+            />
+            <Text style={styles.title}>TANKEF</Text>
+          </View>
 
-        {/* Contenedor con campos de entrada y botones */}
-        <View style={styles.container}>
-          <Text style={styles.welcome}>WELCOME BACK</Text>
-
-          {/* Campos de entrada para correo y contraseña */}
-          <View style={styles.input}>
+          {/* Contenedor del formulario */}
+          <View style={styles.formContainer}>
+            <Text style={styles.welcomeText}>WELCOME BACK</Text>
             <SpecialInput field="Correo" editable={true} set={setEmail} />
             <SpecialInput
               field="Contraseña"
@@ -88,116 +86,116 @@ const InitialScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate("OlvideContrasena")}
             >
-              <Text style={styles.textoOlvideContraseña}>
-                Olvide mi Contraseña
+              <Text style={styles.forgotPasswordText}>
+                Olvidé mi Contraseña
               </Text>
             </TouchableOpacity>
-            <Modal transparent={true} animationType="fade" visible={isLoading}>
-              <View style={styles.overlay}>
-                <ActivityIndicator size={75} color="white" />
-              </View>
-            </Modal>
+          </View>
+
+          {/* Botones */}
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "white" }]}
+              onPress={() => navigation.navigate("Registro1")}
+            >
+              <Text style={[styles.buttonText, { color: "#29364d" }]}>
+                CREAR UNA CUENTA
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "#29364d" }]}
+              onPress={() => signIn()}
+              disabled={isLoading}
+            >
+              <Text style={styles.buttonText}>INICIAR SESIÓN</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
-        {/* Botones para crear cuenta e iniciar sesión */}
-        <TouchableOpacity
-          style={[styles.boton, { marginTop: 670, backgroundColor: "white" }]}
-          onPress={() => navigation.navigate("Registro1")}
-        >
-          <Text style={[styles.textoBotonCuenta, { color: "#29364d" }]}>
-            CREAR UNA CUENTA
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.boton}
-          onPress={() => signIn()}
-          disabled={isLoading}
-        >
-          <Text style={styles.textoBotonCuenta}>INICIAR SESIÓN</Text>
-        </TouchableOpacity>
+        {/* Modal de carga */}
+        <Modal transparent={true} animationType="fade" visible={isLoading}>
+          <View style={styles.overlay}>
+            <ActivityIndicator size={75} color="white" />
+          </View>
+        </Modal>
       </ImageBackground>
     </TouchableWithoutFeedback>
   );
 };
 
-// Estilos de la Pantalla
 const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  imagen: {
+  contentContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  header: {
+    alignItems: "center",
+    paddingTop: 60,
+  },
+  logo: {
     width: 90,
     height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-    position: "absolute",
   },
-  titulo: {
-    fontFamily: "conthrax",
+  title: {
     fontSize: 35,
     color: "white",
-    marginTop: 160,
-    alignSelf: "center",
-    position: "absolute",
+    fontFamily: "conthrax",
   },
-  container: {
-    height: 250,
-    width: 350,
-    marginTop: 280,
-    backgroundColor: "white",
+  formContainer: {
     alignSelf: "center",
+    width: "85%",
+    backgroundColor: "white",
+    borderRadius: 25,
+    padding: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.37,
     shadowRadius: 5,
     elevation: 8,
-    borderRadius: 25,
   },
-  welcome: {
-    marginTop: 30,
+  welcomeText: {
     fontSize: 22,
     fontFamily: "conthrax",
     color: "#29364d",
-    alignSelf: "center",
-    position: "absolute",
+    marginBottom: 20,
+    textAlign: "center",
   },
-  input: {
-    marginTop: 80,
+  forgotPasswordText: {
+    color: "#29364d",
+    textAlign: "center",
+    fontSize: 15,
+    marginTop: 10,
+    fontWeight: "bold",
   },
-  boton: {
-    marginTop: 750,
-    width: 350,
+  buttonGroup: {
+    paddingBottom: 30,
+    paddingHorizontal: 20,
+  },
+  button: {
     height: 60,
-    alignSelf: "center",
     justifyContent: "center",
-    backgroundColor: "#29364d",
     borderRadius: 25,
-    position: "absolute",
+    marginTop: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.37,
     shadowRadius: 5,
     elevation: 8,
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 20,
+    fontFamily: "conthrax",
   },
   overlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
-  },
-  textoBotonCuenta: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "conthrax",
-  },
-  textoOlvideContraseña: {
-    color: "#29364d",
-    textAlign: "center",
-    fontSize: 15,
-    marginTop: 10,
-    fontWeight: "bold",
   },
 });
 
