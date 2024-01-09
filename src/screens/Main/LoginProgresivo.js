@@ -41,7 +41,7 @@ export default function App() {
     // Ajusta según las dimensiones de tu área delimitada
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [{ crop: { originX: 0, originY: 0, width: 300, height: 300 } }],
+      [{ crop: { originX: 120, originY: 2950, width: 1800, height: 1200 } }],
       { compress: 1, format: ImageManipulator.SaveFormat.PNG }
     );
     return manipResult;
@@ -128,13 +128,14 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   shadedArea: {
-    flex: 1,
+    aspectRatio: 1.5,
+    height: 235,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    margin: 50,
+    margin: 20,
   },
   previewImage: {
     width: 300, // Ajusta según tus necesidades
-    height: 300, // Ajusta según tus necesidades
+    height: 200, // Ajusta según tus necesidades
     marginTop: 20,
     borderRadius: 10, // Opcional: para bordes redondeados
   },
