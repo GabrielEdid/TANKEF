@@ -71,207 +71,206 @@ const Registro1 = ({ navigation }) => {
 
   // Componente visual
   return (
-    // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      {/* Contenedor del fondo */}
       <ImageBackground
         source={require("../../../assets/images/Fondo.png")}
         style={styles.background}
       >
-        {/* Logo, Titulo e Imagen de Avance */}
-        <Image
-          source={require("../../../assets/images/Logo_Tankef.png")}
-          style={styles.imagen}
-        />
-        <Text style={styles.titulo}>TANKEF</Text>
-        <Image
-          source={require("../../../assets/images/LoginFlow1.png")}
-          style={styles.imagenAvance}
-        />
-        {/* Contenedor principal */}
-        <Animated.View
-          style={[
-            styles.container,
-            { transform: [{ translateY: animatedHeight }] },
-          ]}
-        >
-          {/* Re-Captcha Verifier con Firebase */}
-          <FirebaseRecaptchaVerifierModal
-            ref={recaptchaVerifier}
-            firebaseConfig={firebaseConfig}
-          />
-          <Text style={styles.bienvenida}>Bienvenido a TANKEF</Text>
-          {/* Boton para Seleccionar Pais */}
-          <TouchableOpacity
-            style={styles.botonPais}
-            onPress={() => setPickerVisible(true)}
-          >
-            <AntDesign
-              name="caretdown"
-              size={20}
-              color="black"
-              style={{ position: "absolute", right: 60, top: 12 }}
+        <View style={styles.contentContainer}>
+          {/* Logo, Titulo e Imagen de Avance */}
+          <View style={styles.header}>
+            <Image
+              source={require("../../../assets/images/Logo_Tankef.png")}
+              style={styles.logo}
             />
-            <CountryPicker
-              withFilter
-              countryCode={countryCode}
-              withCallingCode
-              withCloseButton
-              onSelect={(country) => {
-                const { cca2, callingCode } = country;
-                setCountryCode(cca2);
-                setCallingCode(callingCode[0]);
-              }}
-              visible={pickerVisible}
-              onClose={() => setPickerVisible(false)}
-            />
-          </TouchableOpacity>
-          {/* Botones y campos de entrada para seleccionar el país y el número de teléfono */}
-          <View style={styles.inputContainer}>
-            {/* Manejo del country code al lado del telefono y la barra "|" */}
-            <Text>
-              <Text style={{ fontSize: 18, color: "grey" }}>
-                +{callingCode}
-              </Text>
-              <Text
-                style={{ fontSize: 30, color: "#29364d", letterSpacing: 5 }}
-              >
-                {" |"}
-              </Text>
-            </Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              value={number}
-              placeholder={"55 1234 5678"}
-              onChangeText={(text) => setNumber(text)}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
+            <Text style={styles.title}>TANKEF</Text>
+            <Image
+              source={require("../../../assets/images/LoginFlow1.png")}
+              style={styles.progressImage}
             />
           </View>
-          {/* Botones de "tengo cuenta" y "siguiente" */}
-          <TouchableOpacity
-            style={styles.botonTengoCuenta}
-            onPress={() => navigation.goBack()}
+
+          {/* Contenedor principal */}
+          <Animated.View
+            style={[
+              styles.formContainer,
+              { transform: [{ translateY: animatedHeight }] },
+            ]}
           >
-            <Text style={styles.textoBoton}>Ya tengo una cuenta</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.boton}
-            onPress={() => sendVerification()}
-          >
-            <Text style={styles.textoBotonCuenta}>SIGUIENTE</Text>
-          </TouchableOpacity>
-        </Animated.View>
+            {/* Re-Captcha Verifier con Firebase */}
+            <FirebaseRecaptchaVerifierModal
+              ref={recaptchaVerifier}
+              firebaseConfig={firebaseConfig}
+            />
+            <Text style={styles.welcomeText}>Bienvenido a TANKEF</Text>
+
+            {/* Boton para Seleccionar Pais */}
+            <View style={styles.countryPickerContainer}>
+              <TouchableOpacity
+                style={styles.countryButton}
+                onPress={() => setPickerVisible(true)}
+              >
+                <AntDesign name="caretdown" size={20} color="grey" />
+                <CountryPicker
+                  withFilter
+                  countryCode={countryCode}
+                  withCallingCode
+                  withCloseButton
+                  onSelect={(country) => {
+                    const { cca2, callingCode } = country;
+                    setCountryCode(cca2);
+                    setCallingCode(callingCode[0]);
+                  }}
+                  visible={pickerVisible}
+                  onClose={() => setPickerVisible(false)}
+                />
+              </TouchableOpacity>
+
+              {/* Campo de entrada para el número de teléfono */}
+              <View style={styles.phoneNumberContainer}>
+                <Text style={styles.countryCodeText}>
+                  +{callingCode} {" |"}
+                </Text>
+                <TextInput
+                  style={styles.phoneNumberInput}
+                  keyboardType="numeric"
+                  value={number}
+                  placeholder={"55 1234 5678"}
+                  onChangeText={(text) => setNumber(text)}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                />
+              </View>
+            </View>
+
+            {/* Botones de "tengo cuenta" y "siguiente" */}
+            <TouchableOpacity
+              style={styles.accountButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.accountButtonText}>Ya tengo una cuenta</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.nextButton}
+              onPress={() => sendVerification()}
+            >
+              <Text style={styles.nextButtonText}>SIGUIENTE</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </ImageBackground>
     </TouchableWithoutFeedback>
   );
 };
 
-// Estilos de la Pantalla
 const styles = StyleSheet.create({
-  back: {
-    marginTop: 60,
-    marginLeft: 20,
-    position: "absolute",
-  },
   background: {
     flex: 1,
   },
-  imagen: {
+  contentContainer: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  header: {
+    alignItems: "center",
+    paddingTop: 60,
+  },
+  logo: {
     width: 90,
     height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-    position: "absolute",
   },
-  titulo: {
-    fontFamily: "conthrax",
+  title: {
     fontSize: 35,
     color: "white",
-    marginTop: 160,
-    alignSelf: "center",
-    position: "absolute",
+    fontFamily: "conthrax",
   },
-  imagenAvance: {
+  progressImage: {
     width: 300,
     height: 35,
-    alignSelf: "center",
-    marginTop: 230,
-    position: "absolute",
+    marginTop: 50,
   },
-  container: {
-    marginTop: 600,
-    height: 300,
+  formContainer: {
     backgroundColor: "white",
-    flex: 1,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.37,
+    shadowRadius: 5,
+    elevation: 8,
+    alignItems: "center",
+    paddingBottom: 30,
   },
-  bienvenida: {
-    marginTop: 20,
+  welcomeText: {
     fontSize: 19,
     fontFamily: "conthrax",
     color: "#29364d",
-    alignSelf: "center",
-    position: "absolute",
+    textAlign: "center",
   },
-  botonPais: {
-    marginTop: 60,
-    left: 22,
-    height: 50,
-    width: 96,
+  countryPickerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+    paddingHorizontal: 20,
+    width: "100%",
+  },
+  countryButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: "#29364d",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderRadius: 15,
+    padding: 5,
+    flex: 1,
+    marginRight: 5,
+  },
+  countryPicker: {
+    backgroundColor: "transparent",
+  },
+  phoneNumberContainer: {
+    flexDirection: "row",
     alignItems: "center",
     borderColor: "#29364d",
     borderWidth: 1,
     borderRadius: 15,
-    position: "absolute",
-    paddingTop: 5,
-    paddingLeft: 30,
+    padding: 5,
+    flex: 3,
+    marginLeft: 10,
+    height: 55,
   },
-  inputContainer: {
-    marginTop: 60,
-    left: 135,
-    height: 50,
-    width: 230,
-    borderColor: "#29364d",
-    borderWidth: 1,
-    borderRadius: 15,
-    position: "absolute",
-    padding: 3,
-    paddingLeft: 6,
-  },
-  input: {
+  countryCodeText: {
     fontSize: 18,
-    backgroundColor: "white",
-    color: "#29364d",
-    position: "absolute",
-    marginTop: 15,
-    marginLeft: 90,
+    color: "grey",
+    marginRight: 10,
   },
-  botonTengoCuenta: {
-    marginTop: 120,
-  },
-  textoBoton: {
+  phoneNumberInput: {
+    fontSize: 18,
     color: "#29364d",
-    textAlign: "center",
+    flex: 1,
+  },
+  accountButton: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  accountButtonText: {
+    color: "#29364d",
     fontSize: 14,
     fontWeight: "bold",
   },
-  boton: {
-    marginTop: 150,
-    width: 350,
+  nextButton: {
+    marginTop: 10,
+    width: "100%", // Usa un ancho del 100% para este botón
     height: 60,
-    alignSelf: "center",
     justifyContent: "center",
     backgroundColor: "#29364d",
     borderRadius: 25,
-    position: "absolute",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.37,
     shadowRadius: 5,
     elevation: 8,
   },
-  textoBotonCuenta: {
+  nextButtonText: {
     color: "white",
     textAlign: "center",
     fontSize: 20,
