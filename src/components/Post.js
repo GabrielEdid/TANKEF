@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   verMas: {
-    color: "#00A2FF",
+    color: "#21B6D5",
     marginTop: 5,
   },
   imagen: {

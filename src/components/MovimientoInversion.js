@@ -49,8 +49,14 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     marginLeft: 20,
     marginRight: 20,
-    marginTop: 15,
+    marginBottom: 10,
+    marginTop: 5,
     backgroundColor: "#F2F5F9",
+    shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
+    shadowOpacity: 0.3, // Opacidad de la sombra
+    shadowRadius: 4, // Radio de la sombra
+    elevation: 5, // Elevación para Android
+    shadowColor: "#000000", // Color de la sombra
   },
   Tag: {
     borderRadius: 13,

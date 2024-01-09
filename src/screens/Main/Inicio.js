@@ -75,7 +75,7 @@ const Inicio = () => {
           {/* Anuncio para hacer un Crédito */}
           <TouchableOpacity style={styles.cuadroCredito}>
             <Text style={[styles.texto, { color: "#29364d" }]}>
-              ¿Necesitas un <Text style={{ fontWeight: "bold" }}>impuslo</Text>{" "}
+              ¿Necesitas un <Text style={{ fontWeight: "bold" }}>impulso</Text>{" "}
               para alcanzar tus{" "}
               <Text style={{ fontWeight: "bold" }}>sueños</Text>? ¡Da el primer
               paso hacía tus objetivos!
