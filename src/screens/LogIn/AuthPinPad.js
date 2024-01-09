@@ -13,7 +13,9 @@ const AuthPinPad = ({ navigation, route }) => {
   useEffect(() => {
     if (pin.length === 6) {
       if (pin === userPin) {
-        navigation.navigate("Perfil");
+        navigation.navigate("MainFlow", {
+          screen: "Perfil",
+        });
       } else {
         Alert.alert("Acceso Denegado", "PIN incorrecto");
         setPin("");
