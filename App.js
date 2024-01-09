@@ -109,14 +109,14 @@ function PerfilLoginProgresivo() {
 
 function MiRedStackScreen() {
   return (
-    <MiRedStack.Navigator screenOptions={{ headerShown: false }}>
-      <MiRedStack.Screen name="MiRedMain" component={MiRed} />
-      <MiRedStack.Screen
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MiRedMain" component={MiRed} />
+      <Stack.Screen
         name="SolicitudesConexion"
         component={SolicitudesConexion}
       />
-      <MiRedStack.Screen name="MisConexiones" component={MisConexiones} />
-    </MiRedStack.Navigator>
+      <Stack.Screen name="MisConexiones" component={MisConexiones} />
+    </Stack.Navigator>
   );
 }
 
