@@ -92,38 +92,26 @@ const Registro3 = ({ navigation }) => {
 
   // Componente visual
   return (
-    // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/* Logo, Titulo y Regresar */}
-        <TouchableOpacity onPress={() => handleGoBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={40}
-            color="#29364d"
-            style={styles.back}
-          />
+        <TouchableOpacity onPress={() => handleGoBack()} style={styles.back}>
+          <AntDesign name="arrowleft" size={40} color="#29364d" />
         </TouchableOpacity>
-        <Image
-          source={require("../../../assets/images/Logo_Tankef.png")}
-          style={styles.imagen}
-        />
-        <Text style={styles.titulo}>TANKEF</Text>
-        {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
-        <View style={styles.container}>
+
+        <View style={styles.header}>
+          <Image
+            source={require("../../../assets/images/Logo_Tankef.png")}
+            style={styles.logo}
+          />
+          <Text style={styles.title}>TANKEF</Text>
+        </View>
+
+        <View style={styles.formContainer}>
           <Image
             source={require("../../../assets/images/LoginFlow3.png")}
-            style={styles.imagenAvance}
+            style={styles.progressImage}
           />
-          {/* Sección de campos de entrada */}
-          <View
-            style={{
-              marginTop: 75,
-              height: 100,
-            }}
-            automaticallyAdjustKeyboardInsets={true}
-          >
-            {/* Campos de entrada para datos del usuario */}
+          <View style={styles.inputContainer}>
             <SpecialInput field="Nombre(s)" context="nombre" editable={true} />
             <SpecialInput
               field="Apellido Paterno"
@@ -136,7 +124,6 @@ const Registro3 = ({ navigation }) => {
               editable={true}
             />
             <SpecialInput field="CURP" context="CURP" editable={true} />
-            {/* Campos de información generados a partir del CURP */}
             <SpecialInput
               field="Fecha de Nacimiento"
               context="fechaNacimiento"
@@ -150,89 +137,80 @@ const Registro3 = ({ navigation }) => {
             <SpecialInput field="Sexo" context="sexo" editable={false} />
           </View>
         </View>
-        {/* Botón de Continuar */}
+
         <TouchableOpacity
-          style={styles.botonGrande}
+          style={styles.nextButton}
           onPress={() => handleSiguiente()}
         >
-          <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
+          <Text style={styles.nextButtonText}>SIGUIENTE</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
-// Estilos de la Pantalla
 const styles = StyleSheet.create({
-  back: {
-    marginTop: 60,
-    marginLeft: 20,
-    position: "absolute",
-  },
   background: {
-    backgroundColor: "white",
     flex: 1,
+    backgroundColor: "white",
+    justifyContent: "space-between",
   },
-  imagen: {
+  back: {
+    position: "absolute",
+    top: 60,
+    left: 20,
+  },
+  header: {
+    marginTop: 60,
+    alignItems: "center",
+    width: "100%", // Asegura que el header tome el ancho completo
+  },
+  logo: {
     width: 90,
     height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-    position: "absolute",
   },
-  titulo: {
+  title: {
     fontFamily: "conthrax",
     fontSize: 25,
     color: "#29364d",
-    marginTop: 160,
-    alignSelf: "center",
-    position: "absolute",
+    marginTop: 10,
   },
-  imagenAvance: {
-    width: 300,
-    height: 35,
-    alignSelf: "center",
-    marginTop: 20,
-    position: "absolute",
-  },
-  container: {
-    position: "absolute",
-    alignSelf: "center",
-    height: 520,
-    width: 330,
-    marginTop: 210,
-    backgroundColor: "white",
-    flex: 1,
+  formContainer: {
+    width: "85%",
     borderRadius: 15,
+    padding: 20,
+    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.6,
     shadowRadius: 5,
     elevation: 8,
-  },
-  texto: {
-    fontSize: 16,
-    color: "#29364d",
-    marginTop: 100,
+    alignItems: "center",
     alignSelf: "center",
-    position: "absolute",
   },
-  botonGrande: {
-    marginTop: 750,
-    width: 350,
+  progressImage: {
+    width: 300,
+    height: 35,
+  },
+  inputContainer: {
+    marginTop: 20,
+    width: "100%", // Asegura que tome el ancho completo del formContainer
+  },
+  nextButton: {
+    width: "85%",
     height: 60,
-    alignSelf: "center",
     justifyContent: "center",
     backgroundColor: "#29364d",
     borderRadius: 25,
-    position: "absolute",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.37,
     shadowRadius: 5,
     elevation: 8,
+    alignSelf: "center",
+    marginBottom: 30,
   },
-  textoBotonGrande: {
+  nextButtonText: {
     color: "white",
     textAlign: "center",
     fontSize: 20,
