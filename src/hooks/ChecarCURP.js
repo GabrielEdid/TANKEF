@@ -54,6 +54,7 @@ export const ChecarCURP = (curp) => {
     VZ: "Veracruz",
     YN: "Yucatán",
     ZS: "Zacatecas",
+    NE: "Nacido en el Extranjero",
   };
 
   // Obtiene el nombre completo del estado o retorna 'invalido'

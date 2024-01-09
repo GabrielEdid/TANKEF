@@ -1,238 +1,141 @@
-// Importaciones de React Native y React
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
-  Text,
   StyleSheet,
+  Button,
+  Text,
   Image,
   TouchableOpacity,
-  Alert,
-  TouchableWithoutFeedback,
-  Keyboard,
+  Modal,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-// Importaciones de Componentes
-import SpecialInput from "../../components/SpecialInput";
-import { AntDesign } from "@expo/vector-icons";
+import { Camera } from "expo-camera";
+import * as ImageManipulator from "expo-image-manipulator";
 
-const LoginProgresivo = ({ navigation }) => {
-  // Estados locales
+export default function App() {
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [cameraOpened, setCameraOpened] = useState(false);
+  const cameraRef = useRef(null);
+  const [capturedImage, setCapturedImage] = useState(null);
 
-  // Función para verificar si los campos están completos
-  const verificarCampos = () => {
-    return (
-      user.nombre !== "" &&
-      user.apellidoPaterno !== "" &&
-      user.apellidoMaterno !== "" &&
-      user.CURP !== "" &&
-      user.CURP !== "CURP Invalido" &&
-      user.fechaNacimiento !== "" &&
-      user.fechaNacimiento !== "CURP Invalido" &&
-      user.estadoNacimiento !== "" &&
-      user.estadoNacimiento !== "CURP incorrecto" &&
-      user.sexo !== "" &&
-      user.sexo !== "CURP Invalido"
-    );
-  };
-
-  // Manejador para el botón Siguiente
-  const handleSiguiente = () => {
-    if (!verificarCampos()) {
-      Alert.alert(
-        "Campos Incompletos",
-        "Introduce todos tus datos para continuar.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
-      );
-    } else {
-      navigation.navigate("Registro4");
-    }
-  };
-
-  // Manejador para volver a la pantalla anterior
-  const handleGoBack = () => {
-    // Reinicia los valores del usuario
-    setUser({
-      ...user,
-      nombre: "",
-      apellidoPaterno: "",
-      apellidoMaterno: "",
-      CURP: "",
-      fechaNacimiento: "",
-      sexo: "",
-      estadoNacimiento: "",
-    });
-    navigation.navigate("Registro1");
-  };
-
-  // Efecto para verificar el CURP y actualizar el estado en el contexto global
   useEffect(() => {
-    if (user.CURP && user.CURP.length === 18) {
-      const { fechaNacimiento, sexo, estadoNacimiento } = ChecarCURP(user.CURP);
-      setUser({
-        ...user,
-        fechaNacimiento,
-        sexo,
-        estadoNacimiento,
-      });
-      setIsCurpVerified(true);
-    } else if (isCurpVerified && user.CURP && user.CURP.length !== 18) {
-      setUser({
-        ...user,
-        fechaNacimiento: "CURP Invalido",
-        sexo: "CURP Invalido",
-        estadoNacimiento: "CURP Invalido",
-      });
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasCameraPermission(status === "granted");
+    })();
+  }, []);
+
+  const openCamera = () => {
+    setCameraOpened(true);
+  };
+
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync();
+      const croppedPhoto = await cropImage(photo.uri);
+      setCapturedImage(croppedPhoto.uri); // Guarda la URI de la imagen recortada
+      setCameraOpened(false); // Cierra la cámara después de tomar la foto
     }
-  }, [user.CURP, setUser]);
+  };
 
-  // Componente visual
+  const cropImage = async (uri) => {
+    // Ajusta según las dimensiones de tu área delimitada
+    const manipResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ crop: { originX: 0, originY: 0, width: 300, height: 300 } }],
+      { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+    );
+    return manipResult;
+  };
+
+  if (hasCameraPermission === null) {
+    return <View />;
+  }
+
+  if (hasCameraPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   return (
-    // Cerrar el teclado cuando se toca fuera de un input
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.background}>
-        {/* Logo, Titulo y Regresar */}
-        <TouchableOpacity onPress={() => handleGoBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={40}
-            color="#29364d"
-            style={styles.back}
-          />
-        </TouchableOpacity>
-        <Image
-          source={require("../../../assets/images/Logo_Tankef.png")}
-          style={styles.imagen}
-        />
-        <Text style={styles.titulo}>TANKEF</Text>
-        {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
-        <View style={styles.container}>
-          <Image
-            source={require("../../../assets/images/LoginFlow3.png")}
-            style={styles.imagenAvance}
-          />
-          {/* Sección de campos de entrada */}
-          <View
-            style={{
-              marginTop: 75,
-              height: 100,
-            }}
-            automaticallyAdjustKeyboardInsets={true}
-          >
-            {/* Campos de entrada para datos del usuario */}
-            <SpecialInput field="Nombre(s)" context="nombre" editable={true} />
-            <SpecialInput
-              field="Apellido Paterno"
-              context="apellidoPaterno"
-              editable={true}
-            />
-            <SpecialInput
-              field="Apellido Materno"
-              context="apellidoMaterno"
-              editable={true}
-            />
-            <SpecialInput field="CURP" context="CURP" editable={true} />
-            {/* Campos de información generados a partir del CURP */}
-            <SpecialInput
-              field="Fecha de Nacimiento"
-              context="fechaNacimiento"
-              editable={false}
-            />
-            <SpecialInput
-              field="Estado de Nacimiento"
-              context="estadoNacimiento"
-              editable={false}
-            />
-            <SpecialInput field="Sexo" context="sexo" editable={false} />
-          </View>
-        </View>
-        {/* Botón de Continuar */}
-        <TouchableOpacity
-          style={styles.botonGrande}
-          onPress={() => handleSiguiente()}
-        >
-          <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableWithoutFeedback>
-  );
-};
+    <View style={styles.container}>
+      <TouchableOpacity onPress={openCamera} style={styles.button}>
+        <Text style={styles.buttonText}>Open Camera</Text>
+      </TouchableOpacity>
 
-// Estilos de la Pantalla
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={cameraOpened}
+        onRequestClose={() => {
+          setCameraOpened(false);
+        }}
+      >
+        <Camera style={styles.camera} ref={cameraRef}>
+          <View style={styles.cameraContainer}>
+            <TouchableOpacity
+              onPress={takePicture}
+              style={styles.captureButton}
+            >
+              <Text style={styles.captureButtonText}>Capture</Text>
+            </TouchableOpacity>
+            <View style={styles.shadedArea} />
+          </View>
+        </Camera>
+      </Modal>
+
+      {capturedImage && (
+        <Image source={{ uri: capturedImage }} style={styles.previewImage} />
+      )}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  back: {
-    marginTop: 60,
-    marginLeft: 20,
-    position: "absolute",
-  },
-  background: {
-    backgroundColor: "white",
-    flex: 1,
-  },
-  imagen: {
-    width: 90,
-    height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-    position: "absolute",
-  },
-  titulo: {
-    fontFamily: "conthrax",
-    fontSize: 25,
-    color: "#29364d",
-    marginTop: 160,
-    alignSelf: "center",
-    position: "absolute",
-  },
-  imagenAvance: {
-    width: 300,
-    height: 35,
-    alignSelf: "center",
-    marginTop: 20,
-    position: "absolute",
-  },
   container: {
-    position: "absolute",
-    alignSelf: "center",
-    height: 520,
-    width: 330,
-    marginTop: 210,
-    backgroundColor: "white",
     flex: 1,
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.6,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  texto: {
-    fontSize: 16,
-    color: "#29364d",
-    marginTop: 100,
-    alignSelf: "center",
-    position: "absolute",
-  },
-  botonGrande: {
-    marginTop: 750,
-    width: 350,
-    height: 60,
-    alignSelf: "center",
     justifyContent: "center",
-    backgroundColor: "#29364d",
-    borderRadius: 25,
-    position: "absolute",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
-  textoBotonGrande: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "conthrax",
+  button: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  camera: {
+    flex: 1,
+  },
+  cameraContainer: {
+    flex: 1,
+    backgroundColor: "transparent",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
+  captureButton: {
+    flex: 0,
+    alignSelf: "center",
+    margin: 20,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+  },
+  captureButtonText: {
+    fontSize: 14,
+    color: "#000",
+  },
+  shadedArea: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    margin: 50,
+  },
+  previewImage: {
+    width: 300, // Ajusta según tus necesidades
+    height: 300, // Ajusta según tus necesidades
+    marginTop: 20,
+    borderRadius: 10, // Opcional: para bordes redondeados
   },
 });
-
-export default LoginProgresivo;
