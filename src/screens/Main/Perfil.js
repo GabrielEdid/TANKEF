@@ -65,7 +65,14 @@ const Perfil = () => {
           <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
         </ScrollView>
         {/* View de LogIn Gradual */}
-        <TouchableOpacity style={styles.cuadroLoginProgresivo}>
+        <TouchableOpacity
+          style={styles.cuadroLoginProgresivo}
+          onPress={() =>
+            navigation.navigate("PerfilScreen", {
+              screen: "LoginProgresivo",
+            })
+          }
+        >
           {/* Texto Incentivo del Recuadro */}
           <Text style={styles.texto}>
             Termina tu <Text style={{ fontWeight: "bold" }}>registro</Text> para

@@ -26,6 +26,7 @@ import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
 import SolicitudesConexion from "./src/screens/Main/SolicitudesConexion";
 import MisConexiones from "./src/screens/Main/MisConexiones";
+import LoginProgresivo from "./src/screens/Main/LoginProgresivo";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -33,23 +34,6 @@ import SettingsDrawer from "./src/components/SettingsDrawer";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-const MiRedStack = createStackNavigator();
-
-// Pantalla Perfil con Drawer
-function PerfilDrawer() {
-  return (
-    <Drawer.Navigator
-      screenOptions={{ drawerPosition: "right" }}
-      drawerContent={(props) => <SettingsDrawer {...props} />}
-    >
-      <Drawer.Screen
-        name="PerfilScreen"
-        component={Perfil}
-        options={{ headerShown: false }}
-      />
-    </Drawer.Navigator>
-  );
-}
 
 // Estilos comunes para los íconos y textos de la tabBar
 const createTabScreenOptions = (
@@ -79,7 +63,7 @@ const createTabScreenOptions = (
           height: 5,
           width: 78,
           marginTop: -1,
-          color: focused ? "#29364d" : "#ffffff",
+          tintColor: focused ? "#29364d" : color,
           backgroundColor: focused ? "#29364d" : "#ffffff",
         }}
       />
@@ -97,6 +81,31 @@ const createTabScreenOptions = (
     </View>
   ),
 });
+
+// Pantalla Perfil con Drawer
+function PerfilDrawer() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{ drawerPosition: "right" }}
+      drawerContent={(props) => <SettingsDrawer {...props} />}
+    >
+      <Drawer.Screen
+        name="PerfilScreen"
+        component={PerfilLoginProgresivo}
+        options={{ headerShown: false }}
+      />
+    </Drawer.Navigator>
+  );
+}
+
+function PerfilLoginProgresivo() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="PerfilMain" component={Perfil} />
+      <Stack.Screen name="LoginProgresivo" component={LoginProgresivo} />
+    </Stack.Navigator>
+  );
+}
 
 function MiRedStackScreen() {
   return (
