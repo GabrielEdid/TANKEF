@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 // Importacion de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
@@ -89,52 +91,54 @@ const SpecialInput = (props) => {
 
   // Renderiza el componente
   return (
-    <View style={styles.container}>
-      {/* Campo de texto para ingresar datos */}
-      <View>
-        <TextInput
-          onChangeText={handleChangeText}
-          value={props.editable ? field : user[props.context]}
-          style={[
-            styles.input,
-            !props.editable && { borderColor: "grey", color: "grey" },
-            props.password && { paddingRight: 40 },
-          ]}
-          onFocus={moveUpAnimation}
-          onBlur={() => {
-            if (props.editable && field === "") {
-              moveDownAnimation();
-            }
-          }}
-          editable={props.editable}
-          secureTextEntry={props.password && !isPasswordVisible}
-          autoCapitalize="none"
-        />
-        {/* Etiqueta animada para el campo de texto */}
-        <Animated.Text
-          style={[
-            styles.label,
-            { transform: [{ translateY: animation }] },
-            !props.editable && { color: "grey" },
-          ]}
-        >
-          {props.field}
-        </Animated.Text>
-      </View>
-      {/* Botón para alternar la visibilidad de la contraseña */}
-      {props.password && (
-        <TouchableOpacity
-          onPress={togglePasswordVisibility}
-          style={styles.toggleButton}
-        >
-          <Ionicons
-            name={isPasswordVisible ? "eye-off" : "eye"}
-            size={24}
-            color="#21b6d5"
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        {/* Campo de texto para ingresar datos */}
+        <View>
+          <TextInput
+            onChangeText={handleChangeText}
+            value={props.editable ? field : user[props.context]}
+            style={[
+              styles.input,
+              !props.editable && { borderColor: "grey", color: "grey" },
+              props.password && { paddingRight: 40 },
+            ]}
+            onFocus={moveUpAnimation}
+            onBlur={() => {
+              if (props.editable && field === "") {
+                moveDownAnimation();
+              }
+            }}
+            editable={props.editable}
+            secureTextEntry={props.password && !isPasswordVisible}
+            autoCapitalize="none"
           />
-        </TouchableOpacity>
-      )}
-    </View>
+          {/* Etiqueta animada para el campo de texto */}
+          <Animated.Text
+            style={[
+              styles.label,
+              { transform: [{ translateY: animation }] },
+              !props.editable && { color: "grey" },
+            ]}
+          >
+            {props.field}
+          </Animated.Text>
+        </View>
+        {/* Botón para alternar la visibilidad de la contraseña */}
+        {props.password && (
+          <TouchableOpacity
+            onPress={togglePasswordVisibility}
+            style={styles.toggleButton}
+          >
+            <Ionicons
+              name={isPasswordVisible ? "eye-off" : "eye"}
+              size={24}
+              color="#21b6d5"
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     position: "absolute",
-    right: 60,
+    right: 30,
     height: 40,
     justifyContent: "center",
   },
