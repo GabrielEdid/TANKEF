@@ -97,44 +97,48 @@ const Registro3 = ({ navigation }) => {
         <TouchableOpacity onPress={() => handleGoBack()} style={styles.back}>
           <AntDesign name="arrowleft" size={40} color="#29364d" />
         </TouchableOpacity>
-
-        <View style={styles.header}>
-          <Image
-            source={require("../../../assets/images/Logo_Tankef.png")}
-            style={styles.logo}
-          />
-          <Text style={styles.title}>TANKEF</Text>
-        </View>
-
-        <View style={styles.formContainer}>
-          <Image
-            source={require("../../../assets/images/LoginFlow3.png")}
-            style={styles.progressImage}
-          />
-          <View style={styles.inputContainer}>
-            <SpecialInput field="Nombre(s)" context="nombre" editable={true} />
-            <SpecialInput
-              field="Apellido Paterno"
-              context="apellidoPaterno"
-              editable={true}
+        <View>
+          <View style={styles.header}>
+            <Image
+              source={require("../../../assets/images/Logo_Tankef.png")}
+              style={styles.logo}
             />
-            <SpecialInput
-              field="Apellido Materno"
-              context="apellidoMaterno"
-              editable={true}
+            <Text style={styles.title}>TANKEF</Text>
+          </View>
+          <View style={styles.formContainer}>
+            <Image
+              source={require("../../../assets/images/LoginFlow3.png")}
+              style={styles.progressImage}
             />
-            <SpecialInput field="CURP" context="CURP" editable={true} />
-            <SpecialInput
-              field="Fecha de Nacimiento"
-              context="fechaNacimiento"
-              editable={false}
-            />
-            <SpecialInput
-              field="Estado de Nacimiento"
-              context="estadoNacimiento"
-              editable={false}
-            />
-            <SpecialInput field="Sexo" context="sexo" editable={false} />
+            <View style={styles.inputContainer}>
+              <SpecialInput
+                field="Nombre(s)"
+                context="nombre"
+                editable={true}
+              />
+              <SpecialInput
+                field="Apellido Paterno"
+                context="apellidoPaterno"
+                editable={true}
+              />
+              <SpecialInput
+                field="Apellido Materno"
+                context="apellidoMaterno"
+                editable={true}
+              />
+              <SpecialInput field="CURP" context="CURP" editable={true} />
+              <SpecialInput
+                field="Fecha de Nacimiento"
+                context="fechaNacimiento"
+                editable={false}
+              />
+              <SpecialInput
+                field="Estado de Nacimiento"
+                context="estadoNacimiento"
+                editable={false}
+              />
+              <SpecialInput field="Sexo" context="sexo" editable={false} />
+            </View>
           </View>
         </View>
 
@@ -187,6 +191,7 @@ const styles = StyleSheet.create({
     elevation: 8,
     alignItems: "center",
     alignSelf: "center",
+    marginTop: 20,
   },
   progressImage: {
     width: 300,

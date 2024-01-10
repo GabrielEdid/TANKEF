@@ -126,68 +126,59 @@ const Registro4 = ({ navigation }) => {
     // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/* Logo, Titulo y Regresar */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={40}
-            color="#29364d"
-            style={styles.back}
-          />
+        <TouchableOpacity onPress={() => handleGoBack()} style={styles.back}>
+          <AntDesign name="arrowleft" size={40} color="#29364d" />
         </TouchableOpacity>
-        <Image
-          source={require("../../../assets/images/Logo_Tankef.png")}
-          style={styles.imagen}
-        />
-        <Text style={styles.titulo}>TANKEF</Text>
-        {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
-        <View style={styles.container}>
-          <Image
-            source={require("../../../assets/images/LoginFlow4.png")}
-            style={styles.imagenAvance}
-          />
-          {/* Sección para ingreso de datos y requerimientos de contraseña */}
-          <View
-            style={{
-              marginTop: 75,
-              height: 100,
-            }}
-          >
-            {/* Campos de entrada para correo y contraseña */}
-            <SpecialInput field="Correo" editable={true} context={"email"} />
-            <SpecialInput
-              field="Contraseña"
-              editable={true}
-              password={true}
-              context={"password"}
+        <View>
+          <View style={styles.header}>
+            <Image
+              source={require("../../../assets/images/Logo_Tankef.png")}
+              style={styles.logo}
             />
-            <SpecialInput
-              field="Confirmar Contraseña"
-              set={setConfirmPassword}
-              editable={true}
-              password={true}
-              context={"confirmPassword"}
-            />
-            {/* Texto informativo sobre requisitos de contraseña */}
-            <Text style={styles.texto}>
-              * La contraseña debe contener al menos 8 caracteres, incluyendo
-              una letra mayúscula, una minúscula, un número y un carácter
-              especial.
-            </Text>
+            <Text style={styles.title}>TANKEF</Text>
           </View>
-          <Modal transparent={true} animationType="fade" visible={isLoading}>
-            <View style={styles.overlay}>
-              <ActivityIndicator size={75} color="white" />
+          {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
+          <View style={styles.formContainer}>
+            <Image
+              source={require("../../../assets/images/LoginFlow4.png")}
+              style={styles.progressImage}
+            />
+            <View style={styles.inputContainer}>
+              {/* Campos de entrada para correo y contraseña */}
+              <SpecialInput field="Correo" editable={true} context={"email"} />
+              <SpecialInput
+                field="Contraseña"
+                editable={true}
+                password={true}
+                context={"password"}
+              />
+              <SpecialInput
+                field="Confirmar Contraseña"
+                set={setConfirmPassword}
+                editable={true}
+                password={true}
+                context={"confirmPassword"}
+              />
+              {/* Texto informativo sobre requisitos de contraseña */}
+              <Text style={styles.texto}>
+                * La contraseña debe contener al menos 8 caracteres, incluyendo
+                una letra mayúscula, una minúscula, un número y un carácter
+                especial.
+              </Text>
             </View>
-          </Modal>
+            <Modal transparent={true} animationType="fade" visible={isLoading}>
+              <View style={styles.overlay}>
+                <ActivityIndicator size={75} color="white" />
+              </View>
+            </Modal>
+          </View>
         </View>
         {/* Boton para Crear Cuenta */}
         <TouchableOpacity
-          style={styles.botonGrande}
+          style={styles.nextButton}
           onPress={() => handleSiguiente()}
-          disabled={isLoading}
         >
-          <Text style={styles.textoBotonGrande}>CREAR CUENTA</Text>
+          <Text style={styles.nextButtonText}>SIGUIENTE</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
@@ -196,58 +187,58 @@ const Registro4 = ({ navigation }) => {
 
 // Estilos de la Pantalla
 const styles = StyleSheet.create({
-  back: {
-    marginTop: 60,
-    marginLeft: 20,
-    position: "absolute",
-  },
   background: {
-    backgroundColor: "white",
     flex: 1,
+    backgroundColor: "white",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
-  imagen: {
+  back: {
+    position: "absolute",
+    top: 60,
+    left: 20,
+  },
+  header: {
+    marginTop: 60,
+    alignItems: "center",
+    width: "100%", // Asegura que el header tome el ancho completo
+  },
+  logo: {
     width: 90,
     height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-    position: "absolute",
   },
-  titulo: {
+  title: {
     fontFamily: "conthrax",
     fontSize: 25,
     color: "#29364d",
-    marginTop: 160,
-    alignSelf: "center",
-    position: "absolute",
+    marginTop: 10,
   },
-  imagenAvance: {
-    width: 300,
-    height: 35,
-    alignSelf: "center",
-    marginTop: 20,
-    position: "absolute",
-  },
-  container: {
-    position: "absolute",
-    alignSelf: "center",
-    height: 300,
-    width: 330,
-    marginTop: 210,
-    backgroundColor: "white",
-    flex: 1,
+  formContainer: {
+    width: "85%",
     borderRadius: 15,
+    padding: 20,
+    backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.6,
     shadowRadius: 5,
     elevation: 8,
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  progressImage: {
+    width: 300,
+    height: 35,
+  },
+  inputContainer: {
+    marginTop: 20,
+    width: "100%", // Asegura que tome el ancho completo del formContainer
   },
   texto: {
     color: "grey",
     fontSize: 10.5,
     paddingHorizontal: 20,
-    position: "absolute",
-    marginTop: 180,
   },
   overlay: {
     flex: 1,
@@ -255,22 +246,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
-  botonGrande: {
-    marginTop: 750,
-    width: 350,
+  nextButton: {
+    width: "85%",
     height: 60,
-    alignSelf: "center",
     justifyContent: "center",
     backgroundColor: "#29364d",
     borderRadius: 25,
-    position: "absolute",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.37,
     shadowRadius: 5,
     elevation: 8,
+    alignSelf: "center",
+    marginBottom: 30,
   },
-  textoBotonGrande: {
+  nextButtonText: {
     color: "white",
     textAlign: "center",
     fontSize: 20,
