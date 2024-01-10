@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
-    paddingHorizontal: 20,
     width: "100%",
   },
   countryButton: {
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 5,
     flex: 1,
-    marginRight: 5,
+    marginRight: "2%",
   },
   countryPicker: {
     backgroundColor: "transparent",
@@ -234,7 +233,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 15,
     padding: 5,
-    flex: 3,
+    flex: 3.5,
     marginLeft: 10,
     height: 55,
   },
