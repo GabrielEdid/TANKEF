@@ -60,10 +60,12 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         />
       </TouchableOpacity>
       {/* Texto de Confirma el PIN */}
-      <Text style={styles.titulo}>Confirma tu PIN</Text>
-      {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
-      <PinPad id={false} get={confirmPin} set={setConfirmPin} />
-      {/* Logica para activar el boton de Guardar PIN si el PIN tiene el largo esperado */}
+      <View style={{ height: "89%" }}>
+        <Text style={styles.titulo}>Confirma tu PIN</Text>
+        {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
+        <PinPad id={false} get={confirmPin} set={setConfirmPin} />
+        {/* Logica para activar el boton de Guardar PIN si el PIN tiene el largo esperado */}
+      </View>
       {confirmPin.length === 6 ? (
         <TouchableOpacity
           style={styles.botonGrande}
@@ -95,19 +97,18 @@ const styles = StyleSheet.create({
     color: "#29364d",
   },
   botonGrande: {
-    marginTop: 750,
-    width: 350,
+    width: "85%",
     height: 60,
     alignSelf: "center",
     justifyContent: "center",
     backgroundColor: "#29364d",
     borderRadius: 25,
-    position: "absolute",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.37,
     shadowRadius: 5,
     elevation: 8,
+    marginTop: 20,
   },
   textoBotonGrande: {
     color: "white",
