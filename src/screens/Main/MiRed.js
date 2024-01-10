@@ -27,10 +27,12 @@ const MiRed = ({ navigation }) => {
 
   // Componente visual
   return (
-    //Imagen de Fondo
+    //Titulo
+
     <View style={styles.background}>
-      {/* Titulo */}
-      <Text style={styles.titulo}>TANKEF</Text>
+      <View style={styles.tituloContainer}>
+        <Text style={styles.titulo}>TANKEF</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Buscar"
@@ -88,24 +90,27 @@ const MiRed = ({ navigation }) => {
 
 // Estilos de la pantalla
 const styles = StyleSheet.create({
+  tituloContainer: {
+    height: 105,
+    backgroundColor: "white",
+  },
   background: {
     flex: 1,
     backgroundColor: "white",
+    paddingHorizontal: 20,
   },
   titulo: {
     fontFamily: "conthrax",
     fontSize: 27,
     color: "#29364d",
     marginTop: 70,
-    marginLeft: 20,
-    position: "absolute",
   },
   input: {
     height: 40,
-    width: 354,
+    width: "100%",
     borderColor: "#D5D5D5",
     borderWidth: 1,
-    marginTop: 115,
+    top: 10,
     alignSelf: "center",
     borderRadius: 15,
     color: "#29364d",
@@ -117,42 +122,36 @@ const styles = StyleSheet.create({
     left: 30,
   },
   administrar: {
+    flexDirection: "row",
     height: 50,
-    width: 354,
+    width: "100%",
     borderColor: "#D5D5D5",
     borderWidth: 1,
     marginTop: 15,
     alignSelf: "center",
     borderRadius: 15,
     color: "#29364d",
-    paddingLeft: 40,
+    paddingHorizontal: 20,
   },
   texto: {
+    flex: 2,
     fontSize: 18,
     color: "#29364d",
     marginTop: 13,
-    marginLeft: 20,
-    position: "absolute",
   },
   subTexto: {
     fontSize: 11,
     color: "#C0C0C0",
     marginTop: 17.5,
-    right: 55,
-    position: "absolute",
+    right: 10,
   },
   arrow: {
-    position: "absolute",
     top: 10,
-    right: 20,
   },
   scroll: {
     flex: 1,
-    width: 353,
-    left: 20,
-    paddingTop: 6,
-    position: "absolute",
-    top: 215,
+    width: "100%",
+    paddingTop: 10,
   },
 });
 

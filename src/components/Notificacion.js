@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 const Notificacion = (props) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity style={{ flexDirection: "row" }}>
         <Image source={props.imagen} style={styles.icon} />
         <Text style={styles.textoNombre}>
           {props.nombre}{" "}
@@ -18,10 +18,9 @@ const Notificacion = (props) => {
         style={{
           backgroundColor: "#cccccc",
           height: 1,
-          width: 550,
+          width: "100%",
           alignSelf: "center",
-          position: "absolute",
-          top: 80,
+          top: 15,
         }}
       ></View>
     </View>
@@ -31,7 +30,7 @@ const Notificacion = (props) => {
 const styles = StyleSheet.create({
   container: {
     height: 85,
-    width: 352,
+    width: "100%",
     marginEnd: 10,
   },
   textoNombre: {
@@ -39,22 +38,23 @@ const styles = StyleSheet.create({
     color: "#29364d",
     fontWeight: "bold",
     paddingTop: 15,
-    width: 283,
-    left: 70,
+    width: "80%",
+    left: 10,
   },
   icon: {
     height: 57,
     width: 57,
     borderRadius: 50,
     marginTop: 10,
-    position: "absolute",
   },
   textoTiempo: {
     fontSize: 12,
     color: "grey",
     paddingTop: 5,
-    width: 200,
-    left: 70,
+    width: "100%",
+    position: "absolute",
+    top: "70%",
+    left: 67.5,
   },
 });
 
