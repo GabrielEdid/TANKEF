@@ -236,7 +236,7 @@ function LoginFlow() {
     userInfo && userInfo.loggedIn === true ? "AuthPinPad" : "InitialScreen";*/
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
-  const initialRouteName = "Registro3";
+  const initialRouteName = "Registro1";
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (

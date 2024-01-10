@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   smsInputContainer: {
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 20,
   },
   buttonContainer: {
