@@ -232,11 +232,11 @@ function LoginFlow() {
   }
 
   // Determinar la pantalla inicial basada en el estado de inicio de sesión del usuario
-  /*onst initialRouteName =
+  /*const initialRouteName =
     userInfo && userInfo.loggedIn === true ? "AuthPinPad" : "InitialScreen";*/
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
-  const initialRouteName = "SetPinPad";
+  const initialRouteName = "MainFlow";
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (
