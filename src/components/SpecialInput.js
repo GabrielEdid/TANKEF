@@ -91,24 +91,36 @@ const SpecialInput = (props) => {
   return (
     <View style={styles.container}>
       {/* Campo de texto para ingresar datos */}
-      <TextInput
-        onChangeText={handleChangeText}
-        value={props.editable ? field : user[props.context]}
-        style={[
-          styles.input,
-          !props.editable && { borderColor: "grey", color: "grey" },
-          props.password && { paddingRight: 40 },
-        ]}
-        onFocus={moveUpAnimation}
-        onBlur={() => {
-          if (props.editable && field === "") {
-            moveDownAnimation();
-          }
-        }}
-        editable={props.editable}
-        secureTextEntry={props.password && !isPasswordVisible}
-        autoCapitalize="none"
-      />
+      <View>
+        <TextInput
+          onChangeText={handleChangeText}
+          value={props.editable ? field : user[props.context]}
+          style={[
+            styles.input,
+            !props.editable && { borderColor: "grey", color: "grey" },
+            props.password && { paddingRight: 40 },
+          ]}
+          onFocus={moveUpAnimation}
+          onBlur={() => {
+            if (props.editable && field === "") {
+              moveDownAnimation();
+            }
+          }}
+          editable={props.editable}
+          secureTextEntry={props.password && !isPasswordVisible}
+          autoCapitalize="none"
+        />
+        {/* Etiqueta animada para el campo de texto */}
+        <Animated.Text
+          style={[
+            styles.label,
+            { transform: [{ translateY: animation }] },
+            !props.editable && { color: "grey" },
+          ]}
+        >
+          {props.field}
+        </Animated.Text>
+      </View>
       {/* Botón para alternar la visibilidad de la contraseña */}
       {props.password && (
         <TouchableOpacity
@@ -122,16 +134,6 @@ const SpecialInput = (props) => {
           />
         </TouchableOpacity>
       )}
-      {/* Etiqueta animada para el campo de texto */}
-      <Animated.Text
-        style={[
-          styles.label,
-          { transform: [{ translateY: animation }] },
-          !props.editable && { color: "grey" },
-        ]}
-      >
-        {props.field}
-      </Animated.Text>
     </View>
   );
 };
@@ -139,13 +141,12 @@ const SpecialInput = (props) => {
 // Estilos del componente
 const styles = StyleSheet.create({
   container: {
-    marginTop: 8,
-    position: "relative",
+    marginTop: 0,
   },
   input: {
     borderWidth: 1,
     borderColor: "#29364d",
-    width: 300,
+    width: "100%",
     height: 40,
     fontSize: 16,
     alignSelf: "center",
@@ -154,13 +155,12 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   label: {
-    paddingHorizontal: 5,
+    marginTop: 10,
+    left: 20,
+    position: "absolute",
     fontSize: 16,
     fontWeight: "bold",
     color: "#21b6d5",
-    marginTop: 10,
-    left: 30,
-    position: "absolute",
     backgroundColor: "white",
   },
   toggleButton: {
