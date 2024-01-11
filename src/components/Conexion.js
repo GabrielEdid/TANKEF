@@ -27,8 +27,10 @@ const Conexion = (props) => {
 
   return (
     <View style={styles.container}>
-      <Image source={props.imagen} style={styles.icon} />
-      <Text style={styles.textoNombre}>{props.nombre}</Text>
+      <View style={{ flexDirection: "row", flex: 1 }}>
+        <Image source={props.imagen} style={styles.icon} />
+        <Text style={styles.textoNombre}>{props.nombre}</Text>
+      </View>
       {/* Para Mostrar Boton de Eliminar */}
       <TouchableOpacity
         style={styles.botonElim}
@@ -77,7 +79,8 @@ const Conexion = (props) => {
 const styles = StyleSheet.create({
   container: {
     height: 85,
-    width: 352,
+    width: "100%",
+    flexDirection: "row",
   },
   textoNombre: {
     fontSize: 16,
@@ -85,28 +88,24 @@ const styles = StyleSheet.create({
     color: "#29364d",
     fontWeight: "bold",
     paddingTop: 10,
-    width: 283,
-    left: 70,
+    left: 10,
   },
   icon: {
     height: 57,
     width: 57,
     borderRadius: 50,
     marginTop: 10,
-    position: "absolute",
   },
   botonElim: {
     height: 40,
     width: 45,
-    alignItems: "center",
-    position: "absolute",
     top: 20,
-    left: 300,
+    right: 5,
   },
   linea: {
     backgroundColor: "#cccccc",
     height: 1,
-    width: 550,
+    width: "100%",
     alignSelf: "center",
     position: "absolute",
     top: 80,
