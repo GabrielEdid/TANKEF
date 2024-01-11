@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     fontSize: 27,
     color: "#29364d",
     marginTop: 70,
-    marginLeft: 20,
     position: "absolute",
   },
   input: {
