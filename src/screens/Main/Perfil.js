@@ -43,15 +43,17 @@ const Perfil = () => {
         </TouchableOpacity>
         {/* Titulo Superior */}
         <Text style={styles.titulo}>TANKEF</Text>
-        {/* Imagen, Nombre y Correo de la persona */}
       </View>
       <ScrollView style={styles.scrollV}>
-        <Image
-          style={styles.fotoPerfil}
-          source={require("../../../assets/images/Fotos_Personas/Steve.png")}
-        />
-        <Text style={styles.textoNombre}>Steve Rodgers</Text>
-        <Text style={styles.textoMail}>steve.rodgh@gmail.com</Text>
+        {/* Contenedor Imagen, Nombre y Correo de la persona */}
+        <View>
+          <Image
+            style={styles.fotoPerfil}
+            source={require("../../../assets/images/Fotos_Personas/Steve.png")}
+          />
+          <Text style={styles.textoNombre}>Steve Rodgers</Text>
+          <Text style={styles.textoMail}>steve.rodgh@gmail.com</Text>
+        </View>
         {/* Lista de Datos de Red del Usuario */}
         <ScrollView
           horizontal={true}
@@ -101,7 +103,7 @@ const Perfil = () => {
             </Text>
           </LinearGradient>
         </TouchableOpacity>
-        <View style={{ marginTop: 400 }}>
+        <View style={{ marginTop: 15 }}>
           <Post
             tipo={"compartir"}
             nombre={"Steve Rodgers"}
@@ -132,6 +134,7 @@ const Perfil = () => {
 // Estilos de la pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
+    justifyContent: "space-between",
     height: 105,
     backgroundColor: "white",
   },
@@ -147,21 +150,25 @@ const styles = StyleSheet.create({
     height: 32,
     width: 35,
     marginTop: 70,
-    marginLeft: 340,
-    alignItems: "center",
-    position: "absolute",
+    alignSelf: "flex-end",
+    right: 20,
   },
   scrollV: {
+    paddingHorizontal: 20,
     flex: 1,
     backgroundColor: "white",
+  },
+  scrollH: {
+    height: 110,
+    width: "100%",
+    paddingTop: 6,
+    top: 10,
   },
   fotoPerfil: {
     width: 80,
     height: 80,
-    position: "absolute",
     borderRadius: 80,
     marginTop: 10,
-    left: 20,
   },
   textoNombre: {
     color: "#29364d",
@@ -169,48 +176,38 @@ const styles = StyleSheet.create({
     fontSize: 27,
     marginTop: 10,
     position: "absolute",
-    left: 115,
+    left: 95,
   },
   textoMail: {
     color: "grey",
     fontSize: 19,
     marginTop: 45,
     position: "absolute",
-    left: 115,
-  },
-  scrollH: {
-    height: 110,
-    width: 353,
-    left: 20,
-    paddingTop: 6,
-    position: "absolute",
-    top: 100,
+    left: 96,
   },
   cuadroLoginProgresivo: {
     height: 163,
-    width: 353,
-    marginTop: 220,
-    position: "absolute",
+    width: "100%",
+    marginTop: 20,
     borderWidth: 1.5,
     borderColor: "#D5D5D5",
     borderRadius: 15,
-    left: 20,
     padding: 15,
   },
   texto: {
     fontSize: 15,
     color: "#29364d",
-    width: 250,
+    width: "70%",
     alignSelf: "center",
     textAlign: "center",
   },
   botonGradient: {
     justifyContent: "center",
-    width: 180,
+    width: "65%",
     height: 44,
     alignSelf: "center",
     borderRadius: 15,
-    marginTop: 15,
+    top: 15,
   },
 });
 
