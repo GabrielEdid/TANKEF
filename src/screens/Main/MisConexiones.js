@@ -24,8 +24,10 @@ const MisConexiones = () => {
   return (
     //Fondo
     <View style={styles.background}>
-      {/* Titulo */}
-      <Text style={styles.titulo}>TANKEF</Text>
+      {/*Titulo*/}
+      <View style={styles.tituloContainer}>
+        <Text style={styles.titulo}>TANKEF</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Buscar"
@@ -56,9 +58,14 @@ const MisConexiones = () => {
 
 // Estilos de la pantalla
 const styles = StyleSheet.create({
+  tituloContainer: {
+    height: 105,
+    backgroundColor: "white",
+  },
   background: {
     flex: 1,
     backgroundColor: "white",
+    paddingHorizontal: 20,
   },
   titulo: {
     fontFamily: "conthrax",
@@ -70,10 +77,10 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: 354,
+    width: "100%",
     borderColor: "#D5D5D5",
     borderWidth: 1,
-    marginTop: 115,
+    top: 10,
     alignSelf: "center",
     borderRadius: 15,
     color: "#29364d",
@@ -84,23 +91,15 @@ const styles = StyleSheet.create({
     top: 122.5,
     left: 30,
   },
-  texto: {
-    fontSize: 18,
-    color: "#29364d",
-    marginTop: 13,
-    position: "absolute",
-  },
   header: {
     fontSize: 20,
     color: "#29364d",
     fontWeight: "bold",
-    left: 20,
-    top: 15,
+    top: 20,
   },
   scroll: {
     flex: 1,
-    width: 353,
-    left: 20,
+    width: "100%",
     paddingTop: 6,
     top: 20,
   },
