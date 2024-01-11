@@ -40,36 +40,42 @@ const Request = (props) => {
       {/* Para Mostrar Botones de Confirmar y Eliminar */}
       {estado === "inicial" && (
         <>
-          <TouchableOpacity style={styles.botonConf} onPress={confirmar}>
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.botonGradient}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.botonConf} onPress={confirmar}>
+              <LinearGradient
+                colors={["#2FF690", "#21B6D5"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.botonGradient}
+              >
+                <Text style={styles.textoBoton}>CONFIRMAR</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.botonElim}
+              onPress={() => handleRemove()}
             >
-              <Text style={styles.textoBoton}>CONFIRMAR</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.botonElim}
-            onPress={() => handleRemove()}
-          >
-            <Text
-              style={[styles.textoBoton, { color: "#29364d", paddingTop: 7 }]}
-            >
-              ELIMINAR
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[styles.textoBoton, { color: "#29364d", paddingTop: 7 }]}
+              >
+                ELIMINAR
+              </Text>
+            </TouchableOpacity>
+          </View>
         </>
       )}
       {/* Para Mostrar Boton de Solicitud Enviada */}
       {estado === "solicitudEnviada" && (
-        <TouchableOpacity
-          style={styles.botonConectado}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={[styles.textoBoton, { color: "grey" }]}>CONECTADO</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.botonConectado}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={[styles.textoBoton, { color: "grey" }]}>
+              CONECTADO
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
 
       {/* Modal para mostrar si se presióna el boton de CONECTADO*/}
@@ -112,49 +118,52 @@ const Request = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     height: 85,
-    width: 352,
   },
   textoNombre: {
     fontSize: 14,
     color: "#29364d",
     fontWeight: "bold",
     paddingTop: 10,
-    width: 283,
-    left: 70,
+    left: 65,
   },
   icon: {
     height: 57,
     width: 57,
     borderRadius: 50,
-    marginTop: 10,
     position: "absolute",
+    marginTop: 10,
+  },
+  buttonContainer: {
+    top: 10,
+    width: "100%",
+    flexDirection: "row",
+    left: 60,
+    paddingRight: 70,
   },
   botonGradient: {
+    flex: 1,
+    width: "95%",
     justifyContent: "center",
     height: 31,
-    width: 135,
     alignSelf: "center",
     borderRadius: 8,
   },
   botonConf: {
+    width: "95%",
     height: 31,
-    width: 135,
+    flex: 1,
     borderRadius: 8,
-    position: "absolute",
-    top: 35,
-    left: 70,
   },
   botonElim: {
+    flex: 1,
+    width: "95%",
     height: 31,
-    width: 135,
     borderRadius: 8,
     backgroundColor: "white",
     borderColor: "#29364d",
     borderWidth: 1,
-    position: "absolute",
-    top: 35,
-    left: 212,
   },
   textoBoton: {
     fontSize: 12,
@@ -165,22 +174,21 @@ const styles = StyleSheet.create({
   },
   botonConectado: {
     height: 31,
-    width: 140,
+    width: "100%",
     paddingTop: 7,
+    left: 2.5,
     borderRadius: 8,
     backgroundColor: "#D5D5D5",
-    position: "absolute",
-    top: 36,
-    left: 70,
   },
   linea: {
     backgroundColor: "#cccccc",
     height: 1,
-    width: 550,
+    width: "100%",
     alignSelf: "center",
     position: "absolute",
     top: 80,
   },
+  // Estilos para el Modal que aparece si se elimina una conexión
   fullScreenButton: {
     position: "absolute",
     top: 0,

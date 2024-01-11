@@ -27,9 +27,9 @@ const MiRed = ({ navigation }) => {
 
   // Componente visual
   return (
-    //Titulo
-
+    //Fondo
     <View style={styles.background}>
+      {/*Titulo*/}
       <View style={styles.tituloContainer}>
         <Text style={styles.titulo}>TANKEF</Text>
       </View>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: "#D5D5D5",
     borderWidth: 1,
-    marginTop: 15,
+    marginTop: 20,
     alignSelf: "center",
     borderRadius: 15,
     color: "#29364d",
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     width: "100%",
-    paddingTop: 10,
+    paddingTop: 5,
   },
 });
 
