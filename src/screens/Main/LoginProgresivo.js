@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
-  Button,
   Text,
   Image,
   TouchableOpacity,
@@ -16,6 +15,9 @@ const LoginProgresivo = () => {
   const [cameraOpened, setCameraOpened] = useState(false);
   const cameraRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
+  const [frontIdImage, setFrontIdImage] = useState(null);
+  const [backIdImage, setBackIdImage] = useState(null);
+  const [faceImage, setFaceImage] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -24,16 +26,34 @@ const LoginProgresivo = () => {
     })();
   }, []);
 
-  const openCamera = () => {
+  const openCamera = (setImageStateCallback) => {
+    setCurrentImageSetter(() => setImageStateCallback); // Guarda la callback de actualización de estado
     setCameraOpened(true);
   };
 
+  const [currentImageSetter, setCurrentImageSetter] = useState(null);
+
   const takePicture = async () => {
+    console.log("takePicture called"); // Verifica que la función es llamada
+
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
-      const croppedPhoto = await cropImage(photo.uri);
-      setCapturedImage(croppedPhoto.uri); // Guarda la URI de la imagen recortada
-      setCameraOpened(false); // Cierra la cámara después de tomar la foto
+      console.log("Camera ref is valid"); // Verifica que cameraRef.current no es null
+
+      try {
+        console.log("Trying to take a picture..."); // Informa antes de tomar la foto
+        const photo = await cameraRef.current.takePictureAsync();
+        console.log("Picture taken", photo.uri); // Informa y muestra la URI de la foto tomada
+
+        const croppedPhoto = await cropImage(photo.uri);
+        console.log("Picture cropped", croppedPhoto.uri); // Informa y muestra la URI de la foto recortada
+
+        currentImageSetter(croppedPhoto.uri); // Actualiza el estado de la imagen correspondiente
+        setCameraOpened(false); // Cierra la cámara
+      } catch (error) {
+        console.error("Error taking picture", error); // Muestra el error en caso de fallo
+      }
+    } else {
+      console.log("Camera ref is not valid"); // Informa si cameraRef.current es null
     }
   };
 
@@ -90,7 +110,10 @@ const LoginProgresivo = () => {
             Foto del{" "}
             <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
           </Text>
-          <TouchableOpacity onPress={openCamera} style={styles.button}>
+          <TouchableOpacity
+            onPress={() => openCamera(setFrontIdImage)}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>ABRIR CÁMARA</Text>
           </TouchableOpacity>
         </View>
@@ -106,7 +129,10 @@ const LoginProgresivo = () => {
             Foto de la parte{" "}
             <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
           </Text>
-          <TouchableOpacity onPress={openCamera} style={styles.button}>
+          <TouchableOpacity
+            onPress={() => openCamera(setBackIdImage)}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>ABRIR CÁMARA</Text>
           </TouchableOpacity>
         </View>
@@ -121,7 +147,10 @@ const LoginProgresivo = () => {
           <Text style={styles.texto}>
             Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
           </Text>
-          <TouchableOpacity onPress={openCamera} style={styles.button}>
+          <TouchableOpacity
+            onPress={() => openCamera(setFaceImage)}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>ABRIR CÁMARA</Text>
           </TouchableOpacity>
         </View>
@@ -130,9 +159,7 @@ const LoginProgresivo = () => {
         animationType="slide"
         transparent={false}
         visible={cameraOpened}
-        onRequestClose={() => {
-          setCameraOpened(false);
-        }}
+        onRequestClose={() => setCameraOpened(false)} // Esto permite cerrar el modal con el botón de retroceso en Android
       >
         <Camera style={styles.camera} ref={cameraRef}>
           <View style={styles.cameraContainer}>
@@ -140,14 +167,26 @@ const LoginProgresivo = () => {
               onPress={takePicture}
               style={styles.captureButton}
             >
-              <Text style={styles.captureButtonText}>Capture</Text>
+              <Text style={styles.captureButtonText}>CAPTURAR</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setCameraOpened(false)}
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>CERRAR</Text>
             </TouchableOpacity>
             <View style={styles.shadedArea} />
           </View>
         </Camera>
       </Modal>
-      {capturedImage && (
-        <Image source={{ uri: capturedImage }} style={styles.previewImage} />
+      {faceImage && (
+        <Image source={{ uri: faceImage }} style={styles.previewImage} />
+      )}
+      {frontIdImage && (
+        <Image source={{ uri: frontIdImage }} style={styles.previewImage} />
+      )}
+      {backIdImage && (
+        <Image source={{ uri: backIdImage }} style={styles.previewImage} />
       )}
       <TouchableOpacity
         style={styles.nextButton}
@@ -226,17 +265,30 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   captureButton: {
-    flex: 0,
     alignSelf: "center",
     margin: 20,
     backgroundColor: "#fff",
-    borderRadius: 5,
+    borderRadius: 15,
     padding: 15,
     paddingHorizontal: 20,
   },
   captureButtonText: {
     fontSize: 14,
-    color: "#000",
+    color: "#29364d",
+    fontFamily: "conthrax",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 15,
+  },
+  closeButtonText: {
+    color: "#29364d",
+    fontFamily: "conthrax",
+    fontWeight: "bold",
   },
   shadedArea: {
     aspectRatio: 1.5,
