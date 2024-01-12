@@ -219,10 +219,10 @@ const styles = StyleSheet.create({
     fontSize: 21,
   },
   container: {
-    top: 35,
+    marginTop: 35,
     padding: 10,
     paddingBottom: 0,
-    flex: 0.87,
+    flex: 1,
     width: "100%",
     borderColor: "#cccccc",
     borderWidth: 1,
@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#cccccc",
     borderRadius: 15,
     marginBottom: 20,
+    marginTop: 15,
   },
   textoBoton: {
     textAlign: "center",
