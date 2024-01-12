@@ -1,3 +1,4 @@
+// Importaciones de React Native y React
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -9,6 +10,8 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
+// Importaciones de Hooks y Componentes
+import { Feather } from "@expo/vector-icons";
 
 const LoginProgresivo = () => {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -82,77 +85,109 @@ const LoginProgresivo = () => {
         <Text style={styles.titulo}>TANKEF</Text>
       </View>
       {/* Incentivo a Completar datos */}
-      <Text style={styles.header}>
-        ¡Termina de registrar todos tus datos para{" "}
-        <Text style={{ fontWeight: "bold" }}>
-          comenzar a realizar movimientos!
-        </Text>
-      </Text>
-      {/* Contenedor Principal */}
-      <View style={styles.container}>
-        {/* Indicaciones */}
-        <Text style={[styles.texto, { flex: 0 }]}>
-          Para continuar, se requieren fotos de tu{" "}
+      <View style={{ flex: 1 }}>
+        <Text style={styles.header}>
+          ¡Termina de registrar todos tus datos para{" "}
           <Text style={{ fontWeight: "bold" }}>
-            identificación y tu rostro{" "}
+            comenzar a realizar movimientos!
           </Text>
-          para verificar tu identidad.
         </Text>
-        {/* Seccion INE por Delante */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 10,
-          }}
-        >
-          <Text style={styles.texto}>
-            Foto del{" "}
-            <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
+        {/* Contenedor Principal */}
+        <View style={styles.container}>
+          {/* Indicaciones */}
+          <Text style={[styles.texto, { flex: 0 }]}>
+            Para continuar, se requieren fotos de tu{" "}
+            <Text style={{ fontWeight: "bold" }}>
+              identificación y tu rostro{" "}
+            </Text>
+            para verificar tu identidad.
           </Text>
-          <TouchableOpacity
-            onPress={() => openCamera(setFrontIdImage)}
-            style={styles.button}
+          {/* Seccion INE por Delante */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 10,
+            }}
           >
-            <Text style={styles.buttonText}>ABRIR CÁMARA</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Seccion INE por Detrás */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 15,
-          }}
-        >
-          <Text style={styles.texto}>
-            Foto de la parte{" "}
-            <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
-          </Text>
-          <TouchableOpacity
-            onPress={() => openCamera(setBackIdImage)}
-            style={styles.button}
+            <Text style={styles.texto}>
+              Foto del{" "}
+              <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
+            </Text>
+            <TouchableOpacity
+              onPress={() => openCamera(setFrontIdImage)}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>
+                {!frontIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+              </Text>
+            </TouchableOpacity>
+            {frontIdImage ? (
+              <Feather
+                style={styles.checkMark}
+                name="check-circle"
+                size={30}
+                color="green"
+              />
+            ) : null}
+          </View>
+          {/* Seccion INE por Detrás */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 15,
+            }}
           >
-            <Text style={styles.buttonText}>ABRIR CÁMARA</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Seccion Rostro */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 15,
-          }}
-        >
-          <Text style={styles.texto}>
-            Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
-          </Text>
-          <TouchableOpacity
-            onPress={() => openCamera(setFaceImage)}
-            style={styles.button}
+            <Text style={styles.texto}>
+              Foto de la parte{" "}
+              <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
+            </Text>
+            <TouchableOpacity
+              onPress={() => openCamera(setBackIdImage)}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>
+                {!backIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+              </Text>
+            </TouchableOpacity>
+            {backIdImage ? (
+              <Feather
+                style={styles.checkMark}
+                name="check-circle"
+                size={30}
+                color="green"
+              />
+            ) : null}
+          </View>
+          {/* Seccion Rostro */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 15,
+            }}
           >
-            <Text style={styles.buttonText}>ABRIR CÁMARA</Text>
-          </TouchableOpacity>
+            <Text style={styles.texto}>
+              Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
+            </Text>
+            <TouchableOpacity
+              onPress={() => openCamera(setFaceImage)}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>
+                {!faceImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+              </Text>
+            </TouchableOpacity>
+            {faceImage ? (
+              <Feather
+                style={styles.checkMark}
+                name="check-circle"
+                size={30}
+                color="green"
+              />
+            ) : null}
+          </View>
         </View>
       </View>
       <Modal
@@ -179,7 +214,7 @@ const LoginProgresivo = () => {
           </View>
         </Camera>
       </Modal>
-      {faceImage && (
+      {/*{faceImage && (
         <Image source={{ uri: faceImage }} style={styles.previewImage} />
       )}
       {frontIdImage && (
@@ -187,13 +222,15 @@ const LoginProgresivo = () => {
       )}
       {backIdImage && (
         <Image source={{ uri: backIdImage }} style={styles.previewImage} />
-      )}
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={() => handleSiguiente()}
-      >
-        <Text style={styles.nextButtonText}>SIGUIENTE</Text>
-      </TouchableOpacity>
+      )}}*/}
+      {frontIdImage && backIdImage && faceImage ? (
+        <TouchableOpacity
+          style={styles.nextButton}
+          onPress={() => handleSiguiente()}
+        >
+          <Text style={styles.nextButtonText}>SIGUIENTE</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };
@@ -254,6 +291,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 14,
     fontFamily: "conthrax",
+    textAlign: "center",
+  },
+  checkMark: {
+    alignSelf: "center",
+    marginHorizontal: 5,
   },
   camera: {
     flex: 1,
@@ -314,7 +356,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 8,
     alignSelf: "center",
-    marginBottom: 30,
+    marginBottom: 20,
     marginTop: 15,
   },
   nextButtonText: {
