@@ -70,8 +70,8 @@ const LoginProgresivo = () => {
       </Text>
       {/* Contenedor Principal */}
       <View style={styles.container}>
-        {/* Indicaciones INE */}
-        <Text style={styles.texto}>
+        {/* Indicaciones */}
+        <Text style={[styles.texto, { flex: 0 }]}>
           Para continuar, se requieren fotos de tu{" "}
           <Text style={{ fontWeight: "bold" }}>
             identificación y tu rostro{" "}
@@ -83,6 +83,7 @@ const LoginProgresivo = () => {
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
+            marginTop: 10,
           }}
         >
           <Text style={styles.texto}>
