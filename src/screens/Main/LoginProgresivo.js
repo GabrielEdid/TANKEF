@@ -127,7 +127,7 @@ const LoginProgresivo = () => {
                 style={styles.checkMark}
                 name="check-circle"
                 size={30}
-                color="green"
+                color="#21b6d5"
               />
             ) : null}
           </View>
@@ -156,7 +156,7 @@ const LoginProgresivo = () => {
                 style={styles.checkMark}
                 name="check-circle"
                 size={30}
-                color="green"
+                color="#21b6d5"
               />
             ) : null}
           </View>
@@ -184,7 +184,7 @@ const LoginProgresivo = () => {
                 style={styles.checkMark}
                 name="check-circle"
                 size={30}
-                color="green"
+                color="#21b6d5"
               />
             ) : null}
           </View>
