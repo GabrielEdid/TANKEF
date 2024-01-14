@@ -12,6 +12,7 @@ import { Camera } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
 // Importaciones de Hooks y Componentes
 import { Feather } from "@expo/vector-icons";
+import { ScrollView } from "react-native-gesture-handler";
 
 const LoginProgresivo = () => {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -64,7 +65,7 @@ const LoginProgresivo = () => {
     // Ajusta según las dimensiones de tu área delimitada
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [{ crop: { originX: 120, originY: 2950, width: 1800, height: 1200 } }],
+      [{ crop: { originX: 120, originY: 1500, width: 1750, height: 1200 } }],
       { compress: 1, format: ImageManipulator.SaveFormat.PNG }
     );
     return manipResult;
@@ -94,6 +95,7 @@ const LoginProgresivo = () => {
         </Text>
         {/* Contenedor Principal */}
         <View style={styles.container}>
+        <ScrollView>
           {/* Indicaciones */}
           <Text style={[styles.texto, { flex: 0 }]}>
             Para continuar, se requieren fotos de tu{" "}
@@ -131,6 +133,13 @@ const LoginProgresivo = () => {
               />
             ) : null}
           </View>
+          {frontIdImage && (
+            <View>
+              <Image source={{ uri: frontIdImage }} style={styles.previewImage} />
+              <Text>Asegurate de que aparezca la identificacion completa en la imagen</Text>
+              
+            </View>
+          )}
           {/* Seccion INE por Detrás */}
           <View
             style={{
@@ -160,6 +169,14 @@ const LoginProgresivo = () => {
               />
             ) : null}
           </View>
+
+          {backIdImage && (
+            <View>
+              <Image source={{ uri: backIdImage }} style={styles.previewImage} />
+              <Text>Asegurate de que aparezca la identificacion completa en la imagen</Text>
+            </View>
+          )}
+
           {/* Seccion Rostro */}
           <View
             style={{
@@ -188,6 +205,16 @@ const LoginProgresivo = () => {
               />
             ) : null}
           </View>
+          
+          {faceImage && (
+            <View>
+              <Image source={{ uri: faceImage }} style={styles.previewImage} />
+              <Text>Asegurate de que tu rostro se muestra de manera clara y bien alumbrado</Text>
+            </View>
+          )}
+          
+          
+        </ScrollView>
         </View>
       </View>
       <Modal
@@ -198,6 +225,10 @@ const LoginProgresivo = () => {
       >
         <Camera style={styles.camera} ref={cameraRef}>
           <View style={styles.cameraContainer}>
+          <View style={styles.shadedArea1} />
+          <View style={styles.shadedArea2} />
+          <View style={styles.shadedArea3} />
+          <View style={styles.shadedArea4} />
             <TouchableOpacity
               onPress={takePicture}
               style={styles.captureButton}
@@ -210,19 +241,11 @@ const LoginProgresivo = () => {
             >
               <Text style={styles.closeButtonText}>CERRAR</Text>
             </TouchableOpacity>
-            <View style={styles.shadedArea} />
+            
           </View>
         </Camera>
       </Modal>
-      {/*{faceImage && (
-        <Image source={{ uri: faceImage }} style={styles.previewImage} />
-      )}
-      {frontIdImage && (
-        <Image source={{ uri: frontIdImage }} style={styles.previewImage} />
-      )}
-      {backIdImage && (
-        <Image source={{ uri: backIdImage }} style={styles.previewImage} />
-      )}}*/}
+      
       {frontIdImage && backIdImage && faceImage ? (
         <TouchableOpacity
           style={styles.nextButton}
@@ -261,6 +284,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 15,
     width: "100%",
+    height: "88%",
     backgroundColor: "white",
     borderRadius: 15,
     shadowColor: "#000",
@@ -332,11 +356,44 @@ const styles = StyleSheet.create({
     fontFamily: "conthrax",
     fontWeight: "bold",
   },
+  shadedArea1: {
+    position: "absolute",
+    left: 0,
+    width:20,
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  shadedArea2: {
+    position: "absolute",
+    right: 0,
+    width:20,
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  shadedArea3: {
+    position: "absolute",
+    top: -117.5,
+    left:20,
+    right:20,
+    height: "50%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  shadedArea4: {
+    position: "absolute",
+    bottom: -117.5,
+    left:20,
+    right:20,
+    height: "50%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
   shadedArea: {
+    position: "absolute",
+    top: 50,
     aspectRatio: 1.5,
     height: 235,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     margin: 20,
+    justifyContent: "flex-start",
   },
   previewImage: {
     width: 300, // Ajusta según tus necesidades
