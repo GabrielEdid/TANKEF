@@ -9,29 +9,20 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+// Importaciones de Hooks
+import { UserContext } from "../../hooks/UserContext";
 // Importaciones de Componentes
 import DropDown from "../../components/DropDown";
 import { AntDesign } from "@expo/vector-icons";
 
 const LoginProgresivo2 = ({ navigation }) => {
   // Estados locales
+  const { user, setUser } = useContext(UserContext); //Contexo
 
   // Función para verificar si los campos están completos
   const verificarCampos = () => {
-    return (
-      user.nombre !== "" &&
-      user.apellidoPaterno !== "" &&
-      user.apellidoMaterno !== "" &&
-      user.CURP !== "" &&
-      user.CURP !== "CURP Invalido" &&
-      user.fechaNacimiento !== "" &&
-      user.fechaNacimiento !== "CURP Invalido" &&
-      user.estadoNacimiento !== "" &&
-      user.estadoNacimiento !== "CURP incorrecto" &&
-      user.sexo !== "" &&
-      user.sexo !== "CURP Invalido"
-    );
+    return user.ocupacion !== "" && user.estadoCivil !== "";
   };
 
   // Manejador para el botón Siguiente
@@ -44,7 +35,9 @@ const LoginProgresivo2 = ({ navigation }) => {
         { cancelable: true }
       );
     } else {
-      navigation.navigate("Registro4");
+      navigation.navigate("PerfilScreen", {
+        screen: "PerfilMain",
+      });
     }
   };
 
@@ -114,7 +107,7 @@ const LoginProgresivo2 = ({ navigation }) => {
           style={styles.botonGrande}
           onPress={() => handleSiguiente()}
         >
-          <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
+          <Text style={styles.textoBotonGrande}>GUARDAR</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
