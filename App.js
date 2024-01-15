@@ -27,6 +27,7 @@ import Perfil from "./src/screens/Main/Perfil";
 import SolicitudesConexion from "./src/screens/Main/SolicitudesConexion";
 import MisConexiones from "./src/screens/Main/MisConexiones";
 import LoginProgresivo from "./src/screens/Main/LoginProgresivo";
+import LoginProgresivo2 from "./src/screens/Main/LoginProgresivo2";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -103,6 +104,7 @@ function PerfilLoginProgresivo() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="PerfilMain" component={Perfil} />
       <Stack.Screen name="LoginProgresivo" component={LoginProgresivo} />
+      <Stack.Screen name="LoginProgresivo2" component={LoginProgresivo2} />
     </Stack.Navigator>
   );
 }

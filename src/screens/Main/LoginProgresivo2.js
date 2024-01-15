@@ -14,7 +14,7 @@ import React, { useState, useEffect } from "react";
 import SpecialInput from "../../components/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
-const LoginProgresivo = ({ navigation }) => {
+const LoginProgresivo2 = ({ navigation }) => {
   // Estados locales
 
   // Función para verificar si los campos están completos
@@ -203,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginProgresivo;
+export default LoginProgresivo2;

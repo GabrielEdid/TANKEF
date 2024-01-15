@@ -71,7 +71,7 @@ const Perfil = () => {
           style={styles.cuadroLoginProgresivo}
           onPress={() =>
             navigation.navigate("PerfilScreen", {
-              screen: "LoginProgresivo",
+              screen: "LoginProgresivo2",
             })
           }
         >

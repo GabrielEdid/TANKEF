@@ -12,9 +12,10 @@ import { Camera } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
 // Importaciones de Hooks y Componentes
 import { Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
-const LoginProgresivo = () => {
+const LoginProgresivo = ({ navigation }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [cameraOpened, setCameraOpened] = useState(false);
   const cameraRef = useRef(null);
@@ -85,6 +86,14 @@ const LoginProgresivo = () => {
       <View style={styles.tituloContainer}>
         <Text style={styles.titulo}>TANKEF</Text>
       </View>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <AntDesign
+          name="arrowleft"
+          size={40}
+          color="#29364d"
+          style={styles.back}
+        />
+      </TouchableOpacity>
       {/* Incentivo a Completar datos */}
       <View style={{ flex: 1 }}>
         <Text style={styles.header}>
@@ -263,7 +272,11 @@ const LoginProgresivo = () => {
       {frontIdImage && backIdImage && faceImage ? (
         <TouchableOpacity
           style={styles.nextButton}
-          onPress={() => handleSiguiente()}
+          onPress={() =>
+            navigation.navigate("PerfilScreen", {
+              screen: "LoginProgresivo2",
+            })
+          }
         >
           <Text style={styles.nextButtonText}>SIGUIENTE</Text>
         </TouchableOpacity>
@@ -277,6 +290,7 @@ const styles = StyleSheet.create({
     height: 105,
     backgroundColor: "white",
   },
+  back: {},
   background: {
     flex: 1,
     backgroundColor: "white",
@@ -298,7 +312,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 15,
     width: "100%",
-    height: "88%",
+    flex: 0.98,
     backgroundColor: "white",
     borderRadius: 15,
     shadowColor: "#000",
