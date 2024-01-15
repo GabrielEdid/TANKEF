@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 // Importaciones de Componentes
-import SpecialInput from "../../components/SpecialInput";
+import DropDown from "../../components/DropDown";
 import { AntDesign } from "@expo/vector-icons";
 
 const LoginProgresivo2 = ({ navigation }) => {
@@ -69,9 +69,11 @@ const LoginProgresivo2 = ({ navigation }) => {
     // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/* Logo, Titulo y Regresar */}
-        <Text style={styles.titulo}>TANKEF</Text>
-        <TouchableOpacity onPress={() => handleGoBack()}>
+        {/*Titulo*/}
+        <View style={styles.tituloContainer}>
+          <Text style={styles.titulo}>TANKEF</Text>
+        </View>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign
             name="arrowleft"
             size={40}
@@ -80,46 +82,31 @@ const LoginProgresivo2 = ({ navigation }) => {
           />
         </TouchableOpacity>
         {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
-        <Text style={styles.texto}>
-          ¡Termina de registrar todos tus datos para{" "}
-          <Text style={{ fontWeight: "bold" }}>
-            comenzar a realizar movimientos!
+        <View style={{ flex: 1 }}>
+          <Text style={styles.texto}>
+            ¡Solo faltan un par de datos más{" "}
+            <Text style={{ fontWeight: "bold" }}>
+              para terminar tu registro!
+            </Text>
           </Text>
-        </Text>
-        <View style={styles.container}>
-          {/* Sección de campos de entrada */}
           <View
-            style={{
-              marginTop: 10,
-              height: 100,
-            }}
+            style={styles.container}
             automaticallyAdjustKeyboardInsets={true}
           >
             {/* Campos de entrada para datos del usuario */}
-            <SpecialInput field="Nombre(s)" context="nombre" editable={true} />
-            <SpecialInput
-              field="Apellido Paterno"
-              context="apellidoPaterno"
-              editable={true}
+            <DropDown
+              field="Estado Civil"
+              context="estadoCivil"
+              dropdown={"civil"}
             />
-            <SpecialInput
-              field="Apellido Materno"
-              context="apellidoMaterno"
-              editable={true}
-            />
-            <SpecialInput field="CURP" context="CURP" editable={true} />
-            {/* Campos de información generados a partir del CURP */}
-            <SpecialInput
-              field="Fecha de Nacimiento"
-              context="fechaNacimiento"
-              editable={false}
-            />
-            <SpecialInput
-              field="Estado de Nacimiento"
-              context="estadoNacimiento"
-              editable={false}
-            />
-            <SpecialInput field="Sexo" context="sexo" editable={false} />
+            {/* Campo de entrada para la ocupación del usuario, se tiene con view para que no se obstruya */}
+            <View style={{ zIndex: -1 }}>
+              <DropDown
+                field="Ocupación"
+                context="ocupacion"
+                dropdown={"ocupacion"}
+              />
+            </View>
           </View>
         </View>
         {/* Botón de Continuar */}
@@ -136,14 +123,14 @@ const LoginProgresivo2 = ({ navigation }) => {
 
 // Estilos de la Pantalla
 const styles = StyleSheet.create({
-  back: {
-    marginTop: 110,
-    marginLeft: 20,
-    position: "absolute",
+  tituloContainer: {
+    height: 105,
+    backgroundColor: "white",
   },
   background: {
-    backgroundColor: "white",
     flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: 20,
   },
   imagen: {
     width: 90,
@@ -157,17 +144,14 @@ const styles = StyleSheet.create({
     fontSize: 27,
     color: "#29364d",
     marginTop: 70,
-    marginLeft: 20,
     position: "absolute",
   },
   container: {
-    position: "absolute",
+    padding: 20,
+    marginTop: 15,
     alignSelf: "center",
-    height: 420,
-    width: 332,
-    marginTop: 220,
+    width: "100%",
     backgroundColor: "white",
-    flex: 1,
     borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
@@ -177,23 +161,19 @@ const styles = StyleSheet.create({
   },
   texto: {
     fontSize: 18,
-    width: 352,
     textAlign: "center",
     color: "#29364d",
-    marginTop: 160,
-    left: 20,
     alignSelf: "center",
-    position: "absolute",
   },
   botonGrande: {
-    marginTop: 700,
-    width: 350,
+    width: "100%",
     height: 60,
     alignSelf: "center",
     justifyContent: "center",
     backgroundColor: "#29364d",
     borderRadius: 25,
-    position: "absolute",
+    marginBottom: 20,
+    zIndex: -10,
   },
   textoBotonGrande: {
     color: "white",

@@ -204,9 +204,10 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   DropDownPicker: {
+    zIndex: 1000,
     borderWidth: 1,
     borderColor: "#29364d",
-    width: 300,
+    width: "100%",
     height: 40,
     alignSelf: "center",
     borderRadius: 17,
@@ -214,14 +215,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   DropDownContainer: {
-    width: 300,
+    width: "100%",
     alignSelf: "center",
     borderRadius: 0,
     borderColor: "#29364d",
   },
   DropDownText: {
     fontSize: 16,
-    color: "black",
+    color: "#29364d",
     alignSelf: "center",
   },
 });

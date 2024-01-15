@@ -290,7 +290,6 @@ const styles = StyleSheet.create({
     height: 105,
     backgroundColor: "white",
   },
-  back: {},
   background: {
     flex: 1,
     backgroundColor: "white",
