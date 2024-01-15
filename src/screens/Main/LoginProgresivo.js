@@ -97,7 +97,7 @@ const LoginProgresivo = () => {
         <View style={styles.container}>
           <ScrollView>
             {/* Indicaciones */}
-            <Text style={[styles.texto, { flex: 0 }]}>
+            <Text style={styles.texto}>
               Para continuar, se requieren fotos de tu{" "}
               <Text style={{ fontWeight: "bold" }}>
                 identificación y tu rostro{" "}
