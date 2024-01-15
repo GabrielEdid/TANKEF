@@ -46,15 +46,12 @@ const LoginProgresivo2 = ({ navigation }) => {
     // Reinicia los valores del usuario
     setUser({
       ...user,
-      nombre: "",
-      apellidoPaterno: "",
-      apellidoMaterno: "",
-      CURP: "",
-      fechaNacimiento: "",
-      sexo: "",
-      estadoNacimiento: "",
+      ocupacion: "",
+      estadoCivil: "",
     });
-    navigation.navigate("Registro1");
+    navigation.navigate("PerfilScreen", {
+      screen: "PerfilMain",
+    });
   };
 
   // Componente visual
