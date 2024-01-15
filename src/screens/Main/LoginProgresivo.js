@@ -95,126 +95,141 @@ const LoginProgresivo = () => {
         </Text>
         {/* Contenedor Principal */}
         <View style={styles.container}>
-        <ScrollView>
-          {/* Indicaciones */}
-          <Text style={[styles.texto, { flex: 0 }]}>
-            Para continuar, se requieren fotos de tu{" "}
-            <Text style={{ fontWeight: "bold" }}>
-              identificación y tu rostro{" "}
-            </Text>
-            para verificar tu identidad.
-          </Text>
-          {/* Seccion INE por Delante */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 10,
-            }}
-          >
-            <Text style={styles.texto}>
-              Foto del{" "}
-              <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
-            </Text>
-            <TouchableOpacity
-              onPress={() => openCamera(setFrontIdImage)}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>
-                {!frontIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+          <ScrollView>
+            {/* Indicaciones */}
+            <Text style={[styles.texto, { flex: 0 }]}>
+              Para continuar, se requieren fotos de tu{" "}
+              <Text style={{ fontWeight: "bold" }}>
+                identificación y tu rostro{" "}
               </Text>
-            </TouchableOpacity>
-            {frontIdImage ? (
-              <Feather
-                style={styles.checkMark}
-                name="check-circle"
-                size={30}
-                color="#21b6d5"
-              />
-            ) : null}
-          </View>
-          {frontIdImage && (
-            <View>
-              <Image source={{ uri: frontIdImage }} style={styles.previewImage} />
-              <Text>Asegurate de que aparezca la identificacion completa en la imagen</Text>
-              
+              para verificar tu identidad.
+            </Text>
+            {/* Seccion INE por Delante */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+              }}
+            >
+              <Text style={styles.texto}>
+                Foto del{" "}
+                <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
+              </Text>
+              <TouchableOpacity
+                onPress={() => openCamera(setFrontIdImage)}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>
+                  {!frontIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+                </Text>
+              </TouchableOpacity>
+              {frontIdImage ? (
+                <Feather
+                  style={styles.checkMark}
+                  name="check-circle"
+                  size={30}
+                  color="#21b6d5"
+                />
+              ) : null}
             </View>
-          )}
-          {/* Seccion INE por Detrás */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 15,
-            }}
-          >
-            <Text style={styles.texto}>
-              Foto de la parte{" "}
-              <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
-            </Text>
-            <TouchableOpacity
-              onPress={() => openCamera(setBackIdImage)}
-              style={styles.button}
+            {frontIdImage && (
+              <View>
+                <Image
+                  source={{ uri: frontIdImage }}
+                  style={styles.previewImage}
+                />
+                <Text style={[styles.texto, { fontSize: 15 }]}>
+                  Asegurate de que aparezca la identificacion completa en la
+                  imagen
+                </Text>
+              </View>
+            )}
+            {/* Seccion INE por Detrás */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 15,
+              }}
             >
-              <Text style={styles.buttonText}>
-                {!backIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+              <Text style={styles.texto}>
+                Foto de la parte{" "}
+                <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
               </Text>
-            </TouchableOpacity>
-            {backIdImage ? (
-              <Feather
-                style={styles.checkMark}
-                name="check-circle"
-                size={30}
-                color="#21b6d5"
-              />
-            ) : null}
-          </View>
+              <TouchableOpacity
+                onPress={() => openCamera(setBackIdImage)}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>
+                  {!backIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+                </Text>
+              </TouchableOpacity>
+              {backIdImage ? (
+                <Feather
+                  style={styles.checkMark}
+                  name="check-circle"
+                  size={30}
+                  color="#21b6d5"
+                />
+              ) : null}
+            </View>
 
-          {backIdImage && (
-            <View>
-              <Image source={{ uri: backIdImage }} style={styles.previewImage} />
-              <Text>Asegurate de que aparezca la identificacion completa en la imagen</Text>
-            </View>
-          )}
+            {backIdImage && (
+              <View>
+                <Image
+                  source={{ uri: backIdImage }}
+                  style={styles.previewImage}
+                />
+                <Text style={[styles.texto, { fontSize: 15 }]}>
+                  Asegurate de que aparezca la identificacion completa en la
+                  imagen
+                </Text>
+              </View>
+            )}
 
-          {/* Seccion Rostro */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 15,
-            }}
-          >
-            <Text style={styles.texto}>
-              Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
-            </Text>
-            <TouchableOpacity
-              onPress={() => openCamera(setFaceImage)}
-              style={styles.button}
+            {/* Seccion Rostro */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 15,
+              }}
             >
-              <Text style={styles.buttonText}>
-                {!faceImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+              <Text style={styles.texto}>
+                Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
               </Text>
-            </TouchableOpacity>
-            {faceImage ? (
-              <Feather
-                style={styles.checkMark}
-                name="check-circle"
-                size={30}
-                color="#21b6d5"
-              />
-            ) : null}
-          </View>
-          
-          {faceImage && (
-            <View>
-              <Image source={{ uri: faceImage }} style={styles.previewImage} />
-              <Text>Asegurate de que tu rostro se muestra de manera clara y bien alumbrado</Text>
+              <TouchableOpacity
+                onPress={() => openCamera(setFaceImage)}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>
+                  {!faceImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
+                </Text>
+              </TouchableOpacity>
+              {faceImage ? (
+                <Feather
+                  style={styles.checkMark}
+                  name="check-circle"
+                  size={30}
+                  color="#21b6d5"
+                />
+              ) : null}
             </View>
-          )}
-          
-          
-        </ScrollView>
+
+            {faceImage && (
+              <View>
+                <Image
+                  source={{ uri: faceImage }}
+                  style={styles.previewImage}
+                />
+                <Text style={[styles.texto, { fontSize: 15 }]}>
+                  Asegurate de que tu rostro se muestre de manera clara y bien
+                  alumbrado
+                </Text>
+              </View>
+            )}
+          </ScrollView>
         </View>
       </View>
       <Modal
@@ -225,10 +240,10 @@ const LoginProgresivo = () => {
       >
         <Camera style={styles.camera} ref={cameraRef}>
           <View style={styles.cameraContainer}>
-          <View style={styles.shadedArea1} />
-          <View style={styles.shadedArea2} />
-          <View style={styles.shadedArea3} />
-          <View style={styles.shadedArea4} />
+            <View style={styles.shadedArea1} />
+            <View style={styles.shadedArea2} />
+            <View style={styles.shadedArea3} />
+            <View style={styles.shadedArea4} />
             <TouchableOpacity
               onPress={takePicture}
               style={styles.captureButton}
@@ -241,11 +256,10 @@ const LoginProgresivo = () => {
             >
               <Text style={styles.closeButtonText}>CERRAR</Text>
             </TouchableOpacity>
-            
           </View>
         </Camera>
       </Modal>
-      
+
       {frontIdImage && backIdImage && faceImage ? (
         <TouchableOpacity
           style={styles.nextButton}
@@ -359,30 +373,30 @@ const styles = StyleSheet.create({
   shadedArea1: {
     position: "absolute",
     left: 0,
-    width:20,
+    width: 20,
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   shadedArea2: {
     position: "absolute",
     right: 0,
-    width:20,
+    width: 20,
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   shadedArea3: {
     position: "absolute",
     top: -117.5,
-    left:20,
-    right:20,
+    left: 20,
+    right: 20,
     height: "50%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   shadedArea4: {
     position: "absolute",
     bottom: -117.5,
-    left:20,
-    right:20,
+    left: 20,
+    right: 20,
     height: "50%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
@@ -396,10 +410,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   previewImage: {
-    width: 300, // Ajusta según tus necesidades
-    height: 200, // Ajusta según tus necesidades
+    width: "100%",
+    height: 200,
     marginTop: 20,
-    borderRadius: 10, // Opcional: para bordes redondeados
+    borderRadius: 10,
   },
   nextButton: {
     width: "100%",
