@@ -24,6 +24,12 @@ const LoginProgresivo = ({ navigation }) => {
   const [backIdImage, setBackIdImage] = useState(null);
   const [faceImage, setFaceImage] = useState(null);
 
+  const imageMap = {
+    Tarjeta: require("../../../assets/images/tarjeta.png"),
+    Cara: require("../../../assets/images/Fotos_Personas/Quill.png"),
+    // ... más imágenes
+  };
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -268,6 +274,10 @@ const LoginProgresivo = ({ navigation }) => {
                 <View style={styles.shadedArea2} />
                 <View style={styles.shadedArea3} />
                 <View style={styles.shadedArea4} />
+                <Image
+                  source={ imageMap.Tarjeta }
+                  style={styles.shadedArea}
+                />
               </>
             )}
 
@@ -433,12 +443,13 @@ const styles = StyleSheet.create({
   },
   shadedArea: {
     position: "absolute",
-    top: 50,
-    aspectRatio: 1.5,
-    height: 235,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    margin: 20,
+    top: 288,
+    width: 382,
+    height: 257,
+    backgroundColor: "transparent",
+    margin: 5,
     justifyContent: "flex-start",
+    
   },
   ovalOverlay: {
     position: "absolute",
