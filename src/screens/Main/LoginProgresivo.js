@@ -19,7 +19,7 @@ const LoginProgresivo = ({ navigation }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [cameraOpened, setCameraOpened] = useState(false);
   const cameraRef = useRef(null);
-  const [capturedImage, setCapturedImage] = useState(null);
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [frontIdImage, setFrontIdImage] = useState(null);
   const [backIdImage, setBackIdImage] = useState(null);
   const [faceImage, setFaceImage] = useState(null);
@@ -31,8 +31,12 @@ const LoginProgresivo = ({ navigation }) => {
     })();
   }, []);
 
-  const openCamera = (setImageStateCallback) => {
-    setCurrentImageSetter(() => setImageStateCallback); // Guarda la callback de actualización de estado
+  const openCamera = (
+    setImageStateCallback,
+    type = Camera.Constants.Type.back
+  ) => {
+    setCurrentImageSetter(() => setImageStateCallback);
+    setCameraType(type);
     setCameraOpened(true);
   };
 
@@ -63,10 +67,15 @@ const LoginProgresivo = ({ navigation }) => {
   };
 
   const cropImage = async (uri) => {
-    // Ajusta según las dimensiones de tu área delimitada
+    // Estos valores dependen de la posición y tamaño del óvalo en tu diseño
+    const originX = 120; // Ajusta según el margen izquierdo del óvalo
+    const originY = 1500; // Ajusta según el margen superior del óvalo
+    const width = 1750; // Ajusta según el ancho del óvalo
+    const height = 1200; // Ajusta según la altura del óvalo
+
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [{ crop: { originX: 120, originY: 1500, width: 1750, height: 1200 } }],
+      [{ crop: { originX, originY, width, height } }],
       { compress: 1, format: ImageManipulator.SaveFormat.PNG }
     );
     return manipResult;
@@ -209,7 +218,9 @@ const LoginProgresivo = ({ navigation }) => {
                 Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
               </Text>
               <TouchableOpacity
-                onPress={() => openCamera(setFaceImage)}
+                onPress={() =>
+                  openCamera(setFaceImage, Camera.Constants.Type.front)
+                }
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>
@@ -247,12 +258,19 @@ const LoginProgresivo = ({ navigation }) => {
         visible={cameraOpened}
         onRequestClose={() => setCameraOpened(false)} // Esto permite cerrar el modal con el botón de retroceso en Android
       >
-        <Camera style={styles.camera} ref={cameraRef}>
+        <Camera style={styles.camera} type={cameraType} ref={cameraRef}>
           <View style={styles.cameraContainer}>
-            <View style={styles.shadedArea1} />
-            <View style={styles.shadedArea2} />
-            <View style={styles.shadedArea3} />
-            <View style={styles.shadedArea4} />
+            {cameraType === Camera.Constants.Type.front ? (
+              <View style={styles.ovalOverlay} />
+            ) : (
+              <>
+                <View style={styles.shadedArea1} />
+                <View style={styles.shadedArea2} />
+                <View style={styles.shadedArea3} />
+                <View style={styles.shadedArea4} />
+              </>
+            )}
+
             <TouchableOpacity
               onPress={takePicture}
               style={styles.captureButton}
@@ -421,6 +439,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     margin: 20,
     justifyContent: "flex-start",
+  },
+  ovalOverlay: {
+    position: "absolute",
+    left: "15%",
+    right: "15%",
+    top: "20%",
+    bottom: "20%",
+    borderWidth: 2,
+    borderColor: "white",
+    borderRadius: 100,
+    aspectRatio: 1,
   },
   previewImage: {
     width: "100%",
