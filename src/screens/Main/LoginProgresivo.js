@@ -26,7 +26,7 @@ const LoginProgresivo = ({ navigation }) => {
 
   const imageMap = {
     Tarjeta: require("../../../assets/images/tarjeta.png"),
-    Cara: require("../../../assets/images/Fotos_Personas/Quill.png"),
+    Cara: require("../../../assets/images/fondoCara.png"),
     // ... más imágenes
   };
 
@@ -267,7 +267,13 @@ const LoginProgresivo = ({ navigation }) => {
         <Camera style={styles.camera} type={cameraType} ref={cameraRef}>
           <View style={styles.cameraContainer}>
             {cameraType === Camera.Constants.Type.front ? (
-              <View style={styles.ovalOverlay} />
+              <>
+              <Image
+                  source={ imageMap.Cara }
+                  style={styles.ovalImage}
+                />
+                <View style={styles.ovalOverlay}></View>
+              </>
             ) : (
               <>
                 <View style={styles.shadedArea1} />
@@ -451,15 +457,24 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     
   },
+  ovalImage: {
+    position: "absolute",
+    width:"125%",
+    alignSelf: "center",
+    height: "100%",
+    top: "0",
+    tintColor: "rgba(0, 0, 0, 0.5)",
+  },
   ovalOverlay: {
     position: "absolute",
-    left: "15%",
-    right: "15%",
-    top: "20%",
-    bottom: "20%",
-    borderWidth: 2,
+    left: "7%",
+    right: "7%",
+    top: "17%",
+    bottom: "32%",
+    borderWidth: 18,
     borderColor: "white",
-    borderRadius: 100,
+    borderRadius: 200,
+    borderStyle: "dashed",
     aspectRatio: 1,
   },
   previewImage: {
