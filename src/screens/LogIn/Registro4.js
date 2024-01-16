@@ -48,6 +48,8 @@ const Registro4 = ({ navigation }) => {
             dob: user.fechaNacimiento,
             curp: user.CURP,
             phone: user.telefono,
+            gender: user.sexo,
+            city: user.estadoNacimiento,
           },
         }),
       }
