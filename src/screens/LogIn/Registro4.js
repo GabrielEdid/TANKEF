@@ -48,8 +48,8 @@ const Registro4 = ({ navigation }) => {
             dob: user.fechaNacimiento,
             curp: user.CURP,
             phone: user.telefono,
-            gender: user.sexo,
-            city: user.estadoNacimiento,
+            //gender: user.sexo,
+            //city: user.estadoNacimiento,
           },
         }),
       }
@@ -123,12 +123,33 @@ const Registro4 = ({ navigation }) => {
     }
   };
 
+  // Manejador para volver a la pantalla anterior
+  const handleGoBack = () => {
+    // Reinicia los valores del usuario
+    setUser({
+      ...user,
+      nombre: "",
+      apellidoPaterno: "",
+      apellidoMaterno: "",
+      CURP: "",
+      fechaNacimiento: "",
+      sexo: "",
+      estadoNacimiento: "",
+      email: "",
+      password: "",
+    });
+    navigation.navigate("Registro3");
+  };
+
   // Componente visual
   return (
     // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        <TouchableOpacity onPress={() => handleGoBack()} style={styles.back}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.back}
+        >
           <AntDesign name="arrowleft" size={40} color="#29364d" />
         </TouchableOpacity>
         <View>
@@ -199,6 +220,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 60,
     left: 20,
+    zIndex: 100,
   },
   header: {
     marginTop: 60,

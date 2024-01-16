@@ -57,13 +57,11 @@ const OlvideContrasena = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
         {/* Logo, Titulo y Imagen de Avance y Regresar */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={40}
-            color="#29364d"
-            style={styles.back}
-          />
+        <TouchableOpacity
+          style={styles.back}
+          onPress={() => navigation.goBack()}
+        >
+          <AntDesign name="arrowleft" size={40} color="#29364d" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Image
@@ -107,6 +105,7 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginLeft: 20,
     position: "absolute",
+    zIndex: 100,
   },
   background: {
     backgroundColor: "white",
