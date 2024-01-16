@@ -30,6 +30,13 @@ const LoginProgresivo = ({ navigation }) => {
     // ... más imágenes
   };
 
+  const sizes = {
+    originX: 120,
+    originY: 1500,
+    width: 1750,
+    height: 1200,
+  };
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -74,11 +81,16 @@ const LoginProgresivo = ({ navigation }) => {
 
   const cropImage = async (uri) => {
     // Estos valores dependen de la posición y tamaño del óvalo en tu diseño
-    const originX = 120; // Ajusta según el margen izquierdo del óvalo
-    const originY = 1500; // Ajusta según el margen superior del óvalo
-    const width = 1750; // Ajusta según el ancho del óvalo
-    const height = 1200; // Ajusta según la altura del óvalo
-
+    {
+      Camera.Constants.Type.back
+        ? null
+        : (sizes = {
+            originX: 120,
+            originY: 1500,
+            width: 1750,
+            height: 1200,
+          });
+    }
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
       [{ crop: { originX, originY, width, height } }],
@@ -268,10 +280,7 @@ const LoginProgresivo = ({ navigation }) => {
           <View style={styles.cameraContainer}>
             {cameraType === Camera.Constants.Type.front ? (
               <>
-              <Image
-                  source={ imageMap.Cara }
-                  style={styles.ovalImage}
-                />
+                <Image source={imageMap.Cara} style={styles.ovalImage} />
                 <View style={styles.ovalOverlay}></View>
               </>
             ) : (
@@ -280,10 +289,7 @@ const LoginProgresivo = ({ navigation }) => {
                 <View style={styles.shadedArea2} />
                 <View style={styles.shadedArea3} />
                 <View style={styles.shadedArea4} />
-                <Image
-                  source={ imageMap.Tarjeta }
-                  style={styles.shadedArea}
-                />
+                <Image source={imageMap.Tarjeta} style={styles.shadedArea} />
               </>
             )}
 
@@ -455,11 +461,10 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     margin: 5,
     justifyContent: "flex-start",
-    
   },
   ovalImage: {
     position: "absolute",
-    width:"125%",
+    width: "125%",
     alignSelf: "center",
     height: "100%",
     top: "0",
