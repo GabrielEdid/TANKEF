@@ -24,11 +24,15 @@ const LoginProgresivo = ({ navigation }) => {
   const [backIdImage, setBackIdImage] = useState(null);
   const [faceImage, setFaceImage] = useState(null);
 
+  
+
   const imageMap = {
     Tarjeta: require("../../../assets/images/tarjeta.png"),
     Cara: require("../../../assets/images/fondoCara.png"),
     // ... más imágenes
   };
+
+  
 
   const [sizes, setSizes] = useState({
     originX: 120,
@@ -81,32 +85,39 @@ const LoginProgresivo = ({ navigation }) => {
 
   const cropImage = async (uri) => {
     // Estos valores dependen de la posición y tamaño del óvalo en tu diseño
-    {
-      cameraType === Camera.Constants.Type.back
-        ? null
-        : setSizes({
-            originX: 60,
-            originY: 400,
-            width: 1750,
-            height: 2500,
-          });
-    }
-    const manipResult = await ImageManipulator.manipulateAsync(
+   {
+      await cameraType === Camera.Constants.Type.back
+        ?  manipResult = await ImageManipulator.manipulateAsync(
       uri,
       [
         {
           crop: {
-            originX: sizes.originX,
-            originY: sizes.originY,
-            width: sizes.width,
-            height: sizes.height,
+            originX: 120,
+            originY: 1500,
+            width: 1750,
+            height: 1200,
           },
         },
       ],
       { compress: 1, format: ImageManipulator.SaveFormat.PNG }
-    );
+    ) :  manipResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [
+        {
+          crop: {
+            originX: 60,
+            originY: 700,
+            width: 1690,
+            height: 2100,
+          },
+        },
+      ],
+      { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+    )
+   }
     return manipResult;
   };
+  
 
   if (hasCameraPermission === null) {
     return <View />;
@@ -182,7 +193,7 @@ const LoginProgresivo = ({ navigation }) => {
               <View>
                 <Image
                   source={{ uri: frontIdImage }}
-                  style={styles.previewImage}
+                  style={styles.previewCardImage}
                 />
                 <Text style={[styles.texto, { fontSize: 15 }]}>
                   Asegurate de que aparezca la identificacion completa en la
@@ -224,7 +235,7 @@ const LoginProgresivo = ({ navigation }) => {
               <View>
                 <Image
                   source={{ uri: backIdImage }}
-                  style={styles.previewImage}
+                  style={styles.previewCardImage}
                 />
                 <Text style={[styles.texto, { fontSize: 15 }]}>
                   Asegurate de que aparezca la identificacion completa en la
@@ -268,7 +279,7 @@ const LoginProgresivo = ({ navigation }) => {
               <View>
                 <Image
                   source={{ uri: faceImage }}
-                  style={styles.previewImage}
+                  style={styles.previewFaceImage}
                 />
                 <Text style={[styles.texto, { fontSize: 15 }]}>
                   Asegurate de que tu rostro se muestre de manera clara y bien
@@ -332,6 +343,7 @@ const LoginProgresivo = ({ navigation }) => {
       ) : null}
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -491,9 +503,15 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
     aspectRatio: 1,
   },
-  previewImage: {
-    width: "100%",
-    height: "100%",
+  previewCardImage: {
+    aspectRatio: 1750/1200,
+    width: "100",
+    marginTop: 20,
+    borderRadius: 10,
+  },
+  previewFaceImage: {
+    aspectRatio: 1690/2100,
+    width: "100",
     marginTop: 20,
     borderRadius: 10,
   },
