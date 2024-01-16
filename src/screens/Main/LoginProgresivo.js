@@ -24,15 +24,11 @@ const LoginProgresivo = ({ navigation }) => {
   const [backIdImage, setBackIdImage] = useState(null);
   const [faceImage, setFaceImage] = useState(null);
 
-  
-
   const imageMap = {
     Tarjeta: require("../../../assets/images/tarjeta.png"),
     Cara: require("../../../assets/images/fondoCara.png"),
     // ... más imágenes
   };
-
-  
 
   const [sizes, setSizes] = useState({
     originX: 120,
@@ -85,39 +81,39 @@ const LoginProgresivo = ({ navigation }) => {
 
   const cropImage = async (uri) => {
     // Estos valores dependen de la posición y tamaño del óvalo en tu diseño
-   {
-      await cameraType === Camera.Constants.Type.back
-        ?  manipResult = await ImageManipulator.manipulateAsync(
-      uri,
-      [
-        {
-          crop: {
-            originX: 120,
-            originY: 1500,
-            width: 1750,
-            height: 1200,
-          },
-        },
-      ],
-      { compress: 1, format: ImageManipulator.SaveFormat.PNG }
-    ) :  manipResult = await ImageManipulator.manipulateAsync(
-      uri,
-      [
-        {
-          crop: {
-            originX: 60,
-            originY: 700,
-            width: 1690,
-            height: 2100,
-          },
-        },
-      ],
-      { compress: 1, format: ImageManipulator.SaveFormat.PNG }
-    )
-   }
+    {
+      (await cameraType) === Camera.Constants.Type.back
+        ? (manipResult = await ImageManipulator.manipulateAsync(
+            uri,
+            [
+              {
+                crop: {
+                  originX: 120,
+                  originY: 1500,
+                  width: 1750,
+                  height: 1200,
+                },
+              },
+            ],
+            { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+          ))
+        : (manipResult = await ImageManipulator.manipulateAsync(
+            uri,
+            [
+              {
+                crop: {
+                  originX: 60,
+                  originY: 700,
+                  width: 1690,
+                  height: 2100,
+                },
+              },
+            ],
+            { compress: 1, format: ImageManipulator.SaveFormat.PNG }
+          ));
+    }
     return manipResult;
   };
-  
 
   if (hasCameraPermission === null) {
     return <View />;
@@ -151,144 +147,144 @@ const LoginProgresivo = ({ navigation }) => {
         </Text>
         {/* Contenedor Principal */}
         <View style={styles.linea}></View>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {/* Indicaciones */}
-            <Text style={styles.texto}>
-              Para continuar, se requieren fotos de tu{" "}
-              <Text style={{ fontWeight: "bold" }}>
-                identificación y tu rostro{" "}
-              </Text>
-              para verificar tu identidad.
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Indicaciones */}
+          <Text style={styles.texto}>
+            Para continuar, se requieren fotos de tu{" "}
+            <Text style={{ fontWeight: "bold" }}>
+              identificación y tu rostro{" "}
             </Text>
-            {/* Seccion INE por Delante */}
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 10,
-              }}
+            para verificar tu identidad.
+          </Text>
+          {/* Seccion INE por Delante */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 10,
+            }}
+          >
+            <Text style={styles.textoBanner}>
+              Foto del{" "}
+              <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
+            </Text>
+            <TouchableOpacity
+              onPress={() => openCamera(setFrontIdImage)}
+              style={styles.button}
             >
-              <Text style={styles.textoBanner}>
-                Foto del{" "}
-                <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
+              <Text style={styles.buttonText}>
+                {!frontIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
               </Text>
-              <TouchableOpacity
-                onPress={() => openCamera(setFrontIdImage)}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>
-                  {!frontIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
-                </Text>
-              </TouchableOpacity>
-              {frontIdImage ? (
-                <Feather
-                  style={styles.checkMark}
-                  name="check-circle"
-                  size={30}
-                  color="#29364d"
-                />
-              ) : null}
+            </TouchableOpacity>
+            {frontIdImage ? (
+              <Feather
+                style={styles.checkMark}
+                name="check-circle"
+                size={30}
+                color="#29364d"
+              />
+            ) : null}
+          </View>
+          {frontIdImage && (
+            <View>
+              <Image
+                source={{ uri: frontIdImage }}
+                style={styles.previewCardImage}
+              />
+              <Text style={[styles.texto, { fontSize: 15 }]}>
+                Asegurate de que aparezca la identificacion completa en la
+                imagen
+              </Text>
             </View>
-            {frontIdImage && (
-              <View>
-                <Image
-                  source={{ uri: frontIdImage }}
-                  style={styles.previewCardImage}
-                />
-                <Text style={[styles.texto, { fontSize: 15 }]}>
-                  Asegurate de que aparezca la identificacion completa en la
-                  imagen
-                </Text>
-              </View>
-            )}
-            {/* Seccion INE por Detrás */}
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 15,
-              }}
+          )}
+          {/* Seccion INE por Detrás */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 15,
+            }}
+          >
+            <Text style={styles.textoBanner}>
+              Foto de la parte{" "}
+              <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
+            </Text>
+            <TouchableOpacity
+              onPress={() => openCamera(setBackIdImage)}
+              style={styles.button}
             >
-              <Text style={styles.textoBanner}>
-                Foto de la parte{" "}
-                <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
+              <Text style={styles.buttonText}>
+                {!backIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
               </Text>
-              <TouchableOpacity
-                onPress={() => openCamera(setBackIdImage)}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>
-                  {!backIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
-                </Text>
-              </TouchableOpacity>
-              {backIdImage ? (
-                <Feather
-                  style={styles.checkMark}
-                  name="check-circle"
-                  size={30}
-                  color="#29364d"
-                />
-              ) : null}
+            </TouchableOpacity>
+            {backIdImage ? (
+              <Feather
+                style={styles.checkMark}
+                name="check-circle"
+                size={30}
+                color="#29364d"
+              />
+            ) : null}
+          </View>
+
+          {backIdImage && (
+            <View>
+              <Image
+                source={{ uri: backIdImage }}
+                style={styles.previewCardImage}
+              />
+              <Text style={[styles.texto, { fontSize: 15 }]}>
+                Asegurate de que aparezca la identificacion completa en la
+                imagen
+              </Text>
             </View>
+          )}
 
-            {backIdImage && (
-              <View>
-                <Image
-                  source={{ uri: backIdImage }}
-                  style={styles.previewCardImage}
-                />
-                <Text style={[styles.texto, { fontSize: 15 }]}>
-                  Asegurate de que aparezca la identificacion completa en la
-                  imagen
-                </Text>
-              </View>
-            )}
-
-            {/* Seccion Rostro */}
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 15,
-              }}
+          {/* Seccion Rostro */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 15,
+            }}
+          >
+            <Text style={styles.textoBanner}>
+              Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                openCamera(setFaceImage, Camera.Constants.Type.front)
+              }
+              style={styles.button}
             >
-              <Text style={styles.textoBanner}>
-                Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
+              <Text style={styles.buttonText}>
+                {!faceImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
               </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  openCamera(setFaceImage, Camera.Constants.Type.front)
-                }
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>
-                  {!faceImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
-                </Text>
-              </TouchableOpacity>
-              {faceImage ? (
-                <Feather
-                  style={styles.checkMark}
-                  name="check-circle"
-                  size={30}
-                  color="#29364d"
-                />
-              ) : null}
-            </View>
+            </TouchableOpacity>
+            {faceImage ? (
+              <Feather
+                style={styles.checkMark}
+                name="check-circle"
+                size={30}
+                color="#29364d"
+              />
+            ) : null}
+          </View>
 
-            {faceImage && (
-              <View>
-                <Image
-                  source={{ uri: faceImage }}
-                  style={styles.previewFaceImage}
-                />
-                <Text style={[styles.texto, { fontSize: 15 }]}>
-                  Asegurate de que tu rostro se muestre de manera clara y bien
-                  alumbrado
-                </Text>
-              </View>
-            )}
-            <View style={{height: 30}}/>
-          </ScrollView>
+          {faceImage && (
+            <View>
+              <Image
+                source={{ uri: faceImage }}
+                style={styles.previewFaceImage}
+              />
+              <Text style={[styles.texto, { fontSize: 15 }]}>
+                Asegurate de que tu rostro se muestre de manera clara y bien
+                alumbrado
+              </Text>
+            </View>
+          )}
+          <View style={{ height: 30 }} />
+        </ScrollView>
       </View>
       <Modal
         animationType="slide"
@@ -331,22 +327,21 @@ const LoginProgresivo = ({ navigation }) => {
 
       {frontIdImage && backIdImage && faceImage ? (
         <>
-        <View style={[styles.linea, {marginTop: 0}]}></View>
-        <TouchableOpacity
-          style={styles.nextButton}
-          onPress={() =>
-            navigation.navigate("PerfilScreen", {
-              screen: "LoginProgresivo2",
-            })
-          }
-        >
-          <Text style={styles.nextButtonText}>SIGUIENTE</Text>
-        </TouchableOpacity>
+          <View style={[styles.linea, { marginTop: 0 }]}></View>
+          <TouchableOpacity
+            style={styles.nextButton}
+            onPress={() =>
+              navigation.navigate("PerfilScreen", {
+                screen: "LoginProgresivo2",
+              })
+            }
+          >
+            <Text style={styles.nextButtonText}>SIGUIENTE</Text>
+          </TouchableOpacity>
         </>
       ) : null}
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
@@ -370,13 +365,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#29364d",
     marginTop: 10,
-  },
-  container: {
-    marginTop: 15,
-    width: "100%",
-    flex: 1,
-    backgroundColor: "white",
-    elevation: 8,
   },
   linea: {
     backgroundColor: "#cccccc",
@@ -515,14 +503,14 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   previewCardImage: {
-    aspectRatio: 1750/1200,
+    aspectRatio: 1750 / 1200,
     width: "80%",
     alignSelf: "center",
     marginTop: 20,
     borderRadius: 10,
   },
   previewFaceImage: {
-    aspectRatio: 1690/2100,
+    aspectRatio: 1690 / 2100,
     width: "80%",
     alignSelf: "center",
     marginTop: 20,
