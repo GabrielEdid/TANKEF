@@ -16,6 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
 const LoginProgresivo = ({ navigation }) => {
+  // Estados locales
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [cameraOpened, setCameraOpened] = useState(false);
   const cameraRef = useRef(null);
@@ -24,19 +25,14 @@ const LoginProgresivo = ({ navigation }) => {
   const [backIdImage, setBackIdImage] = useState(null);
   const [faceImage, setFaceImage] = useState(null);
 
+  // Mapa para cargar todas las imagenes
   const imageMap = {
     Tarjeta: require("../../../assets/images/tarjeta.png"),
     Cara: require("../../../assets/images/fondoCara.png"),
     // ... más imágenes
   };
 
-  const [sizes, setSizes] = useState({
-    originX: 120,
-    originY: 1500,
-    width: 1750,
-    height: 1200,
-  });
-
+  // Permisos de la cámara
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -44,6 +40,7 @@ const LoginProgresivo = ({ navigation }) => {
     })();
   }, []);
 
+  // Función para abrir la cámara
   const openCamera = (
     setImageStateCallback,
     type = Camera.Constants.Type.back
@@ -53,8 +50,10 @@ const LoginProgresivo = ({ navigation }) => {
     setCameraOpened(true);
   };
 
+  // Estado donde se guarda el setter de la imagen que se va a tomar en el momento
   const [currentImageSetter, setCurrentImageSetter] = useState(null);
 
+  // Función para tomar la foto
   const takePicture = async () => {
     console.log("takePicture called"); // Verifica que la función es llamada
 
@@ -79,6 +78,7 @@ const LoginProgresivo = ({ navigation }) => {
     }
   };
 
+  // Función para recortar la imagen dependiendo si es INE o Rostro
   const cropImage = async (uri) => {
     // Estos valores dependen de la posición y tamaño del óvalo en tu diseño
     {
@@ -87,6 +87,7 @@ const LoginProgresivo = ({ navigation }) => {
             uri,
             [
               {
+                // Cortar par INE
                 crop: {
                   originX: 120,
                   originY: 1500,
@@ -101,6 +102,7 @@ const LoginProgresivo = ({ navigation }) => {
             uri,
             [
               {
+                // Cortar par Rostro
                 crop: {
                   originX: 60,
                   originY: 700,
@@ -115,6 +117,7 @@ const LoginProgresivo = ({ navigation }) => {
     return manipResult;
   };
 
+  // Perimisos de la camara
   if (hasCameraPermission === null) {
     return <View />;
   }
@@ -123,12 +126,15 @@ const LoginProgresivo = ({ navigation }) => {
     return <Text>No access to camera</Text>;
   }
 
+  // Componente visual
   return (
     <View style={styles.background}>
-      {/*Titulo*/}
+      {/* Titulo */}
       <View style={styles.tituloContainer}>
         <Text style={styles.titulo}>TANKEF</Text>
       </View>
+
+      {/* Boton de regresar */}
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <AntDesign
           name="arrowleft"
@@ -137,6 +143,7 @@ const LoginProgresivo = ({ navigation }) => {
           style={styles.back}
         />
       </TouchableOpacity>
+
       {/* Incentivo a Completar datos */}
       <View style={{ flex: 1 }}>
         <Text style={styles.header}>
@@ -145,8 +152,10 @@ const LoginProgresivo = ({ navigation }) => {
             comenzar a realizar movimientos!
           </Text>
         </Text>
-        {/* Contenedor Principal */}
+
+        {/* Linea de Separación */}
         <View style={styles.linea}></View>
+        {/* Contenedor Principal Scrolleable */}
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Indicaciones */}
           <Text style={styles.texto}>
@@ -156,6 +165,7 @@ const LoginProgresivo = ({ navigation }) => {
             </Text>
             para verificar tu identidad.
           </Text>
+
           {/* Seccion INE por Delante */}
           <View
             style={{
@@ -168,6 +178,7 @@ const LoginProgresivo = ({ navigation }) => {
               Foto del{" "}
               <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
             </Text>
+            {/* Boton de Abirir Camara */}
             <TouchableOpacity
               onPress={() => openCamera(setFrontIdImage)}
               style={styles.button}
@@ -176,6 +187,7 @@ const LoginProgresivo = ({ navigation }) => {
                 {!frontIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
               </Text>
             </TouchableOpacity>
+            {/* Palomita de listo */}
             {frontIdImage ? (
               <Feather
                 style={styles.checkMark}
@@ -185,18 +197,21 @@ const LoginProgresivo = ({ navigation }) => {
               />
             ) : null}
           </View>
+          {/* Visualización de la Imagen tomada */}
           {frontIdImage && (
             <View>
               <Image
                 source={{ uri: frontIdImage }}
                 style={styles.previewCardImage}
               />
+              {/* Mensaje de la Imagen */}
               <Text style={[styles.texto, { fontSize: 15 }]}>
                 Asegurate de que aparezca la identificacion completa en la
                 imagen
               </Text>
             </View>
           )}
+
           {/* Seccion INE por Detrás */}
           <View
             style={{
@@ -209,6 +224,7 @@ const LoginProgresivo = ({ navigation }) => {
               Foto de la parte{" "}
               <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
             </Text>
+            {/* Boton de Abirir Camara */}
             <TouchableOpacity
               onPress={() => openCamera(setBackIdImage)}
               style={styles.button}
@@ -217,6 +233,7 @@ const LoginProgresivo = ({ navigation }) => {
                 {!backIdImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
               </Text>
             </TouchableOpacity>
+            {/* Palomita de listo */}
             {backIdImage ? (
               <Feather
                 style={styles.checkMark}
@@ -226,13 +243,14 @@ const LoginProgresivo = ({ navigation }) => {
               />
             ) : null}
           </View>
-
+          {/* Visualización de la Imagen tomada */}
           {backIdImage && (
             <View>
               <Image
                 source={{ uri: backIdImage }}
                 style={styles.previewCardImage}
               />
+              {/* Mensaje de la Imagen */}
               <Text style={[styles.texto, { fontSize: 15 }]}>
                 Asegurate de que aparezca la identificacion completa en la
                 imagen
@@ -251,6 +269,7 @@ const LoginProgresivo = ({ navigation }) => {
             <Text style={styles.textoBanner}>
               Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
             </Text>
+            {/* Boton de Abirir Camara */}
             <TouchableOpacity
               onPress={() =>
                 openCamera(setFaceImage, Camera.Constants.Type.front)
@@ -261,6 +280,7 @@ const LoginProgresivo = ({ navigation }) => {
                 {!faceImage ? "ABRIR CÁMARA" : "RETOMAR IMAGEN"}
               </Text>
             </TouchableOpacity>
+            {/* Palomita de listo */}
             {faceImage ? (
               <Feather
                 style={styles.checkMark}
@@ -270,13 +290,14 @@ const LoginProgresivo = ({ navigation }) => {
               />
             ) : null}
           </View>
-
+          {/* Visualización de la Imagen tomada */}
           {faceImage && (
             <View>
               <Image
                 source={{ uri: faceImage }}
                 style={styles.previewFaceImage}
               />
+              {/* Mensaje de la Imagen */}
               <Text style={[styles.texto, { fontSize: 15 }]}>
                 Asegurate de que tu rostro se muestre de manera clara y bien
                 alumbrado
@@ -285,7 +306,10 @@ const LoginProgresivo = ({ navigation }) => {
           )}
           <View style={{ height: 30 }} />
         </ScrollView>
+        {/* Fin del Contenedor Principal */}
       </View>
+
+      {/* Modal de la Cámara */}
       <Modal
         animationType="slide"
         transparent={false}
@@ -294,13 +318,16 @@ const LoginProgresivo = ({ navigation }) => {
       >
         <Camera style={styles.camera} type={cameraType} ref={cameraRef}>
           <View style={styles.cameraContainer}>
+            {/* Evalua si abrir camara frontal o trasera dependiendo del estado de cameraType */}
             {cameraType === Camera.Constants.Type.front ? (
               <>
+                {/* Estilos de camara frontal */}
                 <Image source={imageMap.Cara} style={styles.ovalImage} />
                 <View style={styles.ovalOverlay}></View>
               </>
             ) : (
               <>
+                {/* Estilos de camara trasera */}
                 <View style={styles.shadedArea1} />
                 <View style={styles.shadedArea2} />
                 <View style={styles.shadedArea3} />
@@ -308,13 +335,14 @@ const LoginProgresivo = ({ navigation }) => {
                 <Image source={imageMap.Tarjeta} style={styles.shadedArea} />
               </>
             )}
-
+            {/* Boton de Capturar */}
             <TouchableOpacity
               onPress={takePicture}
               style={styles.captureButton}
             >
               <Text style={styles.captureButtonText}>CAPTURAR</Text>
             </TouchableOpacity>
+            {/* Boton de Cerrar */}
             <TouchableOpacity
               onPress={() => setCameraOpened(false)}
               style={styles.closeButton}
@@ -325,8 +353,10 @@ const LoginProgresivo = ({ navigation }) => {
         </Camera>
       </Modal>
 
+      {/* Boton de Siguiente, se evalua si ya estan todas las imagenes listas */}
       {frontIdImage && backIdImage && faceImage ? (
         <>
+          {/* Linea de Separación, aparece cuando todas las imagenes estan listas junto con el boton */}
           <View style={[styles.linea, { marginTop: 0 }]}></View>
           <TouchableOpacity
             style={styles.nextButton}
@@ -344,6 +374,7 @@ const LoginProgresivo = ({ navigation }) => {
   );
 };
 
+// Estilos de la Pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
     height: 105,
