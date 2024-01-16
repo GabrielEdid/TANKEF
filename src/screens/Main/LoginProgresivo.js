@@ -82,13 +82,13 @@ const LoginProgresivo = ({ navigation }) => {
   const cropImage = async (uri) => {
     // Estos valores dependen de la posición y tamaño del óvalo en tu diseño
     {
-      Camera.Constants.Type.back
+      cameraType === Camera.Constants.Type.back
         ? null
         : setSizes({
             originX: 60,
-            originY: 300,
+            originY: 400,
             width: 1750,
-            height: 1200,
+            height: 2500,
           });
     }
     const manipResult = await ImageManipulator.manipulateAsync(
