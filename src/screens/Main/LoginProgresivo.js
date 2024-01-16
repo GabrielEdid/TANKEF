@@ -30,12 +30,12 @@ const LoginProgresivo = ({ navigation }) => {
     // ... más imágenes
   };
 
-  const sizes = {
+  const [sizes, setSizes] = useState({
     originX: 120,
     originY: 1500,
     width: 1750,
     height: 1200,
-  };
+  });
 
   useEffect(() => {
     (async () => {
@@ -84,16 +84,25 @@ const LoginProgresivo = ({ navigation }) => {
     {
       Camera.Constants.Type.back
         ? null
-        : (sizes = {
-            originX: 120,
-            originY: 1500,
+        : setSizes({
+            originX: 60,
+            originY: 300,
             width: 1750,
             height: 1200,
           });
     }
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [{ crop: { originX, originY, width, height } }],
+      [
+        {
+          crop: {
+            originX: sizes.originX,
+            originY: sizes.originY,
+            width: sizes.width,
+            height: sizes.height,
+          },
+        },
+      ],
       { compress: 1, format: ImageManipulator.SaveFormat.PNG }
     );
     return manipResult;
@@ -484,7 +493,7 @@ const styles = StyleSheet.create({
   },
   previewImage: {
     width: "100%",
-    height: 200,
+    height: "100%",
     marginTop: 20,
     borderRadius: 10,
   },
