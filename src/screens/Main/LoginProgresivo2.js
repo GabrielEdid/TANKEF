@@ -63,7 +63,7 @@ const LoginProgresivo2 = ({ navigation }) => {
         <View style={styles.tituloContainer}>
           <Text style={styles.titulo}>TANKEF</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => handleGoBack()}>
           <AntDesign
             name="arrowleft"
             size={40}

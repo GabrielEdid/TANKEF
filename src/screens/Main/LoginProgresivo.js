@@ -207,7 +207,7 @@ const LoginProgresivo = ({ navigation }) => {
               {/* Mensaje de la Imagen */}
               <Text style={[styles.texto, { fontSize: 15 }]}>
                 Asegurate de que aparezca la identificacion completa en la
-                imagen
+                imagen y que no tenga reflejos.
               </Text>
             </View>
           )}
@@ -253,7 +253,7 @@ const LoginProgresivo = ({ navigation }) => {
               {/* Mensaje de la Imagen */}
               <Text style={[styles.texto, { fontSize: 15 }]}>
                 Asegurate de que aparezca la identificacion completa en la
-                imagen
+                imagen y que no tenga reflejos.
               </Text>
             </View>
           )}
