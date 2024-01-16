@@ -150,8 +150,8 @@ const LoginProgresivo = ({ navigation }) => {
           </Text>
         </Text>
         {/* Contenedor Principal */}
-        <View style={styles.container}>
-          <ScrollView>
+        <View style={styles.linea}></View>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {/* Indicaciones */}
             <Text style={styles.texto}>
               Para continuar, se requieren fotos de tu{" "}
@@ -168,7 +168,7 @@ const LoginProgresivo = ({ navigation }) => {
                 marginTop: 10,
               }}
             >
-              <Text style={styles.texto}>
+              <Text style={styles.textoBanner}>
                 Foto del{" "}
                 <Text style={{ fontWeight: "bold" }}>frente de tu INE</Text>
               </Text>
@@ -185,7 +185,7 @@ const LoginProgresivo = ({ navigation }) => {
                   style={styles.checkMark}
                   name="check-circle"
                   size={30}
-                  color="#21b6d5"
+                  color="#29364d"
                 />
               ) : null}
             </View>
@@ -209,7 +209,7 @@ const LoginProgresivo = ({ navigation }) => {
                 marginTop: 15,
               }}
             >
-              <Text style={styles.texto}>
+              <Text style={styles.textoBanner}>
                 Foto de la parte{" "}
                 <Text style={{ fontWeight: "bold" }}>trasera de tu INE</Text>
               </Text>
@@ -226,7 +226,7 @@ const LoginProgresivo = ({ navigation }) => {
                   style={styles.checkMark}
                   name="check-circle"
                   size={30}
-                  color="#21b6d5"
+                  color="#29364d"
                 />
               ) : null}
             </View>
@@ -252,7 +252,7 @@ const LoginProgresivo = ({ navigation }) => {
                 marginTop: 15,
               }}
             >
-              <Text style={styles.texto}>
+              <Text style={styles.textoBanner}>
                 Foto de tu <Text style={{ fontWeight: "bold" }}>rostro</Text>
               </Text>
               <TouchableOpacity
@@ -270,7 +270,7 @@ const LoginProgresivo = ({ navigation }) => {
                   style={styles.checkMark}
                   name="check-circle"
                   size={30}
-                  color="#21b6d5"
+                  color="#29364d"
                 />
               ) : null}
             </View>
@@ -287,8 +287,8 @@ const LoginProgresivo = ({ navigation }) => {
                 </Text>
               </View>
             )}
+            <View style={{height: 30}}/>
           </ScrollView>
-        </View>
       </View>
       <Modal
         animationType="slide"
@@ -330,6 +330,8 @@ const LoginProgresivo = ({ navigation }) => {
       </Modal>
 
       {frontIdImage && backIdImage && faceImage ? (
+        <>
+        <View style={[styles.linea, {marginTop: 0}]}></View>
         <TouchableOpacity
           style={styles.nextButton}
           onPress={() =>
@@ -340,6 +342,7 @@ const LoginProgresivo = ({ navigation }) => {
         >
           <Text style={styles.nextButtonText}>SIGUIENTE</Text>
         </TouchableOpacity>
+        </>
       ) : null}
     </View>
   );
@@ -369,19 +372,27 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   container: {
-    padding: 10,
     marginTop: 15,
     width: "100%",
-    flex: 0.98,
+    flex: 1,
     backgroundColor: "white",
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.6,
-    shadowRadius: 5,
     elevation: 8,
   },
+  linea: {
+    backgroundColor: "#cccccc",
+    height: 1,
+    width: "100%",
+    alignSelf: "center",
+    marginTop: 10,
+  },
   texto: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 18,
+    color: "#29364d",
+    marginTop: 10,
+  },
+  textoBanner: {
     flex: 1,
     fontSize: 18,
     color: "#29364d",
@@ -389,17 +400,17 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#29364d",
     padding: 15,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#21b6d5",
+    borderColor: "#29364d",
     width: "55%",
     marginLeft: 10,
     justifyContent: "flex-end",
   },
   buttonText: {
-    color: "#21b6d5",
+    color: "white",
     alignSelf: "center",
     fontSize: 14,
     fontFamily: "conthrax",
@@ -505,15 +516,17 @@ const styles = StyleSheet.create({
   },
   previewCardImage: {
     aspectRatio: 1750/1200,
-    width: "100",
+    width: "80%",
+    alignSelf: "center",
     marginTop: 20,
     borderRadius: 10,
   },
   previewFaceImage: {
     aspectRatio: 1690/2100,
-    width: "100",
+    width: "80%",
+    alignSelf: "center",
     marginTop: 20,
-    borderRadius: 10,
+    borderRadius: "2000",
   },
   nextButton: {
     width: "100%",
