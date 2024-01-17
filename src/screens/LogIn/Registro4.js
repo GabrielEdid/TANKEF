@@ -10,7 +10,7 @@ import {
   Keyboard,
   Modal,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
@@ -22,6 +22,16 @@ const Registro4 = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [gender, setGender] = useState(""); // Para cambiar el sexo de la persona a como pide el backend
+
+  // useEffect para cambiar el sexo de la persona a como pide el backend
+  useEffect(() => {
+    if (user.sexo === "Hombre") {
+      setGender("male");
+    } else if (user.sexo === "Mujer") {
+      setGender("female");
+    }
+  }, [user.sexo]);
 
   // Función para crear usuario y manejar el registro
   const createUser = async () => {
@@ -48,8 +58,8 @@ const Registro4 = ({ navigation }) => {
             dob: user.fechaNacimiento,
             curp: user.CURP,
             phone: user.telefono,
-            //gender: user.sexo,
-            //city: user.estadoNacimiento,
+            gender: gender,
+            born_state: user.estadoNacimiento,
           },
         }),
       }

@@ -72,12 +72,18 @@ const Registro3 = ({ navigation }) => {
   // Efecto para verificar el CURP y actualizar el estado en el contexto global
   useEffect(() => {
     if (user.CURP && user.CURP.length === 18) {
-      const { fechaNacimiento, sexo, estadoNacimiento } = ChecarCURP(user.CURP);
+      const {
+        fechaNacimiento,
+        sexo,
+        estadoNacimiento,
+        backEndEstadoNacimiento,
+      } = ChecarCURP(user.CURP);
       setUser({
         ...user,
         fechaNacimiento,
         sexo,
         estadoNacimiento,
+        backEndEstadoNacimiento,
       });
       setIsCurpVerified(true);
     } else if (isCurpVerified && user.CURP && user.CURP.length !== 18) {

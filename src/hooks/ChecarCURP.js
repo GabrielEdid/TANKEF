@@ -60,6 +60,8 @@ export const ChecarCURP = (curp) => {
   // Obtiene el nombre completo del estado o retorna 'invalido'
   let estadoNacimiento = estados[estadoCodigo] || invalido;
 
+  let backEndEstadoNacimiento = estadoCodigo;
+
   // Retorna los datos extraídos y procesados
-  return { fechaNacimiento, sexo, estadoNacimiento };
+  return { fechaNacimiento, sexo, estadoNacimiento, backEndEstadoNacimiento };
 };

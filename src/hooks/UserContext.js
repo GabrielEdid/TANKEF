@@ -12,6 +12,7 @@ const initialState = {
   CURP: "",
   fechaNacimiento: "",
   estadoNacimiento: "",
+  backEndEstadoNacimiento: "", // El valor que se envía al backend como estado de nacimiento
   sexo: "",
   ocupacion: "",
   estadoCivil: "",
