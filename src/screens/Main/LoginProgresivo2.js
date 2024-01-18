@@ -14,6 +14,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../hooks/UserContext";
 // Importaciones de Componentes
 import DropDown from "../../components/DropDown";
+import SpecialInput from "../../components/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
 const LoginProgresivo2 = ({ navigation }) => {
@@ -71,7 +72,7 @@ const LoginProgresivo2 = ({ navigation }) => {
             style={styles.back}
           />
         </TouchableOpacity>
-        {/* Contenedor principal para los campos de entrada, aquí se incluye la Imagen de Avance */}
+        {/* Mensaje Superior */}
         <View style={{ flex: 1 }}>
           <Text style={styles.texto}>
             ¡Solo faltan un par de datos más{" "}
@@ -84,19 +85,32 @@ const LoginProgresivo2 = ({ navigation }) => {
             automaticallyAdjustKeyboardInsets={true}
           >
             {/* Campos de entrada para datos del usuario */}
-            <DropDown
-              field="Estado Civil"
-              context="estadoCivil"
-              dropdown={"civil"}
-            />
+            <View style={{ zIndex: 500 }}>
+              <DropDown
+                field="Estado Civil"
+                context="estadoCivil"
+                dropdown={"civil"}
+              />
+            </View>
             {/* Campo de entrada para la ocupación del usuario, se tiene con view para que no se obstruya */}
-            <View style={{ zIndex: -1 }}>
+            <View style={{ zIndex: 400, marginTop: -7.5 }}>
               <DropDown
                 field="Ocupación"
                 context="ocupacion"
                 dropdown={"ocupacion"}
               />
             </View>
+            <SpecialInput
+              field="Nacionalidad"
+              context="nacionalidad"
+              editable={true}
+            />
+            <SpecialInput
+              field="Firma Electrónica"
+              context="firmaElectronica"
+              editable={true}
+            />
+            <SpecialInput field="RFC" context="RFC" editable={true} />
           </View>
         </View>
         {/* Botón de Continuar */}
@@ -140,6 +154,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 15,
     alignSelf: "center",
+    justifyContent: "space-around",
     width: "100%",
     backgroundColor: "white",
     borderRadius: 15,

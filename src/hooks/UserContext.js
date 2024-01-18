@@ -22,6 +22,11 @@ const initialState = {
   password: "",
   pin: "",
   FireBaseUIDTel: "",
+  // Variables de registro progresivo
+  fotoPerfil: "",
+  nacionalidad: "",
+  firmaElectronica: "",
+  RFC: "",
 };
 
 // Componente UserProvider
