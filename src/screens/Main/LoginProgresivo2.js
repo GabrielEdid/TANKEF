@@ -23,7 +23,13 @@ const LoginProgresivo2 = ({ navigation }) => {
 
   // Función para verificar si los campos están completos
   const verificarCampos = () => {
-    return user.ocupacion !== "" && user.estadoCivil !== "";
+    return (
+      user.ocupacion !== "" &&
+      user.estadoCivil !== "" &&
+      user.nacionalidad !== "" &&
+      user.firmaElectronica !== "" &&
+      user.RFC !== ""
+    );
   };
 
   // Manejador para el botón Siguiente
