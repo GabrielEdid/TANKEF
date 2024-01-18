@@ -71,7 +71,11 @@ const Registro1 = ({ navigation }) => {
 
   // Componente visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => Keyboard.dismiss()} // Cerrar el teclado cuando se toca fuera de un input, no funciono touchableWithoutFeedBack
+      style={{ flex: 1 }}
+    >
       <ImageBackground
         source={require("../../../assets/images/Fondo.png")}
         style={styles.background}
@@ -159,7 +163,7 @@ const Registro1 = ({ navigation }) => {
           </Animated.View>
         </View>
       </ImageBackground>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 };
 
