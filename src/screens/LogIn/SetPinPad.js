@@ -44,7 +44,7 @@ const SetPinPad = ({ navigation }) => {
       <View style={{ height: "89%" }}>
         <Text style={styles.titulo}>Crea tu PIN</Text>
         {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
-        <PinPad id={false} get={pin} set={setPin} />
+        <PinPad id={false} get={pin} set={setPin} style={{ zIndex: 1000 }} />
         {/* Logica para activar el boton de Siguiente si el PIN tiene el largo esperado */}
       </View>
       {pin.length === 6 ? (
