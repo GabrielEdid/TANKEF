@@ -8,6 +8,7 @@ import {
   Image,
   Dimensions,
   TextInput,
+  Modal,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
@@ -22,6 +23,17 @@ const Post = (props) => {
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
   const [like, setLike] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Para cuando se desee eliminar el Request
+  const handleRemove = () => {
+    setIsVisible(false);
+  };
+
+  if (!isVisible) {
+    return null;
+  }
 
   // Calculo del porcentaje de la barra de progreso para un Credito
   const porcentaje =
@@ -132,6 +144,51 @@ const Post = (props) => {
           </Text>
         </>
       )}
+
+      {/* Modal y Tres puntos para eliminar o reportar publicación  */}
+      <TouchableOpacity
+        style={styles.opciones}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.tresPuntos}>...</Text>
+      </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.fullScreenButton}
+          activeOpacity={1}
+          onPressOut={() => setModalVisible(false)}
+        >
+          <View style={styles.modalView}>
+            {props.personal ? (
+              <TouchableOpacity
+                style={styles.buttonModal}
+                onPress={() => handleRemove()}
+              >
+                <Text style={{ color: "red" }}>Eliminar Publicación</Text>
+              </TouchableOpacity>
+            ) : null}
+            {!props.personal ? (
+              <TouchableOpacity
+                style={styles.buttonModal}
+                onPress={() => console.log("Implementación de Reportar")}
+              >
+                <Text style={{ color: "red" }}>Reportar Publicación</Text>
+              </TouchableOpacity>
+            ) : null}
+            <TouchableOpacity
+              style={{ marginTop: 10 }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
       <View style={styles.linea}></View>
@@ -250,6 +307,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginHorizontal: 10,
   },
+  opciones: {
+    position: "absolute",
+    right: 20,
+    marginTop: 5,
+  },
+  tresPuntos: {
+    fontSize: 25,
+    color: "#29364d",
+  },
   linea: {
     backgroundColor: "#cccccc",
     height: 1,
@@ -286,6 +352,40 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: "center",
     right: 5,
+  },
+  // Estilos para el Modal que aparece si se presionan los 3 puntos
+  fullScreenButton: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    justifyContent: "flex-end",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position: "absolute",
+    bottom: 0,
+    width: "90%",
+    alignSelf: "center",
+  },
+  buttonModal: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginVertical: 5,
   },
 });
 
