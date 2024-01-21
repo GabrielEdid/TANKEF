@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 10,
     marginTop: 5,
-    backgroundColor: "#F2F5F9",
+    backgroundColor: "#F2F5F9", //"#E9ECEF"
     shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
     shadowOpacity: 0.3, // Opacidad de la sombra
     shadowRadius: 4, // Radio de la sombra

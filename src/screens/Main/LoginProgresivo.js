@@ -433,7 +433,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 14,
     fontFamily: "conthrax",
-    textAlign: "center",
   },
   checkMark: {
     alignSelf: "center",
