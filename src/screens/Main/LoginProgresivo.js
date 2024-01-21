@@ -360,11 +360,7 @@ const LoginProgresivo = ({ navigation }) => {
           <View style={[styles.linea, { marginTop: 0 }]}></View>
           <TouchableOpacity
             style={styles.nextButton}
-            onPress={() =>
-              navigation.navigate("PerfilScreen", {
-                screen: "LoginProgresivo2",
-              })
-            }
+            onPress={() => navigation.navigate("LoginProgresivo2")}
           >
             <Text style={styles.nextButtonText}>SIGUIENTE</Text>
           </TouchableOpacity>

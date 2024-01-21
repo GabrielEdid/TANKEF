@@ -17,7 +17,7 @@ import DropDown from "../../components/DropDown";
 import SpecialInput from "../../components/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
-const LoginProgresivo2 = ({ navigation }) => {
+const EditarPerfil = ({ navigation }) => {
   // Estados locales
   const { user, setUser } = useContext(UserContext); //Contexo
 
@@ -42,8 +42,8 @@ const LoginProgresivo2 = ({ navigation }) => {
         { cancelable: true }
       );
     } else {
-      navigation.navigate("PerfilMain", {
-        screen: "Perfil",
+      navigation.navigate("PerfilScreen", {
+        screen: "PerfilMain",
       });
     }
   };
@@ -194,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginProgresivo2;
+export default EditarPerfil;

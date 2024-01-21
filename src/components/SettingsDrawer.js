@@ -21,7 +21,17 @@ const SettingsDrawer = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <Text style={styles.titulo}>Configuración</Text>
-      <TouchableOpacity style={{ marginTop: 325 }} onPress={() => {}}>
+      <TouchableOpacity
+        style={{ marginTop: 325 }}
+        onPress={() =>
+          navigation.navigate("PerfilScreen", {
+            screen: "LoginProgresivo",
+          })
+        }
+      >
+        <Text style={styles.texto}>Editar Perfil</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {}}>
         <Text style={styles.texto}>Contact</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => {}}>

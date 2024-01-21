@@ -28,6 +28,7 @@ import SolicitudesConexion from "./src/screens/Main/SolicitudesConexion";
 import MisConexiones from "./src/screens/Main/MisConexiones";
 import LoginProgresivo from "./src/screens/Main/LoginProgresivo";
 import LoginProgresivo2 from "./src/screens/Main/LoginProgresivo2";
+import EditarPerfil from "./src/screens/Main/EditarPerfil";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -84,7 +85,8 @@ const createTabScreenOptions = (
 });
 
 // Pantalla Perfil con Drawer
-function PerfilDrawer() {
+{
+  /*function PerfilDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{ drawerPosition: "right" }}
@@ -97,14 +99,34 @@ function PerfilDrawer() {
       />
     </Drawer.Navigator>
   );
+}*/
+}
+
+function PerfilMain() {
+  const Drawer = createDrawerNavigator();
+
+  return (
+    <Drawer.Navigator
+      screenOptions={{ drawerPosition: "right" }}
+      drawerContent={(props) => <SettingsDrawer {...props} />}
+    >
+      <Drawer.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{ headerShown: false }}
+      />
+      {/* Agrega otras pantallas si necesitas dentro del Drawer */}
+    </Drawer.Navigator>
+  );
 }
 
 function PerfilLoginProgresivo() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="PerfilMain" component={Perfil} />
+      <Stack.Screen name="PerfilMain" component={PerfilMain} />
       <Stack.Screen name="LoginProgresivo" component={LoginProgresivo} />
       <Stack.Screen name="LoginProgresivo2" component={LoginProgresivo2} />
+      <Stack.Screen name="EditarPerfil" component={EditarPerfil} />
     </Stack.Navigator>
   );
 }
@@ -178,7 +200,7 @@ function MainFlow() {
       />
       <Tab.Screen
         name="Perfil"
-        component={PerfilDrawer}
+        component={PerfilLoginProgresivo}
         options={createTabScreenOptions(
           require("./assets/images/Perfil.png"),
           "Perfil",
