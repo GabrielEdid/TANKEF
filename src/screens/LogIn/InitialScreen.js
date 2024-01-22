@@ -43,6 +43,13 @@ const InitialScreen = ({ navigation }) => {
       })
       .then((data) => {
         console.log("Success:", data);
+        const token = data.token;
+        const id = data.data.id;
+        setUser({
+          ...user, // Mantén el estado actual
+          userToken: token,
+          userID: id,
+        });
         navigation.navigate("SetPinPad"); // Navegar a la siguiente pantalla en caso de éxito
       })
       .catch((errorResponse) => {

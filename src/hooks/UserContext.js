@@ -22,6 +22,8 @@ const initialState = {
   password: "",
   pin: "",
   FireBaseUIDTel: "",
+  userID: "", // ID del usuario en la base de datos
+  userToken: "", // Token de autenticación del usuario
   // Variables de registro progresivo
   fotoPerfil: "",
   nacionalidad: "",

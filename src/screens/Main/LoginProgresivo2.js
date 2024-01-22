@@ -32,6 +32,44 @@ const LoginProgresivo2 = ({ navigation }) => {
     );
   };
 
+  const updateUser = async (userId, userData) => {
+    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${userId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          // Incluye aquí otros encabezados si son necesarios, como tokens de autenticación
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Usuario actualizado:", data);
+      // Maneja aquí la respuesta
+    } catch (error) {
+      console.error("Hubo un problema al actualizar el usuario:", error);
+      // Maneja aquí los errores
+    }
+  };
+
+  // Datos de usuario a actualizar
+  const userData = {
+    marital_status: user.estadoCivil,
+    nationality: user.nacionalidad,
+    fiel: user.firmaElectronica,
+    rfc: user.RFC,
+    job: user.ocupacion,
+  };
+
+  // Llamada a la función con el ID del usuario y los datos
+  updateUser(user.userID, userData);
+
   // Manejador para el botón Siguiente
   const handleSiguiente = () => {
     if (!verificarCampos()) {
