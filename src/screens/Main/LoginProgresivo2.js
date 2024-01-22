@@ -74,6 +74,7 @@ const LoginProgresivo2 = ({ navigation }) => {
         { cancelable: true }
       );
     } else {
+      console.log("Datos de usuario:", user);
       // Datos de usuario a actualizar
       const userData = {
         marital_status: user.estadoCivil,
@@ -81,11 +82,15 @@ const LoginProgresivo2 = ({ navigation }) => {
         fiel: user.firmaElectronica,
         rfc: user.RFC,
         job: user.ocupacion,
+        name: "GABRIEL",
+        last_name_1: "EDID",
+        last_name_2: "HARARI",
+        phone: "525568182757",
+        curp: "EIHG030528HMCZZZZ2",
       };
 
       try {
         await updateUser(user.userID, userData);
-        // Si la actualización es exitosa, navegar a la siguiente pantalla
       } catch (error) {
         console.error("Error al actualizar:", error);
         // Aquí puedes manejar los errores, por ejemplo, mostrando un alerta

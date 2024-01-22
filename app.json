@@ -18,24 +18,22 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to upload images.",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photo gallery to upload images.",
-        "NSFaceIDUsageDescription": "Face ID is used to authenticate the user."
+        "NSFaceIDUsageDescription": "Face ID is used to authenticate the user when it has already logged in."
       }
     },
     "android": {
-      "android": {
-        "permissions": [
-          "CAMERA",
-          "READ_EXTERNAL_STORAGE",
-          "WRITE_EXTERNAL_STORAGE"
-        ]
-      },
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/App-Icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
-    "web": {
-      "favicon": "./assets/App-Splash-Screen.png"
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/App-Icon.png",
+      "backgroundColor": "#ffffff"
     }
+  },
+  "web": {
+    "favicon": "./assets/App-Splash-Screen.png"
   }
 }

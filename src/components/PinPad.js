@@ -93,7 +93,9 @@ const PinPad = ({ ...props }) => {
       console.log(result);
       if (result.success === true) {
         Alert.alert("Autenticado", "Bienvenido de vuelta!");
-        navigation.navigate("Main");
+        navigation.navigate("MainFlow", {
+          screen: "Perfil",
+        });
       }
     });
   }
