@@ -52,26 +52,20 @@ const LoginProgresivo2 = ({ navigation }) => {
       const data = await response.json();
       console.log("Usuario actualizado:", data);
       // Maneja aquí la respuesta
+      navigation.navigate("MainFlow", {
+        screen: "Perfil",
+        params: {
+          screen: "PerfilMain",
+        },
+      });
     } catch (error) {
       console.error("Hubo un problema al actualizar el usuario:", error);
       // Maneja aquí los errores
     }
   };
 
-  // Datos de usuario a actualizar
-  const userData = {
-    marital_status: user.estadoCivil,
-    nationality: user.nacionalidad,
-    fiel: user.firmaElectronica,
-    rfc: user.RFC,
-    job: user.ocupacion,
-  };
-
-  // Llamada a la función con el ID del usuario y los datos
-  updateUser(user.userID, userData);
-
   // Manejador para el botón Siguiente
-  const handleSiguiente = () => {
+  const handleSiguiente = async () => {
     if (!verificarCampos()) {
       Alert.alert(
         "Campos Incompletos",
@@ -80,12 +74,22 @@ const LoginProgresivo2 = ({ navigation }) => {
         { cancelable: true }
       );
     } else {
-      navigation.navigate("MainFlow", {
-        screen: "Perfil",
-        params: {
-          screen: "PerfilMain",
-        },
-      });
+      // Datos de usuario a actualizar
+      const userData = {
+        marital_status: user.estadoCivil,
+        nationality: user.nacionalidad,
+        fiel: user.firmaElectronica,
+        rfc: user.RFC,
+        job: user.ocupacion,
+      };
+
+      try {
+        await updateUser(user.userID, userData);
+        // Si la actualización es exitosa, navegar a la siguiente pantalla
+      } catch (error) {
+        console.error("Error al actualizar:", error);
+        // Aquí puedes manejar los errores, por ejemplo, mostrando un alerta
+      }
     }
   };
 
