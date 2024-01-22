@@ -23,11 +23,7 @@ const SettingsDrawer = ({ navigation }) => {
       <Text style={styles.titulo}>Configuración</Text>
       <TouchableOpacity
         style={{ marginTop: 325 }}
-        onPress={() =>
-          navigation.navigate("PerfilScreen", {
-            screen: "LoginProgresivo",
-          })
-        }
+        onPress={() => navigation.navigate("EditarPerfil")}
       >
         <Text style={styles.texto}>Editar Perfil</Text>
       </TouchableOpacity>
