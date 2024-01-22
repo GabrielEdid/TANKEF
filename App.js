@@ -32,7 +32,7 @@ import EditarPerfil from "./src/screens/Main/EditarPerfil";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
-// Crear un Stack y Tab Navigator para la navegación
+// Crear un Stack, Tab y Drawer Navigators para la navegación
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -85,26 +85,7 @@ const createTabScreenOptions = (
 });
 
 // Pantalla Perfil con Drawer
-{
-  /*function PerfilDrawer() {
-  return (
-    <Drawer.Navigator
-      screenOptions={{ drawerPosition: "right" }}
-      drawerContent={(props) => <SettingsDrawer {...props} />}
-    >
-      <Drawer.Screen
-        name="PerfilScreen"
-        component={PerfilLoginProgresivo}
-        options={{ headerShown: false }}
-      />
-    </Drawer.Navigator>
-  );
-}*/
-}
-
 function PerfilMain() {
-  const Drawer = createDrawerNavigator();
-
   return (
     <Drawer.Navigator
       screenOptions={{ drawerPosition: "right" }}

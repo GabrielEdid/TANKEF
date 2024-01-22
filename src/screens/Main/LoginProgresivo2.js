@@ -42,8 +42,11 @@ const LoginProgresivo2 = ({ navigation }) => {
         { cancelable: true }
       );
     } else {
-      navigation.navigate("PerfilMain", {
+      navigation.navigate("MainFlow", {
         screen: "Perfil",
+        params: {
+          screen: "PerfilMain",
+        },
       });
     }
   };
@@ -70,14 +73,17 @@ const LoginProgresivo2 = ({ navigation }) => {
         <View style={styles.tituloContainer}>
           <Text style={styles.titulo}>TANKEF</Text>
         </View>
-        <TouchableOpacity onPress={() => handleGoBack()}>
+
+        {/* Boton de Regresar */}
+        {/*<TouchableOpacity onPress={() => handleGoBack()}>
           <AntDesign
             name="arrowleft"
             size={40}
             color="#29364d"
             style={styles.back}
           />
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
+
         {/* Mensaje Superior */}
         <View style={{ flex: 1 }}>
           <Text style={styles.texto}>
@@ -172,6 +178,7 @@ const styles = StyleSheet.create({
   },
   texto: {
     fontSize: 18,
+    marginTop: 10,
     textAlign: "center",
     color: "#29364d",
     alignSelf: "center",
