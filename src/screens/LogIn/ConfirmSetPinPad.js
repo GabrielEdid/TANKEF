@@ -35,7 +35,11 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   // Función para guardar el pin en el contexto y navegar a la pantalla siguiente
   const handleConfirmPin = () => {
     if (confirmPin === pin) {
-      setUser({ ...user, pin: confirmPin, loggedIn: true });
+      setUser({
+        ...user,
+        pin: confirmPin,
+        loggedIn: true,
+      });
       navigation.navigate("MainFlow", {
         screen: "Perfil",
       });

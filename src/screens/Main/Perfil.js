@@ -70,7 +70,7 @@ const Perfil = () => {
         <TouchableOpacity
           style={styles.cuadroLoginProgresivo}
           onPress={() => {
-            navigation.navigate("LoginProgresivo");
+            navigation.navigate("LoginProgresivo2");
           }}
         >
           {/* Texto Incentivo del Recuadro */}

@@ -3,13 +3,14 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks
 import { UserContext } from "../../hooks/UserContext";
 // Importaciones de Componentes
@@ -20,6 +21,7 @@ import { AntDesign } from "@expo/vector-icons";
 const LoginProgresivo2 = ({ navigation }) => {
   // Estados locales
   const { user, setUser } = useContext(UserContext); //Contexo
+  const [isLoading, setIsLoading] = useState(false); // Estado para manejar el indicador de carga
 
   // Función para verificar si los campos están completos
   const verificarCampos = () => {
@@ -33,6 +35,7 @@ const LoginProgresivo2 = ({ navigation }) => {
   };
 
   const updateUser = async (userId, userData) => {
+    setIsLoading(true);
     const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${userId}`;
 
     try {
@@ -52,6 +55,7 @@ const LoginProgresivo2 = ({ navigation }) => {
       const data = await response.json();
       console.log("Usuario actualizado:", data);
       // Maneja aquí la respuesta
+      setIsLoading(false);
       navigation.navigate("MainFlow", {
         screen: "Perfil",
         params: {
@@ -60,6 +64,13 @@ const LoginProgresivo2 = ({ navigation }) => {
       });
     } catch (error) {
       console.error("Hubo un problema al actualizar el usuario:", error);
+      Alert.alert(
+        "Hubo un problema al completar tus datos",
+        "Verificalos y vuelve a intentarlo.",
+        [{ text: "Entendido" }],
+        { cancelable: true }
+      );
+      setIsLoading(false);
       // Maneja aquí los errores
     }
   };
@@ -176,9 +187,17 @@ const LoginProgresivo2 = ({ navigation }) => {
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => handleSiguiente()}
+          disabled={isLoading}
         >
           <Text style={styles.textoBotonGrande}>GUARDAR</Text>
         </TouchableOpacity>
+
+        {/* Modal de carga */}
+        <Modal transparent={true} animationType="fade" visible={isLoading}>
+          <View style={styles.overlay}>
+            <ActivityIndicator size={75} color="white" />
+          </View>
+        </Modal>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -245,6 +264,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontFamily: "conthrax",
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
 });
 

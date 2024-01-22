@@ -1,6 +1,6 @@
 // Importaciones de React Native y React
 import { Image, Text, View } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -8,7 +8,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserProvider } from "./src/hooks/UserContext"; // Contexto para manejar el estado del usuario
+import { UserProvider } from "./src/hooks/UserContext";
+import { UserContext } from "./src/hooks/UserContext";
 // Importar pantallas de la aplicación
 import InitialScreen from "./src/screens/LogIn/InitialScreen";
 import Registro1 from "./src/screens/LogIn/Registro1";
@@ -214,8 +215,22 @@ function LoginFlow() {
       const value = await AsyncStorage.getItem("userInfo");
       if (value !== null) {
         console.log("Información recuperada con éxito");
+        const parsedValue = JSON.parse(value);
+
+        // Asignar valores a variables individuales
+        const userPin = parsedValue.pin;
+        const userLoggedIn = parsedValue.loggedIn;
+        const userId = parsedValue.userID;
+        const userToken = parsedValue.userToken;
+
         console.log(value);
-        return JSON.parse(value);
+
+        return {
+          userPin,
+          userLoggedIn,
+          userId,
+          userToken,
+        };
       }
     } catch (error) {
       console.error("Error recuperando la información de usuario", error);
@@ -238,7 +253,7 @@ function LoginFlow() {
 
   // Determinar la pantalla inicial basada en el estado de inicio de sesión del usuario
   const initialRouteName =
-    userInfo && userInfo.loggedIn === true ? "AuthPinPad" : "InitialScreen";
+    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
   //const initialRouteName = "MainFlow";
@@ -265,7 +280,12 @@ function LoginFlow() {
       <Stack.Screen
         name="AuthPinPad"
         component={AuthPinPad}
-        initialParams={{ userPin: userInfo ? userInfo.pin : undefined }}
+        initialParams={{
+          userPin: userInfo ? userInfo.userPin : undefined,
+          userLoggedIn: userInfo ? userInfo.userLoggedIn : undefined,
+          userId: userInfo ? userInfo.userId : undefined,
+          userToken: userInfo ? userInfo.userToken : undefined,
+        }}
         options={{ headerShown: false }}
       />
       <Stack.Screen

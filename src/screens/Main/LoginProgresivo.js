@@ -357,7 +357,7 @@ const LoginProgresivo = ({ navigation }) => {
       {frontIdImage && backIdImage && faceImage ? (
         <>
           {/* Linea de Separación, aparece cuando todas las imagenes estan listas junto con el boton */}
-          <View style={[styles.linea, { marginTop: 0 }]}></View>
+          <View style={[styles.linea]}></View>
           <TouchableOpacity
             style={styles.nextButton}
             onPress={() => navigation.navigate("LoginProgresivo2")}
@@ -471,14 +471,12 @@ const styles = StyleSheet.create({
   },
   shadedArea1: {
     position: "absolute",
-    left: 0,
     width: 20,
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   shadedArea2: {
     position: "absolute",
-    right: 0,
     width: 20,
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -513,7 +511,6 @@ const styles = StyleSheet.create({
     width: "125%",
     alignSelf: "center",
     height: "100%",
-    top: "0",
     tintColor: "rgba(0, 0, 0, 0.5)",
   },
   ovalOverlay: {
