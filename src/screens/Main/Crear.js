@@ -9,17 +9,38 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
+import { UserContext } from "../../hooks/UserContext";
 import { EvilIcons } from "@expo/vector-icons";
 
-const Crear = () => {
+const Crear = ({ navigation }) => {
   // Estados y Contexto
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const textLimit = 500;
+
+  const postData = async () => {
+    const url = "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts";
+    const data = {
+      title: "",
+      body: text,
+      user_id: user.userID,
+      post_image: image,
+    };
+
+    try {
+      const response = await axios.post(url, data);
+      console.log("Response:", response.data);
+      navigation.navigate("Perfil");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -145,7 +166,7 @@ const Crear = () => {
           {/* Boton para publicar */}
           <TouchableOpacity
             style={styles.boton}
-            onPress={() => {}}
+            onPress={() => postData()}
             disabled={!text}
           >
             {/* Se evalua si hay texto y activa el boton con gradiente */}
