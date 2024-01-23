@@ -11,24 +11,25 @@ const initialState = {
   apellidoMaterno: "",
   CURP: "",
   fechaNacimiento: "",
+  telefono: "",
   estadoNacimiento: "",
   backEndEstadoNacimiento: "", // El valor que se envía al backend como estado de nacimiento
   sexo: "",
-  ocupacion: "",
-  estadoCivil: "",
-  loggedIn: false,
-  telefono: "",
   email: "",
   password: "",
+  // Datos con AsyncStorage
   pin: "",
-  FireBaseUIDTel: "",
-  userID: "", // ID del usuario en la base de datos
-  userToken: "", // Token de autenticación del usuario
+  loggedIn: false,
   // Variables de registro progresivo
+  ocupacion: "",
+  estadoCivil: "",
   fotoPerfil: "",
   nacionalidad: "",
   firmaElectronica: "",
   RFC: "",
+  // Datos con backend
+  userID: "", // ID del usuario en la base de datos
+  userToken: "", // Token de autenticación del usuario
 };
 
 // Componente UserProvider
