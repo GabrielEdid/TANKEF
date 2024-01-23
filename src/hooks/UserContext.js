@@ -6,6 +6,7 @@ export const UserContext = createContext();
 
 // Estado inicial definido fuera del componente
 const initialState = {
+  // Datos de Login y de uso en la App
   nombre: "",
   apellidoPaterno: "",
   apellidoMaterno: "",
@@ -27,6 +28,7 @@ const initialState = {
   nacionalidad: "",
   firmaElectronica: "",
   RFC: "",
+  avatar: null,
   // Datos con backend
   userID: "", // ID del usuario en la base de datos
   userToken: "", // Token de autenticación del usuario

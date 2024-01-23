@@ -33,6 +33,7 @@ const Perfil = () => {
     Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
     Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
     Test: require("../../../assets/images/Test.png"),
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
 
@@ -73,7 +74,7 @@ const Perfil = () => {
         <View>
           <Image
             style={styles.fotoPerfil}
-            source={require("../../../assets/images/Fotos_Personas/Steve.png")}
+            source={user.avatar ? user.avatar : imageMap["Blank"]}
           />
           <Text style={styles.textoNombre}>
             {user.nombre +
@@ -145,9 +146,9 @@ const Perfil = () => {
                 user.apellidoMaterno
               } // Reemplazar con datos reales si están disponibles
               tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-              foto={imageMap["Steve"]} // Reemplazar con datos reales si están disponibles
+              foto={user.avatar ? user.avatar : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
               body={post.body}
-              perfil={imageMap["Steve"]} // Reemplazar con datos reales si están disponibles
+              perfil={user.avatar ? user.avatar : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
               personal={true}
             />
           ))}
