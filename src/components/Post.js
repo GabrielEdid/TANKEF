@@ -10,12 +10,11 @@ import {
   TextInput,
   Modal,
 } from "react-native";
+import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { AntDesign } from "@expo/vector-icons";
 import ProgressBar from "./ProgressBar";
-
-const screenWidth = Dimensions.get("window").width;
 
 const Post = (props) => {
   // Estados del Componente
@@ -26,9 +25,21 @@ const Post = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
+  const deletePost = async (postId) => {
+    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${postId}`;
+
+    try {
+      const response = await axios.delete(url);
+      console.log("Post Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   // Para cuando se desee eliminar el Request
   const handleRemove = () => {
-    setIsVisible(false);
+    deletePost(props.postID);
   };
 
   if (!isVisible) {

@@ -36,6 +36,7 @@ const Crear = ({ navigation }) => {
     try {
       const response = await axios.post(url, data);
       console.log("Response:", response.data);
+      setText("");
       navigation.navigate("Perfil");
     } catch (error) {
       console.error("Error:", error);

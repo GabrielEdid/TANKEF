@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
+import axios from "axios";
+import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
@@ -19,6 +21,8 @@ import Post from "../../components/Post";
 
 const Perfil = () => {
   const navigation = useNavigation();
+  const [posts, setPosts] = useState([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -31,6 +35,24 @@ const Perfil = () => {
     Test: require("../../../assets/images/Test.png"),
     // ... más imágenes
   };
+
+  const fetchUserPosts = async () => {
+    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${user.userID}/posts`;
+
+    try {
+      const response = await axios.get(url);
+      const sortedPosts = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
+      setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserPosts();
+    }, [])
+  );
 
   // Componente visual
   return (
@@ -109,30 +131,26 @@ const Perfil = () => {
             </Text>
           </LinearGradient>
         </TouchableOpacity>
+
         <View style={{ marginTop: 15 }}>
-          <Post
-            tipo={"compartir"}
-            nombre={"Steve Rodgers"}
-            tiempo={"3 horas"}
-            foto={imageMap["Steve"]}
-            body={
-              "Explorar el mundo de las finanzas es embarcarse en un viaje fascinante hacia la libertad financiera. La clave está en la educación continua y la toma de decisiones informadas. Invertir no solo se trata de aumentar tus activos, sino también de comprender los riesgos y cómo gestionarlos. Recuerda: diversificar es vital para equilibrar tu cartera. Y lo más importante, nunca es tarde para empezar a planificar tu futuro financiero. ¡Hagamos de las finanzas una herramienta para alcanzar nuestros sueños! #FinanzasInteligentes #LibertadFinanciera 💹📊"
-            }
-            perfil={imageMap["Steve"]}
-            personal={true}
-          />
-          <Post
-            tipo={"compartir"}
-            nombre={"Steve Rodgers"}
-            tiempo={"3 horas"}
-            foto={imageMap["Steve"]}
-            body={
-              "Invertir es dar el primer paso hacia la libertad financiera. Al elegir sabiamente, tus ahorros pueden crecer exponencialmente. ¿Sabías que empezar joven y con constancia es clave para el éxito? Diversifica tus inversiones para minimizar riesgos y maximizar ganancias. ¡No esperes más, comienza hoy mismo a construir tu futuro! #Inversiones #LibertadFinanciera #CrecimientoEconómico 📈💼🌟"
-            }
-            imagen={imageMap["Test"]}
-            perfil={imageMap["Steve"]}
-            personal={true}
-          />
+          {posts.map((post) => (
+            <Post
+              postID={post.id}
+              tipo={"compartir"}
+              nombre={
+                user.nombre +
+                " " +
+                user.apellidoPaterno +
+                " " +
+                user.apellidoMaterno
+              } // Reemplazar con datos reales si están disponibles
+              tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+              foto={imageMap["Steve"]} // Reemplazar con datos reales si están disponibles
+              body={post.body}
+              perfil={imageMap["Steve"]} // Reemplazar con datos reales si están disponibles
+              personal={true}
+            />
+          ))}
         </View>
       </ScrollView>
     </>
