@@ -84,7 +84,7 @@ const MiRed = ({ navigation }) => {
           tiempo="1 hora"
         />
         <TouchableOpacity onPress={() => navigation.navigate("VerPerfiles")}>
-          <Text>Ver Perfil</Text>
+          <Text>Ver otro Perfil (prueba)</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

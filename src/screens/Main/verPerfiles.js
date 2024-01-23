@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
@@ -20,9 +21,10 @@ import { Feather } from "@expo/vector-icons";
 import Post from "../../components/Post";
 
 const Perfil = () => {
-  const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [estado, setEstado] = useState("inicial"); // Estados: "inicial", "solicitudEnviada"
+  const [modalVisible, setModalVisible] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -60,11 +62,8 @@ const Perfil = () => {
     <>
       <View style={styles.tituloContainer}>
         {/* Boton de Settings */}
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          style={styles.settings}
-        >
-          <Feather name="settings" size={30} color="#29364d" />
+        <TouchableOpacity style={styles.tresPuntos}>
+          <Text style={{ fontSize: 25 }}>...</Text>
         </TouchableOpacity>
         {/* Titulo Superior */}
         <Text style={styles.titulo}>TANKEF</Text>
@@ -72,20 +71,40 @@ const Perfil = () => {
       <ScrollView style={styles.scrollV}>
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
         <View>
-          <Image
-            style={styles.fotoPerfil}
-            source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
-          />
-          <Text style={styles.textoNombre}>
-            {user.nombre +
-              " " +
-              user.apellidoPaterno +
-              " " +
-              user.apellidoMaterno}
-          </Text>
-          <Text style={styles.textoMail}>{user.email}</Text>
+          <Image style={styles.fotoPerfil} source={imageMap["Blank"]} />
+          <Text style={styles.textoNombre}>Nombre del Usuario</Text>
+          <Text style={styles.textoMail}>Mail del Usuario</Text>
         </View>
-        {/* Lista de Datos de Red del Usuario */}
+
+        <View style={styles.buttonContainer}>
+          {estado === "inicial" && (
+            <TouchableOpacity
+              style={styles.botonConf}
+              onPress={() => setEstado("solicitudEnviada")}
+            >
+              <LinearGradient
+                colors={["#2FF690", "#21B6D5"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.botonGradient}
+              >
+                <Text style={styles.textoBoton}>CONECTAR</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
+          {estado === "solicitudEnviada" && (
+            <TouchableOpacity
+              style={styles.botonConectado}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={[styles.textoBoton, { color: "grey" }]}>
+                SOLICITUD ENVIADA
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Lista de Datos de Red del Usuario 
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -96,42 +115,9 @@ const Perfil = () => {
           <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
           <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
           <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
-        </ScrollView>
-        {/* View de LogIn Gradual */}
-        <TouchableOpacity
-          style={styles.cuadroLoginProgresivo}
-          onPress={() => {
-            navigation.navigate("LoginProgresivo");
-          }}
-        >
-          {/* Texto Incentivo del Recuadro */}
-          <Text style={styles.texto}>
-            Termina tu <Text style={{ fontWeight: "bold" }}>registro</Text> para
-            poder{" "}
-            <Text style={{ fontWeight: "bold" }}>
-              solicitar créditos e invertir
-            </Text>
-            !
-          </Text>
-          <ProgressBar progress={0.7} />
-          {/* Boton del Recuadro */}
-          <LinearGradient
-            colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 1, y: 1 }} // Inicio del gradiente
-            end={{ x: 0, y: 0 }} // Fin del gradiente
-            style={styles.botonGradient}
-          >
-            <Text
-              style={{
-                fontFamily: "conthrax",
-                color: "white",
-                textAlign: "center",
-              }}
-            >
-              COMPLETAR PERFIL
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        </ScrollView> */}
+
+        {/* View de los Posts del Usuario */}
 
         <View style={{ marginTop: 15 }}>
           {posts.map((post) => (
@@ -146,7 +132,7 @@ const Perfil = () => {
                 user.apellidoMaterno
               } // Reemplazar con datos reales si están disponibles
               tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-              foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+              foto={imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
               body={post.body}
               perfil={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
               personal={true}
@@ -154,6 +140,38 @@ const Perfil = () => {
           ))}
         </View>
       </ScrollView>
+
+      {/* Modal para mostrar si se presióna el boton de SOLICITUD ENVIADA*/}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.fullScreenButton}
+          activeOpacity={1}
+          onPressOut={() => setModalVisible(false)}
+        >
+          <View style={styles.modalView}>
+            <Text style={{ fontSize: 13 }}>
+              ¿Seguro que deseas eliminar la solicutud de conexión?
+            </Text>
+            <TouchableOpacity
+              style={styles.buttonModal}
+              onPress={() => [setEstado("inicial"), setModalVisible(false)]}
+            >
+              <Text style={{ color: "red" }}>Eliminar Solicitud</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginTop: 10 }}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </>
   );
 };
@@ -173,9 +191,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     position: "absolute",
   },
-  settings: {
-    height: 32,
-    width: 35,
+  tresPuntos: {
+    alignItems: "center",
     marginTop: 70,
     alignSelf: "flex-end",
     right: 20,
@@ -212,29 +229,71 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 96,
   },
-  cuadroLoginProgresivo: {
-    height: 163,
+  buttonContainer: {
+    marginTop: 10,
     width: "100%",
-    marginTop: 20,
-    borderWidth: 1.5,
-    borderColor: "#D5D5D5",
-    borderRadius: 15,
-    padding: 15,
-  },
-  texto: {
-    fontSize: 15,
-    color: "#29364d",
-    width: "70%",
-    alignSelf: "center",
-    textAlign: "center",
+    flexDirection: "row",
   },
   botonGradient: {
+    width: "100%",
     justifyContent: "center",
-    width: "65%",
-    height: 44,
+    height: 31,
     alignSelf: "center",
-    borderRadius: 15,
-    top: 15,
+    borderRadius: 8,
+  },
+  botonConf: {
+    width: "100%",
+    height: 31,
+    borderRadius: 8,
+  },
+  textoBoton: {
+    fontSize: 15,
+    fontFamily: "conthrax",
+    textAlign: "center",
+    paddingTop: 1,
+    color: "white",
+  },
+  botonConectado: {
+    height: 31,
+    width: "100%",
+    paddingTop: 7,
+    left: 2.5,
+    borderRadius: 8,
+    backgroundColor: "#D5D5D5",
+  },
+  // Estilos para el Modal que aparece si se elimina una conexión
+  fullScreenButton: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    justifyContent: "flex-end",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position: "absolute",
+    bottom: 0,
+    width: "90%",
+    alignSelf: "center",
+  },
+  buttonModal: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginVertical: 5,
   },
 });
 

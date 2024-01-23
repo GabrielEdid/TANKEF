@@ -8,13 +8,17 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
+import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import Post from "../../components/Post";
 
 const Inicio = () => {
+  // Estados y Contexto
+  const [banners, setBanners] = useState({ investment: "", credit: "" });
+
   // Mapa para cargar todas las imagenes
   const imageMap = {
     Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
@@ -25,6 +29,21 @@ const Inicio = () => {
     Test: require("../../../assets/images/Test.png"),
     // ... más imágenes
   };
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      const url =
+        "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/banners";
+      try {
+        const response = await axios.get(url);
+        setBanners(response.data.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchBanners();
+  }, []);
 
   // Componente visual
   return (
@@ -48,12 +67,7 @@ const Inicio = () => {
           </ScrollView>
           {/* Anuncio para Invertir */}
           <TouchableOpacity style={styles.cuadroInvertir}>
-            <Text style={styles.texto}>
-              Transforma tu ahorro en inversión, con una{" "}
-              <Text style={{ fontWeight: "bold" }}>
-                Tasa Anual del 13.51% desde $5,000
-              </Text>
-            </Text>
+            <Text style={styles.texto}>{banners.investment}</Text>
             <LinearGradient
               colors={["#2FF690", "#21B6D5"]}
               start={{ x: 1, y: 1 }} // Inicio del gradiente
@@ -75,10 +89,7 @@ const Inicio = () => {
           {/* Anuncio para hacer un Crédito */}
           <TouchableOpacity style={styles.cuadroCredito}>
             <Text style={[styles.texto, { color: "#29364d" }]}>
-              ¿Necesitas un <Text style={{ fontWeight: "bold" }}>impulso</Text>{" "}
-              para alcanzar tus{" "}
-              <Text style={{ fontWeight: "bold" }}>sueños</Text>? ¡Da el primer
-              paso hacía tus objetivos!
+              {banners.credit}
             </Text>
             <LinearGradient
               colors={["#2FF690", "#21B6D5"]}
