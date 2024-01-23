@@ -16,28 +16,35 @@ import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import { EvilIcons } from "@expo/vector-icons";
+import { setEnabled } from "react-native/Libraries/Performance/Systrace";
 
 const Crear = ({ navigation }) => {
   // Estados y Contexto
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
+  const [image64, setImage64] = useState(null);
   const { user, setUser } = useContext(UserContext);
+  const [enabled, setEnabled] = useState(true);
   const textLimit = 500;
 
   const postData = async () => {
+    setEnabled(false);
     const url = "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts";
     const data = {
       title: "",
       body: text,
       user_id: user.userID,
-      post_image: image,
+      post_image: image64,
     };
 
     try {
       const response = await axios.post(url, data);
       console.log("Response:", response.data);
       setText("");
+      setImage(null);
+      setImage64(null);
       navigation.navigate("Perfil");
+      setEnabled(true);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -49,13 +56,13 @@ const Crear = ({ navigation }) => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 3,
+      base64: true,
     });
 
-    // Verifica si la selección fue cancelada
     if (!result.canceled) {
-      // Accede a la primera imagen seleccionada del array 'assets'
       const selectedImage = result.assets[0];
-      setImage(selectedImage.uri);
+      setImage64(selectedImage.base64);
+      setImage(selectedImage.uri); // Guardar el base64 de la imagen en lugar de la URI
     }
   };
 
@@ -168,7 +175,7 @@ const Crear = ({ navigation }) => {
           <TouchableOpacity
             style={styles.boton}
             onPress={() => postData()}
-            disabled={!text}
+            disabled={!text || !enabled}
           >
             {/* Se evalua si hay texto y activa el boton con gradiente */}
             {text ? (
