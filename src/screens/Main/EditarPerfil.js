@@ -8,42 +8,95 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  TextInput,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
-// Importaciones de Hooks
+import * as ImagePicker from "expo-image-picker";
+// Importaciones de Componentes y Hooks
 import { UserContext } from "../../hooks/UserContext";
-// Importaciones de Componentes
-import DropDown from "../../components/DropDown";
-import SpecialInput from "../../components/SpecialInput";
-import { AntDesign } from "@expo/vector-icons";
 
 const EditarPerfil = ({ navigation }) => {
   // Estados locales
   const { user, setUser } = useContext(UserContext); //Contexo
+  const [email, setEmail] = useState(user.email);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Función para verificar si los campos están completos
-  const verificarCampos = () => {
-    return (
-      user.ocupacion !== "" &&
-      user.estadoCivil !== "" &&
-      user.nacionalidad !== "" &&
-      user.firmaElectronica !== "" &&
-      user.RFC !== ""
-    );
-  };
+  const updateUser = async (userId, userData) => {
+    setIsLoading(true);
+    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${userId}`;
 
-  // Manejador para el botón Siguiente
-  const handleSiguiente = () => {
-    if (!verificarCampos()) {
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          // Incluye aquí otros encabezados si son necesarios, como tokens de autenticación
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Usuario actualizado:", data);
+      // Maneja aquí la respuesta
+      setIsLoading(false);
+      navigation.navigate("MainFlow", {
+        screen: "Perfil",
+        params: {
+          screen: "PerfilMain",
+        },
+      });
+    } catch (error) {
+      console.error("Hubo un problema al actualizar el usuario:", error);
       Alert.alert(
-        "Campos Incompletos",
-        "Introduce todos tus datos para continuar.",
+        "Hubo un problema al modificar tus datos",
+        "Verificalos y vuelve a intentarlo.",
         [{ text: "Entendido" }],
         { cancelable: true }
       );
-    } else {
-      navigation.navigate("PerfilScreen", {
-        screen: "PerfilMain",
+      setIsLoading(false);
+      // Maneja aquí los errores
+    }
+  };
+
+  // Manejador para el botón Siguiente
+  const handleSiguiente = async () => {
+    console.log("Datos de usuario:", user);
+    // Datos de usuario a actualizar
+    const userData = {
+      avatar: user.avatar,
+      name: user.nombre,
+      last_name_1: user.apellidoPaterno,
+      last_name_2: user.apellidoMaterno,
+      phone: user.telefono,
+      curp: user.CURP,
+    };
+
+    try {
+      await updateUser(user.userID, userData);
+    } catch (error) {
+      console.error("Error al actualizar:", error);
+      // Aquí puedes manejar los errores, por ejemplo, mostrando un alerta
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 3,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      const selectedImage = result.assets[0];
+      setUser({
+        ...user,
+        avatar: `data:image/jpeg;base64,${selectedImage.base64}`,
       });
     }
   };
@@ -70,61 +123,58 @@ const EditarPerfil = ({ navigation }) => {
         <View style={styles.tituloContainer}>
           <Text style={styles.titulo}>TANKEF</Text>
         </View>
-        <TouchableOpacity onPress={() => handleGoBack()}>
+
+        {/* <TouchableOpacity onPress={() => handleGoBack()}>
           <AntDesign
             name="arrowleft"
             size={40}
             color="#29364d"
             style={styles.back}
           />
-        </TouchableOpacity>
-        {/* Mensaje Superior */}
+        </TouchableOpacity>*/}
+
         <View style={{ flex: 1 }}>
-          <Text style={styles.texto}>
-            ¡Solo faltan un par de datos más{" "}
-            <Text style={{ fontWeight: "bold" }}>
-              para terminar tu registro!
-            </Text>
-          </Text>
-          <View
-            style={styles.container}
-            automaticallyAdjustKeyboardInsets={true}
-          >
-            {/* Campos de entrada para datos del usuario */}
-            <View style={{ zIndex: 500 }}>
-              <DropDown
-                field="Estado Civil"
-                context="estadoCivil"
-                dropdown={"civil"}
-              />
-            </View>
-            {/* Campo de entrada para la ocupación del usuario, se tiene con view para que no se obstruya */}
-            <View style={{ zIndex: 400, marginTop: -7.5 }}>
-              <DropDown
-                field="Ocupación"
-                context="ocupacion"
-                dropdown={"ocupacion"}
-              />
-            </View>
-            <SpecialInput
-              field="Nacionalidad"
-              context="nacionalidad"
-              editable={true}
+          {/* Contenedor Foto de Peril */}
+          <View style={{ flexDirection: "row" }}>
+            <Image
+              style={styles.imagen}
+              source={
+                user.avatar
+                  ? { uri: user.avatar }
+                  : require("../../../assets/images/blankAvatar.jpg")
+              }
             />
-            <SpecialInput
-              field="Firma Electrónica"
-              context="firmaElectronica"
-              editable={true}
-            />
-            <SpecialInput field="RFC" context="RFC" editable={true} />
+            <View>
+              <Text style={styles.texto}>Foto de Perfil</Text>
+              <TouchableOpacity
+                style={styles.botonImagen}
+                onPress={() => pickImage()}
+              >
+                <Text style={styles.textoBotonImagen}>
+                  {user.avatar ? "CAMBIAR IMAGEN" : "ELEGIR IMAGEN"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
+          {/* Contenedor Correo Electrónico */}
+          <Text style={[styles.texto, { marginLeft: 0 }]}>
+            Correo Electrónico
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder={user.email}
+            onChangeText={setEmail}
+          />
         </View>
+
         {/* Botón de Continuar */}
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => handleSiguiente()}
+          disabled={isLoading}
         >
-          <Text style={styles.textoBotonGrande}>GUARDAR</Text>
+          <Text style={styles.textoBotonGrande}>GUARDAR DATOS</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
@@ -143,11 +193,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   imagen: {
-    width: 90,
-    height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-    position: "absolute",
+    marginTop: 15,
+    width: 130,
+    height: 130,
+    borderRadius: 65,
   },
   titulo: {
     fontFamily: "conthrax",
@@ -156,25 +205,39 @@ const styles = StyleSheet.create({
     marginTop: 70,
     position: "absolute",
   },
-  container: {
-    padding: 20,
-    marginTop: 15,
-    alignSelf: "center",
-    justifyContent: "space-around",
-    width: "100%",
-    backgroundColor: "white",
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.6,
-    shadowRadius: 5,
-    elevation: 8,
-  },
   texto: {
-    fontSize: 18,
-    textAlign: "center",
+    marginTop: 15,
+    marginLeft: 15,
+    fontSize: 25,
+    fontWeight: "bold",
     color: "#29364d",
-    alignSelf: "center",
+  },
+  botonImagen: {
+    marginTop: 15,
+    marginLeft: 15,
+    paddingHorizontal: 20,
+    backgroundColor: "#29364d",
+    height: 40,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textoBotonImagen: {
+    color: "white",
+    fontFamily: "conthrax",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  input: {
+    marginTop: 15,
+    paddingHorizontal: 20,
+    backgroundColor: "#f2f2f2",
+    height: 40,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 16,
+    color: "#29364d",
   },
   botonGrande: {
     width: "100%",
