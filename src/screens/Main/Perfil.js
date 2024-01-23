@@ -11,6 +11,7 @@ import React, { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
+import { UserContext } from "../../hooks/UserContext";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import ProgressBar from "../../components/ProgressBar";
 import { Feather } from "@expo/vector-icons";
@@ -18,6 +19,7 @@ import Post from "../../components/Post";
 
 const Perfil = () => {
   const navigation = useNavigation();
+  const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
@@ -51,8 +53,14 @@ const Perfil = () => {
             style={styles.fotoPerfil}
             source={require("../../../assets/images/Fotos_Personas/Steve.png")}
           />
-          <Text style={styles.textoNombre}>Steve Rodgers</Text>
-          <Text style={styles.textoMail}>steve.rodgh@gmail.com</Text>
+          <Text style={styles.textoNombre}>
+            {user.nombre +
+              " " +
+              user.apellidoPaterno +
+              " " +
+              user.apellidoMaterno}
+          </Text>
+          <Text style={styles.textoMail}>{user.email}</Text>
         </View>
         {/* Lista de Datos de Red del Usuario */}
         <ScrollView

@@ -93,11 +93,11 @@ const LoginProgresivo2 = ({ navigation }) => {
         fiel: user.firmaElectronica,
         rfc: user.RFC,
         job: user.ocupacion,
-        name: "GABRIEL",
-        last_name_1: "EDID",
-        last_name_2: "HARARI",
-        phone: "525568182757",
-        curp: "EIHG030528HMCZZZZ2",
+        name: user.nombre,
+        last_name_1: user.apellidoPaterno,
+        last_name_2: user.apellidoMaterno,
+        phone: user.telefono,
+        curp: user.CURP,
       };
 
       try {

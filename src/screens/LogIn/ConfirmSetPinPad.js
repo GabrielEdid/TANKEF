@@ -22,6 +22,12 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         loggedIn: user.loggedIn,
         userID: user.userID,
         userToken: user.userToken,
+        telefono: user.telefono,
+        name: user.nombre,
+        apellido1: user.apellidoPaterno,
+        apellido2: user.apellidoMaterno,
+        CURP: user.CURP,
+        email: user.email,
       };
       // Se guarda la información en el AsyncStorage como userInfo
       AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))

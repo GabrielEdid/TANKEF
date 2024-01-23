@@ -22,6 +22,17 @@ const InitialScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false); // Estado para manejar el indicador de carga
   const { user, setUser } = useContext(UserContext); // Consumir el contexto del usuario
 
+  // Función para convertir la primera letra de cada palabra en mayúscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
   // Función para iniciar sesión
   const signIn = async () => {
     setIsLoading(true); // Activar el indicador de carga
@@ -44,10 +55,22 @@ const InitialScreen = ({ navigation }) => {
         console.log("Success:", data);
         const token = data.token;
         const id = data.data.id;
+        const telefono = data.data.phone;
+        const nombre = data.data.name;
+        const apellido1 = data.data.last_name_1;
+        const apellido2 = data.data.last_name_2;
+        const CURP = data.data.curp;
+        const email = data.data.email;
         setUser({
           ...user, // Mantén el estado actual
           userToken: token,
           userID: id,
+          telefono: telefono,
+          nombre: titleCase(nombre),
+          apellidoPaterno: titleCase(apellido1),
+          apellidoMaterno: titleCase(apellido2),
+          CURP: CURP,
+          email: email,
         });
         navigation.navigate("SetPinPad"); // Navegar a la siguiente pantalla en caso de éxito
       })

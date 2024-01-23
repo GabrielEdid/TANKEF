@@ -222,6 +222,12 @@ function LoginFlow() {
         const userLoggedIn = parsedValue.loggedIn;
         const userId = parsedValue.userID;
         const userToken = parsedValue.userToken;
+        const userTelefono = parsedValue.telefono;
+        const userName = parsedValue.name;
+        const userApellido1 = parsedValue.apellido1;
+        const userApellido2 = parsedValue.apellido2;
+        const userCURP = parsedValue.CURP;
+        const userEMail = parsedValue.email;
 
         console.log(value);
 
@@ -230,6 +236,12 @@ function LoginFlow() {
           userLoggedIn,
           userId,
           userToken,
+          userTelefono,
+          userName,
+          userApellido1,
+          userApellido2,
+          userCURP,
+          userEMail,
         };
       }
     } catch (error) {
@@ -285,6 +297,12 @@ function LoginFlow() {
           userLoggedIn: userInfo ? userInfo.userLoggedIn : undefined,
           userId: userInfo ? userInfo.userId : undefined,
           userToken: userInfo ? userInfo.userToken : undefined,
+          userTelefono: userInfo ? userInfo.userTelefono : undefined,
+          userName: userInfo ? userInfo.userName : undefined,
+          userApellido1: userInfo ? userInfo.userApellido1 : undefined,
+          userApellido2: userInfo ? userInfo.userApellido2 : undefined,
+          userCURP: userInfo ? userInfo.userCURP : undefined,
+          userEMail: userInfo ? userInfo.userEMail : undefined,
         }}
         options={{ headerShown: false }}
       />

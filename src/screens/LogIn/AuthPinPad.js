@@ -7,9 +7,31 @@ import PinPad from "../../components/PinPad";
 
 const AuthPinPad = ({ navigation, route }) => {
   // Estado local y el pin obtenido del AsyncStorage
-  const { userPin, userLoggedIn, userId, userToken } = route.params; // Se obtiene el pin del AsyncStorage
+  const {
+    userPin,
+    userLoggedIn,
+    userId,
+    userToken,
+    userTelefono,
+    userName,
+    userApellido1,
+    userApellido2,
+    userCURP,
+    userEMail,
+  } = route.params; // Se obtiene el pin del AsyncStorage
   const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
+
+  // Función para convertir la primera letra de cada palabra en mayúscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
 
   // Función para comparar el pin introducido con el pin del AsyncStorage
   useEffect(() => {
@@ -21,6 +43,12 @@ const AuthPinPad = ({ navigation, route }) => {
           userID: userId,
           loggedIn: userLoggedIn,
           pin: userPin,
+          telefono: userTelefono,
+          nombre: titleCase(userName),
+          apellidoPaterno: titleCase(userApellido1),
+          apellidoMaterno: titleCase(userApellido2),
+          CURP: userCURP,
+          email: userEMail,
         });
         navigation.navigate("MainFlow", {
           screen: "Perfil",
