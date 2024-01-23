@@ -22,6 +22,7 @@ import OlvideContrasena from "./src/screens/LogIn/OlivideContrasena";
 import AuthPinPad from "./src/screens/LogIn/AuthPinPad";
 import Inicio from "./src/screens/Main/Inicio";
 import MiRed from "./src/screens/Main/MiRed";
+import VerPerfiles from "./src/screens/Main/VerPerfiles";
 import Crear from "./src/screens/Main/Crear";
 import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
@@ -122,6 +123,7 @@ function MiRedStackScreen() {
         component={SolicitudesConexion}
       />
       <Stack.Screen name="MisConexiones" component={MisConexiones} />
+      <Stack.Screen name="VerPerfiles" component={VerPerfiles} />
     </Stack.Navigator>
   );
 }

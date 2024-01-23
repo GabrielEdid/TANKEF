@@ -83,6 +83,9 @@ const MiRed = ({ navigation }) => {
           imagen={imageMap["Clint"]}
           tiempo="1 hora"
         />
+        <TouchableOpacity onPress={() => navigation.navigate("VerPerfiles")}>
+          <Text>Ver Perfil</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
