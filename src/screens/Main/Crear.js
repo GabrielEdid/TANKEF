@@ -16,7 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import { EvilIcons } from "@expo/vector-icons";
-import { APIPost } from "./APIService";
+import { APIPost } from "../../API/APIService";
 
 const Crear = ({ navigation }) => {
   // Estados y Contexto
@@ -61,7 +61,7 @@ const Crear = ({ navigation }) => {
     if (!result.canceled) {
       const selectedImage = result.assets[0];
       setImage64(selectedImage.base64);
-      setImage(selectedImage.uri); // Guardar el base64 de la imagen en lugar de la URI
+      setImage(selectedImage.uri);
     }
   };
 

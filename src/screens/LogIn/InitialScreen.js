@@ -14,7 +14,7 @@ import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../hooks/UserContext"; // Contexto para manejar el estado del usuario
 import SpecialInput from "../../components/SpecialInput"; // Componente para entradas de texto especializadas
-import { token } from "../Main/APIService";
+import { token, APIPost } from "../../API/APIService";
 
 // Componente de pantalla inicial
 const InitialScreen = ({ navigation }) => {
@@ -36,54 +36,44 @@ const InitialScreen = ({ navigation }) => {
 
   // Función para iniciar sesión
   const signIn = async () => {
-    setIsLoading(true); // Activar el indicador de carga
-    // Petición al servidor para iniciar sesión
-    fetch(
-      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/sessions",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session: { email: email, password: password } }),
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw response; // Lanzar un error si la respuesta no es exitosa
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Success:", data);
-        token = data.token;
-        const id = data.data.id;
-        const telefono = data.data.phone;
-        const nombre = data.data.name;
-        const apellido1 = data.data.last_name_1;
-        const apellido2 = data.data.last_name_2;
-        const CURP = data.data.curp;
-        const email = data.data.email;
+    setIsLoading(true);
+    const url =
+      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/sessions";
+    const data = {
+      session: { email: email, password: password },
+    };
+
+    try {
+      const response = await APIPost(url, data);
+      if (response && response.data) {
+        const userData = response.data.data;
+        const userToken = response.data.token;
+
         setUser({
-          ...user, // Mantén el estado actual
-          userToken: token,
-          userID: id,
-          telefono: telefono,
-          nombre: titleCase(nombre),
-          apellidoPaterno: titleCase(apellido1),
-          apellidoMaterno: titleCase(apellido2),
-          CURP: CURP,
-          email: email,
+          ...user,
+          userID: userData.id,
+          telefono: userData.phone,
+          nombre: titleCase(userData.name),
+          apellidoPaterno: titleCase(userData.last_name_1),
+          apellidoMaterno: titleCase(userData.last_name_2),
+          CURP: userData.curp,
+          email: userData.email,
+          userToken: userToken,
         });
-        navigation.navigate("SetPinPad"); // Navegar a la siguiente pantalla en caso de éxito
-      })
-      .catch((errorResponse) => {
-        // Manejar los errores de la petición
-        errorResponse.json().then((errorData) => {
-          console.error("Error:", errorData);
-          const errorMessages = Object.values(errorData).flat().join(". ");
-          Alert.alert("Error de Inicio de Sesión", errorMessages); // Mostrar alerta de error
-        });
-      })
-      .finally(() => setIsLoading(false)); // Finalizar el indicador de carga
+        navigation.navigate("SetPinPad");
+      } else {
+        throw new Error("Respuesta inesperada del servidor");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      const errorMessage =
+        error.response && error.response.data
+          ? Object.values(error.response.data).flat().join(". ")
+          : "Error desconocido";
+      Alert.alert("Error de Inicio de Sesión", errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Componente visual

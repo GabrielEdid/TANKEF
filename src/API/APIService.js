@@ -22,32 +22,28 @@ export const APIGet = async (url) => {
       },
     });
     console.log("Response:", response.data);
-    return response; // Guardar los datos de las publicaciones en el estado
+    return response;
   } catch (error) {
-    if (error === "You need to sign in before continuing.") {
-      refreshAPI(token);
-      APIGet(url);
+    if (error.response.data === "You need to sign in before continuing.") {
+      await refreshAPI();
+      return APIGet(url);
     }
     console.error("Error:", error);
   }
 };
 
-export const APIPost = async ({ url, body }) => {
+export const APIPost = async (url, body) => {
   try {
-    const response = await axios.post(
-      url,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await axios.post(url, body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-      body
-    );
+    });
     return response;
   } catch (error) {
-    if (error === "You need to sign in before continuing.") {
-      refreshAPI();
-      APIPost(url, body);
+    if (error.response.data === "You need to sign in before continuing.") {
+      await refreshAPI();
+      return APIPost(url, body);
     }
     console.error("Error:", error);
   }

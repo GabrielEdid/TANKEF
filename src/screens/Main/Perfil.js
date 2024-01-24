@@ -13,7 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
-import { APIGet } from "./APIService";
+import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import ProgressBar from "../../components/ProgressBar";
