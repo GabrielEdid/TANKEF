@@ -48,7 +48,7 @@ const Post = (props) => {
 
   // Para cuando se desee eliminar el Request
   const handleRemove = () => {
-    deletePost(props.key);
+    deletePost(props.postId);
   };
 
   if (!isVisible) {

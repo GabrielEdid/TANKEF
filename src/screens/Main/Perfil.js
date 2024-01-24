@@ -138,6 +138,7 @@ const Perfil = () => {
           {posts.map((post) => (
             <Post
               key={post.id}
+              postId={post.id}
               tipo={"compartir"}
               nombre={
                 user.nombre +
