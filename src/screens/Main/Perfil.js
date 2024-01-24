@@ -137,7 +137,7 @@ const Perfil = () => {
         <View style={{ marginTop: 15 }}>
           {posts.map((post) => (
             <Post
-              postID={post.id}
+              key={post.id}
               tipo={"compartir"}
               nombre={
                 user.nombre +

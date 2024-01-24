@@ -14,6 +14,7 @@ import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
+import { APIPost, APIDelete } from "../API/APIService";
 import { AntDesign } from "@expo/vector-icons";
 import ProgressBar from "./ProgressBar";
 
@@ -37,7 +38,7 @@ const Post = (props) => {
     const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${postId}`;
 
     try {
-      const response = await axios.delete(url);
+      const response = await APIDelete(url);
       console.log("Post Deleted:", response.data);
       setIsVisible(false);
     } catch (error) {
@@ -47,7 +48,7 @@ const Post = (props) => {
 
   // Para cuando se desee eliminar el Request
   const handleRemove = () => {
-    deletePost(props.postID);
+    deletePost(props.key);
   };
 
   if (!isVisible) {

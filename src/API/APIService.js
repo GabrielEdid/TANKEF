@@ -1,18 +1,7 @@
 import axios from "axios";
 export let token = "";
 
-const refreshAPI = async () => {
-  try {
-    const response = await axios.post(url, body);
-    const token = response.data.token;
-    setUser({
-      ...user,
-      userToken: token,
-    });
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+const refreshAPI = async () => {};
 
 export const APIGet = async (url) => {
   try {
@@ -26,7 +15,7 @@ export const APIGet = async (url) => {
   } catch (error) {
     if (error.response.data === "You need to sign in before continuing.") {
       await refreshAPI();
-      return APIGet(url);
+      return error; //APIGet(url);
     }
     console.error("Error:", error);
   }
@@ -43,8 +32,23 @@ export const APIPost = async (url, body) => {
   } catch (error) {
     if (error.response.data === "You need to sign in before continuing.") {
       await refreshAPI();
-      return APIPost(url, body);
+      return error; //APIPost(url, body);
     }
     console.error("Error:", error);
+  }
+};
+
+export const APIDelete = async (url) => {
+  try {
+    const response = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Deleted:", response.data);
+    return response;
+  } catch (error) {
+    console.error("Error:", error);
+    return error;
   }
 };

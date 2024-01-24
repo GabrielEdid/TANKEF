@@ -31,22 +31,25 @@ const Crear = ({ navigation }) => {
     setEnabled(false);
     const url = "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts";
     const data = {
-      title: "",
-      body: text,
-      user_id: user.userID,
-      post_image: image64,
+      post: {
+        title: "",
+        body: text.trim(),
+        post_image: image64,
+        user_id: user.userID,
+      },
     };
 
     try {
-      const response = await APIPost(url, {}, data);
+      const response = await APIPost(url, data);
       setText("");
       setImage(null);
       setImage64(null);
       navigation.navigate("Perfil");
-      setEnabled(true);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error al publicar:", error);
+      Alert.alert("Error", "No se pudo publicar. Intente nuevamente.");
     }
+    setEnabled(true);
   };
 
   const pickImage = async () => {
