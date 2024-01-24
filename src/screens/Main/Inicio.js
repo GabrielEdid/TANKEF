@@ -12,11 +12,13 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
+import { UserContext } from "../../hooks/UserContext";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import Post from "../../components/Post";
 
 const Inicio = () => {
   // Estados y Contexto
+  const { user, setUser } = useContext(UserContext);
   const [banners, setBanners] = useState({ investment: "", credit: "" });
 
   // Mapa para cargar todas las imagenes
@@ -27,6 +29,7 @@ const Inicio = () => {
     Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
     Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
     Test: require("../../../assets/images/Test.png"),
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
 
@@ -118,7 +121,6 @@ const Inicio = () => {
               "Explorar el mundo de las finanzas es embarcarse en un viaje fascinante hacia la libertad financiera. La clave está en la educación continua y la toma de decisiones informadas. Invertir no solo se trata de aumentar tus activos, sino también de comprender los riesgos y cómo gestionarlos. Recuerda: diversificar es vital para equilibrar tu cartera. Y lo más importante, nunca es tarde para empezar a planificar tu futuro financiero. ¡Hagamos de las finanzas una herramienta para alcanzar nuestros sueños! #FinanzasInteligentes #LibertadFinanciera 💹📊"
             }
             imagen={imageMap["Test"]}
-            perfil={imageMap["Steve"]}
           />
           <Post
             tipo={"credito"}
@@ -129,7 +131,6 @@ const Inicio = () => {
             body={
               "Mi tarjeta corta el 27 y a mi me pagan quincena el 30. Necesito flujo para cerrar el mes y no deber."
             }
-            perfil={imageMap["Steve"]}
             solicitado={"25,000.00"}
             contribuidos={"10,000.00"}
           />
@@ -141,7 +142,6 @@ const Inicio = () => {
             body={
               "Invertir es dar el primer paso hacia la libertad financiera. Al elegir sabiamente, tus ahorros pueden crecer exponencialmente. ¿Sabías que empezar joven y con constancia es clave para el éxito? Diversifica tus inversiones para minimizar riesgos y maximizar ganancias. ¡No esperes más, comienza hoy mismo a construir tu futuro! #Inversiones #LibertadFinanciera #CrecimientoEconómico 📈💼🌟"
             }
-            perfil={imageMap["Steve"]}
           />
           <Post
             tipo={"invertir"}
@@ -149,7 +149,6 @@ const Inicio = () => {
             tiempo={"3 días"}
             foto={imageMap["Quill"]}
             body={"13.5%"}
-            perfil={imageMap["Steve"]}
           />
           <Post
             tipo={"invertir"}
@@ -157,7 +156,6 @@ const Inicio = () => {
             tiempo={"3 días"}
             foto={imageMap["Natasha"]}
             body={"13.5%"}
-            perfil={imageMap["Steve"]}
           />
           <Post
             tipo={"credito"}
@@ -168,7 +166,6 @@ const Inicio = () => {
             body={
               "Estoy muy cerca de empezar mi empresa, pero me falta un poco más para poder hacerlo. ¡Ayudame a cumplir mi sueño! Prometo pagar a todos lo antes posible y lograr consolidarme como se debe. ¡Gracias por su apoyo! Veran que no se arrepentiran."
             }
-            perfil={imageMap["Steve"]}
             solicitado={"50,000.00"}
             contribuidos={"38,000.00"}
           />

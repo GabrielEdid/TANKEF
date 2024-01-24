@@ -148,7 +148,6 @@ const Perfil = () => {
               tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
               foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
               body={post.body}
-              perfil={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
               personal={true}
             />
           ))}

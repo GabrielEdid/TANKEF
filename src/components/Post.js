@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
+import { UserContext } from "../hooks/UserContext";
 import { AntDesign } from "@expo/vector-icons";
 import ProgressBar from "./ProgressBar";
 
@@ -24,6 +25,13 @@ const Post = (props) => {
   const [like, setLike] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const { user, setUser } = React.useContext(UserContext);
+
+  // Mapa para cargar todas las imagenes que se necesiten
+  const imageMap = {
+    Blank: require("../../assets/images/blankAvatar.jpg"),
+    // ... más imágenes
+  };
 
   const deletePost = async (postId) => {
     const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${postId}`;
@@ -211,7 +219,10 @@ const Post = (props) => {
             color={like ? "red" : "#29364d"}
           />
         </TouchableOpacity>
-        <Image source={props.perfil} style={styles.tuPerfil} />
+        <Image
+          source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
+          style={styles.tuPerfil}
+        />
         <TextInput
           style={styles.input}
           placeholder="Añade un comentario..."
