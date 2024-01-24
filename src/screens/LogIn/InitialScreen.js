@@ -14,6 +14,7 @@ import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../hooks/UserContext"; // Contexto para manejar el estado del usuario
 import SpecialInput from "../../components/SpecialInput"; // Componente para entradas de texto especializadas
+import { token } from "../Main/APIService";
 
 // Componente de pantalla inicial
 const InitialScreen = ({ navigation }) => {
@@ -53,7 +54,7 @@ const InitialScreen = ({ navigation }) => {
       })
       .then((data) => {
         console.log("Success:", data);
-        const token = data.token;
+        token = data.token;
         const id = data.data.id;
         const telefono = data.data.phone;
         const nombre = data.data.name;

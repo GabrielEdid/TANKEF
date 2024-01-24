@@ -42,7 +42,7 @@ const Perfil = () => {
     const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${user.userID}/posts`;
 
     try {
-      const response = await APIGet(url);
+      const response = await APIGet(url, user.userID);
       const sortedPosts = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
       setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
     } catch (error) {

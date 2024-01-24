@@ -38,8 +38,7 @@ const Crear = ({ navigation }) => {
     };
 
     try {
-      const response = APIPost(url, {}, data);
-      console.log("Response:", response.data);
+      const response = await APIPost(url, {}, data);
       setText("");
       setImage(null);
       setImage64(null);
