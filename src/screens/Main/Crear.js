@@ -16,7 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import { EvilIcons } from "@expo/vector-icons";
-import { setEnabled } from "react-native/Libraries/Performance/Systrace";
+import { APIPost } from "./APIService";
 
 const Crear = ({ navigation }) => {
   // Estados y Contexto
@@ -38,7 +38,7 @@ const Crear = ({ navigation }) => {
     };
 
     try {
-      const response = await axios.post(url, data);
+      const response = APIPost(url, {}, data);
       console.log("Response:", response.data);
       setText("");
       setImage(null);

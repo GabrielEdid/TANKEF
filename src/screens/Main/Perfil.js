@@ -13,6 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
+import { APIGet } from "./APIService";
 import { UserContext } from "../../hooks/UserContext";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import ProgressBar from "../../components/ProgressBar";
@@ -41,7 +42,7 @@ const Perfil = () => {
     const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${user.userID}/posts`;
 
     try {
-      const response = await axios.get(url);
+      const response = await APIGet(url);
       const sortedPosts = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
       setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
     } catch (error) {
