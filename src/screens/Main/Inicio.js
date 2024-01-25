@@ -37,6 +37,7 @@ const Inicio = () => {
     Test: require("../../../assets/images/Test.png"),
     Test2: require("../../../assets/images/Test2.jpg"),
     Test3: require("../../../assets/images/Test3.jpg"),
+    Test4: require("../../../assets/images/Test4.jpg"),
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
@@ -108,7 +109,6 @@ const Inicio = () => {
               color="white"
               style={{
                 marginTop: -5,
-                marginLeft: 10,
                 transform: [{ scaleX: -1 }],
               }}
             />
@@ -190,19 +190,7 @@ const Inicio = () => {
             body={
               "Explorar el mundo de las finanzas es embarcarse en un viaje fascinante hacia la libertad financiera. La clave está en la educación continua y la toma de decisiones informadas. Invertir no solo se trata de aumentar tus activos, sino también de comprender los riesgos y cómo gestionarlos. Recuerda: diversificar es vital para equilibrar tu cartera. Y lo más importante, nunca es tarde para empezar a planificar tu futuro financiero. ¡Hagamos de las finanzas una herramienta para alcanzar nuestros sueños! #FinanzasInteligentes #LibertadFinanciera 💹📊"
             }
-            imagen={imageMap["Test3"]}
-          />
-          <Post
-            tipo={"credito"}
-            nombre={"Natasha Ocasio Romanoff"}
-            tiempo={"1 día"}
-            foto={imageMap["Natasha"]}
-            titulo={"¡Ayudame a pagar mi tarjeta de crédito!"}
-            body={
-              "Mi tarjeta corta el 27 y a mi me pagan quincena el 30. Necesito flujo para cerrar el mes y no deber."
-            }
-            solicitado={"25,000.00"}
-            contribuidos={"10,000.00"}
+            imagen={imageMap["Test"]}
           />
           <Post
             tipo={"compartir"}
@@ -212,32 +200,6 @@ const Inicio = () => {
             body={
               "Invertir es dar el primer paso hacia la libertad financiera. Al elegir sabiamente, tus ahorros pueden crecer exponencialmente. ¿Sabías que empezar joven y con constancia es clave para el éxito? Diversifica tus inversiones para minimizar riesgos y maximizar ganancias. ¡No esperes más, comienza hoy mismo a construir tu futuro! #Inversiones #LibertadFinanciera #CrecimientoEconómico 📈💼🌟"
             }
-          />
-          <Post
-            tipo={"invertir"}
-            nombre={"Jose Antonio Quill"}
-            tiempo={"3 días"}
-            foto={imageMap["Quill"]}
-            body={"13.5%"}
-          />
-          <Post
-            tipo={"invertir"}
-            nombre={"Natasha Ocasio Romanoff"}
-            tiempo={"3 días"}
-            foto={imageMap["Natasha"]}
-            body={"13.5%"}
-          />
-          <Post
-            tipo={"credito"}
-            nombre={"Antonio Stark Rivera"}
-            tiempo={"4 día"}
-            foto={imageMap["Antonio"]}
-            titulo={"Quiero empezar mi empresa, ¡me falta un poco más!"}
-            body={
-              "Estoy muy cerca de empezar mi empresa, pero me falta un poco más para poder hacerlo. ¡Ayudame a cumplir mi sueño! Prometo pagar a todos lo antes posible y lograr consolidarme como se debe. ¡Gracias por su apoyo! Veran que no se arrepentiran."
-            }
-            solicitado={"50,000.00"}
-            contribuidos={"38,000.00"}
           />
         </ScrollView>
       </TouchableWithoutFeedback>

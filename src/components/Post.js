@@ -10,7 +10,6 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
@@ -32,6 +31,25 @@ const Post = (props) => {
   const imageMap = {
     Blank: require("../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
+  };
+
+  // Funcion para Obtener un tamaño adaptado para cada imagen
+  const onImageLoad = (event) => {
+    const { width, height } = event.nativeEvent.source;
+    const screenWidth = Dimensions.get("window").width;
+    let newWidth, newHeight;
+
+    if (width > height) {
+      // Imagen horizontal
+      newWidth = screenWidth;
+      newHeight = height / (width / screenWidth);
+    } else {
+      // Imagen vertical
+      newHeight = 350; // Altura fija para imágenes verticales
+      newWidth = width / (height / newHeight);
+    }
+
+    setImageSize({ width: newWidth, height: newHeight });
   };
 
   const deletePost = async (postId) => {
@@ -58,18 +76,6 @@ const Post = (props) => {
   // Calculo del porcentaje de la barra de progreso para un Credito
   const porcentaje =
     parseFloat(props.contribuidos) / parseFloat(props.solicitado);
-
-  // Funcion para Obtener un tamaño adaptado para cada imagen
-  const onImageLoad = (event) => {
-    const { width, height } = event.nativeEvent.source;
-    const screenWidth = Dimensions.get("window").width;
-    const margin = 30; // 10px de margen a cada lado
-    const newWidth = screenWidth - 40 - margin; // 40 es el margen total (20 a cada lado) + margen adicional
-    const scaleFactor = width / newWidth;
-    const imageHeight = height / scaleFactor;
-
-    setImageSize({ width: newWidth, height: imageHeight });
-  };
 
   // Funcion para mostrar el texto completo con Ver Más
   const toggleShowFullText = () => {
@@ -110,20 +116,19 @@ const Post = (props) => {
             </TouchableOpacity>
           )}
           {/* Se evalua si se necesita el espacio para la imagen */}
-          {props.imagen ? (
+          {props.imagen && (
             <View style={styles.imageContainer}>
               <Image
                 source={props.imagen}
-                style={[styles.imagen, imageSize]}
+                style={{ width: imageSize.width, height: imageSize.height }}
                 onLoad={onImageLoad}
-                resizeMode="contain" // Ajustar el tamaño de la imagen
               />
             </View>
-          ) : null}
+          )}
         </>
       )}
 
-      {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  */}
+      {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
       {props.tipo === "credito" && (
         <>
           <Text style={styles.titulo}>{props.titulo}</Text>
@@ -155,9 +160,9 @@ const Post = (props) => {
             </LinearGradient>
           </TouchableOpacity>
         </>
-      )}
+      )} */}
 
-      {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion */}
+      {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
       {props.tipo === "invertir" && (
         <>
           <Text style={styles.titulo}>¡Realice una Inversión!</Text>
@@ -166,7 +171,7 @@ const Post = (props) => {
             <Text style={{ fontWeight: "bold" }}>{props.body}</Text>
           </Text>
         </>
-      )}
+      )} */}
 
       {/* Modal y Tres puntos para eliminar o reportar publicación  */}
       <TouchableOpacity
@@ -281,6 +286,7 @@ const styles = StyleSheet.create({
     color: "grey",
   },
   titulo: {
+    marginHorizontal: 20,
     fontSize: 13,
     color: "#29364d",
     fontWeight: "bold",
@@ -289,6 +295,7 @@ const styles = StyleSheet.create({
   textoBody: {
     marginHorizontal: 20,
     fontSize: 13,
+    marginBottom: 0,
     color: "#29364d",
   },
   textSolicitado: {
@@ -323,19 +330,18 @@ const styles = StyleSheet.create({
   },
   verMas: {
     color: "#21B6D5",
-    marginTop: 5,
     marginLeft: 20,
   },
   imageContainer: {
+    marginTop: 10,
     backgroundColor: "black", // Fondo negro para el espacio sobrante
     alignItems: "center", // Centrar la imagen horizontalmente
     justifyContent: "center", // Centrar la imagen verticalmente
     width: "100%", // Ancho total del contenedor
   },
   imagen: {
-    height: "100%",
-    width: "100%",
     alignSelf: "center",
+    resizeMode: "contain",
   },
   opciones: {
     position: "absolute",
@@ -360,7 +366,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: 15,
+    paddingVertical: 10,
     paddingLeft: 20,
   },
   tuPerfil: {
