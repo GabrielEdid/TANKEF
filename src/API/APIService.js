@@ -5,6 +5,10 @@ export const setToken = (newToken) => {
   token = newToken;
 };
 
+export const getToken = () => {
+  return token;
+};
+
 const axiosInstance = axios.create({
   baseURL: "https://market-web-pr477-x6cn34axca-uc.a.run.app",
 });

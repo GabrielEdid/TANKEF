@@ -2,6 +2,7 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 // Importaciones de Hooks y Componentes
+import { APIGet, setToken, getToken } from "../../API/APIService";
 import PinPad from "../../components/PinPad";
 import { UserContext } from "../../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,39 +14,72 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   const { pin, onSetPin } = route.params;
   const [confirmPin, setConfirmPin] = useState("");
 
-  // Función para guardar valores en el AsyncStorage
+  // Función para convertir la primera letra de cada palabra en mayúscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
+  // Función para guardar valores en el AsyncStorage y
   useEffect(() => {
     if (user && user.loggedIn) {
-      // Se define la información a guardar en el AsyncStorage y se extrae la información del contexto
+      console.log("El token a guardar es: " + getToken());
       const userInfo = {
         pin: user.pin,
         loggedIn: user.loggedIn,
-        userID: user.userID,
-        userToken: user.userToken,
-        telefono: user.telefono,
-        name: user.nombre,
-        apellido1: user.apellidoPaterno,
-        apellido2: user.apellidoMaterno,
-        CURP: user.CURP,
-        email: user.email,
+        userToken: getToken(), // Asegúrate de que getToken() devuelve el valor actualizado
       };
-      // Se guarda la información en el AsyncStorage como userInfo
       AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
         .then(() => console.log("Información guardada con éxito"))
         .catch((error) =>
           console.error("Error guardando la información", error)
         );
     }
-  }, [user]);
+  }, [user]); // Se ejecuta cada vez que el estado 'user' cambia
 
-  // Función para guardar el pin en el contexto y navegar a la pantalla siguiente
-  const handleConfirmPin = () => {
+  // Función para obtener los datos del perfil
+  const fetchProfileData = async () => {
+    const url = "/api/v1/profile";
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener datos del perfil:", result.error);
+      // Manejo del error
+    } else {
+      setUser({
+        ...user,
+        userID: result.data.data.id,
+        telefono: result.data.data.phone,
+        nombre: titleCase(result.data.data.name),
+        apellidoPaterno: titleCase(result.data.data.first_last_name),
+        apellidoMaterno: titleCase(result.data.data.first_last_name),
+        CURP: result.data.data.curp,
+        email: result.data.data.email,
+        fechaNacimiento: result.data.data.dob,
+      });
+      console.log("Datos del perfil:", result.data);
+      // Manejo de los datos del perfil
+    }
+  };
+
+  // Función para guardar valores en el conexto y navegar a la pantalla siguiente
+  const handleConfirmPin = async () => {
     if (confirmPin === pin) {
       setUser({
         ...user,
         pin: confirmPin,
         loggedIn: true,
       });
+
+      // Llamada a la función para obtener los datos del perfil
+      await fetchProfileData();
+
       navigation.navigate("MainFlow", {
         screen: "Perfil",
       });

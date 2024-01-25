@@ -48,7 +48,6 @@ const InitialScreen = ({ navigation }) => {
       // Continuar en caso de éxito
       const userData = response.data.data;
       setToken(response.data.token);
-
       setUser({
         ...user,
         userID: userData.id,

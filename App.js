@@ -9,7 +9,7 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "./src/hooks/UserContext";
-import { UserContext } from "./src/hooks/UserContext";
+import { setToken, getToken } from "./src/API/APIService";
 // Importar pantallas de la aplicación
 import InitialScreen from "./src/screens/LogIn/InitialScreen";
 import Registro1 from "./src/screens/LogIn/Registro1";
@@ -222,28 +222,13 @@ function LoginFlow() {
         // Asignar valores a variables individuales
         const userPin = parsedValue.pin;
         const userLoggedIn = parsedValue.loggedIn;
-        const userId = parsedValue.userID;
-        const userToken = parsedValue.userToken;
-        const userTelefono = parsedValue.telefono;
-        const userName = parsedValue.name;
-        const userApellido1 = parsedValue.apellido1;
-        const userApellido2 = parsedValue.apellido2;
-        const userCURP = parsedValue.CURP;
-        const userEMail = parsedValue.email;
+        setToken(parsedValue.userToken);
 
         console.log(value);
 
         return {
           userPin,
           userLoggedIn,
-          userId,
-          userToken,
-          userTelefono,
-          userName,
-          userApellido1,
-          userApellido2,
-          userCURP,
-          userEMail,
         };
       }
     } catch (error) {
@@ -297,14 +282,6 @@ function LoginFlow() {
         initialParams={{
           userPin: userInfo ? userInfo.userPin : undefined,
           userLoggedIn: userInfo ? userInfo.userLoggedIn : undefined,
-          userId: userInfo ? userInfo.userId : undefined,
-          userToken: userInfo ? userInfo.userToken : undefined,
-          userTelefono: userInfo ? userInfo.userTelefono : undefined,
-          userName: userInfo ? userInfo.userName : undefined,
-          userApellido1: userInfo ? userInfo.userApellido1 : undefined,
-          userApellido2: userInfo ? userInfo.userApellido2 : undefined,
-          userCURP: userInfo ? userInfo.userCURP : undefined,
-          userEMail: userInfo ? userInfo.userEMail : undefined,
         }}
         options={{ headerShown: false }}
       />

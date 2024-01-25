@@ -31,6 +31,7 @@ const initialState = {
   avatar: null,
   // Datos con backend
   userID: "", // ID del usuario en la base de datos
+  userToken: "", // Token de autenticación del usuario
 };
 
 // Componente UserProvider

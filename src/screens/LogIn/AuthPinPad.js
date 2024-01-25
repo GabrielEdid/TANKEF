@@ -2,23 +2,13 @@
 import { Text, View, StyleSheet, Alert } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 // Importaciones de Componentes y Hooks
+import { APIGet, setToken } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import PinPad from "../../components/PinPad";
 
 const AuthPinPad = ({ navigation, route }) => {
   // Estado local y el pin obtenido del AsyncStorage
-  const {
-    userPin,
-    userLoggedIn,
-    userId,
-    userToken,
-    userTelefono,
-    userName,
-    userApellido1,
-    userApellido2,
-    userCURP,
-    userEMail,
-  } = route.params; // Se obtiene el pin del AsyncStorage
+  const { userPin, userLoggedIn } = route.params; // Se obtiene el pin del AsyncStorage
   const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
 
@@ -33,23 +23,40 @@ const AuthPinPad = ({ navigation, route }) => {
       .join(" ");
   }
 
+  // Función para obtener los datos del perfil
+  const fetchProfileData = async () => {
+    const url = "/api/v1/profile";
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener datos del perfil:", result.error);
+      // Manejo del error
+    } else {
+      setToken(result.data.data.token);
+      setUser({
+        ...user,
+        loggedIn: userLoggedIn,
+        pin: userPin,
+        userID: result.data.data.id,
+        telefono: result.data.data.phone,
+        nombre: titleCase(result.data.data.name),
+        apellidoPaterno: titleCase(result.data.data.first_last_name),
+        apellidoMaterno: titleCase(result.data.data.second_last_name),
+        CURP: result.data.data.curp,
+        email: result.data.data.email,
+        fechaNacimiento: result.data.data.dob,
+      });
+      console.log("Datos del perfil:", result.data);
+      // Manejo de los datos del perfil
+    }
+  };
+
   // Función para comparar el pin introducido con el pin del AsyncStorage
   useEffect(() => {
     if (pin.length === 6) {
       if (pin === userPin) {
-        setUser({
-          ...user,
-          userToken: userToken,
-          userID: userId,
-          loggedIn: userLoggedIn,
-          pin: userPin,
-          telefono: userTelefono,
-          nombre: titleCase(userName),
-          apellidoPaterno: titleCase(userApellido1),
-          apellidoMaterno: titleCase(userApellido2),
-          CURP: userCURP,
-          email: userEMail,
-        });
+        fetchProfileData();
         navigation.navigate("MainFlow", {
           screen: "Perfil",
         });
