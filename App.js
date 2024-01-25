@@ -43,43 +43,30 @@ const Drawer = createDrawerNavigator();
 const createTabScreenOptions = (
   iconSource,
   label,
-  iconWidth = 20,
-  iconHeight = 20
+  iconWidth = 25,
+  iconHeight = 25
 ) => ({
   headerShown: false,
-  tabBarLabel: ({ focused, color }) => (
-    <Text
-      style={{
-        marginBottom: -7,
-        color: focused ? "#29364d" : color,
-        fontSize: 12,
-        fontWeight: "500",
-        alignSelf: "center",
-      }}
-    >
-      {label}
-    </Text>
-  ),
   tabBarIcon: ({ focused, color, size }) => (
     <View style={{ alignContent: "center", alignItems: "flex-start" }}>
       <Image
         style={{
           height: 5,
           width: 78,
-          marginTop: -1,
-          tintColor: focused ? "#29364d" : color,
-          backgroundColor: focused ? "#29364d" : "#ffffff",
+          marginBottom: label === "Inicio" ? 8 : 7,
+          tintColor: focused ? "#060B4D" : "#9CA1AA",
+          backgroundColor: focused ? "#060B4D" : "#ffffff",
         }}
       />
       <Image
         source={iconSource}
         style={{
           marginTop: 10,
-          marginBottom: 5,
+          marginBottom: label === "MiRed" || "Crear" ? 0 : 5,
           alignSelf: "center",
           width: iconWidth, // Aumentar tamaño si está enfocado
           height: iconHeight,
-          tintColor: focused ? "#29364d" : color,
+          tintColor: focused ? "#060B4D" : "#9CA1AA",
         }}
       />
     </View>
@@ -132,6 +119,7 @@ function MainFlow() {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarShowLabel: false,
         tabBarStyle: {
           shadowOffset: { width: 0, height: -2 }, // Desplazamiento de la sombra
           shadowOpacity: 0.3, // Opacidad de la sombra
@@ -148,8 +136,8 @@ function MainFlow() {
         options={createTabScreenOptions(
           require("./assets/images/Inicio.png"),
           "Inicio",
-          20,
-          20
+          27,
+          27
         )}
       />
       <Tab.Screen
@@ -157,39 +145,39 @@ function MainFlow() {
         component={MiRedStackScreen}
         options={createTabScreenOptions(
           require("./assets/images/MiRed.png"),
-          "Mi Red",
-          27,
-          20
+          "Red",
+          35,
+          28
         )}
       />
       <Tab.Screen
         name="Crear"
         component={Crear}
         options={createTabScreenOptions(
-          require("./assets/images/Crear.png"),
+          require("./assets/images/Crear1.png"),
           "Crear",
-          20,
-          20
+          28,
+          28
         )}
       />
       <Tab.Screen
         name="Movimientos"
         component={Movimientos}
         options={createTabScreenOptions(
-          require("./assets/images/Movimientos.png"),
-          "Movimientos",
-          18,
-          20
+          require("./assets/images/List.png"),
+          "List",
+          32,
+          28
         )}
       />
       <Tab.Screen
         name="Perfil"
         component={PerfilLoginProgresivo}
         options={createTabScreenOptions(
-          require("./assets/images/Perfil.png"),
-          "Perfil",
-          20,
-          20
+          require("./assets/images/Graph.png"),
+          "Graph",
+          32,
+          28
         )}
       />
     </Tab.Navigator>
@@ -251,11 +239,11 @@ function LoginFlow() {
   }
 
   // Determinar la pantalla inicial basada en el estado de inicio de sesión del usuario
-  const initialRouteName =
-    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";
+  /*const initialRouteName =
+    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";*/
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
-  //const initialRouteName = "MainFlow";
+  const initialRouteName = "MainFlow";
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (
