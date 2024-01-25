@@ -13,6 +13,7 @@ import {
 import React, { useState, useEffect, useContext } from "react";
 import * as ImagePicker from "expo-image-picker";
 // Importaciones de Componentes y Hooks
+import { APIPut } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 
 const EditarPerfil = ({ navigation }) => {
@@ -23,24 +24,15 @@ const EditarPerfil = ({ navigation }) => {
 
   const updateUser = async (userId, userData) => {
     setIsLoading(true);
-    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${userId}`;
+    const url = `/api/v1/users/${userId}`;
 
     try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          // Incluye aquí otros encabezados si son necesarios, como tokens de autenticación
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await APIPut(url, userData);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
-      const data = await response.json();
-      console.log("Usuario actualizado:", data);
+      console.log("Usuario actualizado:", response.data);
       // Maneja aquí la respuesta
       setIsLoading(false);
       navigation.navigate("MainFlow", {

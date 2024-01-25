@@ -8,7 +8,6 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -103,7 +102,7 @@ const Perfil = () => {
         <TouchableOpacity
           style={styles.cuadroLoginProgresivo}
           onPress={() => {
-            navigation.navigate("LoginProgresivo");
+            navigation.navigate("LoginProgresivo2");
           }}
         >
           {/* Texto Incentivo del Recuadro */}

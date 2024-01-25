@@ -61,6 +61,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         CURP: result.data.data.curp,
         email: result.data.data.email,
         fechaNacimiento: result.data.data.dob,
+        avatar: result.data.data.avatar,
       });
       console.log("Datos del perfil:", result.data);
       // Manejo de los datos del perfil
