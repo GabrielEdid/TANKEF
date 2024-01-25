@@ -14,6 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
+import GradientText from "../../components/GradientText";
 import Post from "../../components/Post";
 
 const Inicio = () => {
@@ -53,7 +54,7 @@ const Inicio = () => {
     <>
       <View style={styles.tituloContainer}>
         {/* Titulo */}
-        <Text style={styles.titulo}>TANKEF</Text>
+        <GradientText />
       </View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView style={styles.scrollV}>
