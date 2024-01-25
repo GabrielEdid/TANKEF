@@ -88,7 +88,7 @@ const EditarPerfil = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 3,
+      quality: 1,
       base64: true,
     });
 

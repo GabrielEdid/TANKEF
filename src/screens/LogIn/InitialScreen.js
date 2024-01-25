@@ -14,7 +14,7 @@ import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../hooks/UserContext"; // Contexto para manejar el estado del usuario
 import SpecialInput from "../../components/SpecialInput"; // Componente para entradas de texto especializadas
-import { token, APIPost } from "../../API/APIService";
+import { setToken, APIPost } from "../../API/APIService";
 
 // Componente de pantalla inicial
 const InitialScreen = ({ navigation }) => {
@@ -37,43 +37,46 @@ const InitialScreen = ({ navigation }) => {
   // Función para iniciar sesión
   const signIn = async () => {
     setIsLoading(true);
-    const url =
-      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/sessions";
+    const url = "/api/v1/account/sessions";
     const data = {
       session: { email: email, password: password },
     };
 
-    try {
-      const response = await APIPost(url, data);
-      if (response && response.data) {
-        const userData = response.data.data;
-        const userToken = response.data.token;
+    const response = await APIPost(url, data);
 
-        setUser({
-          ...user,
-          userID: userData.id,
-          telefono: userData.phone,
-          nombre: titleCase(userData.name),
-          apellidoPaterno: titleCase(userData.last_name_1),
-          apellidoMaterno: titleCase(userData.last_name_2),
-          CURP: userData.curp,
-          email: userData.email,
-          userToken: userToken,
-        });
-        navigation.navigate("SetPinPad");
-      } else {
-        throw new Error("Respuesta inesperada del servidor");
+    if (response.data && response.data.data) {
+      // Continuar en caso de éxito
+      const userData = response.data.data;
+      setToken(response.data.token);
+
+      setUser({
+        ...user,
+        userID: userData.id,
+        telefono: userData.phone,
+        nombre: titleCase(userData.name),
+        apellidoPaterno: titleCase(userData.last_name_1),
+        apellidoMaterno: titleCase(userData.last_name_2),
+        CURP: userData.curp,
+        email: userData.email,
+      });
+      navigation.navigate("SetPinPad");
+    } else if (response.error) {
+      // Manejar el error
+      console.error("Error de inicio de sesión:", response.error);
+      let errorMessage = "Error en la solicitud";
+      if (typeof response.error === "object") {
+        errorMessage = Object.values(response.error).flat().join(". ");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      const errorMessage =
-        error.response && error.response.data
-          ? Object.values(error.response.data).flat().join(". ")
-          : "Error desconocido";
       Alert.alert("Error de Inicio de Sesión", errorMessage);
-    } finally {
-      setIsLoading(false);
+    } else {
+      // Manejar otros casos inesperados
+      Alert.alert(
+        "Error de Inicio de Sesión",
+        "Respuesta inesperada del servidor"
+      );
     }
+
+    setIsLoading(false);
   };
 
   // Componente visual

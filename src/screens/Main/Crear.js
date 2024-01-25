@@ -29,7 +29,7 @@ const Crear = ({ navigation }) => {
 
   const postData = async () => {
     setEnabled(false);
-    const url = "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts";
+    const url = "/api/v1/posts";
     const data = {
       post: {
         title: "",
@@ -39,15 +39,17 @@ const Crear = ({ navigation }) => {
       },
     };
 
-    try {
-      const response = await APIPost(url, data);
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al publicar:", response.error);
+      Alert.alert("Error", "No se pudo publicar. Intente nuevamente.");
+    } else {
+      // Continuar en caso de éxito
       setText("");
       setImage(null);
       setImage64(null);
       navigation.navigate("Perfil");
-    } catch (error) {
-      console.error("Error al publicar:", error);
-      Alert.alert("Error", "No se pudo publicar. Intente nuevamente.");
     }
     setEnabled(true);
   };
@@ -57,7 +59,7 @@ const Crear = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 3,
+      quality: 1,
       base64: true,
     });
 
@@ -177,7 +179,7 @@ const Crear = ({ navigation }) => {
           <TouchableOpacity
             style={styles.boton}
             onPress={() => postData()}
-            disabled={!text || !enabled}
+            disabled={!text}
           >
             {/* Se evalua si hay texto y activa el boton con gradiente */}
             {text ? (
