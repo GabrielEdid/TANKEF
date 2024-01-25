@@ -2,7 +2,7 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 // Importaciones de Hooks y Componentes
-import { APIGet, setToken, getToken } from "../../API/APIService";
+import { APIGet, getToken } from "../../API/APIService";
 import PinPad from "../../components/PinPad";
 import { UserContext } from "../../hooks/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -28,7 +28,6 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   // Función para guardar valores en el AsyncStorage y
   useEffect(() => {
     if (user && user.loggedIn) {
-      console.log("El token a guardar es: " + getToken());
       const userInfo = {
         pin: user.pin,
         loggedIn: user.loggedIn,

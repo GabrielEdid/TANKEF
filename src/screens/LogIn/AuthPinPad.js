@@ -33,7 +33,6 @@ const AuthPinPad = ({ navigation, route }) => {
       console.error("Error al obtener datos del perfil:", result.error);
       // Manejo del error
     } else {
-      setToken(result.data.data.token);
       setUser({
         ...user,
         loggedIn: userLoggedIn,

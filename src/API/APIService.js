@@ -1,7 +1,10 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 let token = "";
 
 export const setToken = (newToken) => {
+  console.log("EL NUEVO TOKEN ES:", newToken);
   token = newToken;
 };
 
