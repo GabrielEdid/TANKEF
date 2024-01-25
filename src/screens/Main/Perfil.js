@@ -39,14 +39,15 @@ const Perfil = () => {
   };
 
   const fetchUserPosts = async () => {
-    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${user.userID}/posts`;
+    const url = `/api/v1/users/${user.userID}/posts`;
 
-    try {
-      const response = await APIGet(url, user.userID);
-      const sortedPosts = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener posts:", result.error);
+    } else {
+      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
       setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
 
