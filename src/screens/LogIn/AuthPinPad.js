@@ -11,6 +11,7 @@ const AuthPinPad = ({ navigation, route }) => {
   const { userPin, userLoggedIn } = route.params; // Se obtiene el pin del AsyncStorage
   const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
+  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -48,6 +49,7 @@ const AuthPinPad = ({ navigation, route }) => {
         avatar: result.data.data.avatar,
       });
       console.log("Datos del perfil:", result.data);
+      setIsProfileLoaded(true);
     }
   };
 
@@ -56,15 +58,17 @@ const AuthPinPad = ({ navigation, route }) => {
     if (pin.length === 6) {
       if (pin === userPin) {
         fetchProfileData();
-        navigation.navigate("MainFlow", {
-          screen: "Perfil",
-        });
+        if (isProfileLoaded) {
+          navigation.navigate("MainFlow", {
+            screen: "Perfil",
+          });
+        }
       } else {
         Alert.alert("Acceso Denegado", "PIN incorrecto");
         setPin("");
       }
     }
-  }, [pin, userPin, navigation]);
+  }, [pin, userPin, navigation, isProfileLoaded]);
 
   // Componente visual
   return (

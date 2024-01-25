@@ -111,11 +111,14 @@ const Post = (props) => {
           )}
           {/* Se evalua si se necesita el espacio para la imagen */}
           {props.imagen ? (
-            <Image
-              source={props.imagen}
-              style={[styles.imagen, imageSize]}
-              onLoad={onImageLoad} // Asegúrate de usar onLoad
-            />
+            <View style={styles.imageContainer}>
+              <Image
+                source={props.imagen}
+                style={[styles.imagen, imageSize]}
+                onLoad={onImageLoad}
+                resizeMode="contain" // Ajustar el tamaño de la imagen
+              />
+            </View>
           ) : null}
         </>
       )}
@@ -248,14 +251,10 @@ const Post = (props) => {
 // Estilos del Componente
 const styles = StyleSheet.create({
   Cuadro: {
-    borderWidth: 1.5,
-    borderRadius: 15,
-    borderColor: "#D5D5D5",
     width: "100%",
     marginBottom: 10,
     flex: 1,
-    padding: 15,
-    paddingBottom: 5,
+    paddingVertical: 15,
   },
   header: {
     flexDirection: "row",
@@ -269,6 +268,7 @@ const styles = StyleSheet.create({
   fotoPerfil: {
     width: 57,
     height: 57,
+    marginLeft: 20,
     borderRadius: 50,
   },
   textoNombre: {
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   textoBody: {
+    marginHorizontal: 20,
     fontSize: 13,
     color: "#29364d",
   },
@@ -323,12 +324,18 @@ const styles = StyleSheet.create({
   verMas: {
     color: "#21B6D5",
     marginTop: 5,
+    marginLeft: 20,
+  },
+  imageContainer: {
+    backgroundColor: "black", // Fondo negro para el espacio sobrante
+    alignItems: "center", // Centrar la imagen horizontalmente
+    justifyContent: "center", // Centrar la imagen verticalmente
+    width: "100%", // Ancho total del contenedor
   },
   imagen: {
-    marginTop: 20,
+    height: "100%",
+    width: "100%",
     alignSelf: "center",
-    borderRadius: 15,
-    marginHorizontal: 10,
   },
   opciones: {
     position: "absolute",
@@ -336,13 +343,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   tresPuntos: {
-    fontSize: 25,
+    fontSize: 30,
+    marginTop: 5,
+    fontWeight: "bold",
     color: "#29364d",
+    transform: [{ rotate: "90deg" }],
   },
   linea: {
-    backgroundColor: "#cccccc",
-    height: 1,
-    top: 10,
+    backgroundColor: "#F2F2F2",
+    height: 3,
+    top: 70,
     width: "100%",
     alignSelf: "center",
   },
@@ -351,6 +361,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 15,
+    paddingLeft: 20,
   },
   tuPerfil: {
     width: 32,

@@ -3,6 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
+  TextInput,
+  Image,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -11,15 +13,18 @@ import {
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
+import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
-import GradientText from "../../components/GradientText";
 import Post from "../../components/Post";
 
 const Inicio = () => {
   // Estados y Contexto
   const { user, setUser } = useContext(UserContext);
+  const [text, setText] = useState("");
   const [banners, setBanners] = useState({ investment: "", credit: "" });
 
   // Mapa para cargar todas las imagenes
@@ -30,6 +35,8 @@ const Inicio = () => {
     Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
     Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
     Test: require("../../../assets/images/Test.png"),
+    Test2: require("../../../assets/images/Test2.jpg"),
+    Test3: require("../../../assets/images/Test3.jpg"),
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
@@ -54,11 +61,71 @@ const Inicio = () => {
     <>
       <View style={styles.tituloContainer}>
         {/* Titulo */}
-        <GradientText />
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.4, y: 0.4 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={30}
+            color="#060B4D"
+            style={{ marginTop: 70, marginRight: 10 }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image
+            style={[styles.fotoPerfil, { marginTop: 65 }]}
+            source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
+          />
+        </TouchableOpacity>
       </View>
+      <View style={styles.postContainer}>
+        <Image
+          style={styles.fotoPerfil}
+          source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="¿En que estas pensando?"
+          onChangeText={setText}
+          value={text}
+          maxLength={{}}
+        />
+        <MaskedView
+          style={{ flex: 0.22 }}
+          maskElement={
+            <Ionicons
+              name="ios-image"
+              size={45}
+              color="white"
+              style={{
+                marginTop: -5,
+                marginLeft: 10,
+                transform: [{ scaleX: -1 }],
+              }}
+            />
+          }
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.7, y: 0.7 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+      </View>
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView style={styles.scrollV}>
-          {/* Lista de Datos de Red del Usuario */}
+          {/* Lista de Datos de Red del Usuario 
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -68,8 +135,9 @@ const Inicio = () => {
             <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
             <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
             <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
-          </ScrollView>
-          {/* Anuncio para Invertir */}
+          </ScrollView> */}
+
+          {/* Anuncio para Invertir 
           <TouchableOpacity style={styles.cuadroInvertir}>
             <Text style={styles.texto}>{banners.investment}</Text>
             <LinearGradient
@@ -89,8 +157,9 @@ const Inicio = () => {
                 INVERTIR
               </Text>
             </LinearGradient>
-          </TouchableOpacity>
-          {/* Anuncio para hacer un Crédito */}
+          </TouchableOpacity> */}
+
+          {/* Anuncio para hacer un Crédito 
           <TouchableOpacity style={styles.cuadroCredito}>
             <Text style={[styles.texto, { color: "#29364d" }]}>
               {banners.credit}
@@ -112,7 +181,7 @@ const Inicio = () => {
                 CRÉDITO
               </Text>
             </LinearGradient>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Post
             tipo={"compartir"}
             nombre={"Antonio Stark Rivera"}
@@ -121,7 +190,7 @@ const Inicio = () => {
             body={
               "Explorar el mundo de las finanzas es embarcarse en un viaje fascinante hacia la libertad financiera. La clave está en la educación continua y la toma de decisiones informadas. Invertir no solo se trata de aumentar tus activos, sino también de comprender los riesgos y cómo gestionarlos. Recuerda: diversificar es vital para equilibrar tu cartera. Y lo más importante, nunca es tarde para empezar a planificar tu futuro financiero. ¡Hagamos de las finanzas una herramienta para alcanzar nuestros sueños! #FinanzasInteligentes #LibertadFinanciera 💹📊"
             }
-            imagen={imageMap["Test"]}
+            imagen={imageMap["Test3"]}
           />
           <Post
             tipo={"credito"}
@@ -179,21 +248,43 @@ const Inicio = () => {
 // Estilos de la pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
-    height: 115,
+    paddingHorizontal: 20,
+    flexDirection: "row",
     backgroundColor: "white",
+    paddingBottom: 10,
   },
   titulo: {
-    fontFamily: "conthrax",
-    fontSize: 27,
+    fontFamily: "montserrat",
+    letterSpacing: -3,
+    fontSize: 40,
+    marginTop: 60,
+  },
+  postContainer: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    marginTop: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  fotoPerfil: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  input: {
+    borderRadius: 20,
+    borderColor: "#D5D5D5",
+    borderWidth: 1.5,
+    marginLeft: 10,
+    paddingHorizontal: 15,
+    flex: 1,
     color: "#29364d",
-    marginTop: 70,
-    marginLeft: 20,
-    position: "absolute",
+    fontSize: 18,
   },
   scrollV: {
     flex: 1,
+    marginTop: 3,
     backgroundColor: "white",
-    paddingHorizontal: 20,
   },
   scrollH: {
     height: 110,

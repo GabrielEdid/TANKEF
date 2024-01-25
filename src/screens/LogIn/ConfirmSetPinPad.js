@@ -13,6 +13,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   const { user, setUser } = useContext(UserContext);
   const { pin, onSetPin } = route.params;
   const [confirmPin, setConfirmPin] = useState("");
+  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -64,9 +65,15 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         avatar: result.data.data.avatar,
       });
       console.log("Datos del perfil:", result.data);
-      // Manejo de los datos del perfil
+      setIsProfileLoaded(true);
     }
   };
+
+  useEffect(() => {
+    if (confirmPin === pin) {
+      fetchProfileData();
+    }
+  }, [confirmPin, pin]);
 
   // Función para guardar valores en el conexto y navegar a la pantalla siguiente
   const handleConfirmPin = async () => {
@@ -112,7 +119,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         <PinPad id={false} get={confirmPin} set={setConfirmPin} />
         {/* Logica para activar el boton de Guardar PIN si el PIN tiene el largo esperado */}
       </View>
-      {confirmPin.length === 6 ? (
+      {confirmPin.length === 6 && isProfileLoaded ? (
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => [
