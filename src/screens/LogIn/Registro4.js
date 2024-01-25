@@ -13,6 +13,7 @@ import {
 import React, { useState, useContext, useEffect } from "react";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
+import { APIPost } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import SpecialInput from "../../components/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
@@ -36,67 +37,47 @@ const Registro4 = ({ navigation }) => {
   // Función para crear usuario y manejar el registro
   const createUser = async () => {
     setIsLoading(true); // Activar el indicador de carga
-    // Llamada a la API para registrar usuario
-    fetch(
-      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/registrations",
-      {
-        // Configuración de la solicitud
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // Datos del usuario a registrar proporcionados por el contexto
-          account_registration: {
-            email: user.email,
-            email_confirmation: user.email,
-            password: user.password,
-            password_confirmation: user.password,
-            full_name: user.nombre,
-            last_name_1: user.apellidoPaterno,
-            last_name_2: user.apellidoMaterno,
-            dob: user.fechaNacimiento,
-            curp: user.CURP,
-            phone: user.telefono,
-            gender: gender,
-            born_state: user.estadoNacimiento,
-          },
-        }),
-      }
-    )
-      .then((response) => {
-        // Manejo de respuesta de la API
-        if (!response.ok) {
-          throw response;
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Éxito en la solicitud
-        console.log("Success:", data);
-        Alert.alert(
-          "¡Tu cuenta ha sido creada con éxito!",
-          "Checa tu buzon de entrada para confirmar tu correo e inicia sesión.",
-          [{ text: "Entendido" }],
-          { cancelable: true }
-        );
-        navigation.navigate("InitialScreen");
-      })
-      .catch((errorResponse) => {
-        // Manejo de errores
-        errorResponse.json().then((errorData) => {
-          console.error("Error:", errorData);
-          // Aquí puedes juntar los mensajes de error en un string
-          const errorMessages = Object.values(errorData.errors)
-            .flat()
-            .join(". ");
-          Alert.alert("Error al Registrarse", errorMessages);
-        });
-        //navigation.navigate("Registro4"); //VERIFICAR SI DEJAR ESTA LINEA O NEL
-      })
-      .finally(() => {
-        setIsLoading(false); // Finalizar el indicador de carga
-      });
+
+    const url = "/api/v1/account/registrations";
+    const body = {
+      account_registration: {
+        email: user.email,
+        email_confirmation: user.email,
+        password: user.password,
+        password_confirmation: user.password,
+        full_name: user.nombre,
+        last_name_1: user.apellidoPaterno,
+        last_name_2: user.apellidoMaterno,
+        dob: user.fechaNacimiento,
+        curp: user.CURP,
+        phone: user.telefono,
+        gender: gender,
+        born_state: user.estadoNacimiento,
+      },
+    };
+
+    const result = await APIPost(url, body);
+
+    if (result.error) {
+      console.error("Error:", result.error);
+      // Manejo de errores
+      const errorMessages = result.error.errors
+        ? Object.values(result.error.errors).flat().join(". ")
+        : result.error;
+      Alert.alert("Error al Registrarse", errorMessages);
+    } else {
+      // Éxito en la solicitud
+      console.log("Success:", result.data);
+      Alert.alert(
+        "¡Tu cuenta ha sido creada con éxito!",
+        "Checa tu buzon de entrada para confirmar tu correo e inicia sesión.",
+        [{ text: "Entendido" }],
+        { cancelable: true }
+      );
+      navigation.navigate("InitialScreen");
+    }
+
+    setIsLoading(false); // Finalizar el indicador de carga
   };
 
   // Función para verificar si los campos están completos
