@@ -1,5 +1,6 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 let token = "";
 
@@ -25,8 +26,9 @@ const axiosInstance = axios.create({
 });
 
 const refreshAPI = async () => {
+  console.log("Refreshing token..." + getToken());
   try {
-    const refreshToken = "your_refresh_token_here"; // Replace with your actual refresh token
+    const refreshToken = getToken(); // Replace with your actual refresh token
     const response = await axiosInstance.post("/api/v1/account/refresh_token", {
       token: refreshToken,
     });
