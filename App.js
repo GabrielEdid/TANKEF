@@ -59,7 +59,11 @@ const createTabScreenOptions = (
         }}
       />
       <Image
-        source={iconSource}
+        source={
+          focused && label === "Crear"
+            ? require("./assets/images/Crear2.png")
+            : iconSource
+        }
         style={{
           marginTop: 10,
           marginBottom: label === "MiRed" || "Crear" ? 0 : 5,
