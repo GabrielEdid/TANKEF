@@ -335,7 +335,7 @@ export default App = () => {
   async function loadFonts() {
     await Font.loadAsync({
       conthrax: require("./assets/fonts/conthrax.ttf"),
-      montserrat_bold: require("./assets/fonts/Montserrat-ExtraBold.ttf"),
+      montserrat: require("./assets/fonts/montserrat.ttf"),
     });
     setFontsLoaded(true);
   }

@@ -179,7 +179,7 @@ const Inicio = () => {
 // Estilos de la pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
-    height: 105,
+    height: 115,
     backgroundColor: "white",
   },
   titulo: {
