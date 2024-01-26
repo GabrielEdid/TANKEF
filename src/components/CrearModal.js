@@ -29,7 +29,7 @@ const CrearModal = ({ isVisible, onClose }) => {
 // Estilos para el Modal que aparece si se elimina una conexión
 const styles = StyleSheet.create({
   fullScreenButton: {
-    height: "91.4%",
+    height: "100%",
     width: "100%",
     position: "absolute",
     justifyContent: "flex-end",
