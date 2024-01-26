@@ -24,6 +24,7 @@ import Inicio from "./src/screens/Main/Inicio";
 import MiRed from "./src/screens/Main/MiRed";
 import VerPerfiles from "./src/screens/Main/VerPerfiles";
 import Crear from "./src/screens/Main/Crear";
+import CrearModal from "./src/components/CrearModal";
 import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
 import SolicitudesConexion from "./src/screens/Main/SolicitudesConexion";
@@ -69,6 +70,7 @@ const createTabScreenOptions = (
             : iconSource
         }
         style={{
+          zIndex: 1000,
           marginTop: 10,
           marginBottom: label === "MiRed" || "Crear" ? 0 : 5,
           alignSelf: "center",
@@ -124,71 +126,105 @@ function MiRedStackScreen() {
 }
 
 function MainFlow() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleTabPress = (e, routeName) => {
+    if (routeName === "Crear") {
+      e.preventDefault();
+      setIsModalVisible(true);
+    } else {
+      setIsModalVisible(false);
+    }
+  };
+
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          shadowOffset: { width: 0, height: -2 }, // Desplazamiento de la sombra
-          shadowOpacity: 0.3, // Opacidad de la sombra
-          shadowRadius: 4, // Radio de la sombra
-          elevation: 5, // Elevación para Android
-          shadowColor: "#000000", // Color de la sombra
-          borderTopColor: "transparent", // Color del borde superior
-        },
-      }}
-    >
-      <Tab.Screen
-        name="Inicio"
-        component={Inicio}
-        options={createTabScreenOptions(
-          require("./assets/images/Inicio.png"),
-          "Inicio",
-          27,
-          27
-        )}
-      />
-      <Tab.Screen
-        name="Mi Red"
-        component={MiRedStackScreen}
-        options={createTabScreenOptions(
-          require("./assets/images/MiRed.png"),
-          "Red",
-          35,
-          28
-        )}
-      />
-      <Tab.Screen
-        name="Crear"
-        component={Crear}
-        options={createTabScreenOptions(
-          require("./assets/images/Crear1.png"),
-          "Crear",
-          28,
-          28
-        )}
-      />
-      <Tab.Screen
-        name="Movimientos"
-        component={Movimientos}
-        options={createTabScreenOptions(
-          require("./assets/images/List.png"),
-          "List",
-          32,
-          28
-        )}
-      />
-      <Tab.Screen
-        name="Perfil"
-        component={PerfilLoginProgresivo}
-        options={createTabScreenOptions(
-          require("./assets/images/Graph.png"),
-          "Graph",
-          32,
-          28
-        )}
-      />
-    </Tab.Navigator>
+    <>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            shadowOffset: { width: 0, height: -2 }, // Desplazamiento de la sombra
+            shadowOpacity: 0.3, // Opacidad de la sombra
+            shadowRadius: 4, // Radio de la sombra
+            elevation: 5, // Elevación para Android
+            shadowColor: "#000000", // Color de la sombra
+            borderTopColor: "transparent", // Color del borde superior
+          },
+        }}
+      >
+        <Tab.Screen
+          name="Inicio"
+          component={Inicio}
+          listeners={{
+            tabPress: (e) => handleTabPress(e, "x"),
+          }}
+          options={createTabScreenOptions(
+            require("./assets/images/Inicio.png"),
+            "Inicio",
+            27,
+            27
+          )}
+        />
+        <Tab.Screen
+          name="Mi Red"
+          component={MiRedStackScreen}
+          listeners={{
+            tabPress: (e) => handleTabPress(e, "x"),
+          }}
+          options={createTabScreenOptions(
+            require("./assets/images/MiRed.png"),
+            "Red",
+            35,
+            28
+          )}
+        />
+        <Tab.Screen
+          name="Crear"
+          component={Crear}
+          listeners={{
+            tabPress: (e) => handleTabPress(e, "Crear"),
+          }}
+          options={createTabScreenOptions(
+            require("./assets/images/Crear1.png"),
+            "Crear",
+            28,
+            28
+          )}
+        />
+        <Tab.Screen
+          name="Movimientos"
+          component={Movimientos}
+          listeners={{
+            tabPress: (e) => handleTabPress(e, "x"),
+          }}
+          options={createTabScreenOptions(
+            require("./assets/images/List.png"),
+            "List",
+            32,
+            28
+          )}
+        />
+        <Tab.Screen
+          name="Perfil"
+          component={PerfilLoginProgresivo}
+          listeners={{
+            tabPress: (e) => handleTabPress(e, "x"),
+          }}
+          options={createTabScreenOptions(
+            require("./assets/images/Graph.png"),
+            "Graph",
+            32,
+            28
+          )}
+        />
+      </Tab.Navigator>
+      {isModalVisible ? (
+        <CrearModal
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+        />
+      ) : null}
+    </>
   );
 }
 
@@ -247,11 +283,11 @@ function LoginFlow() {
   }
 
   // Determinar la pantalla inicial basada en el estado de inicio de sesión del usuario
-  const initialRouteName =
-    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";
+  /*const initialRouteName =
+    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";*/
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
-  //const initialRouteName = "MainFlow";
+  const initialRouteName = "MainFlow";
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (
