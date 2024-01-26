@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import { Image, Text, View } from "react-native";
+import { Image, View, Dimensions } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -39,6 +39,10 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
+// Obtener el ancho de la pantalla
+const screenWidth = Dimensions.get("window").width;
+const tabBarIconWidth = screenWidth / 5;
+
 // Estilos comunes para los íconos y textos de la tabBar
 const createTabScreenOptions = (
   iconSource,
@@ -52,7 +56,7 @@ const createTabScreenOptions = (
       <Image
         style={{
           height: 5,
-          width: 78,
+          width: tabBarIconWidth,
           marginBottom: label === "Inicio" ? 8 : 7,
           tintColor: focused ? "#060B4D" : "#9CA1AA",
           backgroundColor: focused ? "#060B4D" : "#ffffff",
@@ -68,7 +72,7 @@ const createTabScreenOptions = (
           marginTop: 10,
           marginBottom: label === "MiRed" || "Crear" ? 0 : 5,
           alignSelf: "center",
-          width: iconWidth, // Aumentar tamaño si está enfocado
+          width: iconWidth,
           height: iconHeight,
           tintColor: focused ? "#060B4D" : "#9CA1AA",
         }}
