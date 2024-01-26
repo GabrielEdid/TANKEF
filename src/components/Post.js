@@ -30,6 +30,8 @@ const Post = (props) => {
   // Mapa para cargar todas las imagenes que se necesiten
   const imageMap = {
     Blank: require("../../assets/images/blankAvatar.jpg"),
+    Like: require("../../assets/images/Like.png"),
+    Comment: require("../../assets/images/Comment.png"),
     // ... más imágenes
   };
 
@@ -173,6 +175,39 @@ const Post = (props) => {
         </>
       )} */}
 
+      {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
+      <View style={styles.linea}></View>
+      <View style={styles.interactionContainer}>
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <TouchableOpacity onPress={() => setLike(!like)}>
+            <Image
+              source={imageMap["Like"]}
+              style={{
+                width: 32,
+                height: 28,
+                tintColor: !like ? "#060B4D" : "#21B6D5",
+              }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {}}>
+            <Image
+              source={imageMap["Comment"]}
+              style={{
+                width: 32,
+                height: 28,
+                tintColor: "#060B4D",
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
+        <TouchableOpacity>
+          <Text style={{ fontSize: 13, color: "#060B4D", marginRight: 20 }}>
+            {props.comentarios} comentarios
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Modal y Tres puntos para eliminar o reportar publicación  */}
       <TouchableOpacity
         style={styles.opciones}
@@ -217,38 +252,6 @@ const Post = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
-
-      {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
-      <View style={styles.linea}></View>
-      <View style={styles.interactionContainer}>
-        <TouchableOpacity style={styles.like} onPress={() => setLike(!like)}>
-          <AntDesign
-            name={like ? "heart" : "hearto"}
-            size={27}
-            color={like ? "red" : "#29364d"}
-          />
-        </TouchableOpacity>
-        <Image
-          source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
-          style={styles.tuPerfil}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Añade un comentario..."
-          onChangeText={setComentario}
-          value={comentario}
-          multiline={true}
-          maxLength={80}
-        />
-        {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
-        {comentario ? (
-          <TouchableOpacity style={styles.publicarContainer}>
-            <Text style={{ fontSize: 10, color: "#00A2FF", paddingTop: 10 }}>
-              Publicar
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-      </View>
     </View>
   );
 };
@@ -278,59 +281,23 @@ const styles = StyleSheet.create({
   },
   textoNombre: {
     fontSize: 14,
-    color: "#29364d",
+    color: "#060B4D",
     fontWeight: "bold",
   },
   textoTiempo: {
     fontSize: 12,
     color: "grey",
   },
-  titulo: {
-    marginHorizontal: 20,
-    fontSize: 13,
-    color: "#29364d",
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
   textoBody: {
     marginHorizontal: 20,
-    fontSize: 13,
+    fontSize: 15,
     marginBottom: 0,
-    color: "#29364d",
-  },
-  textSolicitado: {
-    fontSize: 13,
-    marginBottom: -10,
-    left: 5,
-    color: "#29364d",
-    marginTop: 10,
-  },
-  textContribuidos: {
-    fontSize: 13,
-    left: 5,
-    top: -5,
-    color: "#29364d",
-    marginTop: 10,
-  },
-  cuadroGradient: {
-    width: 317,
-    height: 34,
-    alignSelf: "center",
-    borderRadius: 15,
-    top: 5,
-    marginBottom: 5,
-  },
-  gradient: {
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    width: 317,
-    height: 34,
-    borderRadius: 15,
+    color: "#060B4D",
   },
   verMas: {
     color: "#21B6D5",
     marginLeft: 20,
+    fontSize: 15,
   },
   imageContainer: {
     marginTop: 10,
@@ -352,47 +319,53 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginTop: 5,
     fontWeight: "bold",
-    color: "#29364d",
+    color: "#060B4D",
     transform: [{ rotate: "90deg" }],
   },
   linea: {
     backgroundColor: "#F2F2F2",
     height: 3,
-    top: 70,
+    top: 60,
     width: "100%",
     alignSelf: "center",
   },
   interactionContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingVertical: 10,
+    paddingTop: 10,
     paddingLeft: 20,
   },
-  tuPerfil: {
-    width: 32,
-    height: 32,
-    borderRadius: 50,
-    marginRight: 10,
+  /*  ESTILOS DE LOS OTROS TIPOS DE POST
+  textSolicitado: {
+    fontSize: 13,
+    marginBottom: -10,
+    left: 5,
+    color: "#060B4D",
+    marginTop: 10,
   },
-  input: {
-    flex: 1,
-    height: 40,
-    paddingTop: 10,
-    paddingRight: 7,
-    paddingLeft: 3,
-    fontSize: 10,
-    color: "#29364d",
+  textContribuidos: {
+    fontSize: 13,
+    left: 5,
+    top: -5,
+    color: "#060B4D",
+    marginTop: 10,
   },
-  like: {
-    padding: 10,
+  cuadroGradient: {
+    width: 317,
+    height: 34,
+    alignSelf: "center",
+    borderRadius: 15,
+    top: 5,
+    marginBottom: 5,
   },
-  publicarContainer: {
-    width: 40,
-    height: 32,
+  gradient: {
+    justifyContent: "center",
     alignItems: "center",
-    right: 5,
-  },
+    alignSelf: "center",
+    width: 317,
+    height: 34,
+    borderRadius: 15,
+  },*/
   // Estilos para el Modal que aparece si se presionan los 3 puntos
   fullScreenButton: {
     position: "absolute",

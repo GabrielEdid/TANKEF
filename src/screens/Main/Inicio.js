@@ -98,7 +98,7 @@ const Inicio = () => {
           placeholder="¿En que estas pensando?"
           onChangeText={setText}
           value={text}
-          maxLength={{}}
+          maxLength={500}
         />
         <MaskedView
           style={{ flex: 0.22 }}
@@ -161,7 +161,7 @@ const Inicio = () => {
 
           {/* Anuncio para hacer un Crédito 
           <TouchableOpacity style={styles.cuadroCredito}>
-            <Text style={[styles.texto, { color: "#29364d" }]}>
+            <Text style={[styles.texto, { color: "#060B4D" }]}>
               {banners.credit}
             </Text>
             <LinearGradient
@@ -191,6 +191,7 @@ const Inicio = () => {
               "Explorar el mundo de las finanzas es embarcarse en un viaje fascinante hacia la libertad financiera. La clave está en la educación continua y la toma de decisiones informadas. Invertir no solo se trata de aumentar tus activos, sino también de comprender los riesgos y cómo gestionarlos. Recuerda: diversificar es vital para equilibrar tu cartera. Y lo más importante, nunca es tarde para empezar a planificar tu futuro financiero. ¡Hagamos de las finanzas una herramienta para alcanzar nuestros sueños! #FinanzasInteligentes #LibertadFinanciera 💹📊"
             }
             imagen={imageMap["Test"]}
+            comentarios={3}
           />
           <Post
             tipo={"compartir"}
@@ -200,6 +201,7 @@ const Inicio = () => {
             body={
               "Invertir es dar el primer paso hacia la libertad financiera. Al elegir sabiamente, tus ahorros pueden crecer exponencialmente. ¿Sabías que empezar joven y con constancia es clave para el éxito? Diversifica tus inversiones para minimizar riesgos y maximizar ganancias. ¡No esperes más, comienza hoy mismo a construir tu futuro! #Inversiones #LibertadFinanciera #CrecimientoEconómico 📈💼🌟"
             }
+            comentarios={10}
           />
         </ScrollView>
       </TouchableWithoutFeedback>
@@ -240,12 +242,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     paddingHorizontal: 15,
     flex: 1,
-    color: "#29364d",
+    color: "#060B4D",
     fontSize: 18,
   },
   scrollV: {
     flex: 1,
     marginTop: 3,
+    paddingTop: 0,
     backgroundColor: "white",
   },
   scrollH: {
@@ -256,7 +259,7 @@ const styles = StyleSheet.create({
   },
   cuadroInvertir: {
     flexDirection: "row",
-    backgroundColor: "#29364d",
+    backgroundColor: "#060B4D",
     alignContent: "center",
     height: 80,
     width: "100%",
