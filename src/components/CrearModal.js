@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "flex-end",
     backgroundColor: "rgba(0,0,0,0.5)",
+    bottom: 80, // Dejar espacio para el Tab Navigator
   },
   modalView: {
     position: "absolute",

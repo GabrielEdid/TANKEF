@@ -44,43 +44,49 @@ const Drawer = createDrawerNavigator();
 const screenWidth = Dimensions.get("window").width;
 const tabBarIconWidth = screenWidth / 5;
 
+const Placeholder = () => null;
+
 // Estilos comunes para los íconos y textos de la tabBar
 const createTabScreenOptions = (
   iconSource,
   label,
+  customFocusedTab,
   iconWidth = 25,
   iconHeight = 25
 ) => ({
   headerShown: false,
-  tabBarIcon: ({ focused, color, size }) => (
-    <View style={{ alignContent: "center", alignItems: "flex-start" }}>
-      <Image
-        style={{
-          height: 5,
-          width: tabBarIconWidth,
-          marginBottom: label === "Inicio" ? 8 : 7,
-          tintColor: focused ? "#060B4D" : "#9CA1AA",
-          backgroundColor: focused ? "#060B4D" : "#ffffff",
-        }}
-      />
-      <Image
-        source={
-          focused && label === "Crear"
-            ? require("./assets/images/Crear2.png")
-            : iconSource
-        }
-        style={{
-          zIndex: 1000,
-          marginTop: 10,
-          marginBottom: label === "MiRed" || "Crear" ? 0 : 5,
-          alignSelf: "center",
-          width: iconWidth,
-          height: iconHeight,
-          tintColor: focused ? "#060B4D" : "#9CA1AA",
-        }}
-      />
-    </View>
-  ),
+  tabBarIcon: ({ focused, color, size }) => {
+    const isFocused = customFocusedTab ? customFocusedTab === label : focused;
+    return (
+      <View style={{ alignContent: "center", alignItems: "flex-start" }}>
+        <Image
+          style={{
+            height: 5,
+            width: tabBarIconWidth,
+            marginBottom: label === "Inicio" ? 8 : 7,
+            tintColor: isFocused ? "#060B4D" : "#9CA1AA",
+            backgroundColor: isFocused ? "#060B4D" : "#ffffff",
+          }}
+        />
+        <Image
+          source={
+            isFocused && label === "Crear"
+              ? require("./assets/images/Crear2.png")
+              : iconSource
+          }
+          style={{
+            zIndex: 1000,
+            marginTop: 10,
+            marginBottom: label === "MiRed" || "Crear" ? 0 : 5,
+            alignSelf: "center",
+            width: iconWidth,
+            height: iconHeight,
+            tintColor: isFocused ? "#060B4D" : "#9CA1AA",
+          }}
+        />
+      </View>
+    );
+  },
 });
 
 // Pantalla Perfil con Drawer
@@ -127,13 +133,32 @@ function MiRedStackScreen() {
 
 function MainFlow() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [customFocusedTab, setCustomFocusedTab] = useState("");
+  const [previousActiveTab, setPreviousActiveTab] = useState("");
 
   const handleTabPress = (e, routeName) => {
     if (routeName === "Crear") {
       e.preventDefault();
-      setIsModalVisible(true);
+      if (isModalVisible) {
+        // Close the modal and reset focus to the previous tab
+        setIsModalVisible(false);
+        setCustomFocusedTab(previousActiveTab);
+        setPreviousActiveTab("");
+      } else {
+        // Open the modal and remember the previously focused tab
+        setPreviousActiveTab(customFocusedTab);
+        setIsModalVisible(true);
+        setCustomFocusedTab("Crear");
+      }
     } else {
-      setIsModalVisible(false);
+      if (isModalVisible) {
+        // Close the modal when switching to another tab
+        setIsModalVisible(false);
+        setCustomFocusedTab(routeName);
+        setPreviousActiveTab("");
+      } else {
+        setCustomFocusedTab(routeName);
+      }
     }
   };
 
@@ -156,11 +181,12 @@ function MainFlow() {
           name="Inicio"
           component={Inicio}
           listeners={{
-            tabPress: (e) => handleTabPress(e, "x"),
+            tabPress: (e) => handleTabPress(e, "Inicio"),
           }}
           options={createTabScreenOptions(
             require("./assets/images/Inicio.png"),
             "Inicio",
+            customFocusedTab,
             27,
             27
           )}
@@ -169,24 +195,26 @@ function MainFlow() {
           name="Mi Red"
           component={MiRedStackScreen}
           listeners={{
-            tabPress: (e) => handleTabPress(e, "x"),
+            tabPress: (e) => handleTabPress(e, "Mi Red"),
           }}
           options={createTabScreenOptions(
             require("./assets/images/MiRed.png"),
-            "Red",
+            "Mi Red",
+            customFocusedTab,
             35,
             28
           )}
         />
         <Tab.Screen
           name="Crear"
-          component={Crear}
+          component={Placeholder}
           listeners={{
             tabPress: (e) => handleTabPress(e, "Crear"),
           }}
           options={createTabScreenOptions(
             require("./assets/images/Crear1.png"),
             "Crear",
+            customFocusedTab,
             28,
             28
           )}
@@ -195,11 +223,12 @@ function MainFlow() {
           name="Movimientos"
           component={Movimientos}
           listeners={{
-            tabPress: (e) => handleTabPress(e, "x"),
+            tabPress: (e) => handleTabPress(e, "Movimientos"),
           }}
           options={createTabScreenOptions(
             require("./assets/images/List.png"),
-            "List",
+            "Movimientos",
+            customFocusedTab,
             32,
             28
           )}
@@ -208,11 +237,12 @@ function MainFlow() {
           name="Perfil"
           component={PerfilLoginProgresivo}
           listeners={{
-            tabPress: (e) => handleTabPress(e, "x"),
+            tabPress: (e) => handleTabPress(e, "Perfil"),
           }}
           options={createTabScreenOptions(
             require("./assets/images/Graph.png"),
-            "Graph",
+            "Perfil",
+            customFocusedTab,
             32,
             28
           )}
@@ -221,7 +251,11 @@ function MainFlow() {
       {isModalVisible ? (
         <CrearModal
           isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
+          onClose={() => {
+            setIsModalVisible(false);
+            setCustomFocusedTab(previousActiveTab);
+            setPreviousActiveTab("");
+          }}
         />
       ) : null}
     </>
