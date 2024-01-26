@@ -22,9 +22,9 @@ const EditarPerfil = ({ navigation }) => {
   const [email, setEmail] = useState(user.email);
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateUser = async (userId, userData) => {
+  const updateUser = async (userData) => {
     setIsLoading(true);
-    const url = `/api/v1/users/${userId}`;
+    const url = `/api/v1/users/${user.userID}`;
 
     try {
       const response = await APIPut(url, userData);
@@ -68,7 +68,7 @@ const EditarPerfil = ({ navigation }) => {
     };
 
     try {
-      await updateUser(user.userID, userData);
+      await updateUser(userData);
     } catch (error) {
       console.error("Error al actualizar:", error);
       // Aquí puedes manejar los errores, por ejemplo, mostrando un alerta
@@ -80,13 +80,13 @@ const EditarPerfil = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.5,
       base64: true,
     });
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
-      setUser({
+      await setUser({
         ...user,
         avatar: `data:image/jpeg;base64,${selectedImage.base64}`,
       });

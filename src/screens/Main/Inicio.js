@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
   scrollV: {
     flex: 1,
     marginTop: 3,
-    paddingTop: 0,
     backgroundColor: "white",
   },
   scrollH: {

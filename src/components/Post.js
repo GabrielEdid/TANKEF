@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   fotoPerfil: {
     width: 57,
     height: 57,
-    marginLeft: 20,
+    marginLeft: 10,
     borderRadius: 50,
   },
   textoNombre: {
@@ -289,14 +289,13 @@ const styles = StyleSheet.create({
     color: "grey",
   },
   textoBody: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     fontSize: 15,
-    marginBottom: 0,
     color: "#060B4D",
   },
   verMas: {
     color: "#21B6D5",
-    marginLeft: 20,
+    marginLeft: 10,
     fontSize: 15,
   },
   imageContainer: {
@@ -312,7 +311,7 @@ const styles = StyleSheet.create({
   },
   opciones: {
     position: "absolute",
-    right: 20,
+    right: 10,
     marginTop: 5,
   },
   tresPuntos: {
