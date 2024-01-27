@@ -1,27 +1,87 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
+// Importaciones de React Native y React
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
+// Importaciones de Hooks y Componentes
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 const CrearModal = ({ isVisible, onClose }) => {
+  const [modalY] = useState(new Animated.Value(300)); // Ajusta el valor inicial según la altura de tu modal
+
+  const handleClose = () => {
+    Animated.timing(modalY, {
+      toValue: 300,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(onClose); // Llama a onClose después de que la animación termine
+  };
+
+  useEffect(() => {
+    if (isVisible) {
+      Animated.timing(modalY, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isVisible, modalY]);
+
   return (
     <TouchableOpacity
       style={styles.fullScreenButton}
       activeOpacity={1}
-      onPress={onClose}
+      onPress={() => handleClose()}
     >
-      <View style={styles.modalView}>
-        <Text style={{ fontSize: 13 }}>
-          Si eliminas las conexión deberás volver a solicitarla.
-        </Text>
+      <Animated.View
+        style={[
+          styles.modalView,
+          {
+            transform: [{ translateY: modalY }], // Aplica la animación
+          },
+        ]}
+      >
+        {/* Linea en la parte superior */}
+        <TouchableOpacity onPress={() => handleClose()}>
+          <View
+            style={{
+              height: 10,
+              backgroundColor: "#F0F0F0",
+              width: 150,
+              borderRadius: 10,
+              alignSelf: "center",
+            }}
+          ></View>
+        </TouchableOpacity>
+        {/* Boton Invertir */}
         <TouchableOpacity
           style={styles.buttonModal}
-          onPress={onClose} // Suponiendo que onClose maneja el cierre del modal
+          onPress={() => handleClose()}
         >
-          <Text style={{ color: "red" }}>Eliminar Conexión</Text>
+          <FontAwesome5 name="money-bill-alt" size={30} color="#060B4D" />
+          <Text style={styles.texto}>Invertir</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginTop: 10 }} onPress={onClose}>
-          <Text>Cancelar</Text>
+        {/* Boton Crédito */}
+        <TouchableOpacity
+          style={styles.buttonModal}
+          onPress={() => handleClose()}
+        >
+          <FontAwesome name="credit-card" size={30} color="#060B4D" />
+          <Text style={styles.texto}>Solicitar Crédito</Text>
         </TouchableOpacity>
-      </View>
+        {/* Boton Ahorro */}
+        <TouchableOpacity
+          style={styles.buttonModal}
+          onPress={() => handleClose()}
+        >
+          <FontAwesome5 name="piggy-bank" size={30} color="#060B4D" />
+          <Text style={styles.texto}>Caja de Ahorro</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </TouchableOpacity>
   );
 };
@@ -34,19 +94,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "flex-end",
     backgroundColor: "rgba(0,0,0,0.5)",
-    bottom: 80, // Dejar espacio para el Tab Navigator
+    bottom: 79, // Dejar espacio para el Tab Navigator
   },
   modalView: {
     position: "absolute",
     width: "100%",
     alignSelf: "center",
+    justifyContent: "space-between",
     zIndex: -1, // Poner detrás del TabNavigator
-    height: 200,
+    height: 250,
     backgroundColor: "white",
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     padding: 20,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -57,10 +117,20 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonModal: {
+    flexDirection: "row",
     borderRadius: 20,
     padding: 10,
     elevation: 2,
     marginVertical: 5,
+  },
+  texto: {
+    marginLeft: 15,
+    marginTop: 2,
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    paddingTop: 1,
+    color: "#060B4D",
   },
 });
 

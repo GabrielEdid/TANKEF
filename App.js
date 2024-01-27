@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import { Image, View, Dimensions } from "react-native";
+import { Image, View, Dimensions, Animated } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -140,22 +140,16 @@ function MainFlow() {
     if (routeName === "Crear") {
       e.preventDefault();
       if (isModalVisible) {
-        // Close the modal and reset focus to the previous tab
-        setIsModalVisible(false);
-        setCustomFocusedTab(previousActiveTab);
-        setPreviousActiveTab("");
+        setIsModalVisible(false); // Cierra el modal
       } else {
-        // Open the modal and remember the previously focused tab
         setPreviousActiveTab(customFocusedTab);
         setIsModalVisible(true);
         setCustomFocusedTab("Crear");
       }
     } else {
       if (isModalVisible) {
-        // Close the modal when switching to another tab
-        setIsModalVisible(false);
-        setCustomFocusedTab(routeName);
-        setPreviousActiveTab("");
+        e.preventDefault();
+        setIsModalVisible(false); // Cierra el modal
       } else {
         setCustomFocusedTab(routeName);
       }
@@ -248,7 +242,7 @@ function MainFlow() {
           )}
         />
       </Tab.Navigator>
-      {isModalVisible ? (
+      {isModalVisible && (
         <CrearModal
           isVisible={isModalVisible}
           onClose={() => {
@@ -257,7 +251,7 @@ function MainFlow() {
             setPreviousActiveTab("");
           }}
         />
-      ) : null}
+      )}
     </>
   );
 }
