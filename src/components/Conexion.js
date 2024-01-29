@@ -9,7 +9,6 @@ import {
   Modal,
 } from "react-native";
 // Importaciones de Componentes
-import { AntDesign } from "@expo/vector-icons";
 
 const Conexion = (props) => {
   // Estados y Contexto
@@ -36,7 +35,7 @@ const Conexion = (props) => {
         style={styles.botonElim}
         onPress={() => setModalVisible(true)}
       >
-        <AntDesign name="deleteuser" size={40} color="#29364d" />
+        <Text style={styles.tresPuntos}>...</Text>
       </TouchableOpacity>
 
       {/* Modal para mostrar si se presióna el boton de eliminar */}
@@ -70,37 +69,38 @@ const Conexion = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
-      {/* Linea delgada para dividr cada Request */}
-      <View style={styles.linea}></View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
+    marginTop: 3,
+    paddingHorizontal: 20,
     height: 85,
     width: "100%",
     flexDirection: "row",
   },
   textoNombre: {
     fontSize: 16,
-    top: 20,
-    color: "#29364d",
+    alignSelf: "center",
+    color: "#060B4D",
     fontWeight: "bold",
-    paddingTop: 10,
-    left: 10,
+    marginLeft: 10,
   },
   icon: {
-    height: 57,
-    width: 57,
+    height: 48,
+    width: 48,
     borderRadius: 50,
-    marginTop: 10,
+    alignSelf: "center",
   },
-  botonElim: {
-    height: 40,
-    width: 45,
-    top: 20,
-    right: 5,
+  tresPuntos: {
+    fontSize: 30,
+    marginTop: 20,
+    fontWeight: "bold",
+    color: "#060B4D",
+    transform: [{ rotate: "90deg" }],
   },
   linea: {
     backgroundColor: "#cccccc",

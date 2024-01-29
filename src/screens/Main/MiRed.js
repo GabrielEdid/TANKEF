@@ -15,7 +15,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import { Ionicons, Feather, AntDesign, Foundation } from "@expo/vector-icons";
-import Notificacion from "../../components/Notificacion";
+import Conexion from "../../components/Conexion";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -28,6 +28,7 @@ const MiRed = ({ navigation }) => {
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
+    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
     Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
     Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
     Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
@@ -139,6 +140,24 @@ const MiRed = ({ navigation }) => {
           {focus === "Invitaciones" ? <View style={styles.focusLine} /> : null}
         </TouchableOpacity>
       </View>
+
+      {focus === "MiRed" ? (
+        <View style={{ flex: 1 }}>
+          <Conexion
+            nombre={"Natasha Ocasio Romanoff"}
+            imagen={imageMap["Natasha"]}
+          />
+          <Conexion
+            nombre={"Antonio Stark Rivera"}
+            imagen={imageMap["Antonio"]}
+          />
+          <Conexion nombre={"Jose Antonio Quill"} imagen={imageMap["Quill"]} />
+        </View>
+      ) : null}
+
+      {focus === "Solicitudes" ? <View style={{ flex: 1 }}></View> : null}
+
+      {focus === "Invitaciones" ? <View style={{ flex: 1 }}></View> : null}
 
       {/*<TouchableOpacity
         style={styles.administrar}
