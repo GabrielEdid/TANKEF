@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 // Importaciones de Hooks y Componentes
 import { Ionicons } from "@expo/vector-icons";
-import Request from "../../components/Request";
+import Request from "../../../components/Componentes Olvidados/Request";
 
 const SolicitudesConexion = ({ navigation }) => {
   // Estados y Contexto
@@ -19,9 +19,9 @@ const SolicitudesConexion = ({ navigation }) => {
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
-    Bruce: require("../../../assets/images/Fotos_Personas/Bruce.png"),
-    Carol: require("../../../assets/images/Fotos_Personas/Carol.png"),
-    Jane: require("../../../assets/images/Fotos_Personas/Jane.png"),
+    Bruce: require("../../../../assets/images/Fotos_Personas/Bruce.png"),
+    Carol: require("../../../../assets/images/Fotos_Personas/Carol.png"),
+    Jane: require("../../../../assets/images/Fotos_Personas/Jane.png"),
     // ... más imágenes
   };
 
@@ -50,7 +50,7 @@ const SolicitudesConexion = ({ navigation }) => {
         onPress={() => navigation.navigate("MisConexiones")}
       >
         <Image
-          source={require("../../../assets/images/MiRed.png")}
+          source={require("../../../../assets/images/MiRed.png")}
           style={styles.imagen}
         />
         <Text style={styles.texto}>Mis Conexiones</Text>

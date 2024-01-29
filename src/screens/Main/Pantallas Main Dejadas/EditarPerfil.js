@@ -13,8 +13,8 @@ import {
 import React, { useState, useEffect, useContext } from "react";
 import * as ImagePicker from "expo-image-picker";
 // Importaciones de Componentes y Hooks
-import { APIPut } from "../../API/APIService";
-import { UserContext } from "../../hooks/UserContext";
+import { APIPut } from "../../../API/APIService";
+import { UserContext } from "../../../hooks/UserContext";
 
 const EditarPerfil = ({ navigation }) => {
   // Estados locales
@@ -133,7 +133,7 @@ const EditarPerfil = ({ navigation }) => {
               source={
                 user.avatar
                   ? { uri: user.avatar }
-                  : require("../../../assets/images/blankAvatar.jpg")
+                  : require("../../../../assets/images/blankAvatar.jpg")
               }
             />
             <View>

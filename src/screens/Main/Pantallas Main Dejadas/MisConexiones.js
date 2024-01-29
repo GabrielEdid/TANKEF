@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, ScrollView } from "react-native";
 import React, { useState } from "react";
 // Importaciones de Hooks y Componentes
 import { Ionicons } from "@expo/vector-icons";
-import Conexion from "../../components/Conexion";
+import Conexion from "../../../components/Conexion";
 
 const MisConexiones = () => {
   // Estados y Contexto
@@ -11,12 +11,12 @@ const MisConexiones = () => {
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
-    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
-    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
-    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
-    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
-    Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
-    Test: require("../../../assets/images/Test.png"),
+    Natasha: require("../../../../assets/images/Fotos_Personas/Natahsa.png"),
+    Quill: require("../../../../assets/images/Fotos_Personas/Quill.png"),
+    Clint: require("../../../../assets/images/Fotos_Personas/Clint.png"),
+    Antonio: require("../../../../assets/images/Fotos_Personas/Antonio.png"),
+    Steve: require("../../../../assets/images/Fotos_Personas/Steve.png"),
+    Test: require("../../../../assets/images/Test.png"),
     // ... más imágenes
   };
 

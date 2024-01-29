@@ -14,9 +14,9 @@ import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
-import { UserContext } from "../../hooks/UserContext";
+import { UserContext } from "../../../hooks/UserContext";
 import { EvilIcons } from "@expo/vector-icons";
-import { APIPost } from "../../API/APIService";
+import { APIPost } from "../../../API/APIService";
 
 const Crear = ({ navigation }) => {
   // Estados y Contexto
@@ -96,7 +96,7 @@ const Crear = ({ navigation }) => {
                   tintColor: "white",
                   marginBottom: 10,
                 }}
-                source={require("../../../assets/images/Invertir.png")}
+                source={require("../../../../assets/images/Invertir.png")}
               />
               <Text style={styles.textoAcciones}>INVERTIR</Text>
             </LinearGradient>
@@ -116,7 +116,7 @@ const Crear = ({ navigation }) => {
                   tintColor: "white",
                   marginBottom: 10,
                 }}
-                source={require("../../../assets/images/Credito.png")}
+                source={require("../../../../assets/images/Credito.png")}
               />
               <Text style={styles.textoAcciones}>CRÉDITO</Text>
             </LinearGradient>

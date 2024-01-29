@@ -23,15 +23,15 @@ import AuthPinPad from "./src/screens/LogIn/AuthPinPad";
 import Inicio from "./src/screens/Main/Inicio";
 import MiRed from "./src/screens/Main/MiRed";
 import VerPerfiles from "./src/screens/Main/VerPerfiles";
-import Crear from "./src/screens/Main/Crear";
+import Crear from "./src/screens/Main/Pantallas Main Dejadas/Crear";
 import CrearModal from "./src/components/CrearModal";
 import Movimientos from "./src/screens/Main/Movimientos";
 import Perfil from "./src/screens/Main/Perfil";
-import SolicitudesConexion from "./src/screens/Main/SolicitudesConexion";
-import MisConexiones from "./src/screens/Main/MisConexiones";
+import SolicitudesConexion from "./src/screens/Main/Pantallas Main Dejadas/SolicitudesConexion";
+import MisConexiones from "./src/screens/Main/Pantallas Main Dejadas/MisConexiones";
 import LoginProgresivo from "./src/screens/Main/LoginProgresivo";
 import LoginProgresivo2 from "./src/screens/Main/LoginProgresivo2";
-import EditarPerfil from "./src/screens/Main/EditarPerfil";
+import EditarPerfil from "./src/screens/Main/Pantallas Main Dejadas/EditarPerfil";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
