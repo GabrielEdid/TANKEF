@@ -9,8 +9,9 @@ import {
   Modal,
 } from "react-native";
 // Importaciones de Componentes
+import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
-const Conexion = (props) => {
+const Invitaciones = (props) => {
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,11 +32,21 @@ const Conexion = (props) => {
         <Text style={styles.textoNombre}>{props.nombre}</Text>
       </View>
       {/* Para Mostrar Boton de Eliminar */}
-      <TouchableOpacity
-        style={styles.botonElim}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.tresPuntos}>...</Text>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <MaterialIcons
+          name="highlight-remove"
+          size={45}
+          color="#F95C5C"
+          style={{ marginTop: 20 }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={{}}>
+        <FontAwesome5
+          name="check-circle"
+          size={40}
+          color="#31CC18"
+          style={{ marginTop: 22.5, marginLeft: 10 }}
+        />
       </TouchableOpacity>
 
       {/* Modal para mostrar si se presióna el boton de eliminar */}
@@ -52,13 +63,13 @@ const Conexion = (props) => {
         >
           <View style={styles.modalView}>
             <Text style={{ fontSize: 13 }}>
-              Si eliminas las conexión deberás volver a solicitarla.
+              Si eliminas la solicitud deberás volver a enviarla.
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}
               onPress={() => handleRemove()}
             >
-              <Text style={{ color: "red" }}>Eliminar Conexión</Text>
+              <Text style={{ color: "red" }}>Eliminar Solicitud</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{ marginTop: 10 }}
@@ -94,13 +105,6 @@ const styles = StyleSheet.create({
     width: 48,
     borderRadius: 50,
     alignSelf: "center",
-  },
-  tresPuntos: {
-    fontSize: 30,
-    marginTop: 20,
-    fontWeight: "bold",
-    color: "#060B4D",
-    transform: [{ rotate: "90deg" }],
   },
   linea: {
     backgroundColor: "#cccccc",
@@ -145,4 +149,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Conexion;
+export default Invitaciones;

@@ -16,6 +16,8 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { UserContext } from "../../hooks/UserContext";
 import { Ionicons, Feather, AntDesign, Foundation } from "@expo/vector-icons";
 import Conexion from "../../components/Conexion";
+import Solicitudes from "../../components/Solicitudes";
+import Invitaciones from "../../components/Invitaciones";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -33,6 +35,9 @@ const MiRed = ({ navigation }) => {
     Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
     Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
     Blank: require("../../../assets/images/blankAvatar.jpg"),
+    Bruce: require("../../../assets/images/Fotos_Personas/Bruce.png"),
+    Carol: require("../../../assets/images/Fotos_Personas/Carol.png"),
+    Jane: require("../../../assets/images/Fotos_Personas/Jane.png"),
     // ... más imágenes
   };
 
@@ -155,9 +160,27 @@ const MiRed = ({ navigation }) => {
         </View>
       ) : null}
 
-      {focus === "Solicitudes" ? <View style={{ flex: 1 }}></View> : null}
+      {focus === "Solicitudes" ? (
+        <View style={{ flex: 1 }}>
+          <Solicitudes
+            nombre={"Bruce García Banner"}
+            imagen={imageMap["Bruce"]}
+          />
+          <Solicitudes
+            nombre={"Carol Danvers Miller"}
+            imagen={imageMap["Carol"]}
+          />
+        </View>
+      ) : null}
 
-      {focus === "Invitaciones" ? <View style={{ flex: 1 }}></View> : null}
+      {focus === "Invitaciones" ? (
+        <View style={{ flex: 1 }}>
+          <Invitaciones
+            nombre={"Janet Foster Cruz"}
+            imagen={imageMap["Jane"]}
+          />
+        </View>
+      ) : null}
 
       {/*<TouchableOpacity
         style={styles.administrar}
