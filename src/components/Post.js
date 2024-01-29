@@ -193,7 +193,7 @@ const Post = (props) => {
             <Image
               source={imageMap["Comment"]}
               style={{
-                width: 32,
+                width: 33,
                 height: 28,
                 tintColor: "#060B4D",
               }}

@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontFamily: "montserrat",
-    letterSpacing: -3,
+    letterSpacing: -4,
     fontSize: 40,
     marginTop: 60,
   },
