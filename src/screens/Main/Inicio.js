@@ -16,8 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import Post from "../../components/Post";
 
@@ -250,7 +249,8 @@ const styles = StyleSheet.create({
     marginTop: 3,
     backgroundColor: "white",
   },
-  scrollH: {
+  // Estilos de lo que se ha eliminado
+  /*scrollH: {
     height: 110,
     width: "100%",
     paddingTop: 6,
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     flex: 1.4,
     right: 10,
     borderRadius: 15,
-  },
+  },*/
 });
 
 export default Inicio;

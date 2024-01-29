@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   fotoPerfil: {
     width: 57,
     height: 57,
-    marginLeft: 10,
+    marginLeft: 20,
     borderRadius: 50,
   },
   textoNombre: {
@@ -289,13 +289,13 @@ const styles = StyleSheet.create({
     color: "grey",
   },
   textoBody: {
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     fontSize: 15,
     color: "#060B4D",
   },
   verMas: {
     color: "#21B6D5",
-    marginLeft: 10,
+    marginLeft: 20,
     fontSize: 15,
   },
   imageContainer: {
