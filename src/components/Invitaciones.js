@@ -35,7 +35,7 @@ const Invitaciones = (props) => {
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <MaterialIcons
           name="highlight-remove"
-          size={45}
+          size={46}
           color="#F95C5C"
           style={{ marginTop: 20 }}
         />
