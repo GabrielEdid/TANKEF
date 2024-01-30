@@ -21,6 +21,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   const { user, setUser } = useContext(UserContext);
   const [text, setText] = useState("");
   const [modalQuien, setModalQuien] = useState(false);
+  const [quien, setQuien] = useState("Toda la Red");
 
   const handleFocus = () => {
     setIsModalVisible(true);
@@ -34,6 +35,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   // Mapa para cargar todas las imagenes
   const imageMap = {
     Blank: require("../../assets/images/blankAvatar.jpg"),
+    MiRed: require("../../assets/images/MiRed.png"),
     // ... más imágenes
   };
 
@@ -120,7 +122,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               marginTop: -7.5,
             }}
           >
-            <Text>Toda la Red</Text>
+            <Text>{quien}</Text>
           </TouchableOpacity>
         </Text>
 
@@ -147,24 +149,16 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                 style={styles.buttonModal}
                 onPress={() => setModalQuien(false)}
               >
-                <FontAwesome5 name="money-bill-alt" size={30} color="#060B4D" />
-                <Text style={styles.texto}>Invertir</Text>
+                <Entypo name="globe" size={35} color="#060B4D" />
+                <Text style={styles.texto}>Toda la Red</Text>
               </TouchableOpacity>
               {/* Boton Crédito */}
               <TouchableOpacity
                 style={styles.buttonModal}
                 onPress={() => setModalQuien(false)}
               >
-                <FontAwesome name="credit-card" size={30} color="#060B4D" />
-                <Text style={styles.texto}>Solicitar Crédito</Text>
-              </TouchableOpacity>
-              {/* Boton Ahorro */}
-              <TouchableOpacity
-                style={styles.buttonModal}
-                onPress={() => setModalQuien(false)}
-              >
-                <FontAwesome5 name="piggy-bank" size={30} color="#060B4D" />
-                <Text style={styles.texto}>Caja de Ahorro</Text>
+                <Image style={styles.miRed} source={imageMap["MiRed"]} />
+                <Text style={styles.texto}>Mis Conexiones</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -249,6 +243,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "flex-end",
     backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  miRed: {
+    width: 37,
+    height: 30,
   },
 });
 
