@@ -260,6 +260,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     paddingHorizontal: 15,
     flex: 1,
+    fontFamily: "opensans",
     color: "#060B4D",
     fontSize: 18,
   },

@@ -202,7 +202,14 @@ const Post = (props) => {
         </View>
         {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
         <TouchableOpacity>
-          <Text style={{ fontSize: 13, color: "#060B4D", marginRight: 20 }}>
+          <Text
+            style={{
+              fontSize: 13,
+              color: "#060B4D",
+              marginRight: 20,
+              fontFamily: "opensans",
+            }}
+          >
             {props.comentarios} comentarios
           </Text>
         </TouchableOpacity>
@@ -281,20 +288,24 @@ const styles = StyleSheet.create({
   },
   textoNombre: {
     fontSize: 18,
+    fontFamily: "opensansbold",
     color: "#060B4D",
     fontWeight: "bold",
   },
   textoTiempo: {
     fontSize: 12,
+    fontFamily: "opensans",
     color: "#060B4D",
   },
   textoBody: {
     marginHorizontal: 20,
+    fontFamily: "opensans",
     fontSize: 15,
     color: "#060B4D",
   },
   verMas: {
     color: "#21B6D5",
+    fontFamily: "opensans",
     marginLeft: 20,
     fontSize: 15,
   },
@@ -317,7 +328,7 @@ const styles = StyleSheet.create({
   tresPuntos: {
     fontSize: 30,
     marginTop: 5,
-    fontWeight: "bold",
+    fontFamily: "opensansbold",
     color: "#060B4D",
     transform: [{ rotate: "90deg" }],
   },

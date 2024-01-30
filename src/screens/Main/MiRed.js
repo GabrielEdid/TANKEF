@@ -266,6 +266,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#060B4D",
     fontSize: 18,
+    fontFamily: "opensans",
   },
   search: {
     position: "absolute",
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 19,
-    fontWeight: "bold",
+    fontFamily: "opensansbold",
   },
   focusLine: {
     height: 7,

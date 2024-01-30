@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: "center",
     color: "#060B4D",
-    fontWeight: "bold",
+    fontFamily: "opensansbold",
     marginLeft: 10,
   },
   icon: {
