@@ -213,14 +213,14 @@ function MainFlow() {
           )}
         />
         <Tab.Screen
-          name="Movimientos"
+          name="MiTankef"
           component={Movimientos}
           listeners={{
-            tabPress: (e) => handleTabPress(e, "Movimientos"),
+            tabPress: (e) => handleTabPress(e, "MiTankef"),
           }}
           options={createTabScreenOptions(
-            require("./assets/images/List.png"),
-            "Movimientos",
+            require("./assets/images/Graph.png"),
+            "MiTankef",
             customFocusedTab,
             32,
             28
@@ -233,11 +233,11 @@ function MainFlow() {
             tabPress: (e) => handleTabPress(e, "Perfil"),
           }}
           options={createTabScreenOptions(
-            require("./assets/images/Graph.png"),
+            require("./assets/images/Perfil.png"),
             "Perfil",
             customFocusedTab,
-            32,
-            28
+            30,
+            30
           )}
         />
       </Tab.Navigator>
