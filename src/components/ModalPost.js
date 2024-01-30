@@ -367,7 +367,6 @@ const styles = StyleSheet.create({
   textoNombre: {
     fontSize: 18,
     color: "#060B4D",
-    fontWeight: "bold",
     marginLeft: 10,
     fontFamily: "opensansbold",
   },
