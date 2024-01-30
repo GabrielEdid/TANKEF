@@ -14,18 +14,18 @@ import {
 import React, { useState, useContext, useEffect } from "react";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
-import { Entypo, FontAwesome5, FontAwesome } from "@expo/vector-icons";
+import {
+  Entypo,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   // Estados y Contexto
   const { user, setUser } = useContext(UserContext);
   const [text, setText] = useState("");
   const [modalQuien, setModalQuien] = useState(false);
-  const [quien, setQuien] = useState("Toda la Red");
-
-  const handleFocus = () => {
-    setIsModalVisible(true);
-  };
+  const [quien, setQuien] = useState("Mis Conexiones");
 
   const handleModalClose = () => {
     setIsModalVisible(false);
@@ -64,13 +64,14 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               fontSize: 30,
               color: "#060B4D",
               textAlign: "center",
+              fontFamily: "opensans",
             }}
           >
             Post
           </Text>
           <TouchableOpacity
             style={[
-              { flex: 0.9, justifyContent: "center", alignItems: "center" },
+              { backgroundColor: text ? "#060B4D" : "#D5D5D5" },
               styles.botonCompartir,
             ]} // Adjusted for centering the text
             onPress={() => handleModalClose()}
@@ -78,9 +79,9 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
             <Text
               style={{
                 fontSize: 17,
-                color: "white",
+                color: text ? "white" : "grey",
                 textAlign: "center",
-                fontWeight: "bold",
+                fontFamily: "opensansbold",
               }}
             >
               Compartir
@@ -104,7 +105,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
             <Text
               style={[
                 styles.textoNombre,
-                { fontSize: 12, fontWeight: "regular" },
+                { fontSize: 12, fontFamily: "opensans" },
               ]}
             >
               conexiones
@@ -112,20 +113,59 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
           </View>
         </View>
 
-        <Text style={{ marginTop: 10, color: "#060B4D", fontSize: 15 }}>
-          Compartir a{" "}
-          <TouchableOpacity
-            onPress={() => setModalQuien(true)}
+        <TouchableOpacity
+          onPress={() => setModalQuien(true)}
+          style={{
+            marginTop: 15,
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Text
+            style={{ color: "#060B4D", fontSize: 15, fontFamily: "opensans" }}
+          >
+            Compartir a{" "}
+          </Text>
+          <View
             style={{
+              flexDirection: "row",
               backgroundColor: "#2FF690",
               padding: 5,
-              marginTop: -7.5,
+              marginLeft: 5,
+              alignItems: "center",
             }}
           >
-            <Text>{quien}</Text>
-          </TouchableOpacity>
-        </Text>
+            {quien === "Toda la Red" ? (
+              <Entypo name="globe" size={20} color="#060B4D" />
+            ) : (
+              <Image
+                style={{ width: 22, height: 17 }}
+                source={imageMap["MiRed"]}
+              />
+            )}
+            <Text style={{ marginLeft: 10, fontFamily: "opensans" }}>
+              {quien}
+            </Text>
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={24}
+              color="#060B4D"
+              style={{ marginLeft: 10 }}
+            />
+          </View>
+        </TouchableOpacity>
 
+        <TextInput
+          style={styles.input}
+          placeholder=" ¿De que quieres hablar?"
+          placeholderTextColor="#9B9DB6"
+          onChangeText={setText}
+          multiline={true}
+          value={text}
+          maxLength={500}
+        />
+
+        {/* Modal de Quien puede ver el post */}
         <Modal animationType="slide" transparent={true} visible={modalQuien}>
           <TouchableOpacity
             style={styles.fullScreenButton}
@@ -144,21 +184,65 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   }}
                 ></View>
               </TouchableOpacity>
-              {/* Boton Invertir */}
+              {/* Boton Toda la Red */}
               <TouchableOpacity
                 style={styles.buttonModal}
-                onPress={() => setModalQuien(false)}
+                onPress={() => [setModalQuien(false), setQuien("Toda la Red")]}
               >
                 <Entypo name="globe" size={35} color="#060B4D" />
-                <Text style={styles.texto}>Toda la Red</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.texto}>Toda la Red</Text>
+                  <Text style={styles.texto2}>
+                    El post lo podrá ver toda la comunidad Tankef.
+                  </Text>
+                </View>
+                {quien === "Toda la Red" ? (
+                  <MaterialCommunityIcons
+                    name="radiobox-marked"
+                    size={32}
+                    color="#060B4D"
+                    style={{ marginTop: 12 }}
+                  />
+                ) : (
+                  <Entypo
+                    name="circle"
+                    size={28}
+                    color="#060B4D"
+                    style={{ marginTop: 13 }}
+                  />
+                )}
               </TouchableOpacity>
-              {/* Boton Crédito */}
+
+              {/* Boton Mis Conexiones */}
               <TouchableOpacity
                 style={styles.buttonModal}
-                onPress={() => setModalQuien(false)}
+                onPress={() => [
+                  setModalQuien(false),
+                  setQuien("Mis Conexiones"),
+                ]}
               >
                 <Image style={styles.miRed} source={imageMap["MiRed"]} />
-                <Text style={styles.texto}>Mis Conexiones</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.texto}>Mis Conexiones</Text>
+                  <Text style={styles.texto2}>
+                    Solo tus conexiones verán el post.
+                  </Text>
+                </View>
+                {quien === "Mis Conexiones" ? (
+                  <MaterialCommunityIcons
+                    name="radiobox-marked"
+                    size={32}
+                    color="#060B4D"
+                    style={{ marginTop: 12 }}
+                  />
+                ) : (
+                  <Entypo
+                    name="circle"
+                    size={28}
+                    color="#060B4D"
+                    style={{ marginTop: 13 }}
+                  />
+                )}
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -186,10 +270,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   botonCompartir: {
-    backgroundColor: "#060B4D",
     paddingVertical: 10,
     padding: 10,
     borderRadius: 5,
+    flex: 0.9,
+    justifyContent: "center",
+    alignItems: "center",
   },
   fotoPerfilModal: {
     width: 57,
@@ -201,6 +287,16 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontWeight: "bold",
     marginLeft: 10,
+    fontFamily: "opensansbold",
+  },
+  input: {
+    marginTop: 20,
+    fontSize: 18,
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    textAlignVertical: "top",
+    fontFamily: "opensans",
   },
   modalQuienView: {
     width: "100%",
@@ -232,9 +328,17 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 2,
     fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontFamily: "opensansbold",
     paddingTop: 1,
+    color: "#060B4D",
+  },
+  texto2: {
+    marginLeft: 15,
+    marginTop: 2,
+    fontSize: 15,
+    paddingTop: 1,
+    width: 250,
+    fontFamily: "opensans",
     color: "#060B4D",
   },
   fullScreenButton: {

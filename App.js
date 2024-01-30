@@ -403,6 +403,8 @@ export default App = () => {
     await Font.loadAsync({
       conthrax: require("./assets/fonts/conthrax.ttf"),
       montserrat: require("./assets/fonts/montserrat.ttf"),
+      opensans: require("./assets/fonts/opensans.ttf"),
+      opensansbold: require("./assets/fonts/opensansbold.ttf"),
     });
     setFontsLoaded(true);
   }
