@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Dimensions,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -30,6 +31,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   const [quien, setQuien] = useState("Mis Conexiones");
   const [image, setImage] = useState(null);
   const [image64, setImage64] = useState(null);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
   const handleModalClose = () => {
     setIsModalVisible(false);
@@ -54,10 +56,19 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
-      setImage64(selectedImage.base64);
       setImage(selectedImage.uri);
+      setImage64(selectedImage.base64);
+      setImageSize({
+        width: selectedImage.width,
+        height: selectedImage.height,
+      });
     }
   };
+
+  const windowWidth = Dimensions.get("window").width;
+  const scaledHeight = imageSize.height
+    ? (imageSize.height / imageSize.width) * windowWidth
+    : 0;
 
   // Componente visual
   return (
@@ -69,9 +80,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.modalView}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+          <View style={styles.headers}>
             <TouchableOpacity
               style={{
                 flex: 1,
@@ -144,7 +153,12 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
             }}
           >
             <Text
-              style={{ color: "#060B4D", fontSize: 15, fontFamily: "opensans" }}
+              style={{
+                color: "#060B4D",
+                fontSize: 15,
+                fontFamily: "opensans",
+                marginLeft: 20,
+              }}
             >
               Compartir a{" "}
             </Text>
@@ -188,23 +202,41 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
           {image && (
             <Image
               source={{ uri: image }}
-              style={styles.imagen}
-              resizeMode="contain"
+              style={[
+                styles.imagen,
+                { width: windowWidth, height: scaledHeight },
+              ]}
             />
           )}
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              alignSelf: "center",
-              justifyContent: "space-between",
-              marginBottom: 10,
-            }}
-            onPress={() => pickImage()}
-          >
-            <FontAwesome name="image" size={30} color="#060B4D" />
-            <Text style={styles.textoImagen}>Agregar Imagen</Text>
-          </TouchableOpacity>
+          {!image ? (
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                alignSelf: "center",
+                justifyContent: "space-between",
+                marginBottom: 20,
+              }}
+              onPress={() => pickImage()}
+            >
+              <FontAwesome name="image" size={30} color="#060B4D" />
+              <Text style={styles.textoImagen}>Agregar Imagen</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                alignSelf: "center",
+                justifyContent: "space-between",
+                marginBottom: 20,
+              }}
+              onPress={() => setImage(null)}
+            >
+              <FontAwesome name="trash-o" size={30} color="#F95C5C" />
+              <Text style={styles.textoImagen}>Eliminar Imagen</Text>
+            </TouchableOpacity>
+          )}
           {/* Modal de Quien puede ver el post */}
           <Modal animationType="slide" transparent={true} visible={modalQuien}>
             <TouchableOpacity
@@ -303,7 +335,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -312,6 +343,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  headers: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   botonCompartir: {
     paddingVertical: 10,
@@ -325,6 +362,7 @@ const styles = StyleSheet.create({
     width: 57,
     height: 57,
     borderRadius: 30,
+    marginLeft: 20,
   },
   textoNombre: {
     fontSize: 18,
@@ -334,6 +372,7 @@ const styles = StyleSheet.create({
     fontFamily: "opensansbold",
   },
   input: {
+    paddingHorizontal: 20,
     marginTop: 20,
     fontSize: 18,
     flex: 1,
@@ -341,11 +380,11 @@ const styles = StyleSheet.create({
     height: "100%",
     textAlignVertical: "top",
     fontFamily: "opensans",
-    backgroundColor: "#F0F0F0",
   },
   imagen: {
-    width: "100%",
-    marginVertical: 7,
+    marginTop: 5,
+    marginBottom: 10,
+    resizeMode: "contain",
   },
   textoImagen: {
     fontSize: 15,
@@ -401,7 +440,7 @@ const styles = StyleSheet.create({
     width: "100%",
     position: "absolute",
     justifyContent: "flex-end",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0)",
   },
   miRed: {
     width: 37,
