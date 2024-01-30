@@ -125,9 +125,8 @@ const styles = StyleSheet.create({
   },
   texto: {
     marginLeft: 15,
-    marginTop: 2,
     fontSize: 24,
-    fontWeight: "bold",
+    fontFamily: "opensansbold",
     textAlign: "center",
     paddingTop: 1,
     color: "#060B4D",
