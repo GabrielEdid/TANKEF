@@ -100,15 +100,19 @@ const Inicio = () => {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.postContainer}>
+      <TouchableOpacity
+        style={styles.postContainer}
+        activeOpacity={1}
+        onPress={() => handleFocus()}
+      >
         <Image
           style={styles.fotoPerfil}
           source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
         />
         <TextInput
           style={styles.input}
-          onPressIn={() => handleFocus()}
           placeholder="¿En que estas pensando?"
+          onPressIn={() => handleFocus()}
           editable={false}
         />
         <MaskedView
@@ -132,7 +136,7 @@ const Inicio = () => {
             style={StyleSheet.absoluteFill}
           />
         </MaskedView>
-      </View>
+      </TouchableOpacity>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView style={styles.scrollV}>
           {/* Lista de Datos de Red del Usuario 

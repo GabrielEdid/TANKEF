@@ -12,12 +12,14 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
+import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
 import {
   Entypo,
   MaterialIcons,
   MaterialCommunityIcons,
+  FontAwesome,
 } from "@expo/vector-icons";
 
 const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
@@ -26,6 +28,8 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   const [text, setText] = useState("");
   const [modalQuien, setModalQuien] = useState(false);
   const [quien, setQuien] = useState("Mis Conexiones");
+  const [image, setImage] = useState(null);
+  const [image64, setImage64] = useState(null);
 
   const handleModalClose = () => {
     setIsModalVisible(false);
@@ -39,6 +43,22 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
     // ... más imágenes
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      const selectedImage = result.assets[0];
+      setImage64(selectedImage.base64);
+      setImage(selectedImage.uri);
+    }
+  };
+
   // Componente visual
   return (
     <Modal
@@ -47,207 +67,231 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
       visible={isModalVisible}
       onRequestClose={handleModalClose}
     >
-      <View style={styles.modalView}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              justifyContent: "center",
-            }}
-            onPress={() => handleModalClose()}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.modalView}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Entypo name="cross" size={35} color="#060B4D" />
-          </TouchableOpacity>
-          <Text
-            style={{
-              flex: 1,
-              fontSize: 30,
-              color: "#060B4D",
-              textAlign: "center",
-              fontFamily: "opensans",
-            }}
-          >
-            Post
-          </Text>
-          <TouchableOpacity
-            style={[
-              { backgroundColor: text ? "#060B4D" : "#D5D5D5" },
-              styles.botonCompartir,
-            ]} // Adjusted for centering the text
-            onPress={() => handleModalClose()}
-          >
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: "center",
+              }}
+              onPress={() => handleModalClose()}
+            >
+              <Entypo name="cross" size={35} color="#060B4D" />
+            </TouchableOpacity>
             <Text
               style={{
-                fontSize: 17,
-                color: text ? "white" : "grey",
+                flex: 1,
+                fontSize: 30,
+                color: "#060B4D",
                 textAlign: "center",
-                fontFamily: "opensansbold",
+                fontFamily: "opensans",
               }}
             >
-              Compartir
+              Post
             </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ flexDirection: "row", marginTop: 20 }}>
-          <Image
-            style={styles.fotoPerfilModal}
-            source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
-          />
-          <View>
-            <Text style={styles.textoNombre}>
-              {"Nombre" +
-                user.nombre +
-                " " +
-                user.apellidoPaterno +
-                " " +
-                user.apellidoMaterno}
-            </Text>
-            <Text
+            <TouchableOpacity
               style={[
-                styles.textoNombre,
-                { fontSize: 12, fontFamily: "opensans" },
-              ]}
+                { backgroundColor: text ? "#060B4D" : "#D5D5D5" },
+                styles.botonCompartir,
+              ]} // Adjusted for centering the text
+              onPress={() => handleModalClose()}
             >
-              conexiones
-            </Text>
-          </View>
-        </View>
-
-        <TouchableOpacity
-          onPress={() => setModalQuien(true)}
-          style={{
-            marginTop: 15,
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Text
-            style={{ color: "#060B4D", fontSize: 15, fontFamily: "opensans" }}
-          >
-            Compartir a{" "}
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              backgroundColor: "#2FF690",
-              padding: 5,
-              marginLeft: 5,
-              alignItems: "center",
-            }}
-          >
-            {quien === "Toda la Red" ? (
-              <Entypo name="globe" size={20} color="#060B4D" />
-            ) : (
-              <Image
-                style={{ width: 22, height: 17 }}
-                source={imageMap["MiRed"]}
-              />
-            )}
-            <Text style={{ marginLeft: 10, fontFamily: "opensans" }}>
-              {quien}
-            </Text>
-            <MaterialIcons
-              name="keyboard-arrow-down"
-              size={24}
-              color="#060B4D"
-              style={{ marginLeft: 10 }}
-            />
-          </View>
-        </TouchableOpacity>
-
-        <TextInput
-          style={styles.input}
-          placeholder=" ¿De que quieres hablar?"
-          placeholderTextColor="#9B9DB6"
-          onChangeText={setText}
-          multiline={true}
-          value={text}
-          maxLength={500}
-        />
-
-        {/* Modal de Quien puede ver el post */}
-        <Modal animationType="slide" transparent={true} visible={modalQuien}>
-          <TouchableOpacity
-            style={styles.fullScreenButton}
-            activeOpacity={1}
-            onPress={() => setModalQuien(false)}
-          >
-            <View style={styles.modalQuienView}>
-              <TouchableOpacity onPress={() => setModalQuien(false)}>
-                <View
-                  style={{
-                    height: 10,
-                    backgroundColor: "#F0F0F0",
-                    width: 150,
-                    borderRadius: 10,
-                    alignSelf: "center",
-                  }}
-                ></View>
-              </TouchableOpacity>
-              {/* Boton Toda la Red */}
-              <TouchableOpacity
-                style={styles.buttonModal}
-                onPress={() => [setModalQuien(false), setQuien("Toda la Red")]}
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: text ? "white" : "grey",
+                  textAlign: "center",
+                  fontFamily: "opensansbold",
+                }}
               >
-                <Entypo name="globe" size={35} color="#060B4D" />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.texto}>Toda la Red</Text>
-                  <Text style={styles.texto2}>
-                    El post lo podrá ver toda la comunidad Tankef.
-                  </Text>
-                </View>
-                {quien === "Toda la Red" ? (
-                  <MaterialCommunityIcons
-                    name="radiobox-marked"
-                    size={32}
-                    color="#060B4D"
-                    style={{ marginTop: 12 }}
-                  />
-                ) : (
-                  <Entypo
-                    name="circle"
-                    size={28}
-                    color="#060B4D"
-                    style={{ marginTop: 13 }}
-                  />
-                )}
-              </TouchableOpacity>
-
-              {/* Boton Mis Conexiones */}
-              <TouchableOpacity
-                style={styles.buttonModal}
-                onPress={() => [
-                  setModalQuien(false),
-                  setQuien("Mis Conexiones"),
+                Compartir
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flexDirection: "row", marginTop: 20 }}>
+            <Image
+              style={styles.fotoPerfilModal}
+              source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
+            />
+            <View>
+              <Text style={styles.textoNombre}>
+                {"Nombre" +
+                  user.nombre +
+                  " " +
+                  user.apellidoPaterno +
+                  " " +
+                  user.apellidoMaterno}
+              </Text>
+              <Text
+                style={[
+                  styles.textoNombre,
+                  { fontSize: 12, fontFamily: "opensans" },
                 ]}
               >
-                <Image style={styles.miRed} source={imageMap["MiRed"]} />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.texto}>Mis Conexiones</Text>
-                  <Text style={styles.texto2}>
-                    Solo tus conexiones verán el post.
-                  </Text>
-                </View>
-                {quien === "Mis Conexiones" ? (
-                  <MaterialCommunityIcons
-                    name="radiobox-marked"
-                    size={32}
-                    color="#060B4D"
-                    style={{ marginTop: 12 }}
-                  />
-                ) : (
-                  <Entypo
-                    name="circle"
-                    size={28}
-                    color="#060B4D"
-                    style={{ marginTop: 13 }}
-                  />
-                )}
-              </TouchableOpacity>
+                conexiones
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => setModalQuien(true)}
+            style={{
+              marginTop: 15,
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Text
+              style={{ color: "#060B4D", fontSize: 15, fontFamily: "opensans" }}
+            >
+              Compartir a{" "}
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: "#2FF690",
+                padding: 5,
+                marginLeft: 5,
+                alignItems: "center",
+              }}
+            >
+              {quien === "Toda la Red" ? (
+                <Entypo name="globe" size={20} color="#060B4D" />
+              ) : (
+                <Image
+                  style={{ width: 22, height: 18 }}
+                  source={imageMap["MiRed"]}
+                />
+              )}
+              <Text style={{ marginLeft: 10, fontFamily: "opensans" }}>
+                {quien}
+              </Text>
+              <MaterialIcons
+                name="keyboard-arrow-down"
+                size={24}
+                color="#060B4D"
+                style={{ marginLeft: 10 }}
+              />
             </View>
           </TouchableOpacity>
-        </Modal>
-      </View>
+          <TextInput
+            style={styles.input}
+            placeholder=" ¿De que quieres hablar?"
+            placeholderTextColor="#9B9DB6"
+            onChangeText={setText}
+            multiline={true}
+            value={text}
+            maxLength={500}
+          />
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={styles.imagen}
+              resizeMode="contain"
+            />
+          )}
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              alignSelf: "center",
+              justifyContent: "space-between",
+              marginBottom: 10,
+            }}
+            onPress={() => pickImage()}
+          >
+            <FontAwesome name="image" size={30} color="#060B4D" />
+            <Text style={styles.textoImagen}>Agregar Imagen</Text>
+          </TouchableOpacity>
+          {/* Modal de Quien puede ver el post */}
+          <Modal animationType="slide" transparent={true} visible={modalQuien}>
+            <TouchableOpacity
+              style={styles.fullScreenButton}
+              activeOpacity={1}
+              onPress={() => setModalQuien(false)}
+            >
+              <View style={styles.modalQuienView}>
+                <TouchableOpacity onPress={() => setModalQuien(false)}>
+                  <View
+                    style={{
+                      height: 10,
+                      backgroundColor: "#F0F0F0",
+                      width: 150,
+                      borderRadius: 10,
+                      alignSelf: "center",
+                    }}
+                  ></View>
+                </TouchableOpacity>
+                {/* Boton Toda la Red */}
+                <TouchableOpacity
+                  style={styles.buttonModal}
+                  onPress={() => [
+                    setModalQuien(false),
+                    setQuien("Toda la Red"),
+                  ]}
+                >
+                  <Entypo name="globe" size={35} color="#060B4D" />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.texto}>Toda la Red</Text>
+                    <Text style={styles.texto2}>
+                      El post lo podrá ver toda la comunidad Tankef.
+                    </Text>
+                  </View>
+                  {quien === "Toda la Red" ? (
+                    <MaterialCommunityIcons
+                      name="radiobox-marked"
+                      size={32}
+                      color="#060B4D"
+                      style={{ marginTop: 12 }}
+                    />
+                  ) : (
+                    <Entypo
+                      name="circle"
+                      size={28}
+                      color="#060B4D"
+                      style={{ marginTop: 13 }}
+                    />
+                  )}
+                </TouchableOpacity>
+
+                {/* Boton Mis Conexiones */}
+                <TouchableOpacity
+                  style={styles.buttonModal}
+                  onPress={() => [
+                    setModalQuien(false),
+                    setQuien("Mis Conexiones"),
+                  ]}
+                >
+                  <Image style={styles.miRed} source={imageMap["MiRed"]} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.texto}>Mis Conexiones</Text>
+                    <Text style={styles.texto2}>
+                      Solo tus conexiones verán el post.
+                    </Text>
+                  </View>
+                  {quien === "Mis Conexiones" ? (
+                    <MaterialCommunityIcons
+                      name="radiobox-marked"
+                      size={32}
+                      color="#060B4D"
+                      style={{ marginTop: 12 }}
+                    />
+                  ) : (
+                    <Entypo
+                      name="circle"
+                      size={28}
+                      color="#060B4D"
+                      style={{ marginTop: 13 }}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
+        </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
@@ -297,6 +341,17 @@ const styles = StyleSheet.create({
     height: "100%",
     textAlignVertical: "top",
     fontFamily: "opensans",
+    backgroundColor: "#F0F0F0",
+  },
+  imagen: {
+    width: "100%",
+    marginVertical: 7,
+  },
+  textoImagen: {
+    fontSize: 15,
+    fontFamily: "opensans",
+    color: "#060B4D",
+    marginLeft: 10,
   },
   modalQuienView: {
     width: "100%",
