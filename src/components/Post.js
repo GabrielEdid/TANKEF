@@ -280,13 +280,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   textoNombre: {
-    fontSize: 14,
+    fontSize: 18,
     color: "#060B4D",
     fontWeight: "bold",
   },
   textoTiempo: {
     fontSize: 12,
-    color: "grey",
+    color: "#060B4D",
   },
   textoBody: {
     marginHorizontal: 20,

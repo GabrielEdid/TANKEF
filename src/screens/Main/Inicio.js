@@ -6,6 +6,7 @@ import {
   TextInput,
   Image,
   ScrollView,
+  Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
@@ -16,15 +17,27 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons, Entypo } from "@expo/vector-icons";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import Post from "../../components/Post";
+import ModalPost from "../../components/ModalPost";
 
 const Inicio = () => {
   // Estados y Contexto
   const { user, setUser } = useContext(UserContext);
   const [text, setText] = useState("");
   const [banners, setBanners] = useState({ investment: "", credit: "" });
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [textInputValue, setTextInputValue] = useState("");
+
+  const handleFocus = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    // Aquí podrías necesitar lógica adicional para reenfocar en el TextInput si es necesario
+  };
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
@@ -94,10 +107,9 @@ const Inicio = () => {
         />
         <TextInput
           style={styles.input}
+          onPressIn={() => handleFocus()}
           placeholder="¿En que estas pensando?"
-          onChangeText={setText}
-          value={text}
-          maxLength={500}
+          editable={false}
         />
         <MaskedView
           style={{ flex: 0.22 }}
@@ -121,7 +133,6 @@ const Inicio = () => {
           />
         </MaskedView>
       </View>
-
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView style={styles.scrollV}>
           {/* Lista de Datos de Red del Usuario 
@@ -204,6 +215,10 @@ const Inicio = () => {
           />
         </ScrollView>
       </TouchableWithoutFeedback>
+      <ModalPost
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
     </>
   );
 };
