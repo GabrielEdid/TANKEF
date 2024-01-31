@@ -15,6 +15,7 @@ import {
 import React, { useState, useContext, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
+import { APIPost } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
 import {
   Entypo,
@@ -32,17 +33,40 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   const [image, setImage] = useState(null);
   const [image64, setImage64] = useState(null);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-    // Aquí podrías necesitar lógica adicional para reenfocar en el TextInput si es necesario
-  };
+  const [enabled, setEnabled] = useState(true);
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
     Blank: require("../../assets/images/blankAvatar.jpg"),
     MiRed: require("../../assets/images/MiRed.png"),
     // ... más imágenes
+  };
+
+  const postData = async () => {
+    setEnabled(false);
+    const url = "/api/v1/posts";
+    const data = {
+      post: {
+        title: "",
+        body: text.trim(),
+        post_image: image64,
+        user_id: user.userID,
+      },
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al publicar:", response.error);
+      Alert.alert("Error", "No se pudo publicar. Intente nuevamente.");
+    } else {
+      // Continuar en caso de éxito
+      setText("");
+      setImage(null);
+      setImage64(null);
+      handleModalClose();
+    }
+    setEnabled(true);
   };
 
   const pickImage = async () => {
@@ -69,6 +93,10 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   const scaledHeight = imageSize.height
     ? (imageSize.height / imageSize.width) * windowWidth
     : 0;
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
 
   // Componente visual
   return (
@@ -106,7 +134,8 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                 { backgroundColor: text ? "#060B4D" : "#D5D5D5" },
                 styles.botonCompartir,
               ]} // Adjusted for centering the text
-              onPress={() => handleModalClose()}
+              onPress={() => postData()}
+              disabled={!enabled && !text}
             >
               <Text
                 style={{
