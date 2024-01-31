@@ -300,6 +300,11 @@ const styles = StyleSheet.create({
     fontFamily: "opensansbold",
     fontWeight: "bold",
   },
+  sliders: {
+    width: 25,
+    height: 23,
+    marginTop: 50,
+  },
   postContainer: {
     flexDirection: "row",
     backgroundColor: "white",
@@ -311,11 +316,6 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 18,
-  },
-  sliders: {
-    width: 25,
-    height: 23,
-    marginTop: 50,
   },
   input: {
     borderRadius: 20,

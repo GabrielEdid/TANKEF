@@ -11,6 +11,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
@@ -34,6 +35,7 @@ const Perfil = () => {
     Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
     Test: require("../../../assets/images/Test.png"),
     Blank: require("../../../assets/images/blankAvatar.jpg"),
+    Sliders: require("../../../assets/images/Sliders.png"),
     // ... más imágenes
   };
 
@@ -45,8 +47,8 @@ const Perfil = () => {
     if (result.error) {
       console.error("Error al obtener posts:", result.error);
     } else {
-      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
-      setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
+      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id);
+      setPosts(sortedPosts);
     }
   };
 
@@ -60,15 +62,34 @@ const Perfil = () => {
   return (
     <>
       <View style={styles.tituloContainer}>
-        {/* Boton de Settings */}
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          style={styles.settings}
+        {/* Titulo */}
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
-          <Feather name="settings" size={30} color="#29364d" />
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.8, y: 0.8 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text style={styles.tituloPantalla}>Perfil</Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50, marginRight: 15 }}
+          />
         </TouchableOpacity>
-        {/* Titulo Superior */}
-        <Text style={styles.titulo}>TANKEF</Text>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          {/*<Image
+            style={[styles.fotoPerfil, { marginTop: 65 }]}
+            source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
+        />*/}
+          <Image style={styles.sliders} source={imageMap["Sliders"]} />
+        </TouchableOpacity>
       </View>
       <ScrollView style={styles.scrollV}>
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
@@ -134,7 +155,7 @@ const Perfil = () => {
           </LinearGradient>
         </TouchableOpacity>
 
-        <View style={{ marginTop: 15, marginHorizontal:-20 }}>
+        <View style={{ marginTop: 15, marginHorizontal: -20 }}>
           {posts.map((post) => (
             <Post
               key={post.id}
@@ -163,17 +184,30 @@ const Perfil = () => {
 // Estilos de la pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
-    justifyContent: "space-between",
-    height: 105,
+    paddingHorizontal: 20,
+    flexDirection: "row",
     backgroundColor: "white",
+    paddingBottom: 10,
   },
   titulo: {
-    fontFamily: "conthrax",
-    fontSize: 27,
-    color: "#29364d",
-    marginTop: 70,
-    marginLeft: 20,
-    position: "absolute",
+    fontFamily: "montserrat",
+    letterSpacing: -4,
+    fontSize: 35,
+    marginTop: 40,
+  },
+  tituloPantalla: {
+    flex: 1,
+    marginTop: 45,
+    marginLeft: 0,
+    fontSize: 25,
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+    fontWeight: "bold",
+  },
+  sliders: {
+    width: 25,
+    height: 23,
+    marginTop: 50,
   },
   settings: {
     height: 32,
