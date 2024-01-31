@@ -17,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
-import { Feather, Ionicons, Entypo } from "@expo/vector-icons";
+import { Feather, Ionicons, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
 import Post from "../../components/Post";
 import ModalPost from "../../components/ModalPost";
@@ -51,6 +51,7 @@ const Inicio = () => {
     Test3: require("../../../assets/images/Test3.jpg"),
     Test4: require("../../../assets/images/Test4.jpg"),
     Blank: require("../../../assets/images/blankAvatar.jpg"),
+    Sliders: require("../../../assets/images/Sliders.png"),
     // ... más imágenes
   };
 
@@ -106,10 +107,11 @@ const Inicio = () => {
           />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Image
+          {/*<Image
             style={[styles.fotoPerfil, { marginTop: 65 }]}
             source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
-          />
+        />*/}
+          <Image style={styles.sliders} source={imageMap["Sliders"]} />
         </TouchableOpacity>
       </View>
       <TouchableOpacity
@@ -264,6 +266,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+  },
+  sliders: {
+    width: 32,
+    height: 30,
+    marginTop: 70,
   },
   input: {
     borderRadius: 20,

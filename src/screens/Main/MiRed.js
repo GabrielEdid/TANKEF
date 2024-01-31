@@ -38,6 +38,7 @@ const MiRed = ({ navigation }) => {
     Bruce: require("../../../assets/images/Fotos_Personas/Bruce.png"),
     Carol: require("../../../assets/images/Fotos_Personas/Carol.png"),
     Jane: require("../../../assets/images/Fotos_Personas/Jane.png"),
+    Sliders: require("../../../assets/images/Sliders.png"),
     // ... más imágenes
   };
 
@@ -67,10 +68,11 @@ const MiRed = ({ navigation }) => {
           />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Image
+          {/*<Image
             style={[styles.fotoPerfil, { marginTop: 65 }]}
             source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
-          />
+        />*/}
+          <Image style={styles.sliders} source={imageMap["Sliders"]} />
         </TouchableOpacity>
       </View>
 
@@ -247,6 +249,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+  },
+  sliders: {
+    width: 32,
+    height: 30,
+    marginTop: 70,
   },
   searchContainer: {
     flexDirection: "row",
