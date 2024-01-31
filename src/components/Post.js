@@ -9,6 +9,7 @@ import {
   Dimensions,
   TextInput,
   Modal,
+  Linking,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
@@ -34,8 +35,31 @@ const Post = (props) => {
     Comment: require("../../assets/images/Comment.png"),
     // ... más imágenes
   };
-  const B = (props) => <Text style={{fontFamily: 'opensansbold', color: '#22BAD2'}}>{props.children}</Text>
 
+  const Link = (props) => (
+    <Text style={{ fontFamily: "opensansbold", color: "#22BAD2", top: 8.5 }}>
+      {props.children}
+    </Text>
+  );
+
+  const parseTextForLinks = (text) => {
+    const words = text.split(" ");
+    const textComponents = words.map((word, index) => {
+      if (word.toLowerCase().includes("http")) {
+        return (
+          <Text key={`word-${index}`}>
+            <TouchableOpacity onPress={() => Linking.openURL(word)}>
+              <Link>{word}</Link>
+            </TouchableOpacity>{" "}
+          </Text>
+        );
+      } else {
+        return `${word} `;
+      }
+    });
+
+    return textComponents;
+  };
 
   // Para manejar las imagenes usadas en las publicaciones
   let imageSource;
@@ -125,9 +149,9 @@ const Post = (props) => {
       {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
       {props.tipo === "compartir" && (
         <>
-          <Text style={styles.textoBody}>Mira <B>@daniela_fuentes</B> la revista Entrepeneur sobre comenzar un negocio, te dejo el link.
-{"\n"}<B>https://www.entrepreneur.com/es</B></Text>
-          {/*<Text style={styles.textoBody}>{displayedText}</Text>*/}
+          <Text style={styles.textoBody}>
+            {parseTextForLinks(displayedText)}
+          </Text>
           {needsMoreButton && (
             <TouchableOpacity onPress={toggleShowFullText}>
               <Text style={styles.verMas}>Ver Más</Text>
