@@ -26,10 +26,7 @@ import ModalPost from "../../components/ModalPost";
 const Inicio = () => {
   // Estados y Contexto
   const { user, setUser } = useContext(UserContext);
-  const [text, setText] = useState("");
-  const [banners, setBanners] = useState({ investment: "", credit: "" });
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [textInputValue, setTextInputValue] = useState("");
   const [posts, setPosts] = useState([]);
 
   const fetchFeed = async () => {
@@ -64,11 +61,6 @@ const Inicio = () => {
 
   const handleFocus = () => {
     setIsModalVisible(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-    // Aquí podrías necesitar lógica adicional para reenfocar en el TextInput si es necesario
   };
 
   // Mapa para cargar todas las imagenes
@@ -285,6 +277,7 @@ const Inicio = () => {
               body={post.body}
               comentarios={post.count_reactions}
               personal={false}
+              imagen={post.image}
             />
           ))}
         </ScrollView>

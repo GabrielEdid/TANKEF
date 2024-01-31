@@ -12,7 +12,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
-import { APIGet } from "../../API/APIService";
+import { APIGet, APIPost } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import Post from "../../components/Post";
 
@@ -41,6 +41,28 @@ const VerPerfiles = ({ route }) => {
     Test: require("../../../assets/images/Test.png"),
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
+  };
+
+  const postRequest = async () => {
+    const url = "/api/v1/friendship_request";
+    const data = {
+      contact: {
+        email: userInfo.mail,
+      },
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al Solicitar Amistad:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudo hacer el solicitud. Intente nuevamente."
+      );
+    } else {
+      // Continuar en caso de éxito
+      setEstado("solicitudEnviada");
+    }
   };
 
   const fetchUserPosts = async () => {
@@ -114,7 +136,7 @@ const VerPerfiles = ({ route }) => {
           {estado === "inicial" && (
             <TouchableOpacity
               style={styles.botonConf}
-              onPress={() => setEstado("solicitudEnviada")}
+              onPress={() => postRequest()}
             >
               <LinearGradient
                 colors={["#2FF690", "#21B6D5"]}
