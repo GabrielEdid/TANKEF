@@ -110,20 +110,7 @@ const Inicio = () => {
             style={StyleSheet.absoluteFill}
           />
         </MaskedView>
-        <Text
-          style={{
-            flex: 1,
-            marginTop: 45,
-            marginLeft: 0,
-            fontSize: 25,
-            color: "#060B4D",
-            fontFamily: "opensansbold",
-            fontWeight: "bold",
-            
-          }}
-        >
-          Inicio
-        </Text>
+        <Text style={styles.tituloPantalla}>Inicio</Text>
         <TouchableOpacity>
           <Feather
             name="bell"
@@ -303,6 +290,15 @@ const styles = StyleSheet.create({
     letterSpacing: -4,
     fontSize: 35,
     marginTop: 40,
+  },
+  tituloPantalla: {
+    flex: 1,
+    marginTop: 45,
+    marginLeft: 0,
+    fontSize: 25,
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+    fontWeight: "bold",
   },
   postContainer: {
     flexDirection: "row",

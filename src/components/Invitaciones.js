@@ -35,17 +35,17 @@ const Invitaciones = (props) => {
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <MaterialIcons
           name="highlight-remove"
-          size={46}
+          size={42}
           color="#F95C5C"
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 16 }}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={{}}>
         <FontAwesome5
           name="check-circle"
-          size={40}
+          size={36}
           color="#31CC18"
-          style={{ marginTop: 22.5, marginLeft: 10 }}
+          style={{ marginTop: 18, marginLeft: 10 }}
         />
       </TouchableOpacity>
 
@@ -89,20 +89,20 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 3,
     paddingHorizontal: 20,
-    height: 85,
+    height: 75,
     width: "100%",
     flexDirection: "row",
   },
   textoNombre: {
-    fontSize: 20,
+    fontSize: 17,
     alignSelf: "center",
     color: "#060B4D",
     fontFamily: "opensansbold",
     marginLeft: 10,
   },
   icon: {
-    height: 48,
-    width: 48,
+    height: 45,
+    width: 45,
     borderRadius: 50,
     alignSelf: "center",
   },

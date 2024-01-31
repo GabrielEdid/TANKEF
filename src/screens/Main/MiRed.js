@@ -81,24 +81,25 @@ const MiRed = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={{ flex: 1 }}>
         <View style={styles.tituloContainer}>
-          {/* Titulo, Campana e Imagen */}
+          {/* Titulo */}
           <MaskedView
             style={{ flex: 1 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
           >
             <LinearGradient
               colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0.4, y: 0.4 }}
+              start={{ x: 0.8, y: 0.8 }}
               end={{ x: 0, y: 0 }}
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
+          <Text style={styles.tituloPantalla}>Mi Red</Text>
           <TouchableOpacity>
             <Feather
               name="bell"
-              size={30}
+              size={25}
               color="#060B4D"
-              style={{ marginTop: 70, marginRight: 10 }}
+              style={{ marginTop: 50, marginRight: 15 }}
             />
           </TouchableOpacity>
           <TouchableOpacity>
@@ -132,14 +133,14 @@ const MiRed = ({ navigation }) => {
           />
           <Ionicons
             name="search-sharp"
-            size={30}
+            size={25}
             color="#060B4D"
             style={styles.search}
           />
           <TouchableOpacity>
             <Foundation
               name="filter"
-              size={35}
+              size={30}
               color="#060B4D"
               style={styles.filter}
             />
@@ -314,8 +315,17 @@ const styles = StyleSheet.create({
   titulo: {
     fontFamily: "montserrat",
     letterSpacing: -4,
-    fontSize: 40,
-    marginTop: 60,
+    fontSize: 35,
+    marginTop: 40,
+  },
+  tituloPantalla: {
+    flex: 1,
+    marginTop: 45,
+    marginLeft: 0,
+    fontSize: 25,
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+    fontWeight: "bold",
   },
   fotoPerfil: {
     width: 40,
@@ -323,9 +333,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   sliders: {
-    width: 32,
-    height: 30,
-    marginTop: 70,
+    width: 25,
+    height: 23,
+    marginTop: 50,
   },
   searchContainer: {
     flexDirection: "row",
@@ -341,8 +351,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: {
-    paddingLeft: 45,
-    height: 40,
+    paddingLeft: 40,
     borderRadius: 20,
     borderColor: "#D5D5D5",
     borderWidth: 1.5,
@@ -350,7 +359,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     flex: 1,
     color: "#060B4D",
-    fontSize: 18,
+    fontSize: 15,
     fontFamily: "opensans",
   },
   search: {
@@ -359,7 +368,7 @@ const styles = StyleSheet.create({
     left: 60,
   },
   filter: {
-    marginTop: 2.5,
+    marginTop: 0,
     alignSelf: "center",
     marginLeft: 10,
   },
@@ -367,7 +376,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
     marginTop: 3,
-    paddingTop: 30,
+    paddingTop: 20,
     zIndex: -1,
   },
   tab: {
@@ -376,7 +385,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   tabText: {
-    fontSize: 19,
+    fontSize: 17,
     fontFamily: "opensansbold",
   },
   focusLine: {

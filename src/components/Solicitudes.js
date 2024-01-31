@@ -35,9 +35,9 @@ const Solicitudes = (props) => {
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <FontAwesome
           name="trash-o"
-          size={35}
+          size={30}
           color="#F95C5C"
-          style={{ marginTop: 25 }}
+          style={{ marginTop: 20 }}
         />
       </TouchableOpacity>
 
@@ -81,20 +81,20 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 3,
     paddingHorizontal: 20,
-    height: 85,
+    height: 75,
     width: "100%",
     flexDirection: "row",
   },
   textoNombre: {
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: "opensansbold",
     alignSelf: "center",
     color: "#060B4D",
     marginLeft: 10,
   },
   icon: {
-    height: 48,
-    width: 48,
+    height: 45,
+    width: 45,
     borderRadius: 50,
     alignSelf: "center",
   },
