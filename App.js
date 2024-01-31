@@ -139,15 +139,22 @@ function MainFlow() {
   const handleTabPress = (e, routeName) => {
     if (routeName === "Crear") {
       e.preventDefault();
-      setPreviousActiveTab(customFocusedTab);
-      setIsModalVisible(!isModalVisible);
-      if (!isModalVisible) {
+      if (isModalVisible) {
+        // Close the modal and reset focus to the previous tab
+        setIsModalVisible(false);
+        setCustomFocusedTab(previousActiveTab);
+        setPreviousActiveTab("");
+      } else {
+        // Open the modal and remember the previously focused tab
+        setPreviousActiveTab(customFocusedTab);
+        setIsModalVisible(true);
         setCustomFocusedTab("Crear");
       }
     } else {
       if (isModalVisible) {
+        // Close the modal when switching to another tab
         setIsModalVisible(false);
-        setCustomFocusedTab(previousActiveTab);
+        setCustomFocusedTab(routeName);
         setPreviousActiveTab("");
       } else {
         setCustomFocusedTab(routeName);
