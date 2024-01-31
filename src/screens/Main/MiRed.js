@@ -8,16 +8,20 @@ import {
   ScrollView,
   Image,
   Dimensions,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
+import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import { Ionicons, Feather, AntDesign, Foundation } from "@expo/vector-icons";
 import Conexion from "../../components/Conexion";
 import Solicitudes from "../../components/Solicitudes";
 import Invitaciones from "../../components/Invitaciones";
+import SearchResult from "../../components/SearchResult";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -26,6 +30,8 @@ const MiRed = ({ navigation }) => {
   // Estados y Contexto
   const [text, setText] = useState("");
   const [focus, setFocus] = useState("MiRed");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -38,153 +44,219 @@ const MiRed = ({ navigation }) => {
     Bruce: require("../../../assets/images/Fotos_Personas/Bruce.png"),
     Carol: require("../../../assets/images/Fotos_Personas/Carol.png"),
     Jane: require("../../../assets/images/Fotos_Personas/Jane.png"),
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
     Sliders: require("../../../assets/images/Sliders.png"),
     // ... más imágenes
   };
 
+  const fetchQuery = async (query) => {
+    const url = `/api/v1/search?query=${query}`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener la busqueda:", result.error);
+    } else {
+      const sortedResults = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
+      console.log("Resultados de la busqueda:", sortedResults);
+      setSearchResults(sortedResults); // Guardar los datos de las publicaciones en el estado
+    }
+  };
+
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
   // Componente visual
   return (
     //Fondo
-    <View style={{ flex: 1 }}>
-      <View style={styles.tituloContainer}>
-        {/* Titulo, Campana e Imagen */}
-        <MaskedView
-          style={{ flex: 1 }}
-          maskElement={<Text style={styles.titulo}>tankef</Text>}
-        >
-          <LinearGradient
-            colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 0.4, y: 0.4 }}
-            end={{ x: 0, y: 0 }}
-            style={StyleSheet.absoluteFill}
-          />
-        </MaskedView>
-        <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={30}
-            color="#060B4D"
-            style={{ marginTop: 70, marginRight: 10 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          {/*<Image
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={{ flex: 1 }}>
+        <View style={styles.tituloContainer}>
+          {/* Titulo, Campana e Imagen */}
+          <MaskedView
+            style={{ flex: 1 }}
+            maskElement={<Text style={styles.titulo}>tankef</Text>}
+          >
+            <LinearGradient
+              colors={["#2FF690", "#21B6D5"]}
+              start={{ x: 0.4, y: 0.4 }}
+              end={{ x: 0, y: 0 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </MaskedView>
+          <TouchableOpacity>
+            <Feather
+              name="bell"
+              size={30}
+              color="#060B4D"
+              style={{ marginTop: 70, marginRight: 10 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            {/*<Image
             style={[styles.fotoPerfil, { marginTop: 65 }]}
             source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
         />*/}
-          <Image style={styles.sliders} source={imageMap["Sliders"]} />
-        </TouchableOpacity>
-      </View>
+            <Image style={styles.sliders} source={imageMap["Sliders"]} />
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Buscar"
-          placeholderTextColor="#060B4D"
-          onChangeText={setText}
-          value={text}
-          maxLength={500}
-        />
-        <Ionicons
-          name="search-sharp"
-          size={30}
-          color="#060B4D"
-          style={styles.search}
-        />
-        <TouchableOpacity>
-          <Foundation
-            name="filter"
-            size={35}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Buscar"
+            placeholderTextColor="#060B4D"
+            onChangeText={(text) => {
+              setText(text);
+              if (text.length > 0) {
+                const focus = focus;
+                setIsSearching(true);
+                setFocus(null);
+                fetchQuery(text);
+              } else if (text.length === 0) {
+                setIsSearching(false);
+                setFocus("MiRed");
+              }
+            }}
+            value={text}
+            maxLength={500}
+          />
+          <Ionicons
+            name="search-sharp"
+            size={30}
             color="#060B4D"
-            style={styles.filter}
+            style={styles.search}
           />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.tabsContainer}>
-        {/* Boton Mi Red */}
-        <TouchableOpacity style={styles.tab} onPress={() => setFocus("MiRed")}>
-          <Text
-            style={[
-              styles.tabText,
-              { color: focus === "MiRed" ? "#060B4D" : "#C4C6C9" },
-            ]}
-          >
-            Mi Red
-          </Text>
-          {focus === "MiRed" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
-
-        {/* Boton Solicitudes */}
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => setFocus("Solicitudes")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              { color: focus === "Solicitudes" ? "#060B4D" : "#C4C6C9" },
-            ]}
-          >
-            Solicitudes
-          </Text>
-          {focus === "Solicitudes" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
-
-        {/* Boton Invitaciones */}
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => setFocus("Invitaciones")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              { color: focus === "Invitaciones" ? "#060B4D" : "#C4C6C9" },
-            ]}
-          >
-            Invitaciones
-          </Text>
-          {focus === "Invitaciones" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
-      </View>
-
-      {focus === "MiRed" ? (
-        <View style={{ flex: 1 }}>
-          <Conexion
-            nombre={"Natasha Ocasio Romanoff"}
-            imagen={imageMap["Natasha"]}
-          />
-          <Conexion
-            nombre={"Antonio Stark Rivera"}
-            imagen={imageMap["Antonio"]}
-          />
-          <Conexion nombre={"Jose Antonio Quill"} imagen={imageMap["Quill"]} />
+          <TouchableOpacity>
+            <Foundation
+              name="filter"
+              size={35}
+              color="#060B4D"
+              style={styles.filter}
+            />
+          </TouchableOpacity>
         </View>
-      ) : null}
 
-      {focus === "Solicitudes" ? (
-        <View style={{ flex: 1 }}>
-          <Solicitudes
-            nombre={"Bruce García Banner"}
-            imagen={imageMap["Bruce"]}
-          />
-          <Solicitudes
-            nombre={"Carol Danvers Miller"}
-            imagen={imageMap["Carol"]}
-          />
-        </View>
-      ) : null}
+        {isSearching && (
+          <View style={styles.searchResultsContainer}>
+            <ScrollView>
+              {searchResults.map((post) => (
+                <SearchResult
+                  key={post.id}
+                  userID={post.id}
+                  nombre={titleCase(post.full_name)}
+                  imagen={
+                    post.avatar ? { uri: post.avatar } : imageMap["Blank"]
+                  }
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
 
-      {focus === "Invitaciones" ? (
-        <View style={{ flex: 1 }}>
-          <Invitaciones
-            nombre={"Janet Foster Cruz"}
-            imagen={imageMap["Jane"]}
-          />
-        </View>
-      ) : null}
+        {!isSearching && (
+          <View style={styles.tabsContainer}>
+            {/* Boton Mi Red */}
+            <TouchableOpacity
+              style={styles.tab}
+              onPress={() => setFocus("MiRed")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: focus === "MiRed" ? "#060B4D" : "#C4C6C9" },
+                ]}
+              >
+                Mi Red
+              </Text>
+              {focus === "MiRed" ? <View style={styles.focusLine} /> : null}
+            </TouchableOpacity>
 
-      {/*<TouchableOpacity
+            {/* Boton Solicitudes */}
+            <TouchableOpacity
+              style={styles.tab}
+              onPress={() => setFocus("Solicitudes")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: focus === "Solicitudes" ? "#060B4D" : "#C4C6C9" },
+                ]}
+              >
+                Solicitudes
+              </Text>
+              {focus === "Solicitudes" ? (
+                <View style={styles.focusLine} />
+              ) : null}
+            </TouchableOpacity>
+
+            {/* Boton Invitaciones */}
+            <TouchableOpacity
+              style={styles.tab}
+              onPress={() => setFocus("Invitaciones")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: focus === "Invitaciones" ? "#060B4D" : "#C4C6C9" },
+                ]}
+              >
+                Invitaciones
+              </Text>
+              {focus === "Invitaciones" ? (
+                <View style={styles.focusLine} />
+              ) : null}
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {focus === "MiRed" ? (
+          <View style={{ flex: 1 }}>
+            <Conexion
+              nombre={"Natasha Ocasio Romanoff"}
+              imagen={imageMap["Natasha"]}
+            />
+            <Conexion
+              nombre={"Antonio Stark Rivera"}
+              imagen={imageMap["Antonio"]}
+            />
+            <Conexion
+              nombre={"Jose Antonio Quill"}
+              imagen={imageMap["Quill"]}
+            />
+          </View>
+        ) : null}
+
+        {focus === "Solicitudes" ? (
+          <View style={{ flex: 1 }}>
+            <Solicitudes
+              nombre={"Bruce García Banner"}
+              imagen={imageMap["Bruce"]}
+            />
+            <Solicitudes
+              nombre={"Carol Danvers Miller"}
+              imagen={imageMap["Carol"]}
+            />
+          </View>
+        ) : null}
+
+        {focus === "Invitaciones" ? (
+          <View style={{ flex: 1 }}>
+            <Invitaciones
+              nombre={"Janet Foster Cruz"}
+              imagen={imageMap["Jane"]}
+            />
+          </View>
+        ) : null}
+
+        {/*<TouchableOpacity
         style={styles.administrar}
         onPress={() => navigation.navigate("SolicitudesConexion")}
       >
@@ -223,11 +295,12 @@ const MiRed = ({ navigation }) => {
           tiempo="1 hora"
         />
         */}
-      <TouchableOpacity onPress={() => navigation.navigate("VerPerfiles")}>
-        <Text>Ver otro Perfil (prueba)</Text>
-      </TouchableOpacity>
-      {/*</ScrollView>*/}
-    </View>
+        <TouchableOpacity onPress={() => navigation.navigate("VerPerfiles")}>
+          <Text>Ver otro Perfil (prueba)</Text>
+        </TouchableOpacity>
+        {/*</ScrollView>*/}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -262,6 +335,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 40,
   },
+  searchResultsContainer: {
+    width: "100%",
+    height: "100%",
+    zIndex: 1,
+    flex: 1,
+  },
   input: {
     paddingLeft: 45,
     height: 40,
@@ -290,6 +369,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 3,
     paddingTop: 30,
+    zIndex: -1,
   },
   tab: {
     flex: 1,
