@@ -151,6 +151,7 @@ const Perfil = () => {
               foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
               body={post.body}
               personal={true}
+              imagen={post.image}
             />
           ))}
         </View>

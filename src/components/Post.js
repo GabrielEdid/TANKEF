@@ -35,6 +35,16 @@ const Post = (props) => {
     // ... más imágenes
   };
 
+  // Para manejar las imagenes usadas en las publicaciones
+  let imageSource;
+  if (typeof props.imagen === "string") {
+    // Assuming it's a URL for a network image
+    imageSource = { uri: props.imagen };
+  } else {
+    // Assuming it's a local image requiring require()
+    imageSource = props.imagen;
+  }
+
   // Funcion para Obtener un tamaño adaptado para cada imagen
   const onImageLoad = (event) => {
     const { width, height } = event.nativeEvent.source;
@@ -121,7 +131,7 @@ const Post = (props) => {
           {props.imagen && (
             <View style={styles.imageContainer}>
               <Image
-                source={props.imagen}
+                source={imageSource}
                 style={{ width: imageSize.width, height: imageSize.height }}
                 onLoad={onImageLoad}
               />
