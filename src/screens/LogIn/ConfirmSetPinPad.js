@@ -58,7 +58,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         telefono: result.data.data.phone,
         nombre: titleCase(result.data.data.name),
         apellidoPaterno: titleCase(result.data.data.first_last_name),
-        apellidoMaterno: titleCase(result.data.data.first_last_name),
+        apellidoMaterno: titleCase(result.data.data.second_last_name),
         CURP: result.data.data.curp,
         email: result.data.data.email,
         fechaNacimiento: result.data.data.dob,

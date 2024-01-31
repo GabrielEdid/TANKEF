@@ -37,7 +37,7 @@ const Post = (props) => {
   };
 
   const Link = (props) => (
-    <Text style={{ fontFamily: "opensansbold", color: "#22BAD2", top: 8.5 }}>
+    <Text style={{ fontFamily: "opensansbold", color: "#22BAD2", top: 4 }}>
       {props.children}
     </Text>
   );
@@ -139,10 +139,8 @@ const Post = (props) => {
       <View style={styles.header}>
         <Image source={props.foto} style={styles.fotoPerfil} />
         <View style={styles.headerText}>
-          <Text style={styles.textoNombre}>Samuel L. Rodriguez</Text>
-          <Text style={styles.textoTiempo}>2hrs.</Text>
-          {/*<Text style={styles.textoNombre}>{props.nombre}</Text>
-          <Text style={styles.textoTiempo}>Hace {props.tiempo}</Text>*/}
+          <Text style={styles.textoNombre}>{props.nombre}</Text>
+          <Text style={styles.textoTiempo}>Hace {props.tiempo}</Text>
         </View>
       </View>
 
