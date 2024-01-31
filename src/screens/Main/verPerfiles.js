@@ -9,23 +9,27 @@ import {
   Modal,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
-import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
+import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
-import CuadroRedUsuario from "../../components/CuadroRedUsuario";
-import ProgressBar from "../../components/ProgressBar";
-import { Feather } from "@expo/vector-icons";
 import Post from "../../components/Post";
 
-const Perfil = () => {
+const VerPerfiles = ({ route }) => {
+  const { userID } = route.params;
+  const { user, setUser } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [estado, setEstado] = useState("inicial"); // Estados: "inicial", "solicitudEnviada"
   const [modalVisible, setModalVisible] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const [userInfo, setUserInfo] = useState({
+    nombre: "",
+    apellidoPaterno: "",
+    apellidoMaterno: "",
+    mail: "",
+    avatar: null,
+  });
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
@@ -40,14 +44,15 @@ const Perfil = () => {
   };
 
   const fetchUserPosts = async () => {
-    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/users/${user.userID}/posts`;
+    const url = `/api/v1/users/${userID}/posts`;
 
-    try {
-      const response = await axios.get(url);
-      const sortedPosts = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener posts:", result.error);
+    } else {
+      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
       setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
 
@@ -56,6 +61,29 @@ const Perfil = () => {
       fetchUserPosts();
     }, [])
   );
+
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      const user = posts[0].user;
+      setUserInfo({
+        nombre: titleCase(user.name),
+        apellidoPaterno: titleCase(user.first_last_name),
+        apellidoMaterno: titleCase(user.second_last_name),
+        mail: user.email,
+        avatar: user.avatar ? user.avatar : imageMap["Blank"],
+      });
+    }
+  }, [posts]);
 
   // Componente visual
   return (
@@ -71,9 +99,15 @@ const Perfil = () => {
       <ScrollView style={styles.scrollV}>
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
         <View>
-          <Image style={styles.fotoPerfil} source={imageMap["Blank"]} />
-          <Text style={styles.textoNombre}>Nombre del Usuario</Text>
-          <Text style={styles.textoMail}>Mail del Usuario</Text>
+          <Image style={styles.fotoPerfil} source={userInfo.avatar} />
+          <Text style={styles.textoNombre}>
+            {userInfo.nombre +
+              " " +
+              userInfo.apellidoPaterno +
+              " " +
+              userInfo.apellidoMaterno}
+          </Text>
+          <Text style={styles.textoMail}>{userInfo.mail}</Text>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -297,4 +331,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Perfil;
+export default VerPerfiles;

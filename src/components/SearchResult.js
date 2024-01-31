@@ -18,14 +18,7 @@ const SearchResult = ({ nombre, imagen, userID }) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() =>
-        navigation.navigate("MainFlow", {
-          screen: "MiRedStackScreen",
-          params: {
-            screen: "VerPerfiles",
-          },
-        })
-      }
+      onPress={() => navigation.navigate("VerPerfiles", { userID })}
     >
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imagen} style={styles.icon} />

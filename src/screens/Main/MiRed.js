@@ -57,9 +57,11 @@ const MiRed = ({ navigation }) => {
     if (result.error) {
       console.error("Error al obtener la busqueda:", result.error);
     } else {
-      const sortedResults = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
-      console.log("Resultados de la busqueda:", sortedResults);
-      setSearchResults(sortedResults); // Guardar los datos de las publicaciones en el estado
+      const filteredResults = result.data.data
+        .filter((post) => post.id !== user.userID) // Filtrar los posts donde post.id es igual a user.userID
+        .sort((a, b) => b.id - a.id);
+      console.log("Resultados de la busqueda:", filteredResults);
+      setSearchResults(filteredResults); // Guardar los datos de las publicaciones en el estado
     }
   };
 
@@ -147,13 +149,13 @@ const MiRed = ({ navigation }) => {
         {isSearching && (
           <View style={styles.searchResultsContainer}>
             <ScrollView>
-              {searchResults.map((post) => (
+              {searchResults.map((search) => (
                 <SearchResult
-                  key={post.id}
-                  userID={post.id}
-                  nombre={titleCase(post.full_name)}
+                  key={search.id}
+                  userID={search.id}
+                  nombre={titleCase(search.full_name)}
                   imagen={
-                    post.avatar ? { uri: post.avatar } : imageMap["Blank"]
+                    search.avatar ? { uri: search.avatar } : imageMap["Blank"]
                   }
                 />
               ))}
@@ -295,9 +297,6 @@ const MiRed = ({ navigation }) => {
           tiempo="1 hora"
         />
         */}
-        <TouchableOpacity onPress={() => navigation.navigate("VerPerfiles")}>
-          <Text>Ver otro Perfil (prueba)</Text>
-        </TouchableOpacity>
         {/*</ScrollView>*/}
       </View>
     </TouchableWithoutFeedback>
