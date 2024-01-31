@@ -11,11 +11,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
+import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import { Feather, Ionicons, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import CuadroRedUsuario from "../../components/CuadroRedUsuario";
@@ -29,6 +30,37 @@ const Inicio = () => {
   const [banners, setBanners] = useState({ investment: "", credit: "" });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [textInputValue, setTextInputValue] = useState("");
+  const [posts, setPosts] = useState([]);
+
+  const fetchFeed = async () => {
+    const url = `/api/v1/feed`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener el feed:", result.error);
+    } else {
+      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
+      setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchFeed();
+    }, [])
+  );
+
+  // Función para convertir la primera letra de cada palabra en mayúscula y el resto minuscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
 
   const handleFocus = () => {
     setIsModalVisible(true);
@@ -55,7 +87,7 @@ const Inicio = () => {
     // ... más imágenes
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchBanners = async () => {
       const url =
         "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/banners";
@@ -68,7 +100,7 @@ const Inicio = () => {
     };
 
     fetchBanners();
-  }, []);
+  }, []);*/
 
   // Componente visual
   return (
@@ -210,6 +242,8 @@ const Inicio = () => {
               </Text>
             </LinearGradient>
           </TouchableOpacity> */}
+
+          {/* TEMPLATE DE POSTS EN FEED
           <Post
             tipo={"compartir"}
             nombre={"Antonio Stark Rivera"}
@@ -230,7 +264,28 @@ const Inicio = () => {
               "Invertir es dar el primer paso hacia la libertad financiera. Al elegir sabiamente, tus ahorros pueden crecer exponencialmente. ¿Sabías que empezar joven y con constancia es clave para el éxito? Diversifica tus inversiones para minimizar riesgos y maximizar ganancias. ¡No esperes más, comienza hoy mismo a construir tu futuro! #Inversiones #LibertadFinanciera #CrecimientoEconómico 📈💼🌟"
             }
             comentarios={10}
-          />
+          />*/}
+          {posts.map((post) => (
+            <Post
+              key={post.id}
+              postId={post.id}
+              tipo={"compartir"}
+              nombre={
+                titleCase(post.user.name) +
+                " " +
+                titleCase(post.user.first_last_name) +
+                " " +
+                titleCase(post.user.second_last_name)
+              } // Reemplazar con datos reales si están disponibles
+              tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+              foto={
+                post.user.avatar ? { uri: post.user.avatar } : imageMap["Blank"]
+              } // Reemplazar con datos reales si están disponibles
+              body={post.body}
+              comentarios={post.count_reactions}
+              personal={false}
+            />
+          ))}
         </ScrollView>
       </TouchableWithoutFeedback>
       <ModalPost
