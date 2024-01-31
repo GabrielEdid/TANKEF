@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 45,
-    marginLeft: 0,
+    marginLeft: -5,
     fontSize: 25,
     color: "#060B4D",
     fontFamily: "opensansbold",
