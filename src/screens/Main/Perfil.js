@@ -134,7 +134,7 @@ const Perfil = () => {
           </LinearGradient>
         </TouchableOpacity>
 
-        <View style={{ marginTop: 15 }}>
+        <View style={{ marginTop: 15, marginHorizontal:-20 }}>
           {posts.map((post) => (
             <Post
               key={post.id}
