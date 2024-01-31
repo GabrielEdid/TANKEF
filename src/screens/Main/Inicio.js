@@ -80,11 +80,23 @@ const Inicio = () => {
         >
           <LinearGradient
             colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 0.4, y: 0.4 }}
+            start={{ x: 0.8, y: 0.8 }}
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
         </MaskedView>
+        <Text
+          style={{
+            flex: 1,
+            marginTop: 65,
+            marginLeft: 10,
+            fontSize: 30,
+            color: "#060B4D",
+            fontFamily: "opensans",
+          }}
+        >
+          Inicio
+        </Text>
         <TouchableOpacity>
           <Feather
             name="bell"
