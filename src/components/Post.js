@@ -34,6 +34,8 @@ const Post = (props) => {
     Comment: require("../../assets/images/Comment.png"),
     // ... más imágenes
   };
+  const B = (props) => <Text style={{fontFamily: 'opensansbold', color: '#22BAD2'}}>{props.children}</Text>
+
 
   // Funcion para Obtener un tamaño adaptado para cada imagen
   const onImageLoad = (event) => {
@@ -103,15 +105,19 @@ const Post = (props) => {
       <View style={styles.header}>
         <Image source={props.foto} style={styles.fotoPerfil} />
         <View style={styles.headerText}>
-          <Text style={styles.textoNombre}>{props.nombre}</Text>
-          <Text style={styles.textoTiempo}>Hace {props.tiempo}</Text>
+          <Text style={styles.textoNombre}>Samuel L. Rodriguez</Text>
+          <Text style={styles.textoTiempo}>2hrs.</Text>
+          {/*<Text style={styles.textoNombre}>{props.nombre}</Text>
+          <Text style={styles.textoTiempo}>Hace {props.tiempo}</Text>*/}
         </View>
       </View>
 
       {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
       {props.tipo === "compartir" && (
         <>
-          <Text style={styles.textoBody}>{displayedText}</Text>
+          <Text style={styles.textoBody}>Mira <B>@daniela_fuentes</B> la revista Entrepeneur sobre comenzar un negocio, te dejo el link.
+{"\n"}<B>https://www.entrepreneur.com/es</B></Text>
+          {/*<Text style={styles.textoBody}>{displayedText}</Text>*/}
           {needsMoreButton && (
             <TouchableOpacity onPress={toggleShowFullText}>
               <Text style={styles.verMas}>Ver Más</Text>
@@ -183,8 +189,8 @@ const Post = (props) => {
             <Image
               source={imageMap["Like"]}
               style={{
-                width: 32,
-                height: 28,
+                width: 28,
+                height: 24,
                 tintColor: !like ? "#060B4D" : "#21B6D5",
               }}
             />
@@ -193,8 +199,8 @@ const Post = (props) => {
             <Image
               source={imageMap["Comment"]}
               style={{
-                width: 33,
-                height: 28,
+                width: 28,
+                height: 23,
                 tintColor: "#060B4D",
               }}
             />
@@ -206,7 +212,7 @@ const Post = (props) => {
             style={{
               fontSize: 13,
               color: "#060B4D",
-              marginRight: 20,
+              marginRight: 23,
               fontFamily: "opensans",
             }}
           >
@@ -281,13 +287,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   fotoPerfil: {
-    width: 57,
-    height: 57,
+    width: 45,
+    height: 45,
     marginLeft: 20,
-    borderRadius: 50,
+    borderRadius: 203,
   },
   textoNombre: {
-    fontSize: 18,
+    fontSize: 17,
     fontFamily: "opensansbold",
     color: "#060B4D",
     fontWeight: "bold",
@@ -300,7 +306,7 @@ const styles = StyleSheet.create({
   textoBody: {
     marginHorizontal: 20,
     fontFamily: "opensans",
-    fontSize: 15,
+    fontSize: 14,
     color: "#060B4D",
   },
   verMas: {
@@ -326,8 +332,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   tresPuntos: {
-    fontSize: 30,
-    marginTop: 5,
+    fontSize: 20,
+    marginTop: 10,
     fontFamily: "opensansbold",
     color: "#060B4D",
     transform: [{ rotate: "90deg" }],
@@ -343,7 +349,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingTop: 10,
-    paddingLeft: 20,
+    paddingLeft: 22,
   },
   /*  ESTILOS DE LOS OTROS TIPOS DE POST
   textSolicitado: {

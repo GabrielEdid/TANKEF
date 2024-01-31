@@ -121,10 +121,11 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
             <Text
               style={{
                 flex: 1,
-                fontSize: 30,
+                fontSize: 25,
                 color: "#060B4D",
-                textAlign: "center",
-                fontFamily: "opensans",
+                fontFamily: "opensansbold",
+                fontWeight: "bold",
+                textAlign: "center"
               }}
             >
               Post
@@ -139,25 +140,24 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
             >
               <Text
                 style={{
-                  fontSize: 17,
+                  fontSize: 15,
                   color: text ? "white" : "grey",
                   textAlign: "center",
-                  fontFamily: "opensansbold",
+                  fontFamily: "opensans",
                 }}
               >
                 Compartir
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: "row", marginTop: 20 }}>
+          <View style={{ flexDirection: "row", paddingTop: 20, marginBottom: 0, backgroundColor: "white" }}>
             <Image
               style={styles.fotoPerfilModal}
               source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
             />
             <View>
               <Text style={styles.textoNombre}>
-                {"Nombre" +
-                  user.nombre +
+                {user.nombre +
                   " " +
                   user.apellidoPaterno +
                   " " +
@@ -169,14 +169,15 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   { fontSize: 12, fontFamily: "opensans" },
                 ]}
               >
-                conexiones
+                5 conexiones
               </Text>
             </View>
           </View>
           <TouchableOpacity
             onPress={() => setModalQuien(true)}
             style={{
-              marginTop: 15,
+              paddingVertical: 10,
+              backgroundColor: "white",
               alignItems: "center",
               flexDirection: "row",
             }}
@@ -195,7 +196,9 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               style={{
                 flexDirection: "row",
                 backgroundColor: "#2FF690",
-                padding: 5,
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                borderRadius: 5,
                 marginLeft: 5,
                 alignItems: "center",
               }}
@@ -208,14 +211,14 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   source={imageMap["MiRed"]}
                 />
               )}
-              <Text style={{ marginLeft: 10, fontFamily: "opensans" }}>
+              <Text style={{ marginLeft: 5, fontFamily: "opensansbold", fontSize:12 }}>
                 {quien}
               </Text>
               <MaterialIcons
                 name="keyboard-arrow-down"
                 size={24}
                 color="#060B4D"
-                style={{ marginLeft: 10 }}
+                style={{ marginLeft: 0 }}
               />
             </View>
           </TouchableOpacity>
@@ -242,9 +245,12 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                alignSelf: "center",
-                justifyContent: "space-between",
-                marginBottom: 20,
+                alignSelf: "stretch",
+                justifyContent: "center",
+                marginTop: 3,
+                paddingTop: 20,
+                paddingBottom: 30,
+                backgroundColor: "white",
               }}
               onPress={() => pickImage()}
             >
@@ -369,6 +375,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+    backgroundColor: "#f5f5f5",
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
@@ -377,10 +384,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingVertical: 10,
+    marginBottom: 3,
+    backgroundColor: "white",
   },
   botonCompartir: {
-    paddingVertical: 10,
+    paddingVertical: 7,
     padding: 10,
     borderRadius: 5,
     flex: 0.9,
@@ -401,12 +410,14 @@ const styles = StyleSheet.create({
   },
   input: {
     paddingHorizontal: 20,
-    marginTop: 20,
+    paddingTop: 20,
+    marginTop: 3,
     fontSize: 18,
     flex: 1,
     width: "100%",
     height: "100%",
     textAlignVertical: "top",
+    backgroundColor: "white",
     fontFamily: "opensans",
   },
   imagen: {

@@ -121,11 +121,13 @@ const Inicio = () => {
         <Text
           style={{
             flex: 1,
-            marginTop: 65,
-            marginLeft: 10,
-            fontSize: 30,
+            marginTop: 45,
+            marginLeft: 0,
+            fontSize: 25,
             color: "#060B4D",
-            fontFamily: "opensans",
+            fontFamily: "opensansbold",
+            fontWeight: "bold",
+            
           }}
         >
           Inicio
@@ -133,9 +135,9 @@ const Inicio = () => {
         <TouchableOpacity>
           <Feather
             name="bell"
-            size={30}
+            size={25}
             color="#060B4D"
-            style={{ marginTop: 70, marginRight: 10 }}
+            style={{ marginTop: 50, marginRight: 15 }}
           />
         </TouchableOpacity>
         <TouchableOpacity>
@@ -166,17 +168,16 @@ const Inicio = () => {
           maskElement={
             <Ionicons
               name="ios-image"
-              size={45}
+              size={30}
               color="white"
               style={{
-                marginTop: -5,
                 transform: [{ scaleX: -1 }],
               }}
             />
           }
         >
           <LinearGradient
-            colors={["#2FF690", "#21B6D5"]}
+            colors={["#060B4D", "#060B4D"]}
             start={{ x: 0.7, y: 0.7 }}
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
@@ -307,8 +308,8 @@ const styles = StyleSheet.create({
   titulo: {
     fontFamily: "montserrat",
     letterSpacing: -4,
-    fontSize: 40,
-    marginTop: 60,
+    fontSize: 35,
+    marginTop: 40,
   },
   postContainer: {
     flexDirection: "row",
@@ -318,14 +319,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   fotoPerfil: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 35,
+    height: 35,
+    borderRadius: 18,
   },
   sliders: {
-    width: 32,
-    height: 30,
-    marginTop: 70,
+    width: 25,
+    height: 23,
+    marginTop: 50,
   },
   input: {
     borderRadius: 20,
@@ -336,7 +337,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: "opensans",
     color: "#060B4D",
-    fontSize: 18,
+    fontSize: 15,
   },
   scrollV: {
     flex: 1,
