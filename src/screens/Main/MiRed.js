@@ -11,7 +11,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
@@ -114,6 +114,14 @@ const MiRed = ({ navigation }) => {
       setInvitations(filteredResults); // Guardar los datos de las publicaciones en el estado
     }
   };
+
+  useEffect(() => {
+    let counter = 0;
+    if (focus === "MiRed" && counter === 0) {
+      fetchNetwork();
+      counter++;
+    }
+  }, []);
 
   function titleCase(str) {
     return str
