@@ -32,6 +32,9 @@ const MiRed = ({ navigation }) => {
   const [focus, setFocus] = useState("MiRed");
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [invitations, setInvitations] = useState([]);
+  const [network, setNetwork] = useState([]);
+  const [pending, setPending] = useState([]);
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -62,6 +65,53 @@ const MiRed = ({ navigation }) => {
         .sort((a, b) => b.id - a.id);
       console.log("Resultados de la busqueda:", filteredResults);
       setSearchResults(filteredResults); // Guardar los datos de las publicaciones en el estado
+    }
+  };
+
+  const fetchNetwork = async () => {
+    // Obtener solicitudes pendientes
+    const url = `/api/v1/network/members`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener la red del usuario:", result.error);
+    } else {
+      const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
+      console.log("Resultados de la red:", filteredResults);
+      setNetwork(filteredResults); // Guardar los datos de las publicaciones en el estado
+    }
+  };
+
+  const fetchPending = async () => {
+    // Obtener solicitudes pendientes
+    const url = `/api/v1/network/requests_pending`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener las solicitudes pendientes:",
+        result.error
+      );
+    } else {
+      const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
+      console.log("Resultados de las solicitudes pendientes:", filteredResults);
+      setPending(filteredResults); // Guardar los datos de las publicaciones en el estado
+    }
+  };
+
+  const fetchInvitations = async () => {
+    const url = `/api/v1/network/invitations`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener las invitaciones:", result.error);
+    } else {
+      const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
+      console.log("Resultados de las invitaciones:", filteredResults);
+      setInvitations(filteredResults); // Guardar los datos de las publicaciones en el estado
     }
   };
 
@@ -169,7 +219,7 @@ const MiRed = ({ navigation }) => {
             {/* Boton Mi Red */}
             <TouchableOpacity
               style={styles.tab}
-              onPress={() => setFocus("MiRed")}
+              onPress={() => [setFocus("MiRed"), fetchNetwork()]}
             >
               <Text
                 style={[
@@ -185,7 +235,7 @@ const MiRed = ({ navigation }) => {
             {/* Boton Solicitudes */}
             <TouchableOpacity
               style={styles.tab}
-              onPress={() => setFocus("Solicitudes")}
+              onPress={() => [setFocus("Solicitudes"), fetchPending()]}
             >
               <Text
                 style={[
@@ -203,7 +253,7 @@ const MiRed = ({ navigation }) => {
             {/* Boton Invitaciones */}
             <TouchableOpacity
               style={styles.tab}
-              onPress={() => setFocus("Invitaciones")}
+              onPress={() => [setFocus("Invitaciones"), fetchInvitations()]}
             >
               <Text
                 style={[
@@ -222,40 +272,45 @@ const MiRed = ({ navigation }) => {
 
         {focus === "MiRed" ? (
           <View style={{ flex: 1 }}>
-            <Conexion
-              nombre={"Natasha Ocasio Romanoff"}
-              imagen={imageMap["Natasha"]}
-            />
-            <Conexion
-              nombre={"Antonio Stark Rivera"}
-              imagen={imageMap["Antonio"]}
-            />
-            <Conexion
-              nombre={"Jose Antonio Quill"}
-              imagen={imageMap["Quill"]}
-            />
+            {network.map((network) => (
+              <Conexion
+                key={network.id}
+                userID={network.userID}
+                nombre={titleCase(network.full_name)}
+                imagen={network.avatar ? network.avatar : imageMap["Blank"]}
+                mail={network.email}
+              />
+            ))}
           </View>
         ) : null}
 
         {focus === "Solicitudes" ? (
           <View style={{ flex: 1 }}>
-            <Solicitudes
-              nombre={"Bruce García Banner"}
-              imagen={imageMap["Bruce"]}
-            />
-            <Solicitudes
-              nombre={"Carol Danvers Miller"}
-              imagen={imageMap["Carol"]}
-            />
+            {pending.map((pending) => (
+              <Solicitudes
+                key={pending.id}
+                userID={pending.userID}
+                nombre={titleCase(pending.full_name)}
+                imagen={pending.avatar ? pending.avatar : imageMap["Blank"]}
+                mail={pending.email}
+              />
+            ))}
           </View>
         ) : null}
 
         {focus === "Invitaciones" ? (
           <View style={{ flex: 1 }}>
-            <Invitaciones
-              nombre={"Janet Foster Cruz"}
-              imagen={imageMap["Jane"]}
-            />
+            {invitations.map((invitation) => (
+              <Invitaciones
+                key={invitation.id}
+                userID={invitation.userID}
+                nombre={titleCase(invitation.full_name)}
+                imagen={
+                  invitation.avatar ? invitation.avatar : imageMap["Blank"]
+                }
+                mail={invitation.email}
+              />
+            ))}
           </View>
         ) : null}
 

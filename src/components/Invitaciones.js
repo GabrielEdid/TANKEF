@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Alert,
 } from "react-native";
 // Importaciones de Componentes
+import { APIPost } from "../API/APIService";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
 const Invitaciones = (props) => {
@@ -25,10 +27,37 @@ const Invitaciones = (props) => {
     return null;
   }
 
+  const postAccept = async () => {
+    const url = "/api/v1/friendship_request/accept";
+    const data = { contact_id: props.userID };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al aceptar Invitacion:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudo aceptar la invitacion. Intente nuevamente."
+      );
+    } else {
+      // Continuar en caso de éxito
+      handleRemove();
+    }
+  };
+
+  let imageSource;
+  if (typeof props.imagen === "string") {
+    // Assuming it's a URL for a network image
+    imageSource = { uri: props.imagen };
+  } else {
+    // Assuming it's a local image requiring require()
+    imageSource = props.imagen;
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", flex: 1 }}>
-        <Image source={props.imagen} style={styles.icon} />
+        <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
       </View>
       {/* Para Mostrar Boton de Eliminar */}
@@ -40,7 +69,7 @@ const Invitaciones = (props) => {
           style={{ marginTop: 16 }}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={{}}>
+      <TouchableOpacity onPress={() => postAccept()}>
         <FontAwesome5
           name="check-circle"
           size={36}

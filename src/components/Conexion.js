@@ -24,10 +24,19 @@ const Conexion = (props) => {
     return null;
   }
 
+  let imageSource;
+  if (typeof props.imagen === "string") {
+    // Assuming it's a URL for a network image
+    imageSource = { uri: props.imagen };
+  } else {
+    // Assuming it's a local image requiring require()
+    imageSource = props.imagen;
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", flex: 1 }}>
-        <Image source={props.imagen} style={styles.icon} />
+        <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
       </View>
       {/* Para Mostrar Boton de Eliminar */}
