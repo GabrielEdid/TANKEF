@@ -275,7 +275,7 @@ const MiRed = ({ navigation }) => {
             {network.map((network) => (
               <Conexion
                 key={network.id}
-                userID={network.userID}
+                userID={network.id}
                 nombre={titleCase(network.full_name)}
                 imagen={network.avatar ? network.avatar : imageMap["Blank"]}
                 mail={network.email}
@@ -289,7 +289,7 @@ const MiRed = ({ navigation }) => {
             {pending.map((pending) => (
               <Solicitudes
                 key={pending.id}
-                userID={pending.userID}
+                userID={pending.id}
                 nombre={titleCase(pending.full_name)}
                 imagen={pending.avatar ? pending.avatar : imageMap["Blank"]}
                 mail={pending.email}
@@ -303,7 +303,7 @@ const MiRed = ({ navigation }) => {
             {invitations.map((invitation) => (
               <Invitaciones
                 key={invitation.id}
-                userID={invitation.userID}
+                userID={invitation.id}
                 nombre={titleCase(invitation.full_name)}
                 imagen={
                   invitation.avatar ? invitation.avatar : imageMap["Blank"]

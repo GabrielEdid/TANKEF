@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -11,10 +11,12 @@ import {
 } from "react-native";
 // Importaciones de Componentes
 import { APIPost } from "../API/APIService";
+import { UserContext } from "../hooks/UserContext";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
 const Invitaciones = (props) => {
   // Estados y Contexto
+  const { user, setUser } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
