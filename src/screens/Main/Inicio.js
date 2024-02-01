@@ -256,7 +256,7 @@ const Inicio = () => {
                       : imageMap["Blank"]
                   } // Reemplazar con datos reales si están disponibles
                   body={post.body}
-                  comentarios={post.count_reactions}
+                  comentarios={post.count_comments}
                   personal={false}
                   imagen={post.image}
                 />

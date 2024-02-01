@@ -11,6 +11,8 @@ import {
   Modal,
   Linking,
 } from "react-native";
+import { parseISO, formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
@@ -34,6 +36,13 @@ const Post = (props) => {
     Like: require("../../assets/images/Like.png"),
     Comment: require("../../assets/images/Comment.png"),
     // ... más imágenes
+  };
+
+  const getTiempo = () => {
+    const timestamp = props.tiempo;
+    const date = parseISO(timestamp);
+    const timeAgo = formatDistanceToNow(date, { addSuffix: true, locale: es });
+    return timeAgo;
   };
 
   const Link = (props) => (
@@ -140,7 +149,7 @@ const Post = (props) => {
         <Image source={props.foto} style={styles.fotoPerfil} />
         <View style={styles.headerText}>
           <Text style={styles.textoNombre}>{props.nombre}</Text>
-          <Text style={styles.textoTiempo}>Hace {props.tiempo}</Text>
+          <Text style={styles.textoTiempo}>{getTiempo()}</Text>
         </View>
       </View>
 

@@ -199,7 +199,8 @@ const VerPerfiles = ({ route }) => {
                 foto={imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
                 body={post.body}
                 perfil={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
-                personal={true}
+                personal={false}
+                comentarios={post.count_comments}
               />
             ))}
         </View>

@@ -17,28 +17,30 @@ import MovimientoInversion from "../../components/MovimientoInversion";
 
 const MiTankef = ({ navigation }) => {
   return (
-    <View style={styles.tituloContainer}>
-      {/* Titulo */}
-      <MaskedView
-        style={{ flex: 1 }}
-        maskElement={<Text style={styles.titulo}>tankef</Text>}
-      >
-        <LinearGradient
-          colors={["#2FF690", "#21B6D5"]}
-          start={{ x: 0.8, y: 0.8 }}
-          end={{ x: 0, y: 0 }}
-          style={StyleSheet.absoluteFill}
-        />
-      </MaskedView>
-      <Text style={styles.tituloPantalla}>Mi Tankef</Text>
-      <TouchableOpacity>
-        <Feather
-          name="bell"
-          size={25}
-          color="#060B4D"
-          style={{ marginTop: 50 }}
-        />
-      </TouchableOpacity>
+    <View style={{ flex: 1 }}>
+      <View style={styles.tituloContainer}>
+        {/* Titulo */}
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.8, y: 0.8 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text style={styles.tituloPantalla}>Mi Tankef</Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
