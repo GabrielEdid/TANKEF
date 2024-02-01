@@ -109,6 +109,14 @@ const Perfil = () => {
             <Text style={styles.textoMail}>{user.email}</Text>
           </View>
         </View>
+        <View
+          style={{
+            backgroundColor: "#F2F2F2",
+            width: "100%",
+            height: 3,
+            marginTop: 10,
+          }}
+        />
         {/* Lista de Datos de Red del Usuario 
         <ScrollView
           horizontal={true}
@@ -157,7 +165,7 @@ const Perfil = () => {
           </LinearGradient>
         </TouchableOpacity> */}
 
-        <View style={{ marginTop: 15 }}>
+        <View style={{ marginTop: 5 }}>
           {posts.map((post) => (
             <Post
               key={post.id}
