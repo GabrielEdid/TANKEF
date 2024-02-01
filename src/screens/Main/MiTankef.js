@@ -12,10 +12,23 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
 import { Feather } from "@expo/vector-icons";
+import StackedImages from "../../components/StackedImages";
 import MovimientoCredito from "../../components/MovimientoCredito";
 import MovimientoInversion from "../../components/MovimientoInversion";
 
 const MiTankef = ({ navigation }) => {
+  const imageMap = {
+    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
+    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
+    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
+    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
+    Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
+    Test: require("../../../assets/images/Test.png"),
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
+    Sliders: require("../../../assets/images/Sliders.png"),
+    // ... más imágenes
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.tituloContainer}>
@@ -40,6 +53,12 @@ const MiTankef = ({ navigation }) => {
             style={{ marginTop: 50 }}
           />
         </TouchableOpacity>
+      </View>
+      <View style={{ marginTop: 3, backgroundColor: "white" }}>
+        <Text style={styles.textoValorRed}>Valor de tu Red (MXN)</Text>
+        <Text style={styles.valorRed}>$120,000.00</Text>
+
+        <StackedImages />
       </View>
     </View>
   );
@@ -289,6 +308,28 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensansbold",
     fontWeight: "bold",
+  },
+  textoValorRed: {
+    textAlign: "center",
+    fontFamily: "opensansbold",
+    fontSize: 16,
+    color: "#060B4D",
+    marginTop: 20,
+  },
+  valorRed: {
+    textAlign: "center",
+    fontFamily: "opensansbold",
+    fontSize: 35,
+    color: "#060B4D",
+    marginTop: 0,
+  },
+  imagen: {
+    alignSelf: "center",
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    marginTop: 3,
+    marginBottom: 20,
   },
 
   /* background: {
