@@ -93,21 +93,23 @@ const Perfil = () => {
       </View>
       <ScrollView style={styles.scrollV}>
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
-        <View>
+        <View style={{ flexDirection: "row" }}>
           <Image
             style={styles.fotoPerfil}
             source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
           />
-          <Text style={styles.textoNombre}>
-            {user.nombre +
-              " " +
-              user.apellidoPaterno +
-              " " +
-              user.apellidoMaterno}
-          </Text>
-          <Text style={styles.textoMail}>{user.email}</Text>
+          <View style={{ marginLeft: 10, marginTop: 5 }}>
+            <Text style={styles.textoNombre}>
+              {user.nombre +
+                " " +
+                user.apellidoPaterno +
+                " " +
+                user.apellidoMaterno}
+            </Text>
+            <Text style={styles.textoMail}>{user.email}</Text>
+          </View>
         </View>
-        {/* Lista de Datos de Red del Usuario */}
+        {/* Lista de Datos de Red del Usuario 
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -119,14 +121,14 @@ const Perfil = () => {
           <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
           <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
         </ScrollView>
-        {/* View de LogIn Gradual */}
+        {/* View de LogIn Gradual *
         <TouchableOpacity
           style={styles.cuadroLoginProgresivo}
           onPress={() => {
             navigation.navigate("LoginProgresivo");
           }}
         >
-          {/* Texto Incentivo del Recuadro */}
+          {/* Texto Incentivo del Recuadro 
           <Text style={styles.texto}>
             Termina tu <Text style={{ fontWeight: "bold" }}>registro</Text> para
             poder{" "}
@@ -136,7 +138,7 @@ const Perfil = () => {
             !
           </Text>
           <ProgressBar progress={0.7} />
-          {/* Boton del Recuadro */}
+          {/* Boton del Recuadro 
           <LinearGradient
             colors={["#2FF690", "#21B6D5"]}
             start={{ x: 1, y: 1 }} // Inicio del gradiente
@@ -153,9 +155,9 @@ const Perfil = () => {
               COMPLETAR PERFIL
             </Text>
           </LinearGradient>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <View style={{ marginTop: 15, marginHorizontal: -20 }}>
+        <View style={{ marginTop: 15 }}>
           {posts.map((post) => (
             <Post
               key={post.id}
@@ -217,7 +219,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   scrollV: {
-    paddingHorizontal: 20,
+    marginTop: 3,
     flex: 1,
     backgroundColor: "white",
   },
@@ -232,21 +234,18 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 80,
     marginTop: 10,
+    marginLeft: 20,
   },
   textoNombre: {
     color: "#29364d",
-    fontWeight: "bold",
-    fontSize: 27,
-    marginTop: 10,
-    position: "absolute",
-    left: 95,
+    fontFamily: "opensansbold",
+    fontSize: 24,
   },
   textoMail: {
     color: "grey",
-    fontSize: 19,
-    marginTop: 45,
-    position: "absolute",
-    left: 96,
+    fontFamily: "opensans",
+    fontSize: 14,
+    marginLeft: 1,
   },
   cuadroLoginProgresivo: {
     height: 163,
