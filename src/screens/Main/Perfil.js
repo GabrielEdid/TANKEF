@@ -166,25 +166,49 @@ const Perfil = () => {
         </TouchableOpacity> */}
 
         <View style={{ marginTop: 5 }}>
-          {posts.map((post) => (
-            <Post
-              key={post.id}
-              postId={post.id}
-              tipo={"compartir"}
-              nombre={
-                user.nombre +
-                " " +
-                user.apellidoPaterno +
-                " " +
-                user.apellidoMaterno
-              } // Reemplazar con datos reales si están disponibles
-              tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-              foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
-              body={post.body}
-              personal={true}
-              imagen={post.image}
-            />
-          ))}
+          {posts.length !== 0 ? (
+            posts.map((post) => (
+              <Post
+                key={post.id}
+                postId={post.id}
+                tipo={"compartir"}
+                nombre={
+                  user.nombre +
+                  " " +
+                  user.apellidoPaterno +
+                  " " +
+                  user.apellidoMaterno
+                } // Reemplazar con datos reales si están disponibles
+                tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+                body={post.body}
+                personal={true}
+                imagen={post.image}
+              />
+            ))
+          ) : (
+            <View
+              style={{
+                paddingHorizontal: 40,
+                paddingVertical: 250,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: "opensans",
+                  textAlign: "center",
+                  color: "#060B4D",
+                }}
+              >
+                ¡Bienvenido a{" "}
+                <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
+                recuerda que entre más amigos, familiares y socios, mayores
+                beneficios reciben todos! Para comenzar empieza por contarnos en
+                que estas pensando...
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </>
