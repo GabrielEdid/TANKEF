@@ -272,7 +272,7 @@ const MiRed = ({ navigation }) => {
         )}
 
         {focus === "MiRed" ? (
-          <View style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }}>
             {network.map((network) => (
               <Conexion
                 key={network.id}
@@ -282,11 +282,11 @@ const MiRed = ({ navigation }) => {
                 mail={network.email}
               />
             ))}
-          </View>
+          </ScrollView>
         ) : null}
 
         {focus === "Solicitudes" ? (
-          <View style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }}>
             {pending.map((pending) => (
               <Solicitudes
                 key={pending.id}
@@ -296,11 +296,11 @@ const MiRed = ({ navigation }) => {
                 mail={pending.email}
               />
             ))}
-          </View>
+          </ScrollView>
         ) : null}
 
         {focus === "Invitaciones" ? (
-          <View style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }}>
             {invitations.map((invitation) => (
               <Invitaciones
                 key={invitation.id}
@@ -312,7 +312,7 @@ const MiRed = ({ navigation }) => {
                 mail={invitation.email}
               />
             ))}
-          </View>
+          </ScrollView>
         ) : null}
 
         {/*<TouchableOpacity

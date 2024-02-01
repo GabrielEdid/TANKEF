@@ -1,6 +1,7 @@
 // Importaciones de React Native y React
-import { Text, View, StyleSheet, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert, Modal } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import { APIGet, setToken } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
@@ -12,6 +13,7 @@ const AuthPinPad = ({ navigation, route }) => {
   const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -26,6 +28,7 @@ const AuthPinPad = ({ navigation, route }) => {
 
   // Función para obtener los datos del perfil
   const fetchProfileData = async () => {
+    setIsLoading(true);
     const url = "/api/v1/profile";
 
     const result = await APIGet(url);
@@ -50,6 +53,7 @@ const AuthPinPad = ({ navigation, route }) => {
       });
       console.log("Datos del perfil:", result.data);
       setIsProfileLoaded(true);
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +81,11 @@ const AuthPinPad = ({ navigation, route }) => {
       <Text style={styles.titulo}>Introduce tu PIN</Text>
       {/* Componente de PinPad, ahí mismo aparece el logo, titulo de Tankef, faceID y olvide mi PIN */}
       <PinPad id={true} get={pin} set={setPin} />
+      <Modal transparent={true} animationType="fade" visible={isLoading}>
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="white" />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -94,6 +103,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     color: "#29364d",
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
 

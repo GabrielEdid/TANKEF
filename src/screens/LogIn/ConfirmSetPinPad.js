@@ -1,11 +1,12 @@
 // Importaciones de React Native y React
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
+import { ActivityIndicator } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // Importaciones de Hooks y Componentes
 import { APIGet, getToken } from "../../API/APIService";
 import PinPad from "../../components/PinPad";
 import { UserContext } from "../../hooks/UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 
 const ConfirmSetPinPad = ({ navigation, route }) => {
@@ -14,6 +15,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   const { pin, onSetPin } = route.params;
   const [confirmPin, setConfirmPin] = useState("");
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -77,6 +79,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
 
   // Función para guardar valores en el conexto y navegar a la pantalla siguiente
   const handleConfirmPin = async () => {
+    setIsLoading(true);
     if (confirmPin === pin) {
       setUser({
         ...user,
@@ -88,12 +91,14 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
       await fetchProfileData();
 
       navigation.navigate("MainFlow", {
-        screen: "Perfil",
+        screen: "Inicio",
       });
+      setIsLoading(false);
     } else {
       alert("Los Pines no Coinciden");
       setConfirmPin("");
       navigation.navigate("SetPinPad"); // Se regresa a la pantalla de SetPinPad
+      setIsLoading(false);
     }
   };
 
@@ -117,6 +122,11 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         <Text style={styles.titulo}>Confirma tu PIN</Text>
         {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
         <PinPad id={false} get={confirmPin} set={setConfirmPin} />
+        <Modal transparent={true} animationType="fade" visible={isLoading}>
+          <View style={styles.overlay}>
+            <ActivityIndicator size={75} color="white" />
+          </View>
+        </Modal>
         {/* Logica para activar el boton de Guardar PIN si el PIN tiene el largo esperado */}
       </View>
       {confirmPin.length === 6 && isProfileLoaded ? (
@@ -168,6 +178,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontFamily: "conthrax",
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
 
