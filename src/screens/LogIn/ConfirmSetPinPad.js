@@ -91,7 +91,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
       await fetchProfileData();
 
       navigation.navigate("MainFlow", {
-        screen: "Inicio",
+        screen: "PerfilMain",
       });
       setIsLoading(false);
     } else {

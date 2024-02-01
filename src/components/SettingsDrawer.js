@@ -60,6 +60,7 @@ const SettingsDrawer = ({ navigation }) => {
     // Espera a que el estado se actualice antes de guardar en AsyncStorage
     await AsyncStorage.setItem("userInfo", JSON.stringify(user));
     console.log("Información reseteada y guardada con éxito");
+    navigation.closeDrawer();
     navigation.navigate("InitialScreen");
   };
 

@@ -139,26 +139,14 @@ const Inicio = () => {
           onPressIn={() => handleFocus()}
           editable={false}
         />
-        <MaskedView
-          style={{ flex: 0.22 }}
-          maskElement={
-            <Ionicons
-              name="ios-image"
-              size={30}
-              color="white"
-              style={{
-                transform: [{ scaleX: -1 }],
-              }}
-            />
-          }
-        >
-          <LinearGradient
-            colors={["#060B4D", "#060B4D"]}
-            start={{ x: 0.7, y: 0.7 }}
-            end={{ x: 0, y: 0 }}
-            style={StyleSheet.absoluteFill}
-          />
-        </MaskedView>
+        <Ionicons
+          name="ios-image"
+          size={30}
+          color="#060B4D"
+          style={{
+            transform: [{ scaleX: -1 }],
+          }}
+        />
       </TouchableOpacity>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView style={styles.scrollV}>
@@ -350,7 +338,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: "#D5D5D5",
     borderWidth: 1.5,
-    marginLeft: 10,
+    marginHorizontal: 10,
     paddingHorizontal: 15,
     flex: 1,
     fontFamily: "opensans",
