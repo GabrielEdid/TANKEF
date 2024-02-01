@@ -245,28 +245,54 @@ const Inicio = () => {
             }
             comentarios={10}
           />*/}
-          {posts.map((post) => (
-            <Post
-              key={post.id}
-              postId={post.id}
-              tipo={"compartir"}
-              nombre={
-                titleCase(post.user.name) +
-                " " +
-                titleCase(post.user.first_last_name) +
-                " " +
-                titleCase(post.user.second_last_name)
-              } // Reemplazar con datos reales si están disponibles
-              tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-              foto={
-                post.user.avatar ? { uri: post.user.avatar } : imageMap["Blank"]
-              } // Reemplazar con datos reales si están disponibles
-              body={post.body}
-              comentarios={post.count_reactions}
-              personal={false}
-              imagen={post.image}
-            />
-          ))}
+          {posts.length !== 0 ? (
+            posts.map((post) => (
+              <Post
+                key={post.id}
+                postId={post.id}
+                tipo={"compartir"}
+                nombre={
+                  titleCase(post.user.name) +
+                  " " +
+                  titleCase(post.user.first_last_name) +
+                  " " +
+                  titleCase(post.user.second_last_name)
+                } // Reemplazar con datos reales si están disponibles
+                tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                foto={
+                  post.user.avatar
+                    ? { uri: post.user.avatar }
+                    : imageMap["Blank"]
+                } // Reemplazar con datos reales si están disponibles
+                body={post.body}
+                comentarios={post.count_reactions}
+                personal={false}
+                imagen={post.image}
+              />
+            ))
+          ) : (
+            <View
+              style={{
+                paddingHorizontal: 40,
+                paddingVertical: 250,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: "opensans",
+                  textAlign: "center",
+                  color: "#060B4D",
+                }}
+              >
+                ¡Bienvenido a{" "}
+                <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
+                recuerda que entre más amigos, familiares y socios, mayores
+                beneficios reciben todos! Para comenzar empieza por contarnos en
+                que estas pensando...
+              </Text>
+            </View>
+          )}
         </ScrollView>
       </TouchableWithoutFeedback>
       <ModalPost
