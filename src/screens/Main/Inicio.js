@@ -41,8 +41,8 @@ const Inicio = () => {
       console.error("Error al obtener el feed:", result.error);
     } else {
       const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
-      setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
       setIsLoading(false);
+      setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
     }
   };
 

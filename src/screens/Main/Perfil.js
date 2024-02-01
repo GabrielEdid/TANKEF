@@ -52,8 +52,8 @@ const Perfil = () => {
       console.error("Error al obtener posts:", result.error);
     } else {
       const sortedPosts = result.data.data.sort((a, b) => b.id - a.id);
-      setPosts(sortedPosts);
       setIsLoading(false);
+      setPosts(sortedPosts);
     }
   };
 
