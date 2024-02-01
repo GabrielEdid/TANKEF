@@ -11,6 +11,7 @@ import {
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
 import { APIGet, APIPost } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
@@ -23,6 +24,7 @@ const VerPerfiles = ({ route }) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [estado, setEstado] = useState("inicial"); // Estados: "inicial", "solicitudEnviada"
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState({
     nombre: "",
     apellidoPaterno: "",
@@ -159,6 +161,11 @@ const VerPerfiles = ({ route }) => {
             </TouchableOpacity>
           )}
         </View>
+        <Modal transparent={true} animationType="fade" visible={isLoading}>
+          <View style={styles.overlay}>
+            <ActivityIndicator size={75} color="#060B4D" />
+          </View>
+        </Modal>
 
         {/* Lista de Datos de Red del Usuario 
         <ScrollView
@@ -176,24 +183,25 @@ const VerPerfiles = ({ route }) => {
         {/* View de los Posts del Usuario */}
 
         <View style={{ marginTop: 15 }}>
-          {posts.map((post) => (
-            <Post
-              postID={post.id}
-              tipo={"compartir"}
-              nombre={
-                user.nombre +
-                " " +
-                user.apellidoPaterno +
-                " " +
-                user.apellidoMaterno
-              } // Reemplazar con datos reales si están disponibles
-              tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-              foto={imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
-              body={post.body}
-              perfil={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
-              personal={true}
-            />
-          ))}
+          {!isLoading &&
+            posts.map((post) => (
+              <Post
+                postID={post.id}
+                tipo={"compartir"}
+                nombre={
+                  user.nombre +
+                  " " +
+                  user.apellidoPaterno +
+                  " " +
+                  user.apellidoMaterno
+                } // Reemplazar con datos reales si están disponibles
+                tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                foto={imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+                body={post.body}
+                perfil={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+                personal={true}
+              />
+            ))}
         </View>
       </ScrollView>
 
@@ -350,6 +358,11 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     marginVertical: 5,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
