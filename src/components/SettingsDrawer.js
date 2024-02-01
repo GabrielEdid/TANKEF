@@ -112,25 +112,24 @@ const SettingsDrawer = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   titulo: {
-    fontSize: 25,
-    fontFamily: "conthrax",
-    marginTop: 70,
+    fontSize: 30,
+    fontFamily: "opensansbold",
+    marginTop: 100,
     position: "absolute",
     color: "#29364d",
   },
   texto: {
     fontSize: 20,
-    fontFamily: "conthrax",
+    fontFamily: "opensans",
     marginBottom: 30,
     color: "#29364d",
   },
   cerrarSesion: {
     fontSize: 20,
-    fontFamily: "conthrax",
+    fontFamily: "opensans",
     color: "red",
     marginBottom: 30,
   },
-  // Estilos para el modal
   centeredView: {
     flex: 1,
     justifyContent: "center",

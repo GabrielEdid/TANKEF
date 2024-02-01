@@ -14,6 +14,7 @@ import {
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator } from "react-native-paper";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
@@ -27,9 +28,11 @@ const Inicio = () => {
   // Estados y Contexto
   const { user, setUser } = useContext(UserContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
 
   const fetchFeed = async () => {
+    setIsLoading(true);
     const url = `/api/v1/feed`;
 
     const result = await APIGet(url);
@@ -39,6 +42,7 @@ const Inicio = () => {
     } else {
       const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
       setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
+      setIsLoading(false);
     }
   };
 
@@ -158,6 +162,11 @@ const Inicio = () => {
       </TouchableOpacity>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView style={styles.scrollV}>
+          <Modal transparent={true} animationType="fade" visible={isLoading}>
+            <View style={styles.overlay}>
+              <ActivityIndicator size={75} color="#060B4D" />
+            </View>
+          </Modal>
           {/* Lista de Datos de Red del Usuario 
           <ScrollView
             horizontal={true}
@@ -238,54 +247,55 @@ const Inicio = () => {
             }
             comentarios={10}
           />*/}
-          {posts.length !== 0 ? (
-            posts.map((post) => (
-              <Post
-                key={post.id}
-                postId={post.id}
-                tipo={"compartir"}
-                nombre={
-                  titleCase(post.user.name) +
-                  " " +
-                  titleCase(post.user.first_last_name) +
-                  " " +
-                  titleCase(post.user.second_last_name)
-                } // Reemplazar con datos reales si están disponibles
-                tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                foto={
-                  post.user.avatar
-                    ? { uri: post.user.avatar }
-                    : imageMap["Blank"]
-                } // Reemplazar con datos reales si están disponibles
-                body={post.body}
-                comentarios={post.count_reactions}
-                personal={false}
-                imagen={post.image}
-              />
-            ))
-          ) : (
-            <View
-              style={{
-                paddingHorizontal: 40,
-                paddingVertical: 250,
-              }}
-            >
-              <Text
+          {!isLoading &&
+            (posts.length !== 0 ? (
+              posts.map((post) => (
+                <Post
+                  key={post.id}
+                  postId={post.id}
+                  tipo={"compartir"}
+                  nombre={
+                    titleCase(post.user.name) +
+                    " " +
+                    titleCase(post.user.first_last_name) +
+                    " " +
+                    titleCase(post.user.second_last_name)
+                  } // Reemplazar con datos reales si están disponibles
+                  tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                  foto={
+                    post.user.avatar
+                      ? { uri: post.user.avatar }
+                      : imageMap["Blank"]
+                  } // Reemplazar con datos reales si están disponibles
+                  body={post.body}
+                  comentarios={post.count_reactions}
+                  personal={false}
+                  imagen={post.image}
+                />
+              ))
+            ) : (
+              <View
                 style={{
-                  fontSize: 14,
-                  fontFamily: "opensans",
-                  textAlign: "center",
-                  color: "#060B4D",
+                  paddingHorizontal: 40,
+                  paddingVertical: 250,
                 }}
               >
-                ¡Bienvenido a{" "}
-                <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
-                recuerda que entre más amigos, familiares y socios, mayores
-                beneficios reciben todos! Para comenzar empieza por contarnos en
-                que estas pensando...
-              </Text>
-            </View>
-          )}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "opensans",
+                    textAlign: "center",
+                    color: "#060B4D",
+                  }}
+                >
+                  ¡Bienvenido a{" "}
+                  <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
+                  recuerda que entre más amigos, familiares y socios, mayores
+                  beneficios reciben todos! Para comenzar empieza por contarnos
+                  en que estas pensando...
+                </Text>
+              </View>
+            ))}
         </ScrollView>
       </TouchableWithoutFeedback>
       <ModalPost
@@ -351,6 +361,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 3,
     backgroundColor: "white",
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   // Estilos de lo que se ha eliminado
   /*scrollH: {

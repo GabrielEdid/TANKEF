@@ -6,11 +6,13 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator } from "react-native-paper";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
@@ -24,6 +26,7 @@ const Perfil = () => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -40,6 +43,7 @@ const Perfil = () => {
   };
 
   const fetchUserPosts = async () => {
+    setIsLoading(true);
     const url = `/api/v1/users/${user.userID}/posts`;
 
     const result = await APIGet(url);
@@ -49,6 +53,7 @@ const Perfil = () => {
     } else {
       const sortedPosts = result.data.data.sort((a, b) => b.id - a.id);
       setPosts(sortedPosts);
+      setIsLoading(false);
     }
   };
 
@@ -166,49 +171,55 @@ const Perfil = () => {
         </TouchableOpacity> */}
 
         <View style={{ marginTop: 5 }}>
-          {posts.length !== 0 ? (
-            posts.map((post) => (
-              <Post
-                key={post.id}
-                postId={post.id}
-                tipo={"compartir"}
-                nombre={
-                  user.nombre +
-                  " " +
-                  user.apellidoPaterno +
-                  " " +
-                  user.apellidoMaterno
-                } // Reemplazar con datos reales si están disponibles
-                tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
-                body={post.body}
-                personal={true}
-                imagen={post.image}
-              />
-            ))
-          ) : (
-            <View
-              style={{
-                paddingHorizontal: 40,
-                paddingVertical: 250,
-              }}
-            >
-              <Text
+          <Modal transparent={true} animationType="fade" visible={isLoading}>
+            <View style={styles.overlay}>
+              <ActivityIndicator size={75} color="#060B4D" />
+            </View>
+          </Modal>
+          {!isLoading &&
+            (posts.length !== 0 ? (
+              posts.map((post) => (
+                <Post
+                  key={post.id}
+                  postId={post.id}
+                  tipo={"compartir"}
+                  nombre={
+                    user.nombre +
+                    " " +
+                    user.apellidoPaterno +
+                    " " +
+                    user.apellidoMaterno
+                  } // Reemplazar con datos reales si están disponibles
+                  tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                  foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+                  body={post.body}
+                  personal={true}
+                  imagen={post.image}
+                />
+              ))
+            ) : (
+              <View
                 style={{
-                  fontSize: 14,
-                  fontFamily: "opensans",
-                  textAlign: "center",
-                  color: "#060B4D",
+                  paddingHorizontal: 40,
+                  paddingVertical: 250,
                 }}
               >
-                ¡Bienvenido a{" "}
-                <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
-                recuerda que entre más amigos, familiares y socios, mayores
-                beneficios reciben todos! Para comenzar empieza por contarnos en
-                que estas pensando...
-              </Text>
-            </View>
-          )}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "opensans",
+                    textAlign: "center",
+                    color: "#060B4D",
+                  }}
+                >
+                  ¡Bienvenido a{" "}
+                  <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
+                  recuerda que entre más amigos, familiares y socios, mayores
+                  beneficios reciben todos! Para comenzar empieza por contarnos
+                  en que estas pensando...
+                </Text>
+              </View>
+            ))}
         </View>
       </ScrollView>
     </>
@@ -302,6 +313,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 15,
     top: 15,
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
