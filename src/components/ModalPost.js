@@ -51,6 +51,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
         body: text.trim(),
         post_image: image64,
         user_id: user.userID,
+        scope_post: quien === "Mis Conexiones" ? "friends" : "all_network",
       },
     };
 
@@ -125,7 +126,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                 color: "#060B4D",
                 fontFamily: "opensansbold",
                 fontWeight: "bold",
-                textAlign: "center"
+                textAlign: "center",
               }}
             >
               Post
@@ -150,7 +151,14 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: "row", paddingTop: 20, marginBottom: 0, backgroundColor: "white" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingTop: 20,
+              marginBottom: 0,
+              backgroundColor: "white",
+            }}
+          >
             <Image
               style={styles.fotoPerfilModal}
               source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
@@ -211,7 +219,13 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   source={imageMap["MiRed"]}
                 />
               )}
-              <Text style={{ marginLeft: 5, fontFamily: "opensansbold", fontSize:12 }}>
+              <Text
+                style={{
+                  marginLeft: 5,
+                  fontFamily: "opensansbold",
+                  fontSize: 12,
+                }}
+              >
                 {quien}
               </Text>
               <MaterialIcons
