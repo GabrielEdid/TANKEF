@@ -157,15 +157,8 @@ const MiRed = ({ navigation }) => {
               name="bell"
               size={25}
               color="#060B4D"
-              style={{ marginTop: 50, marginRight: 15 }}
+              style={{ marginTop: 50 }}
             />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            {/*<Image
-            style={[styles.fotoPerfil, { marginTop: 65 }]}
-            source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
-        />*/}
-            <Image style={styles.sliders} source={imageMap["Sliders"]} />
           </TouchableOpacity>
         </View>
 
@@ -384,7 +377,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 45,
-    marginLeft: -5,
+    marginRight: 45,
     fontSize: 25,
     color: "#060B4D",
     fontFamily: "opensansbold",
