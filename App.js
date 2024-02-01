@@ -25,7 +25,7 @@ import MiRed from "./src/screens/Main/MiRed";
 import VerPerfiles from "./src/screens/Main/VerPerfiles";
 import Crear from "./src/screens/Main/Pantallas Main Dejadas/Crear";
 import CrearModal from "./src/components/CrearModal";
-import Movimientos from "./src/screens/Main/Movimientos";
+import MiTankef from "./src/screens/Main/MiTankef";
 import Perfil from "./src/screens/Main/Perfil";
 import SolicitudesConexion from "./src/screens/Main/Pantallas Main Dejadas/SolicitudesConexion";
 import MisConexiones from "./src/screens/Main/Pantallas Main Dejadas/MisConexiones";
@@ -221,7 +221,7 @@ function MainFlow() {
         />
         <Tab.Screen
           name="MiTankef"
-          component={Movimientos}
+          component={MiTankef}
           listeners={{
             tabPress: (e) => handleTabPress(e, "MiTankef"),
           }}
