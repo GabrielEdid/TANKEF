@@ -376,17 +376,12 @@ const styles = StyleSheet.create({
   },
   tituloPantalla: {
     flex: 1,
-    marginTop: 45,
+    marginTop: 47,
     marginRight: 45,
-    fontSize: 25,
+    fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensansbold",
     fontWeight: "bold",
-  },
-  fotoPerfil: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
   },
   sliders: {
     width: 25,

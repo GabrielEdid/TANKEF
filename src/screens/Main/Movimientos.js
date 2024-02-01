@@ -9,11 +9,42 @@ import {
 } from "react-native";
 import React, { Component } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
+import { Feather } from "@expo/vector-icons";
 import MovimientoCredito from "../../components/MovimientoCredito";
 import MovimientoInversion from "../../components/MovimientoInversion";
 
-export default class Movimientos extends Component {
+const MiTankef = ({ navigation }) => {
+  return (
+    <View style={styles.tituloContainer}>
+      {/* Titulo */}
+      <MaskedView
+        style={{ flex: 1 }}
+        maskElement={<Text style={styles.titulo}>tankef</Text>}
+      >
+        <LinearGradient
+          colors={["#2FF690", "#21B6D5"]}
+          start={{ x: 0.8, y: 0.8 }}
+          end={{ x: 0, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </MaskedView>
+      <Text style={styles.tituloPantalla}>Mi Tankef</Text>
+      <TouchableOpacity>
+        <Feather
+          name="bell"
+          size={25}
+          color="#060B4D"
+          style={{ marginTop: 50 }}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+{
+  /*export default class Movimientos extends Component {
   constructor(props) {
     super(props);
 
@@ -27,7 +58,7 @@ export default class Movimientos extends Component {
   render() {
     return (
       <View style={styles.background}>
-        {/* Titulo */}
+        {/* Titulo 
         <View style={{ height: 120 }}>
           <Text style={styles.titulo}>TANKEF</Text>
         </View>
@@ -102,7 +133,7 @@ export default class Movimientos extends Component {
           </TouchableOpacity>
         </View>
 
-        {/* Seccion de los Creditos del Usuario */}
+        {/* Seccion de los Creditos del Usuario 
         {this.state.isCreditos && (
           <View style={{ flex: 1 }}>
             <Image
@@ -128,7 +159,7 @@ export default class Movimientos extends Component {
               </ScrollView>
             </View>
 
-            {/* Boton de Nuevo Crédito y Ver Más */}
+            {/* Boton de Nuevo Crédito y Ver Más 
             <View
               style={{
                 height: 80,
@@ -150,14 +181,14 @@ export default class Movimientos extends Component {
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-            {/* Boton de VerMas*/}
+            {/* Boton de VerMas
             {/*<TouchableOpacity style={styles.verMas}>
           <Text style={styles.textoVerMas}>VER MÁS</Text>
-        </TouchableOpacity>*/}
+        </TouchableOpacity>
           </View>
         )}
 
-        {/* Seccion de las Inversiones del Usuario */}
+        {/* Seccion de las Inversiones del Usuario 
         {this.state.isInversiones && (
           <View style={{ flex: 1 }}>
             <Image
@@ -199,7 +230,7 @@ export default class Movimientos extends Component {
               </ScrollView>
             </View>
 
-            {/* Boton de Invertir y Ver Más */}
+            {/* Boton de Invertir y Ver Más 
             <View
               style={{
                 height: 80,
@@ -222,20 +253,43 @@ export default class Movimientos extends Component {
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-            {/* Boton de VerMas*/}
+            {/* Boton de VerMas
             {/* <TouchableOpacity style={[styles.verMas, { marginTop: 730 }]}>
           <Text style={styles.textoVerMas}>VER MÁS</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity> 
           </View>
         )}
       </View>
     );
   }
+} */
 }
 
 // Estilos de la pantalla
 const styles = StyleSheet.create({
-  background: {
+  tituloContainer: {
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    backgroundColor: "white",
+    paddingBottom: 10,
+  },
+  titulo: {
+    fontFamily: "montserrat",
+    letterSpacing: -4,
+    fontSize: 35,
+    marginTop: 40,
+  },
+  tituloPantalla: {
+    flex: 1,
+    marginTop: 47,
+    marginRight: 90,
+    fontSize: 24,
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+    fontWeight: "bold",
+  },
+
+  /* background: {
     flex: 1,
     backgroundColor: "white",
   },
@@ -364,5 +418,7 @@ const styles = StyleSheet.create({
     fontFamily: "conthrax",
     color: "#29364d",
     position: "absolute",
-  },
+  }, */
 });
+
+export default MiTankef;
