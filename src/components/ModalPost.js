@@ -124,7 +124,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                 flex: 1,
                 fontSize: 24,
                 color: "#060B4D",
-                fontFamily: "opensansbold",
+                fontFamily: "opensanssemibold",
                 fontWeight: "bold",
                 textAlign: "center",
               }}

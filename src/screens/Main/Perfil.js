@@ -244,10 +244,10 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginLeft: 0,
+    marginLeft: 5,
     fontSize: 24,
     color: "#060B4D",
-    fontFamily: "opensansbold",
+    fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
   sliders: {

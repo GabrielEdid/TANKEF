@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     marginRight: 35,
     fontSize: 24,
     color: "#060B4D",
-    fontFamily: "opensansbold",
+    fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
   sliders: {
