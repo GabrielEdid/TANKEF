@@ -412,6 +412,7 @@ export default App = () => {
       montserrat: require("./assets/fonts/montserrat.ttf"),
       opensans: require("./assets/fonts/opensans.ttf"),
       opensansbold: require("./assets/fonts/opensansbold.ttf"),
+      opensanssemibold: require("./assets/fonts/opensanssemibold.ttf"),
     });
     setFontsLoaded(true);
   }

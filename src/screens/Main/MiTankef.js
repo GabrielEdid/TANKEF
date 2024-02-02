@@ -6,8 +6,9 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from "react-native";
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
@@ -16,7 +17,14 @@ import StackedImages from "../../components/StackedImages";
 import MovimientoCredito from "../../components/MovimientoCredito";
 import MovimientoInversion from "../../components/MovimientoInversion";
 
+const screenWidth = Dimensions.get("window").width;
+const widthHalf = screenWidth / 2;
+
 const MiTankef = ({ navigation }) => {
+  // Estados y Contexto
+  const [focus, setFocus] = useState("Credito");
+  const [secondFocus, setSecondFocus] = useState("Detalle");
+
   const imageMap = {
     Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
     Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
@@ -57,8 +65,127 @@ const MiTankef = ({ navigation }) => {
       <View style={{ marginTop: 3, backgroundColor: "white" }}>
         <Text style={styles.textoValorRed}>Valor de tu Red (MXN)</Text>
         <Text style={styles.valorRed}>$120,000.00</Text>
-
         <StackedImages />
+      </View>
+
+      {/* Primera Barra de Tabs */}
+      <View style={styles.tabsContainer}>
+        {/* Boton Tab Credito */}
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            { backgroundColor: focus === "Credito" ? "#2FF690" : "#F3F3F3" },
+          ]}
+          onPress={() => setFocus("Credito")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              { color: focus === "Credito" ? "#060B4D" : "#9596AF" },
+            ]}
+          >
+            Crédito
+          </Text>
+        </TouchableOpacity>
+        {/* Boton Tab Inversion */}
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            { backgroundColor: focus === "Inversion" ? "#2FF690" : "#F3F3F3" },
+          ]}
+          onPress={() => setFocus("Inversion")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              { color: focus === "Inversion" ? "#060B4D" : "#9596AF" },
+            ]}
+          >
+            Inversión
+          </Text>
+        </TouchableOpacity>
+        {/* Boton Tab Caja Ahorro */}
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            { backgroundColor: focus === "Caja" ? "#2FF690" : "#F3F3F3" },
+          ]}
+          onPress={() => setFocus("Caja")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              { color: focus === "Caja" ? "#060B4D" : "#9596AF" },
+            ]}
+          >
+            Caja Ahorro
+          </Text>
+        </TouchableOpacity>
+        {/* Boton Tab Obligado S. */}
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            { backgroundColor: focus === "Obligado" ? "#2FF690" : "#F3F3F3" },
+          ]}
+          onPress={() => setFocus("Obligado")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              { color: focus === "Obligado" ? "#060B4D" : "#9596AF" },
+            ]}
+          >
+            Obligado S.
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Segunda Barra de Tabs */}
+      <View style={styles.secondTabsContainer}>
+        {/* Boton Tab Detalle */}
+        <TouchableOpacity
+          style={styles.secondTabButton}
+          onPress={() => setSecondFocus("Detalle")}
+        >
+          <Text
+            style={[
+              styles.secondTabText,
+              {
+                color: secondFocus === "Detalle" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  secondFocus === "Detalle"
+                    ? "opensansbold"
+                    : "opensanssemibold",
+              },
+            ]}
+          >
+            Detalle
+          </Text>
+          {secondFocus === "Detalle" ? <View style={styles.focusLine} /> : null}
+        </TouchableOpacity>
+        {/* Boton Tab Movimientos */}
+        <TouchableOpacity
+          style={styles.secondTabButton}
+          onPress={() => setSecondFocus("Movimientos")}
+        >
+          <Text
+            style={[
+              styles.secondTabText,
+              {
+                color: secondFocus === "Movimientos" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  secondFocus === "Movimientos"
+                    ? "opensansbold"
+                    : "opensanssemibold",
+              },
+            ]}
+          >
+            Movimientos
+          </Text>
+          {secondFocus === "Movimientos" ? (
+            <View style={styles.focusLine} />
+          ) : null}
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -330,6 +457,50 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 3,
     marginBottom: 20,
+  },
+  //Estilos para la primera barra de Tabs
+  tabsContainer: {
+    marginTop: 3,
+    backgroundColor: "white",
+    flexDirection: "row",
+    paddingVertical: 10,
+    justifyContent: "space-between",
+  },
+  tabButton: {
+    alignItems: "center",
+    borderRadius: 100,
+    paddingVertical: 10,
+    marginHorizontal: 7,
+    flex: 1,
+  },
+  tabText: {
+    fontFamily: "opensanssemibold",
+    fontSize: 14,
+    textAlign: "center",
+  },
+  //Estilos para la segunda barra de Tabs
+  secondTabsContainer: {
+    marginTop: 3,
+    backgroundColor: "white",
+    flexDirection: "row",
+    paddingTop: 19,
+    justifyContent: "space-between",
+  },
+  secondTabButton: {
+    alignItems: "center",
+    paddingVertical: 0,
+    flex: 1,
+  },
+  secondTabText: {
+    fontFamily: "opensansbold",
+    fontSize: 18,
+    textAlign: "center",
+  },
+  focusLine: {
+    height: 4,
+    width: widthHalf,
+    marginTop: 15,
+    backgroundColor: "#060B4D",
   },
 
   /* background: {
