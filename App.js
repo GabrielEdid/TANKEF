@@ -243,8 +243,8 @@ function MainFlow() {
             require("./assets/images/Perfil.png"),
             "Perfil",
             customFocusedTab,
-            30,
-            30
+            28,
+            28
           )}
         />
       </Tab.Navigator>
