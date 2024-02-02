@@ -14,8 +14,9 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
 import { Feather } from "@expo/vector-icons";
 import StackedImages from "../../components/StackedImages";
-import MovimientoCredito from "../../components/MovimientoCredito";
-import MovimientoInversion from "../../components/MovimientoInversion";
+import MovimientoCredito from "../../components/MiTankefCredito";
+//import MovimientoCredito from "../../components/Componentes Olvidados/MovimientoCredito";
+//import MovimientoInversion from "../../components/Componentes Olvidados/MovimientoInversion";
 
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;

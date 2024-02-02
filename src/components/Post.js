@@ -18,7 +18,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { UserContext } from "../hooks/UserContext";
 import { APIPost, APIDelete } from "../API/APIService";
 import { AntDesign } from "@expo/vector-icons";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "./Componentes Olvidados/ProgressBar";
 
 const Post = (props) => {
   // Estados del Componente

@@ -20,7 +20,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import { Feather, Ionicons, Entypo, FontAwesome5 } from "@expo/vector-icons";
-import CuadroRedUsuario from "../../components/CuadroRedUsuario";
+import CuadroRedUsuario from "../../components/Componentes Olvidados/CuadroRedUsuario";
 import Post from "../../components/Post";
 import ModalPost from "../../components/ModalPost";
 
