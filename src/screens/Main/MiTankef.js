@@ -14,7 +14,10 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
 import { Feather } from "@expo/vector-icons";
 import StackedImages from "../../components/StackedImages";
-import MovimientoCredito from "../../components/MiTankefCredito";
+import MiTankefCredito from "../../components/MiTankefCredito";
+import MiTankefInversion from "../../components/MiTankefInversion";
+import MiTankefCaja from "../../components/MiTankefCaja";
+import MiTankefObligado from "../../components/MiTankefObligado";
 //import MovimientoCredito from "../../components/Componentes Olvidados/MovimientoCredito";
 //import MovimientoInversion from "../../components/Componentes Olvidados/MovimientoInversion";
 
@@ -187,6 +190,19 @@ const MiTankef = ({ navigation }) => {
             <View style={styles.focusLine} />
           ) : null}
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.detalleView}>
+        {focus === "Credito" && secondFocus === "Detalle" && (
+          <MiTankefCredito />
+        )}
+        {focus === "Inversion" && secondFocus === "Detalle" && (
+          <MiTankefInversion />
+        )}
+        {focus === "Caja" && secondFocus === "Detalle" && <MiTankefCaja />}
+        {focus === "Obligado" && secondFocus === "Detalle" && (
+          <MiTankefObligado />
+        )}
       </View>
     </View>
   );
@@ -502,6 +518,11 @@ const styles = StyleSheet.create({
     width: widthHalf,
     marginTop: 15,
     backgroundColor: "#060B4D",
+  },
+  detalleView: {
+    marginTop: 5,
+    backgroundColor: "white",
+    flex: 1,
   },
 
   /* background: {
