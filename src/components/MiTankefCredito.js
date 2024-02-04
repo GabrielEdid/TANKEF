@@ -137,13 +137,13 @@ const styles = StyleSheet.create({
   },
   concepto: {
     fontFamily: "opensansbold",
-    fontSize: 16,
+    fontSize: 15,
     color: "#060B4D",
     flex: 1,
   },
   valorConcepto: {
     fontFamily: "opensanssemibold",
-    fontSize: 16,
+    fontSize: 15,
     color: "#060B4D",
   },
   seperacion: {
