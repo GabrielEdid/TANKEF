@@ -192,7 +192,7 @@ const MiTankef = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.detalleView}>
+      <View style={{ marginTop: 5 }}>
         {focus === "Credito" && secondFocus === "Detalle" && (
           <MiTankefCredito />
         )}
@@ -518,11 +518,6 @@ const styles = StyleSheet.create({
     width: widthHalf,
     marginTop: 15,
     backgroundColor: "#060B4D",
-  },
-  detalleView: {
-    marginTop: 5,
-    backgroundColor: "white",
-    flex: 1,
   },
 
   /* background: {
