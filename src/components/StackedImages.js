@@ -3,7 +3,7 @@ import React from "react";
 import { View, Image, StyleSheet, Text } from "react-native";
 // Importaciones de Componentes y Hooks
 
-const imageSize = 50; // Diameter of the circular images
+const imageSize = 45; // Diameter of the circular images
 const overlap = 20; // Overlap size
 const borderSize = 2;
 

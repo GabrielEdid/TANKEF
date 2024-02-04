@@ -456,14 +456,14 @@ const styles = StyleSheet.create({
   textoValorRed: {
     textAlign: "center",
     fontFamily: "opensansbold",
-    fontSize: 16,
+    fontSize: 14,
     color: "#060B4D",
     marginTop: 20,
   },
   valorRed: {
     textAlign: "center",
     fontFamily: "opensansbold",
-    fontSize: 35,
+    fontSize: 30,
     color: "#060B4D",
     marginTop: 0,
   },
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     backgroundColor: "white",
     flexDirection: "row",
-    paddingTop: 19,
+    paddingTop: 16,
     justifyContent: "space-between",
   },
   secondTabButton: {
@@ -510,13 +510,13 @@ const styles = StyleSheet.create({
   },
   secondTabText: {
     fontFamily: "opensansbold",
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "center",
   },
   focusLine: {
     height: 4,
     width: widthHalf,
-    marginTop: 15,
+    marginTop: 12,
     backgroundColor: "#060B4D",
   },
 

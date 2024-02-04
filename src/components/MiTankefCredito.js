@@ -78,15 +78,25 @@ const MiTankefCredito = (props) => {
         <View style={{ flexDirection: "row", marginTop: 15 }}>
           <Text style={styles.concepto}>Estatus</Text>
           <Text style={styles.valorConcepto}>A tiempo</Text>
-          <AntDesign
-            name="checkcircle"
-            size={18}
-            color="#2FF690"
+          {/* View para tener la palomita negra */}
+          <View
             style={{
+              backgroundColor: "#060B4D",
               alignSelf: "center",
+              borderRadius: 15,
               marginLeft: 5,
             }}
-          />
+          >
+            <AntDesign
+              name="checkcircle"
+              size={18}
+              color="#2FF690"
+              style={{
+                alignSelf: "center",
+                bottom: 0.1,
+              }}
+            />
+          </View>
         </View>
         <View style={styles.seperacion} />
         <View style={{ flexDirection: "row" }}>
@@ -111,12 +121,12 @@ const MiTankefCredito = (props) => {
 const styles = StyleSheet.create({
   tituloMonto: {
     fontFamily: "opensans",
-    fontSize: 16,
+    fontSize: 14,
     color: "#060B4D",
   },
   monto: {
     fontFamily: "opensansbold",
-    fontSize: 20,
+    fontSize: 18,
     color: "#060B4D",
   },
   line: {
@@ -127,13 +137,13 @@ const styles = StyleSheet.create({
   },
   concepto: {
     fontFamily: "opensansbold",
-    fontSize: 18,
+    fontSize: 16,
     color: "#060B4D",
     flex: 1,
   },
   valorConcepto: {
     fontFamily: "opensanssemibold",
-    fontSize: 18,
+    fontSize: 16,
     color: "#060B4D",
   },
   seperacion: {
