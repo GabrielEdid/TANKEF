@@ -71,7 +71,7 @@ const SettingsDrawer = ({ navigation }) => {
         style={{ marginTop: 325 }}
         onPress={() => navigation.navigate("EditarPerfil")}
       >
-        <Text style={styles.texto}>Editar Perfil</Text>
+        <Text style={styles.texto}>Datos del Perfil</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -117,13 +117,13 @@ const styles = StyleSheet.create({
     fontFamily: "opensansbold",
     marginTop: 100,
     position: "absolute",
-    color: "#29364d",
+    color: "#060B4D",
   },
   texto: {
     fontSize: 20,
     fontFamily: "opensans",
     marginBottom: 30,
-    color: "#29364d",
+    color: "#060B4D",
   },
   cerrarSesion: {
     fontSize: 20,
