@@ -31,7 +31,7 @@ import SolicitudesConexion from "./src/screens/Main/Pantallas Main Dejadas/Solic
 import MisConexiones from "./src/screens/Main/Pantallas Main Dejadas/MisConexiones";
 import LoginProgresivo from "./src/screens/Main/LoginProgresivo";
 import LoginProgresivo2 from "./src/screens/Main/LoginProgresivo2";
-import EditarPerfil from "./src/screens/Main/Pantallas Main Dejadas/EditarPerfil";
+import EditarPerfil from "./src/screens/Main/EditarPerfil";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 

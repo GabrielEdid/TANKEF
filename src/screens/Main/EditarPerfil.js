@@ -11,10 +11,12 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 // Importaciones de Componentes y Hooks
-import { APIPut } from "../../../API/APIService";
-import { UserContext } from "../../../hooks/UserContext";
+import { APIPut } from "../../API/APIService";
+import { UserContext } from "../../hooks/UserContext";
 
 const EditarPerfil = ({ navigation }) => {
   // Estados locales
@@ -111,19 +113,29 @@ const EditarPerfil = ({ navigation }) => {
     // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/*Titulo*/}
         <View style={styles.tituloContainer}>
-          <Text style={styles.titulo}>TANKEF</Text>
+          {/* Titulo */}
+          <MaskedView
+            style={{ flex: 1 }}
+            maskElement={<Text style={styles.titulo}>tankef</Text>}
+          >
+            <LinearGradient
+              colors={["#2FF690", "#21B6D5"]}
+              start={{ x: 0.8, y: 0.8 }}
+              end={{ x: 0, y: 0 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </MaskedView>
+          <Text style={styles.tituloPantalla}>Mi Red</Text>
+          <TouchableOpacity>
+            <Feather
+              name="bell"
+              size={25}
+              color="#060B4D"
+              style={{ marginTop: 50 }}
+            />
+          </TouchableOpacity>
         </View>
-
-        {/* <TouchableOpacity onPress={() => handleGoBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={40}
-            color="#29364d"
-            style={styles.back}
-          />
-        </TouchableOpacity>*/}
 
         <View style={{ flex: 1 }}>
           {/* Contenedor Foto de Peril */}
@@ -133,7 +145,7 @@ const EditarPerfil = ({ navigation }) => {
               source={
                 user.avatar
                   ? { uri: user.avatar }
-                  : require("../../../../assets/images/blankAvatar.jpg")
+                  : require("../../../assets/images/blankAvatar.jpg")
               }
             />
             <View>
@@ -176,8 +188,25 @@ const EditarPerfil = ({ navigation }) => {
 // Estilos de la Pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
-    height: 105,
+    paddingHorizontal: 20,
+    flexDirection: "row",
     backgroundColor: "white",
+    paddingBottom: 10,
+  },
+  titulo: {
+    fontFamily: "montserrat",
+    letterSpacing: -4,
+    fontSize: 35,
+    marginTop: 40,
+  },
+  tituloPantalla: {
+    flex: 1,
+    marginTop: 47,
+    marginLeft: 5,
+    fontSize: 24,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    fontWeight: "bold",
   },
   background: {
     flex: 1,
@@ -189,13 +218,6 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     borderRadius: 65,
-  },
-  titulo: {
-    fontFamily: "conthrax",
-    fontSize: 27,
-    color: "#29364d",
-    marginTop: 70,
-    position: "absolute",
   },
   texto: {
     marginTop: 15,
