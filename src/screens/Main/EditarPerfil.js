@@ -17,6 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 // Importaciones de Componentes y Hooks
 import { APIPut } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 
 const EditarPerfil = ({ navigation }) => {
   // Estados locales
@@ -24,7 +25,45 @@ const EditarPerfil = ({ navigation }) => {
   const [email, setEmail] = useState(user.email);
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateUser = async (userData) => {
+  const imageMap = {
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
+    // ... más imágenes
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.1,
+    });
+
+    if (!result.canceled) {
+      const formData = new FormData();
+      formData.append("avatar", {
+        uri: result.uri,
+        type: "image/jpeg", // O el tipo de imagen correspondiente
+        name: "avatar.jpg", // Un nombre para el archivo
+      });
+      await setUser({
+        ...user,
+        avatar: formData,
+      });
+
+      console.log("Imagen seleccionada:", formData);
+      updateUser(formData);
+    }
+  };
+
+  const updateUser = async (data) => {
+    const userData = {
+      avatar: data,
+      name: user.nombre,
+      last_name_1: user.apellidoPaterno,
+      last_name_2: user.apellidoMaterno,
+      phone: user.telefono,
+      curp: user.CURP,
+    };
     setIsLoading(true);
     const url = `/api/v1/users/${user.userID}`;
 
@@ -37,12 +76,12 @@ const EditarPerfil = ({ navigation }) => {
       console.log("Usuario actualizado:", response.data);
       // Maneja aquí la respuesta
       setIsLoading(false);
-      navigation.navigate("MainFlow", {
+      /*navigation.navigate("MainFlow", {
         screen: "Perfil",
         params: {
           screen: "PerfilMain",
         },
-      });
+      });*/
     } catch (error) {
       console.error("Hubo un problema al actualizar el usuario:", error);
       Alert.alert(
@@ -52,46 +91,6 @@ const EditarPerfil = ({ navigation }) => {
         { cancelable: true }
       );
       setIsLoading(false);
-      // Maneja aquí los errores
-    }
-  };
-
-  // Manejador para el botón Siguiente
-  const handleSiguiente = async () => {
-    console.log("Datos de usuario:", user);
-    // Datos de usuario a actualizar
-    const userData = {
-      avatar: user.avatar,
-      name: user.nombre,
-      last_name_1: user.apellidoPaterno,
-      last_name_2: user.apellidoMaterno,
-      phone: user.telefono,
-      curp: user.CURP,
-    };
-
-    try {
-      await updateUser(userData);
-    } catch (error) {
-      console.error("Error al actualizar:", error);
-      // Aquí puedes manejar los errores, por ejemplo, mostrando un alerta
-    }
-  };
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.5,
-      base64: true,
-    });
-
-    if (!result.canceled) {
-      const selectedImage = result.assets[0];
-      await setUser({
-        ...user,
-        avatar: `data:image/jpeg;base64,${selectedImage.base64}`,
-      });
     }
   };
 
@@ -112,7 +111,7 @@ const EditarPerfil = ({ navigation }) => {
   return (
     // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.background}>
+      <View style={{ flex: 1 }}>
         <View style={styles.tituloContainer}>
           {/* Titulo */}
           <MaskedView
@@ -126,7 +125,7 @@ const EditarPerfil = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>Mi Red</Text>
+          <Text style={styles.tituloPantalla}>Perfil</Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -137,49 +136,63 @@ const EditarPerfil = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ flex: 1 }}>
+        <View style={{ backgroundColor: "white", marginTop: 3 }}>
           {/* Contenedor Foto de Peril */}
-          <View style={{ flexDirection: "row" }}>
+          <View>
             <Image
               style={styles.imagen}
-              source={
-                user.avatar
-                  ? { uri: user.avatar }
-                  : require("../../../assets/images/blankAvatar.jpg")
-              }
+              source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
             />
             <View>
-              <Text style={styles.texto}>Foto de Perfil</Text>
               <TouchableOpacity
                 style={styles.botonImagen}
                 onPress={() => pickImage()}
               >
-                <Text style={styles.textoBotonImagen}>
-                  {user.avatar ? "CAMBIAR IMAGEN" : "ELEGIR IMAGEN"}
-                </Text>
+                <FontAwesome name="camera" size={24} color="#060B4D" />
+                <Text style={styles.textoBotonImagen}>Editar Foto</Text>
               </TouchableOpacity>
             </View>
           </View>
-
-          {/* Contenedor Correo Electrónico */}
-          <Text style={[styles.texto, { marginLeft: 0 }]}>
-            Correo Electrónico
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder={user.email}
-            onChangeText={setEmail}
-          />
         </View>
 
-        {/* Botón de Continuar */}
+        {/* Contenedor Correo Electrónico */}
+        <View
+          style={{
+            marginTop: 3,
+            backgroundColor: "white",
+            flex: 1,
+            paddingTop: 10,
+          }}
+        >
+          <Text style={styles.tituloDato}>Correo Electrónico</Text>
+          <Text style={styles.textoDato}>{user.email}</Text>
+          <View style={styles.linea} />
+          <Text style={styles.tituloDato}>Nombre(s) y Apellidos</Text>
+          <Text style={styles.textoDato}>
+            {user.nombre +
+              " " +
+              user.apellidoPaterno +
+              " " +
+              user.apellidoMaterno}
+          </Text>
+          <View style={styles.linea} />
+          <Text style={styles.tituloDato}>Fecha de Nacimiento</Text>
+          <Text style={styles.textoDato}>{user.fechaNacimiento}</Text>
+          <View style={styles.linea} />
+          <Text style={styles.tituloDato}>Teléfono</Text>
+          <Text style={styles.textoDato}>{user.telefono}</Text>
+          <View style={styles.linea} />
+        </View>
+
+        {/* Botón de Continuar 
+        
         <TouchableOpacity
           style={styles.botonGrande}
           onPress={() => handleSiguiente()}
           disabled={isLoading}
         >
-          <Text style={styles.textoBotonGrande}>GUARDAR DATOS</Text>
-        </TouchableOpacity>
+          <Text style={styles.textoBotonGrande}>Guardar</Text>
+            </TouchableOpacity>*/}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -202,73 +215,74 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginLeft: 5,
+    marginLeft: -30,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
-  background: {
-    flex: 1,
-    backgroundColor: "white",
-    paddingHorizontal: 20,
-  },
   imagen: {
     marginTop: 15,
-    width: 130,
-    height: 130,
+    width: 100,
+    height: 100,
+    alignSelf: "center",
     borderRadius: 65,
   },
-  texto: {
-    marginTop: 15,
-    marginLeft: 15,
-    fontSize: 25,
-    fontWeight: "bold",
-    color: "#29364d",
-  },
   botonImagen: {
-    marginTop: 15,
-    marginLeft: 15,
+    backgroundColor: "#2FF690",
+    width: 160,
     paddingHorizontal: 20,
-    backgroundColor: "#29364d",
     height: 40,
-    borderRadius: 15,
+    borderRadius: 5,
+    marginTop: 15,
+    marginBottom: 50,
     alignItems: "center",
-    justifyContent: "center",
+    alignSelf: "center",
+    flexDirection: "row",
   },
   textoBotonImagen: {
-    color: "white",
-    fontFamily: "conthrax",
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
     fontSize: 16,
-    fontWeight: "bold",
+    marginLeft: 10,
   },
-  input: {
-    marginTop: 15,
-    paddingHorizontal: 20,
-    backgroundColor: "#f2f2f2",
-    height: 40,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
+  tituloDato: {
+    marginLeft: 15,
+    marginBottom: 10,
     fontSize: 16,
-    color: "#29364d",
+    fontFamily: "opensans",
+    color: "#9a9cb8ff",
   },
-  botonGrande: {
+  textoDato: {
+    marginBottom: 10,
+    marginLeft: 15,
+    fontSize: 17,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
+  },
+  linea: {
+    height: 1,
     width: "100%",
+    backgroundColor: "#cecfdbff",
+    marginBottom: 10,
+  },
+  /* Estilos del botón grande
+  botonGrande: {
+    width: "%",
     height: 60,
     alignSelf: "center",
     justifyContent: "center",
-    backgroundColor: "#29364d",
+    backgroundColor: "#2FF690",
     borderRadius: 25,
     marginBottom: 20,
     zIndex: -10,
   },
   textoBotonGrande: {
-    color: "white",
+    color: "#060B4D",
     textAlign: "center",
     fontSize: 20,
-    fontFamily: "conthrax",
-  },
+    fontFamily: "opensansbold",
+  },*/
 });
 
 export default EditarPerfil;
