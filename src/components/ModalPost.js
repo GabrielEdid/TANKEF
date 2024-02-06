@@ -31,7 +31,6 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   const [modalQuien, setModalQuien] = useState(false);
   const [quien, setQuien] = useState("Mis Conexiones");
   const [image, setImage] = useState(null);
-  const [image64, setImage64] = useState(null);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [enabled, setEnabled] = useState(true);
 
@@ -45,17 +44,23 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   const postData = async () => {
     setEnabled(false);
     const url = "/api/v1/posts";
-    const data = {
-      post: {
-        title: "",
-        body: text.trim(),
-        post_image: image64,
-        user_id: user.userID,
-        scope_post: quien === "Mis Conexiones" ? "friends" : "all_network",
-      },
-    };
 
-    const response = await APIPost(url, data);
+    const formData = new FormData();
+    // Añadir la imagen al FormData
+    formData.append("post[post_image]", {
+      uri: image,
+      type: "image/jpeg",
+      name: "image.jpg",
+    });
+    formData.append("post[title]", "");
+    formData.append("post[body]", text.trim());
+    formData.append("post[user_id]", user.userID);
+    formData.append(
+      "post[scope_post]",
+      quien === "Mis Conexiones" ? "friends" : "all_network"
+    );
+
+    const response = await APIPost(url, formData);
     if (response.error) {
       // Manejar el error
       console.error("Error al publicar:", response.error);
@@ -64,7 +69,6 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
       // Continuar en caso de éxito
       setText("");
       setImage(null);
-      setImage64(null);
       handleModalClose();
     }
     setEnabled(true);
@@ -75,14 +79,12 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
-      base64: true,
+      quality: 0.2,
     });
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
       setImage(selectedImage.uri);
-      setImage64(selectedImage.base64);
       setImageSize({
         width: selectedImage.width,
         height: selectedImage.height,

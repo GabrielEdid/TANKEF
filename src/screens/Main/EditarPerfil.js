@@ -42,27 +42,31 @@ const EditarPerfil = ({ navigation }) => {
       const selectedImage = result.assets[0];
       await setUser({
         ...user,
-        avatarUri: selectedImage.uri, // Accede a la URI a través de assets
+        avatar: selectedImage.uri, // Accede a la URI a través de assets
       });
 
       updateUser();
     }
   };
 
-  const updateUser = async (data) => {
-    const userData = {
-      name: user.nombre,
-      last_name_1: user.apellidoPaterno,
-      last_name_2: user.apellidoMaterno,
-      phone: user.telefono,
-      curp: user.CURP,
-      avatar: user.avatar,
-    };
+  const updateUser = async () => {
+    const formData = new FormData();
+    // Añadir la imagen al FormData
+    formData.append("user[avatar]", {
+      uri: user.avatar,
+      type: "image/jpeg",
+      name: "avatar.jpg",
+    });
+    formData.append("user[name]", user.nombre);
+    formData.append("user[last_name_1]", user.apellidoPaterno);
+    formData.append("user[last_name_2]", user.apellidoMaterno);
+    formData.append("user[phone]", user.telefono);
+    formData.append("user[curp]", user.CURP);
     setIsLoading(true);
     const url = `/api/v1/users/${user.userID}`;
 
     try {
-      const response = await APIPut(url, userData);
+      const response = await APIPut(url, formData);
       if (response.error) {
         throw new Error(response.error);
       }
