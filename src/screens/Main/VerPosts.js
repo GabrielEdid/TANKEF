@@ -9,13 +9,17 @@ import {
   Dimensions,
   TextInput,
   Modal,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
+import Comment from "../../components/Comment";
 import { APIGet, APIPost } from "../../API/APIService";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
 const VerPosts = ({ route }) => {
   const {
@@ -27,6 +31,7 @@ const VerPosts = ({ route }) => {
     body,
     imagen,
     comentarios,
+    reacciones,
     personal,
   } = route.params;
   // Estados del Componente
@@ -43,6 +48,11 @@ const VerPosts = ({ route }) => {
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     Like: require("../../../assets/images/Like.png"),
     Comment: require("../../../assets/images/Comment.png"),
+    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
+    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
+    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
+    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
+    Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
     // ... más imágenes
   };
 
@@ -142,39 +152,50 @@ const VerPosts = ({ route }) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.Cuadro}>
-        {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
-        <View style={styles.header}>
-          <Image source={foto} style={styles.fotoPerfil} />
-          <View style={styles.headerText}>
-            <Text style={styles.textoNombre}>{nombre}</Text>
-            <Text style={styles.textoTiempo}>{tiempo}</Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAwareScrollView
+          resetScrollToCoords={{ x: 0, y: 0 }}
+          contentContainerStyle={{ flexGrow: 1 }}
+          scrollEnabled={true}
+          extraScrollHeight={100}
+          enableOnAndroid={true}
+          style={styles.scrollV}
+        >
+          {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
+          <View style={styles.header}>
+            <Image source={foto} style={styles.fotoPerfil} />
+            <View style={styles.headerText}>
+              <Text style={styles.textoNombre}>{nombre}</Text>
+              <Text style={styles.textoTiempo}>{tiempo}</Text>
+            </View>
           </View>
-        </View>
 
-        {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
-        {tipo === "compartir" && (
-          <>
-            <Text style={styles.textoBody}>{displayedText}</Text>
-            {needsMoreButton && (
-              <TouchableOpacity onPress={toggleShowFullText}>
-                <Text style={styles.verMas}>Ver Más</Text>
-              </TouchableOpacity>
-            )}
-            {/* Se evalua si se necesita el espacio para la imagen */}
-            {imagen && (
-              <View style={styles.imageContainer}>
-                <Image
-                  source={imageSource}
-                  style={{ width: imageSize.width, height: imageSize.height }}
-                  onLoad={onImageLoad}
-                />
-              </View>
-            )}
-          </>
-        )}
+          {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
+          {tipo === "compartir" && (
+            <>
+              <Text style={styles.textoBody}>{displayedText}</Text>
+              {needsMoreButton && (
+                <TouchableOpacity onPress={toggleShowFullText}>
+                  <Text style={styles.verMas}>Ver Más</Text>
+                </TouchableOpacity>
+              )}
+              {/* Se evalua si se necesita el espacio para la imagen */}
+              {imagen && (
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={imageSource}
+                    style={{
+                      width: imageSize.width,
+                      height: imageSize.height,
+                    }}
+                    onLoad={onImageLoad}
+                  />
+                </View>
+              )}
+            </>
+          )}
 
-        {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
+          {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
       {tipo === "credito" && (
         <>
           <Text style={styles.titulo}>{props.titulo}</Text>
@@ -208,7 +229,7 @@ const VerPosts = ({ route }) => {
         </>
       )} */}
 
-        {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
+          {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
       {tipo === "invertir" && (
         <>
           <Text style={styles.titulo}>¡Realice una Inversión!</Text>
@@ -219,91 +240,132 @@ const VerPosts = ({ route }) => {
         </>
       )} */}
 
-        {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
-        <View style={styles.linea}></View>
-        <View style={styles.interactionContainer}>
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <TouchableOpacity onPress={() => setLike(!like)}>
-              <Image
-                source={imageMap["Like"]}
+          {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
+          <View style={styles.interactionContainer}>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <TouchableOpacity onPress={() => [setLike(!like)]}>
+                <Image
+                  source={imageMap["Like"]}
+                  style={{
+                    width: 28,
+                    height: 24,
+                    tintColor: !like ? "#060B4D" : "#21B6D5",
+                  }}
+                />
+              </TouchableOpacity>
+              <Text
                 style={{
-                  width: 28,
-                  height: 24,
-                  tintColor: !like ? "#060B4D" : "#21B6D5",
+                  fontSize: 13,
+                  color: "#060B4D",
+                  marginLeft: 10,
+                  alignSelf: "center",
+                  fontFamily: "opensans",
                 }}
-              />
+              >
+                {reacciones} reacciones
+              </Text>
+            </View>
+            {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
+            <TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 13,
+                  color: "#060B4D",
+                  marginRight: 23,
+                  fontFamily: "opensans",
+                }}
+              >
+                {comentarios} comentarios
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {}}>
-              <Image
-                source={imageMap["Comment"]}
-                style={{
-                  width: 28,
-                  height: 23,
-                  tintColor: "#060B4D",
-                }}
+          </View>
+          <View style={styles.linea} />
+          <View style={styles.commentContainer}>
+            <Comment
+              nombre={"Natasha Ocasio Romanoff"}
+              body={"¡Excelente publicación! Me encantó."}
+              imagen={imageMap["Natasha"]}
+            />
+            <Comment
+              nombre={"Antonio Quill"}
+              body={
+                "Es muy curioso lo que dices, me parece que no siempre se puede lograr una imagen así."
+              }
+              imagen={imageMap["Quill"]}
+            />
+            <Comment
+              nombre={"Steve Rodgers Gonzales"}
+              body={"Cuando nos vemos? Ya tiene mucho tiempo que no te veo!"}
+              imagen={imageMap["Steve"]}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Escribe un comentario..."
+              placeholderTextColor="#D5D5D5"
+              multiline={true}
+              onChangeText={(text) => setComentario(text)}
+              value={comentario}
+              maxLength={300}
+            />
+            <TouchableOpacity
+              style={styles.sendIcon}
+              onPress={() => console.log("Enviar comentario")}
+            >
+              <Ionicons
+                name="send"
+                size={24}
+                color={comentario ? "#060B4D" : "#D5D5D5"}
               />
             </TouchableOpacity>
           </View>
-          {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
-          <TouchableOpacity>
-            <Text
-              style={{
-                fontSize: 13,
-                color: "#060B4D",
-                marginRight: 23,
-                fontFamily: "opensans",
-              }}
-            >
-              {comentarios} comentarios
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Modal y Tres puntos para eliminar o reportar publicación  */}
-        <TouchableOpacity
-          style={styles.opciones}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.tresPuntos}>...</Text>
-        </TouchableOpacity>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
+          {/* Modal y Tres puntos para eliminar o reportar publicación  */}
           <TouchableOpacity
-            style={styles.fullScreenButton}
-            activeOpacity={1}
-            onPressOut={() => setModalVisible(false)}
+            style={styles.opciones}
+            onPress={() => setModalVisible(true)}
           >
-            <View style={styles.modalView}>
-              {personal ? (
-                <TouchableOpacity
-                  style={styles.buttonModal}
-                  onPress={() => handleRemove()}
-                >
-                  <Text style={{ color: "red" }}>Eliminar Publicación</Text>
-                </TouchableOpacity>
-              ) : null}
-              {!personal ? (
-                <TouchableOpacity
-                  style={styles.buttonModal}
-                  onPress={() => console.log("Implementación de Reportar")}
-                >
-                  <Text style={{ color: "red" }}>Reportar Publicación</Text>
-                </TouchableOpacity>
-              ) : null}
-              <TouchableOpacity
-                style={{ marginTop: 10 }}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.tresPuntos}>...</Text>
           </TouchableOpacity>
-        </Modal>
-      </View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <TouchableOpacity
+              style={styles.fullScreenButton}
+              activeOpacity={1}
+              onPressOut={() => setModalVisible(false)}
+            >
+              <View style={styles.modalView}>
+                {personal ? (
+                  <TouchableOpacity
+                    style={styles.buttonModal}
+                    onPress={() => handleRemove()}
+                  >
+                    <Text style={{ color: "red" }}>Eliminar Publicación</Text>
+                  </TouchableOpacity>
+                ) : null}
+                {!personal ? (
+                  <TouchableOpacity
+                    style={styles.buttonModal}
+                    onPress={() => console.log("Implementación de Reportar")}
+                  >
+                    <Text style={{ color: "red" }}>Reportar Publicación</Text>
+                  </TouchableOpacity>
+                ) : null}
+                <TouchableOpacity
+                  style={{ marginTop: 10 }}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
+        </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
     </>
   );
 };
@@ -322,11 +384,12 @@ const styles = StyleSheet.create({
     fontSize: 35,
     marginTop: 40,
   },
-  Cuadro: {
+  scrollV: {
+    marginTop: 3,
     width: "100%",
-    marginBottom: 10,
+    height: "100%",
     flex: 1,
-    paddingVertical: 15,
+    paddingTop: 15,
     backgroundColor: "white",
   },
   header: {
@@ -393,15 +456,42 @@ const styles = StyleSheet.create({
   linea: {
     backgroundColor: "#F2F2F2",
     height: 3,
-    top: 60,
     width: "100%",
     alignSelf: "center",
+    marginTop: 10,
   },
   interactionContainer: {
     flexDirection: "row",
     alignItems: "center",
     paddingTop: 10,
     paddingLeft: 22,
+  },
+  commentContainer: {
+    flex: 1,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 10,
+    marginBottom: 20,
+    paddingHorizontal: 15,
+    paddingTop: 10,
+    paddingBottom: 12,
+    borderRadius: 20,
+    borderColor: "#D5D5D5",
+    borderWidth: 1.5,
+  },
+  input: {
+    flex: 1,
+    fontFamily: "opensans",
+    color: "#060B4D",
+    fontSize: 15,
+    paddingRight: 40,
+  },
+  sendIcon: {
+    position: "absolute",
+    right: 20,
+    bottom: 10,
   },
   /*  ESTILOS DE LOS OTROS TIPOS DE POST
   textSolicitado: {
@@ -437,8 +527,6 @@ const styles = StyleSheet.create({
   // Estilos para el Modal que aparece si se presionan los 3 puntos
   fullScreenButton: {
     position: "absolute",
-    top: 0,
-    left: 0,
     width: "100%",
     height: "100%",
     justifyContent: "flex-end",
