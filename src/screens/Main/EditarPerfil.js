@@ -39,30 +39,24 @@ const EditarPerfil = ({ navigation }) => {
     });
 
     if (!result.canceled) {
-      const formData = new FormData();
-      formData.append("avatar", {
-        uri: result.uri,
-        type: "image/jpeg", // O el tipo de imagen correspondiente
-        name: "avatar.jpg", // Un nombre para el archivo
-      });
+      const selectedImage = result.assets[0];
       await setUser({
         ...user,
-        avatar: formData,
+        avatarUri: selectedImage.uri, // Accede a la URI a través de assets
       });
 
-      console.log("Imagen seleccionada:", formData);
-      updateUser(formData);
+      updateUser();
     }
   };
 
   const updateUser = async (data) => {
     const userData = {
-      avatar: data,
       name: user.nombre,
       last_name_1: user.apellidoPaterno,
       last_name_2: user.apellidoMaterno,
       phone: user.telefono,
       curp: user.CURP,
+      avatar: user.avatar,
     };
     setIsLoading(true);
     const url = `/api/v1/users/${user.userID}`;

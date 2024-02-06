@@ -75,18 +75,9 @@ export const APIPost = async (url, body) => {
 };
 
 export const APIPut = async (url, body) => {
-  let headers = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  // Si el cuerpo es FormData, elimina el Content-Type para permitir que se genere automáticamente
-  if (body instanceof FormData) {
-    headers["Content-Type"] = "multipart/form-data";
-  }
-
   return handleRequest(() =>
     axiosInstance.put(url, body, {
-      headers,
+      headers: { Authorization: `Bearer ${token}` },
     })
   );
 };
