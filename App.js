@@ -23,6 +23,7 @@ import AuthPinPad from "./src/screens/LogIn/AuthPinPad";
 import Inicio from "./src/screens/Main/Inicio";
 import MiRed from "./src/screens/Main/MiRed";
 import VerPerfiles from "./src/screens/Main/VerPerfiles";
+import VerPosts from "./src/screens/Main/VerPosts";
 import Crear from "./src/screens/Main/Pantallas Main Dejadas/Crear";
 import CrearModal from "./src/components/CrearModal";
 import MiTankef from "./src/screens/Main/MiTankef";
@@ -131,6 +132,15 @@ function MiRedStackScreen() {
   );
 }
 
+function InicioStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Incio" component={Inicio} />
+      <Stack.Screen name="VerPosts" component={VerPosts} />
+    </Stack.Navigator>
+  );
+}
+
 function MainFlow() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [customFocusedTab, setCustomFocusedTab] = useState("");
@@ -179,7 +189,7 @@ function MainFlow() {
       >
         <Tab.Screen
           name="Inicio"
-          component={Inicio}
+          component={InicioStack}
           listeners={{
             tabPress: (e) => handleTabPress(e, "Inicio"),
           }}

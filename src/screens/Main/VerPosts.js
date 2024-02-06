@@ -14,15 +14,12 @@ import {
 import { parseISO, formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
-import { UserContext } from "../hooks/UserContext";
-import { APIPost, APIDelete } from "../API/APIService";
+import { UserContext } from "../../hooks/UserContext";
+import { APIGet, APIPost } from "../../API/APIService";
 import { AntDesign } from "@expo/vector-icons";
-import ProgressBar from "./Componentes Olvidados/ProgressBar";
 
-const Post = (props) => {
-  const navigation = useNavigation();
+const VerPosts = (props) => {
   // Estados del Componente
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
@@ -34,9 +31,9 @@ const Post = (props) => {
 
   // Mapa para cargar todas las imagenes que se necesiten
   const imageMap = {
-    Blank: require("../../assets/images/blankAvatar.jpg"),
-    Like: require("../../assets/images/Like.png"),
-    Comment: require("../../assets/images/Comment.png"),
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
+    Like: require("../../../assets/images/Like.png"),
+    Comment: require("../../../assets/images/Comment.png"),
     // ... más imágenes
   };
 
@@ -238,10 +235,7 @@ const Post = (props) => {
               }}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{ marginLeft: 10 }}
-            onPress={() => navigation.navigate("VerPosts")}
-          >
+          <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {}}>
             <Image
               source={imageMap["Comment"]}
               style={{
@@ -253,7 +247,7 @@ const Post = (props) => {
           </TouchableOpacity>
         </View>
         {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
-        <TouchableOpacity onPress={() => navigation.navigate("VerPosts")}>
+        <TouchableOpacity>
           <Text
             style={{
               fontSize: 13,
@@ -464,4 +458,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Post;
+export default VerPosts;
