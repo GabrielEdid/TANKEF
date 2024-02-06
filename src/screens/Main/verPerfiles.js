@@ -340,6 +340,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     padding: 20,
+    paddingBottom: 30,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -350,8 +351,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     position: "absolute",
-    bottom: 0,
-    width: "90%",
+    width: "100%",
     alignSelf: "center",
   },
   buttonModal: {
