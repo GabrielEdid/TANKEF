@@ -240,7 +240,21 @@ const Post = (props) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={{ marginLeft: 10 }}
-            onPress={() => navigation.navigate("VerPosts")}
+            onPress={() =>
+              navigation.navigate("VerPosts", {
+                key: props.key,
+                postId: props.postId,
+                tipo: props.tipo,
+                nombre: props.nombre,
+                tiempo: getTiempo(),
+                foto: props.foto,
+                body: parseTextForLinks(displayedText),
+                imagen: props.imagen,
+                comentarios: props.comentarios,
+                reacciones: props.reacciones,
+                personal: props.personal,
+              })
+            }
           >
             <Image
               source={imageMap["Comment"]}
@@ -253,7 +267,23 @@ const Post = (props) => {
           </TouchableOpacity>
         </View>
         {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
-        <TouchableOpacity onPress={() => navigation.navigate("VerPosts")}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("VerPosts", {
+              key: props.key,
+              postId: props.postId,
+              tipo: props.tipo,
+              nombre: props.nombre,
+              tiempo: getTiempo(),
+              foto: props.foto,
+              body: parseTextForLinks(displayedText),
+              imagen: props.imagen,
+              comentarios: props.comentarios,
+              reacciones: props.reacciones,
+              personal: props.personal,
+            })
+          }
+        >
           <Text
             style={{
               fontSize: 13,

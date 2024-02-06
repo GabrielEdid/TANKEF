@@ -257,6 +257,7 @@ const Inicio = () => {
                   } // Reemplazar con datos reales si están disponibles
                   body={post.body}
                   comentarios={post.count_comments}
+                  reacciones={post.count_reactions}
                   personal={false}
                   imagen={post.image}
                 />

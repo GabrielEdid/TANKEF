@@ -9,17 +9,26 @@ import {
   Dimensions,
   TextInput,
   Modal,
-  Linking,
 } from "react-native";
-import { parseISO, formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import { APIGet, APIPost } from "../../API/APIService";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 
-const VerPosts = (props) => {
+const VerPosts = ({ route }) => {
+  const {
+    postId,
+    tipo,
+    nombre,
+    tiempo,
+    foto,
+    body,
+    imagen,
+    comentarios,
+    personal,
+  } = route.params;
   // Estados del Componente
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
@@ -37,46 +46,14 @@ const VerPosts = (props) => {
     // ... más imágenes
   };
 
-  const getTiempo = () => {
-    const timestamp = props.tiempo;
-    const date = parseISO(timestamp);
-    const timeAgo = formatDistanceToNow(date, { addSuffix: true, locale: es });
-    return timeAgo;
-  };
-
-  const Link = (props) => (
-    <Text style={{ fontFamily: "opensansbold", color: "#22BAD2", top: 4 }}>
-      {props.children}
-    </Text>
-  );
-
-  const parseTextForLinks = (text) => {
-    const words = text.split(" ");
-    const textComponents = words.map((word, index) => {
-      if (word.toLowerCase().includes("http")) {
-        return (
-          <Text key={`word-${index}`}>
-            <TouchableOpacity onPress={() => Linking.openURL(word)}>
-              <Link>{word}</Link>
-            </TouchableOpacity>{" "}
-          </Text>
-        );
-      } else {
-        return `${word} `;
-      }
-    });
-
-    return textComponents;
-  };
-
   // Para manejar las imagenes usadas en las publicaciones
   let imageSource;
-  if (typeof props.imagen === "string") {
+  if (typeof imagen === "string") {
     // Assuming it's a URL for a network image
-    imageSource = { uri: props.imagen };
+    imageSource = { uri: imagen };
   } else {
     // Assuming it's a local image requiring require()
-    imageSource = props.imagen;
+    imageSource = imagen;
   }
 
   // Funcion para Obtener un tamaño adaptado para cada imagen
@@ -112,7 +89,7 @@ const VerPosts = (props) => {
 
   // Para cuando se desee eliminar el Request
   const handleRemove = () => {
-    deletePost(props.postId);
+    deletePost(postId);
   };
 
   if (!isVisible) {
@@ -120,8 +97,8 @@ const VerPosts = (props) => {
   }
 
   // Calculo del porcentaje de la barra de progreso para un Credito
-  const porcentaje =
-    parseFloat(props.contribuidos) / parseFloat(props.solicitado);
+  //const porcentaje =
+  //parseFloat(props.contribuidos) / parseFloat(props.solicitado);
 
   // Funcion para mostrar el texto completo con Ver Más
   const toggleShowFullText = () => {
@@ -129,7 +106,7 @@ const VerPosts = (props) => {
   };
 
   // Asegurarse de que body es una cadena de texto
-  const bodyText = props.body || "";
+  const bodyText = body || "";
 
   // Determinar si se necesita el botón "Ver Más"
   const needsMoreButton = bodyText.length > 200 && !showFullText;
@@ -142,42 +119,63 @@ const VerPosts = (props) => {
   // Componente visual
   return (
     // Cuadro del Post
-    <View style={styles.Cuadro}>
-      {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
-      <View style={styles.header}>
-        <Image source={props.foto} style={styles.fotoPerfil} />
-        <View style={styles.headerText}>
-          <Text style={styles.textoNombre}>{props.nombre}</Text>
-          <Text style={styles.textoTiempo}>{getTiempo()}</Text>
-        </View>
+    <>
+      <View style={styles.tituloContainer}>
+        {/* Titulo */}
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.4, y: 0.4 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
       </View>
+      <View style={styles.Cuadro}>
+        {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
+        <View style={styles.header}>
+          <Image source={foto} style={styles.fotoPerfil} />
+          <View style={styles.headerText}>
+            <Text style={styles.textoNombre}>{nombre}</Text>
+            <Text style={styles.textoTiempo}>{tiempo}</Text>
+          </View>
+        </View>
 
-      {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
-      {props.tipo === "compartir" && (
-        <>
-          <Text style={styles.textoBody}>
-            {parseTextForLinks(displayedText)}
-          </Text>
-          {needsMoreButton && (
-            <TouchableOpacity onPress={toggleShowFullText}>
-              <Text style={styles.verMas}>Ver Más</Text>
-            </TouchableOpacity>
-          )}
-          {/* Se evalua si se necesita el espacio para la imagen */}
-          {props.imagen && (
-            <View style={styles.imageContainer}>
-              <Image
-                source={imageSource}
-                style={{ width: imageSize.width, height: imageSize.height }}
-                onLoad={onImageLoad}
-              />
-            </View>
-          )}
-        </>
-      )}
+        {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
+        {tipo === "compartir" && (
+          <>
+            <Text style={styles.textoBody}>{displayedText}</Text>
+            {needsMoreButton && (
+              <TouchableOpacity onPress={toggleShowFullText}>
+                <Text style={styles.verMas}>Ver Más</Text>
+              </TouchableOpacity>
+            )}
+            {/* Se evalua si se necesita el espacio para la imagen */}
+            {imagen && (
+              <View style={styles.imageContainer}>
+                <Image
+                  source={imageSource}
+                  style={{ width: imageSize.width, height: imageSize.height }}
+                  onLoad={onImageLoad}
+                />
+              </View>
+            )}
+          </>
+        )}
 
-      {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
-      {props.tipo === "credito" && (
+        {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
+      {tipo === "credito" && (
         <>
           <Text style={styles.titulo}>{props.titulo}</Text>
           <Text style={styles.textoBody}>{displayedText}</Text>
@@ -210,8 +208,8 @@ const VerPosts = (props) => {
         </>
       )} */}
 
-      {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
-      {props.tipo === "invertir" && (
+        {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
+      {tipo === "invertir" && (
         <>
           <Text style={styles.titulo}>¡Realice una Inversión!</Text>
           <Text style={styles.textoBody}>
@@ -221,101 +219,115 @@ const VerPosts = (props) => {
         </>
       )} */}
 
-      {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
-      <View style={styles.linea}></View>
-      <View style={styles.interactionContainer}>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => setLike(!like)}>
-            <Image
-              source={imageMap["Like"]}
-              style={{
-                width: 28,
-                height: 24,
-                tintColor: !like ? "#060B4D" : "#21B6D5",
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {}}>
-            <Image
-              source={imageMap["Comment"]}
-              style={{
-                width: 28,
-                height: 23,
-                tintColor: "#060B4D",
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
-        <TouchableOpacity>
-          <Text
-            style={{
-              fontSize: 13,
-              color: "#060B4D",
-              marginRight: 23,
-              fontFamily: "opensans",
-            }}
-          >
-            {props.comentarios} comentarios
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Modal y Tres puntos para eliminar o reportar publicación  */}
-      <TouchableOpacity
-        style={styles.opciones}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.tresPuntos}>...</Text>
-      </TouchableOpacity>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <TouchableOpacity
-          style={styles.fullScreenButton}
-          activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
-        >
-          <View style={styles.modalView}>
-            {props.personal ? (
-              <TouchableOpacity
-                style={styles.buttonModal}
-                onPress={() => handleRemove()}
-              >
-                <Text style={{ color: "red" }}>Eliminar Publicación</Text>
-              </TouchableOpacity>
-            ) : null}
-            {!props.personal ? (
-              <TouchableOpacity
-                style={styles.buttonModal}
-                onPress={() => console.log("Implementación de Reportar")}
-              >
-                <Text style={{ color: "red" }}>Reportar Publicación</Text>
-              </TouchableOpacity>
-            ) : null}
-            <TouchableOpacity
-              style={{ marginTop: 10 }}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text>Cancelar</Text>
+        {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
+        <View style={styles.linea}></View>
+        <View style={styles.interactionContainer}>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TouchableOpacity onPress={() => setLike(!like)}>
+              <Image
+                source={imageMap["Like"]}
+                style={{
+                  width: 28,
+                  height: 24,
+                  tintColor: !like ? "#060B4D" : "#21B6D5",
+                }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {}}>
+              <Image
+                source={imageMap["Comment"]}
+                style={{
+                  width: 28,
+                  height: 23,
+                  tintColor: "#060B4D",
+                }}
+              />
             </TouchableOpacity>
           </View>
+          {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
+          <TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 13,
+                color: "#060B4D",
+                marginRight: 23,
+                fontFamily: "opensans",
+              }}
+            >
+              {comentarios} comentarios
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Modal y Tres puntos para eliminar o reportar publicación  */}
+        <TouchableOpacity
+          style={styles.opciones}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.tresPuntos}>...</Text>
         </TouchableOpacity>
-      </Modal>
-    </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.fullScreenButton}
+            activeOpacity={1}
+            onPressOut={() => setModalVisible(false)}
+          >
+            <View style={styles.modalView}>
+              {personal ? (
+                <TouchableOpacity
+                  style={styles.buttonModal}
+                  onPress={() => handleRemove()}
+                >
+                  <Text style={{ color: "red" }}>Eliminar Publicación</Text>
+                </TouchableOpacity>
+              ) : null}
+              {!personal ? (
+                <TouchableOpacity
+                  style={styles.buttonModal}
+                  onPress={() => console.log("Implementación de Reportar")}
+                >
+                  <Text style={{ color: "red" }}>Reportar Publicación</Text>
+                </TouchableOpacity>
+              ) : null}
+              <TouchableOpacity
+                style={{ marginTop: 10 }}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      </View>
+    </>
   );
 };
 
 // Estilos del Componente
 const styles = StyleSheet.create({
+  tituloContainer: {
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    backgroundColor: "white",
+    paddingBottom: 10,
+  },
+  titulo: {
+    fontFamily: "montserrat",
+    letterSpacing: -4,
+    fontSize: 35,
+    marginTop: 40,
+  },
   Cuadro: {
     width: "100%",
     marginBottom: 10,
     flex: 1,
     paddingVertical: 15,
+    backgroundColor: "white",
   },
   header: {
     flexDirection: "row",

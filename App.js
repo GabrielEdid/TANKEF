@@ -114,6 +114,7 @@ function PerfilLoginProgresivo() {
       <Stack.Screen name="LoginProgresivo" component={LoginProgresivo} />
       <Stack.Screen name="LoginProgresivo2" component={LoginProgresivo2} />
       <Stack.Screen name="EditarPerfil" component={EditarPerfil} />
+      <Stack.Screen name="VerPosts" component={VerPosts} />
     </Stack.Navigator>
   );
 }

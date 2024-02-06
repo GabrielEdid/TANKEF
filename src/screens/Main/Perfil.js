@@ -196,6 +196,7 @@ const Perfil = () => {
                   personal={true}
                   imagen={post.image}
                   comentarios={post.count_comments}
+                  reacciones={post.count_reactions}
                 />
               ))
             ) : (
