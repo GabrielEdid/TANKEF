@@ -62,7 +62,7 @@ const AuthPinPad = ({ navigation, route }) => {
         navigation.navigate("MainFlow", {
           screen: "Perfil",
         });
-        Alert.alert("Autenticado", "Bienvenido de vuelta!");
+        //Alert.alert("Autenticado", "Bienvenido de vuelta!");
       }
     }
   };

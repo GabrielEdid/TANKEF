@@ -8,10 +8,12 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
+import { APIGet } from "../../API/APIService";
 import { Feather } from "@expo/vector-icons";
 import StackedImages from "../../components/StackedImages";
 import MiTankefCredito from "../../components/MiTankefCredito";
@@ -27,6 +29,7 @@ const widthHalf = screenWidth / 2;
 const MiTankef = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Credito");
+  const [dashboard, setDashboard] = useState({});
   const [secondFocus, setSecondFocus] = useState("Detalle");
 
   const imageMap = {
@@ -40,6 +43,24 @@ const MiTankef = ({ navigation }) => {
     Sliders: require("../../../assets/images/Sliders.png"),
     // ... más imágenes
   };
+
+  const fetchDashboard = async () => {
+    const url = "/api/v1/dashboard";
+    const response = await APIGet(url);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al obtener el Dashboard:", response.error);
+    } else {
+      console.log("Dashboard:", response.data);
+      setDashboard(response.data);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchDashboard();
+    }, [])
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -68,7 +89,13 @@ const MiTankef = ({ navigation }) => {
       </View>
       <View style={{ marginTop: 3, backgroundColor: "white" }}>
         <Text style={styles.textoValorRed}>Valor de tu Red (MXN)</Text>
-        <Text style={styles.valorRed}>$120,000.00</Text>
+        <Text style={styles.valorRed}>
+          {dashboard.data &&
+            dashboard.data.value_network.toLocaleString("es-MX", {
+              style: "currency",
+              currency: "MXN",
+            })}
+        </Text>
         <StackedImages />
       </View>
 
