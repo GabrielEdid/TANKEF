@@ -351,9 +351,9 @@ const VerPosts = ({ route, navigation }) => {
           </View>
           <View style={styles.linea} />
           <View style={styles.commentContainer}>
-            {comments.map((comment) => (
+            {comments.map((comment, index) => (
               <Comment
-                key={comment.id}
+                key={index}
                 nombre={
                   titleCase(comment.user.name) +
                   " " +

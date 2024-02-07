@@ -237,9 +237,9 @@ const Inicio = () => {
           />*/}
           {!isLoading &&
             (posts.length !== 0 ? (
-              posts.map((post) => (
+              posts.map((post, index) => (
                 <Post
-                  key={post.id}
+                  key={index}
                   postId={post.id}
                   tipo={"compartir"}
                   nombre={

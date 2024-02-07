@@ -201,9 +201,9 @@ const MiRed = ({ navigation }) => {
         {isSearching && (
           <View style={styles.searchResultsContainer}>
             <ScrollView>
-              {searchResults.map((search) => (
+              {searchResults.map((search, index) => (
                 <SearchResult
-                  key={search.id}
+                  key={index}
                   userID={search.id}
                   nombre={titleCase(search.full_name)}
                   imagen={
@@ -273,9 +273,9 @@ const MiRed = ({ navigation }) => {
 
         {focus === "MiRed" ? (
           <ScrollView style={{ flex: 1 }}>
-            {network.map((network) => (
+            {network.map((network, index) => (
               <Conexion
-                key={network.id}
+                key={index}
                 userID={network.id}
                 nombre={titleCase(network.full_name)}
                 imagen={network.avatar ? network.avatar : imageMap["Blank"]}
@@ -287,9 +287,9 @@ const MiRed = ({ navigation }) => {
 
         {focus === "Solicitudes" ? (
           <ScrollView style={{ flex: 1 }}>
-            {pending.map((pending) => (
+            {pending.map((pending, index) => (
               <Solicitudes
-                key={pending.id}
+                key={index}
                 userID={pending.id}
                 nombre={titleCase(pending.full_name)}
                 imagen={pending.avatar ? pending.avatar : imageMap["Blank"]}
@@ -301,9 +301,9 @@ const MiRed = ({ navigation }) => {
 
         {focus === "Invitaciones" ? (
           <ScrollView style={{ flex: 1 }}>
-            {invitations.map((invitation) => (
+            {invitations.map((invitation, index) => (
               <Invitaciones
-                key={invitation.id}
+                key={index}
                 userID={invitation.id}
                 nombre={titleCase(invitation.full_name)}
                 imagen={
