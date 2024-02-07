@@ -15,6 +15,10 @@ const AuthPinPad = ({ navigation, route }) => {
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleAuthenticationSuccess = () => {
+    fetchProfileData(); // Llama a fetchProfileData después de la autenticación exitosa
+  };
+
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
     return str
@@ -54,6 +58,12 @@ const AuthPinPad = ({ navigation, route }) => {
       console.log("Datos del perfil:", result.data);
       setIsProfileLoaded(true);
       setIsLoading(false);
+      if (isProfileLoaded) {
+        navigation.navigate("MainFlow", {
+          screen: "Perfil",
+        });
+        Alert.alert("Autenticado", "Bienvenido de vuelta!");
+      }
     }
   };
 
@@ -62,11 +72,6 @@ const AuthPinPad = ({ navigation, route }) => {
     if (pin.length === 6) {
       if (pin === userPin) {
         fetchProfileData();
-        if (isProfileLoaded) {
-          navigation.navigate("MainFlow", {
-            screen: "Perfil",
-          });
-        }
       } else {
         Alert.alert("Acceso Denegado", "PIN incorrecto");
         setPin("");
@@ -80,7 +85,12 @@ const AuthPinPad = ({ navigation, route }) => {
       {/* Texto de Introduce tu PIN */}
       <Text style={styles.titulo}>Introduce tu PIN</Text>
       {/* Componente de PinPad, ahí mismo aparece el logo, titulo de Tankef, faceID y olvide mi PIN */}
-      <PinPad id={true} get={pin} set={setPin} />
+      <PinPad
+        id={true}
+        get={pin}
+        set={setPin}
+        onAuthenticationSuccess={handleAuthenticationSuccess}
+      />
       <Modal transparent={true} animationType="fade" visible={isLoading}>
         <View style={styles.overlay}>
           <ActivityIndicator size={75} color="white" />
