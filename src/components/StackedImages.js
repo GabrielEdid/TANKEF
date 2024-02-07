@@ -13,16 +13,9 @@ const StackedImages = () => {
   const [images, setImages] = useState([]);
 
   const imageMap = {
-    Natasha: require("../../assets/images/Fotos_Personas/Natahsa.png"),
-    Quill: require("../../assets/images/Fotos_Personas/Quill.png"),
-    Clint: require("../../assets/images/Fotos_Personas/Clint.png"),
-    Antonio: require("../../assets/images/Fotos_Personas/Antonio.png"),
-    Steve: require("../../assets/images/Fotos_Personas/Steve.png"),
     Blank: require("../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
-
-  const imageKeys = ["Steve", "Antonio", "Clint", "Quill", "Natasha", "Blank"];
 
   const fetchDashboard = async () => {
     const url = "/api/v1/dashboard";
