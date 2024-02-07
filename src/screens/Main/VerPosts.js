@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,13 +12,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import Comment from "../../components/Comment";
-import { APIDelete, APIPost } from "../../API/APIService";
+import { APIDelete, APIPost, APIGet } from "../../API/APIService";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
 const VerPosts = ({ route, navigation }) => {
@@ -39,6 +40,7 @@ const VerPosts = ({ route, navigation }) => {
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
   const [like, setLike] = useState(false);
+  const [comments, setComments] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const { user, setUser } = React.useContext(UserContext);
@@ -55,6 +57,38 @@ const VerPosts = ({ route, navigation }) => {
     Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
     // ... más imágenes
   };
+
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
+  const fetchComments = async () => {
+    const url = `/api/v1/posts/${postId}/comments`;
+    const response = await APIGet(url);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al obtener comentarios:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudieron obtener los comentarios. Intente nuevamente."
+      );
+    } else {
+      const sortedComments = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
+      setComments(sortedComments); // Guardar los datos de las publicaciones en el estado
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchComments();
+    }, [])
+  );
 
   const postComment = async () => {
     const url = "/api/v1/comments";
@@ -74,8 +108,8 @@ const VerPosts = ({ route, navigation }) => {
         "No se pudo publicar el comentario. Intente nuevamente."
       );
     } else {
-      // Continuar en caso de éxito
       setComentario("");
+      fetchComments();
     }
   };
 
@@ -311,29 +345,26 @@ const VerPosts = ({ route, navigation }) => {
                   fontFamily: "opensans",
                 }}
               >
-                {comentarios} comentarios
+                {comments.length} comentarios
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.linea} />
           <View style={styles.commentContainer}>
-            <Comment
-              nombre={"Natasha Ocasio Romanoff"}
-              body={"¡Excelente publicación! Me encantó."}
-              imagen={imageMap["Natasha"]}
-            />
-            <Comment
-              nombre={"Antonio Quill"}
-              body={
-                "Es muy curioso lo que dices, me parece que no siempre se puede lograr una imagen así."
-              }
-              imagen={imageMap["Quill"]}
-            />
-            <Comment
-              nombre={"Steve Rodgers Gonzales"}
-              body={"Cuando nos vemos? Ya tiene mucho tiempo que no te veo!"}
-              imagen={imageMap["Steve"]}
-            />
+            {comments.map((comment) => (
+              <Comment
+                key={comment.id}
+                nombre={
+                  titleCase(comment.user.name) +
+                  " " +
+                  titleCase(comment.user.first_last_name) +
+                  " " +
+                  titleCase(comment.user.second_last_name)
+                }
+                body={comment.body}
+                imagen={comment.user.avatar}
+              />
+            ))}
           </View>
           <View style={styles.inputContainer}>
             <TextInput
