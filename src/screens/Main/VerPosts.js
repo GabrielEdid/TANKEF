@@ -81,6 +81,7 @@ const VerPosts = ({ route, navigation }) => {
     } else {
       const sortedComments = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
       setComments(sortedComments); // Guardar los datos de las publicaciones en el estado
+      console.log("Comments:", sortedComments);
     }
   };
 
@@ -363,6 +364,7 @@ const VerPosts = ({ route, navigation }) => {
                 }
                 body={comment.body}
                 imagen={comment.user.avatar}
+                personal={comment.user.id === user.userID}
               />
             ))}
           </View>

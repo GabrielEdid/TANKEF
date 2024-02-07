@@ -61,7 +61,7 @@ const Conexion = (props) => {
         >
           <View style={styles.modalView}>
             <Text style={{ fontSize: 13 }}>
-              Si eliminas las conexión deberás volver a solicitarla.
+              Si eliminas la conexión deberás volver a solicitarla.
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}

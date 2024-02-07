@@ -63,15 +63,19 @@ const Comment = (props) => {
           onPressOut={() => setModalVisible(false)}
         >
           <View style={styles.modalView}>
-            <Text style={{ fontSize: 13 }}>
-              Si eliminas las conexión deberás volver a solicitarla.
-            </Text>
-            <TouchableOpacity
-              style={styles.buttonModal}
-              onPress={() => handleRemove()}
-            >
-              <Text style={{ color: "red" }}>Eliminar Conexión</Text>
-            </TouchableOpacity>
+            {props.personal ? (
+              <TouchableOpacity style={styles.buttonModal} onPress={() => {}}>
+                <Text style={{ color: "red" }}>Eliminar Comentario</Text>
+              </TouchableOpacity>
+            ) : null}
+            {!props.personal ? (
+              <TouchableOpacity
+                style={styles.buttonModal}
+                onPress={() => console.log("Implementación de Reportar")}
+              >
+                <Text style={{ color: "red" }}>Reportar Comentario</Text>
+              </TouchableOpacity>
+            ) : null}
             <TouchableOpacity
               style={{ marginTop: 10 }}
               onPress={() => setModalVisible(false)}
