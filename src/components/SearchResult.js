@@ -18,7 +18,7 @@ const SearchResult = ({ nombre, imagen, userID }) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate("VerPerfiles", { userID })}
+      onPress={() => navigation.navigate("VerPerfiles", { userID: userID })}
     >
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imagen} style={styles.icon} />

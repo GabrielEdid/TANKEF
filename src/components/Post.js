@@ -40,6 +40,39 @@ const Post = (props) => {
     // ... más imágenes
   };
 
+  const postReaction = async () => {
+    const url = "/api/v1/reactions";
+    const data = {
+      reactionable_type: "Post",
+      reactionable_id: props.postId,
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al dar Like:", response.error);
+      Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+    } else {
+      setLike(!like);
+    }
+  };
+
+  const deletePost = async (postId) => {
+    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${props.postId}`;
+
+    try {
+      const response = await APIDelete(url);
+      console.log("Post Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  if (!isVisible) {
+    return null;
+  }
+
   const getTiempo = () => {
     const timestamp = props.tiempo;
     const date = parseISO(timestamp);
@@ -100,27 +133,6 @@ const Post = (props) => {
 
     setImageSize({ width: newWidth, height: newHeight });
   };
-
-  const deletePost = async (postId) => {
-    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${postId}`;
-
-    try {
-      const response = await APIDelete(url);
-      console.log("Post Deleted:", response.data);
-      setIsVisible(false);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  // Para cuando se desee eliminar el Request
-  const handleRemove = () => {
-    deletePost(props.postId);
-  };
-
-  if (!isVisible) {
-    return null;
-  }
 
   // Calculo del porcentaje de la barra de progreso para un Credito
   const porcentaje =
@@ -228,7 +240,7 @@ const Post = (props) => {
       <View style={styles.linea}></View>
       <View style={styles.interactionContainer}>
         <View style={{ flex: 1, flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => setLike(!like)}>
+          <TouchableOpacity onPress={() => postReaction()}>
             <Image
               source={imageMap["Like"]}
               style={{
@@ -319,7 +331,7 @@ const Post = (props) => {
             {props.personal ? (
               <TouchableOpacity
                 style={styles.buttonModal}
-                onPress={() => handleRemove()}
+                onPress={() => deletePost()}
               >
                 <Text style={{ color: "red" }}>Eliminar Publicación</Text>
               </TouchableOpacity>

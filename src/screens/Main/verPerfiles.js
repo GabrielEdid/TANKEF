@@ -69,6 +69,7 @@ const VerPerfiles = ({ route }) => {
 
   const fetchUserPosts = async () => {
     const url = `/api/v1/users/${userID}/posts`;
+    console.log("Fetching user posts from:", url);
 
     const result = await APIGet(url);
 

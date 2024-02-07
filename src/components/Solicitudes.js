@@ -10,15 +10,27 @@ import {
 } from "react-native";
 // Importaciones de Componentes
 import { FontAwesome } from "@expo/vector-icons";
+import { APIDelete } from "../API/APIService";
 
 const Solicitudes = (props) => {
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Para cuando se desee eliminar el Request
-  const handleRemove = () => {
+  const deleteSolicitud = async () => {
     setIsVisible(false);
+    const url = `/api/v1/friendship_request/cancel`;
+    const data = {
+      id: props.userID,
+    };
+
+    try {
+      const response = await APIDelete(url, data);
+      console.log("Post Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (!isVisible) {
@@ -68,7 +80,7 @@ const Solicitudes = (props) => {
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}
-              onPress={() => handleRemove()}
+              onPress={() => deleteSolicitud()}
             >
               <Text style={{ color: "red" }}>Eliminar Solicitud</Text>
             </TouchableOpacity>

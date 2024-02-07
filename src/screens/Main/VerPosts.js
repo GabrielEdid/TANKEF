@@ -56,6 +56,62 @@ const VerPosts = ({ route }) => {
     // ... más imágenes
   };
 
+  const postComment = async () => {
+    const url = "/api/v1/comments";
+    const data = {
+      body: comentario,
+      commentable_type: "Post",
+      commentable_id: postId,
+      user_id: user.userID,
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al publicar comentario:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudo publicar el comentario. Intente nuevamente."
+      );
+    } else {
+      // Continuar en caso de éxito
+      setComentario("");
+    }
+  };
+
+  const postReaction = async () => {
+    const url = "/api/v1/reactions";
+    const data = {
+      reactionable_type: "Post",
+      reactionable_id: postId,
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al dar Like:", response.error);
+      Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+    } else {
+      setLike(!like);
+    }
+  };
+
+  const deletePost = async (postId) => {
+    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${postId}`;
+
+    try {
+      const response = await APIDelete(url);
+      console.log("Post Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  if (!isVisible) {
+    return null;
+  }
+
   // Para manejar las imagenes usadas en las publicaciones
   let imageSource;
   if (typeof imagen === "string") {
@@ -84,27 +140,6 @@ const VerPosts = ({ route }) => {
 
     setImageSize({ width: newWidth, height: newHeight });
   };
-
-  const deletePost = async (postId) => {
-    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${postId}`;
-
-    try {
-      const response = await APIDelete(url);
-      console.log("Post Deleted:", response.data);
-      setIsVisible(false);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  // Para cuando se desee eliminar el Request
-  const handleRemove = () => {
-    deletePost(postId);
-  };
-
-  if (!isVisible) {
-    return null;
-  }
 
   // Calculo del porcentaje de la barra de progreso para un Credito
   //const porcentaje =
@@ -243,7 +278,7 @@ const VerPosts = ({ route }) => {
           {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
           <View style={styles.interactionContainer}>
             <View style={{ flex: 1, flexDirection: "row" }}>
-              <TouchableOpacity onPress={() => [setLike(!like)]}>
+              <TouchableOpacity onPress={() => postReaction()}>
                 <Image
                   source={imageMap["Like"]}
                   style={{
@@ -311,7 +346,7 @@ const VerPosts = ({ route }) => {
             />
             <TouchableOpacity
               style={styles.sendIcon}
-              onPress={() => console.log("Enviar comentario")}
+              onPress={() => postComment()}
             >
               <Ionicons
                 name="send"
@@ -342,7 +377,7 @@ const VerPosts = ({ route }) => {
                 {personal ? (
                   <TouchableOpacity
                     style={styles.buttonModal}
-                    onPress={() => handleRemove()}
+                    onPress={() => deletePost()}
                   >
                     <Text style={{ color: "red" }}>Eliminar Publicación</Text>
                   </TouchableOpacity>
