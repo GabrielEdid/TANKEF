@@ -18,10 +18,10 @@ import { LinearGradient } from "expo-linear-gradient";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import Comment from "../../components/Comment";
-import { APIGet, APIPost } from "../../API/APIService";
+import { APIDelete, APIPost } from "../../API/APIService";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
-const VerPosts = ({ route }) => {
+const VerPosts = ({ route, navigation }) => {
   const {
     postId,
     tipo,
@@ -97,12 +97,13 @@ const VerPosts = ({ route }) => {
   };
 
   const deletePost = async (postId) => {
-    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${postId}`;
+    const url = `/api/v1/posts/${postId}`;
 
     try {
       const response = await APIDelete(url);
       console.log("Post Deleted:", response.data);
       setIsVisible(false);
+      navigation.goBack();
     } catch (error) {
       console.error("Error:", error);
     }

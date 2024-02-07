@@ -57,9 +57,9 @@ const Post = (props) => {
     }
   };
 
-  const deletePost = async (postId) => {
-    const url = `https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/posts/${props.postId}`;
-
+  const deletePost = async () => {
+    const url = `/api/v1/posts/${props.postId}`;
+    console.log("URL:", url);
     try {
       const response = await APIDelete(url);
       console.log("Post Deleted:", response.data);

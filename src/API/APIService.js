@@ -82,7 +82,7 @@ export const APIPut = async (url, body) => {
   );
 };
 
-export const APIDelete = async (url, body) => {
+export const APIDelete = async (url, body = {}) => {
   return handleRequest(() =>
     axiosInstance.delete(url, body, {
       headers: { Authorization: `Bearer ${token}` },

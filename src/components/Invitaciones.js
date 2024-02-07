@@ -42,7 +42,6 @@ const Invitaciones = (props) => {
         "No se pudo aceptar la invitacion. Intente nuevamente."
       );
     } else {
-      // Continuar en caso de éxito
       handleRemove();
     }
   };
