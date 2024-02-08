@@ -31,7 +31,9 @@ const Invitaciones = (props) => {
 
   const postAccept = async () => {
     const url = "/api/v1/friendship_request/accept";
-    const data = { contact_id: props.userID };
+    const data = {
+      contact_id: props.userID,
+    };
 
     const response = await APIPost(url, data);
     if (response.error) {

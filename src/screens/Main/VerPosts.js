@@ -131,16 +131,14 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
-  const deletePost = async (postId) => {
-    const url = `/api/v1/posts/${postId}`;
-
-    try {
-      const response = await APIDelete(url);
-      console.log("Post Deleted:", response.data);
+  const deletePost = async () => {
+    const url = `/api/v1/posts/${props.postId}`;
+    const response = await APIDelete(url);
+    if (response.error) {
+      console.log("Post no eliminado");
+    } else {
       setIsVisible(false);
-      navigation.goBack();
-    } catch (error) {
-      console.error("Error:", error);
+      console.error("Post eliminado" + response);
     }
   };
 

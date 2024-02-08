@@ -51,7 +51,6 @@ const MiTankef = ({ navigation }) => {
       // Manejar el error
       console.error("Error al obtener el Dashboard:", response.error);
     } else {
-      console.log("Dashboard:", response.data);
       setDashboard(response.data);
     }
   };

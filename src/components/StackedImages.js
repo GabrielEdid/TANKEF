@@ -24,7 +24,6 @@ const StackedImages = () => {
       // Manejar el error
       console.error("Error al obtener el Dashboard:", response.error);
     } else {
-      console.log("Dashboard:", response.data.data.members);
       setImages(response.data.data.members);
     }
   };
