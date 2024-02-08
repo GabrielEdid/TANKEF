@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   textoNombre: {
-    color: "#29364d",
+    color: "#060B4D",
     fontFamily: "opensansbold",
     fontSize: 24,
   },
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   },
   texto: {
     fontSize: 15,
-    color: "#29364d",
+    color: "#060B4D",
     width: "70%",
     alignSelf: "center",
     textAlign: "center",

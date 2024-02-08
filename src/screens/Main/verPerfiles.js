@@ -11,8 +11,10 @@ import {
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
+import { Feather } from "@expo/vector-icons";
 import { APIGet, APIPost } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import Post from "../../components/Post";
@@ -114,25 +116,41 @@ const VerPerfiles = ({ route }) => {
   return (
     <>
       <View style={styles.tituloContainer}>
-        {/* Boton de Settings */}
-        <TouchableOpacity style={styles.tresPuntos}>
-          <Text style={{ fontSize: 25 }}>...</Text>
+        {/* Titulo */}
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.4, y: 0.4 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50, marginRight: 15 }}
+          />
         </TouchableOpacity>
-        {/* Titulo Superior */}
-        <Text style={styles.titulo}>TANKEF</Text>
       </View>
       <ScrollView style={styles.scrollV}>
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
-        <View>
-          <Image style={styles.fotoPerfil} source={userInfo.avatar} />
-          <Text style={styles.textoNombre}>
-            {userInfo.nombre +
-              " " +
-              userInfo.apellidoPaterno +
-              " " +
-              userInfo.apellidoMaterno}
-          </Text>
-          <Text style={styles.textoMail}>{userInfo.mail}</Text>
+        <View style={{ flexDirection: "row", marginBottom: 15 }}>
+          <Image style={styles.fotoPerfil} source={imageMap["Blank"]} />
+          <View style={{ marginTop: 5 }}>
+            <Text style={styles.textoNombre}>
+              {userInfo.nombre +
+                " " +
+                userInfo.apellidoPaterno +
+                " " +
+                userInfo.apellidoMaterno}
+            </Text>
+            <Text style={styles.textoMail}>{userInfo.mail}</Text>
+          </View>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -141,14 +159,7 @@ const VerPerfiles = ({ route }) => {
               style={styles.botonConf}
               onPress={() => postRequest()}
             >
-              <LinearGradient
-                colors={["#2FF690", "#21B6D5"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.botonGradient}
-              >
-                <Text style={styles.textoBoton}>CONECTAR</Text>
-              </LinearGradient>
+              <Text style={styles.textoBoton}>Conectar</Text>
             </TouchableOpacity>
           )}
           {estado === "solicitudEnviada" && (
@@ -157,7 +168,7 @@ const VerPerfiles = ({ route }) => {
               onPress={() => setModalVisible(true)}
             >
               <Text style={[styles.textoBoton, { color: "grey" }]}>
-                SOLICITUD ENVIADA
+                Solicitud Enviada
               </Text>
             </TouchableOpacity>
           )}
@@ -245,17 +256,30 @@ const VerPerfiles = ({ route }) => {
 // Estilos de la pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
-    justifyContent: "space-between",
-    height: 105,
+    paddingHorizontal: 20,
+    flexDirection: "row",
     backgroundColor: "white",
+    paddingBottom: 10,
   },
   titulo: {
-    fontFamily: "conthrax",
-    fontSize: 27,
-    color: "#29364d",
-    marginTop: 70,
-    marginLeft: 20,
-    position: "absolute",
+    fontFamily: "montserrat",
+    letterSpacing: -4,
+    fontSize: 35,
+    marginTop: 40,
+  },
+  tituloPantalla: {
+    flex: 1,
+    marginTop: 47,
+    marginRight: 50,
+    fontSize: 24,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    fontWeight: "bold",
+  },
+  sliders: {
+    width: 25,
+    height: 23,
+    marginTop: 50,
   },
   tresPuntos: {
     alignItems: "center",
@@ -264,7 +288,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   scrollV: {
-    paddingHorizontal: 20,
+    marginTop: 3,
     flex: 1,
     backgroundColor: "white",
   },
@@ -275,57 +299,55 @@ const styles = StyleSheet.create({
     top: 10,
   },
   fotoPerfil: {
+    marginLeft: 20,
+    marginRight: 10,
     width: 80,
     height: 80,
     borderRadius: 80,
     marginTop: 10,
   },
   textoNombre: {
-    color: "#29364d",
-    fontWeight: "bold",
-    fontSize: 27,
-    marginTop: 10,
-    position: "absolute",
-    left: 95,
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+    fontSize: 24,
   },
   textoMail: {
     color: "grey",
-    fontSize: 19,
-    marginTop: 45,
-    position: "absolute",
-    left: 96,
+    fontFamily: "opensans",
+    fontSize: 14,
+    marginLeft: 1,
   },
   buttonContainer: {
-    marginTop: 10,
-    width: "100%",
+    marginHorizontal: 20,
+    alignSelf: "center",
+    flex: 1,
+    borderRadius: 8,
     flexDirection: "row",
   },
-  botonGradient: {
-    width: "100%",
-    justifyContent: "center",
+  botonConf: {
     height: 31,
+    marginHorizontal: 20,
     alignSelf: "center",
     borderRadius: 8,
-  },
-  botonConf: {
-    width: "100%",
-    height: 31,
+    flex: 1,
     borderRadius: 8,
-  },
-  textoBoton: {
-    fontSize: 15,
-    fontFamily: "conthrax",
-    textAlign: "center",
-    paddingTop: 1,
-    color: "white",
+    backgroundColor: "#2FF690",
   },
   botonConectado: {
     height: 31,
-    width: "100%",
-    paddingTop: 7,
-    left: 2.5,
+    marginHorizontal: 20,
+    alignSelf: "center",
+    borderRadius: 8,
+    flex: 1,
     borderRadius: 8,
     backgroundColor: "#D5D5D5",
+  },
+  textoBoton: {
+    fontSize: 15,
+    fontFamily: "opensansbold",
+    textAlign: "center",
+    paddingTop: 3,
+    color: "#060B4D",
   },
   // Estilos para el Modal que aparece si se elimina una conexión
   fullScreenButton: {
