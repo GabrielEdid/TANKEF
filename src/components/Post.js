@@ -27,7 +27,7 @@ const Post = (props) => {
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(props["liked"]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const { user, setUser } = React.useContext(UserContext);
@@ -246,7 +246,7 @@ const Post = (props) => {
               style={{
                 width: 28,
                 height: 24,
-                tintColor: !like ? "#060B4D" : "#21B6D5",
+                tintColor: like ? "#21B6D5" : "#060B4D",
               }}
             />
           </TouchableOpacity>

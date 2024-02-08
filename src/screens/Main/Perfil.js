@@ -25,8 +25,10 @@ import Post from "../../components/Post";
 const Perfil = () => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [page, setPage] = useState(1);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -42,26 +44,55 @@ const Perfil = () => {
     // ... más imágenes
   };
 
-  const fetchUserPosts = async () => {
-    //setIsLoading(true);
+  const fetchUserPosts = async (currentPage) => {
+    setIsFetchingMore(true);
     const url = `/api/v1/users/${user.userID}/posts`;
+    const response = await APIGet(`${url}?page=${currentPage}`);
 
-    const result = await APIGet(url);
+    if (!response.error) {
+      // Ordena los posts de más nuevo a más viejo
+      const newPosts = response.data.data.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
 
-    if (result.error) {
-      console.error("Error al obtener posts:", result.error);
+      if (currentPage === 1) {
+        setPosts(newPosts);
+      } else {
+        // Filtra los posts que ya están presentes en el estado actual
+        const filteredNewPosts = newPosts.filter(
+          (newPost) => !posts.some((post) => post.id === newPost.id)
+        );
+
+        setPosts((prevPosts) => [...prevPosts, ...filteredNewPosts]);
+      }
     } else {
-      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id);
-      setIsLoading(false);
-      setPosts(sortedPosts);
+      console.error("Error al obtener posts:", response.error);
+    }
+    setIsLoading(false);
+    setIsFetchingMore(false);
+  };
+
+  useEffect(() => {
+    fetchUserPosts(page);
+  }, [page]);
+
+  const handleLoadMore = () => {
+    if (!isFetchingMore) {
+      setPage((prevPage) => prevPage + 1);
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchUserPosts();
-    }, [])
-  );
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20; // cuánto espacio en la parte inferior antes de cargar más
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
 
   // Componente visual
   return (
@@ -96,7 +127,15 @@ const Perfil = () => {
           <Image style={styles.sliders} source={imageMap["Sliders"]} />
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.scrollV}>
+      <ScrollView
+        style={styles.scrollV}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            handleLoadMore();
+          }
+        }}
+        scrollEventThrottle={400}
+      >
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
         <View style={{ flexDirection: "row" }}>
           <Image
@@ -197,6 +236,7 @@ const Perfil = () => {
                   imagen={post.image}
                   comentarios={post.count_comments}
                   reacciones={post.count_reactions}
+                  liked={post["liked?"]}
                 />
               ))
             ) : (
@@ -223,6 +263,7 @@ const Perfil = () => {
               </View>
             ))}
         </View>
+        {isFetchingMore && <ActivityIndicator size="large" color="#0000ff" />}
       </ScrollView>
     </>
   );

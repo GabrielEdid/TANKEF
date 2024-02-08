@@ -260,6 +260,7 @@ const Inicio = () => {
                   reacciones={post.count_reactions}
                   personal={false}
                   imagen={post.image}
+                  liked={post["liked?"]}
                 />
               ))
             ) : (
