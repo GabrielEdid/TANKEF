@@ -28,7 +28,6 @@ const Perfil = () => {
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -46,8 +45,8 @@ const Perfil = () => {
 
   const fetchUserPosts = async (currentPage) => {
     setIsFetchingMore(true);
-    const url = `/api/v1/users/${user.userID}/posts`;
-    const response = await APIGet(`${url}?page=${currentPage}`);
+    const url = `/api/v1/users/${user.userID}/posts?page=${currentPage}`;
+    const response = await APIGet(url);
 
     if (!response.error) {
       // Ordena los posts de más nuevo a más viejo

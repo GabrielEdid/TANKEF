@@ -60,11 +60,10 @@ const handleRequest = async (requestFunc) => {
   }
 };
 
-export const APIGet = async (url, queryParams = {}) => {
+export const APIGet = async (url) => {
   return handleRequest(() =>
     axiosInstance.get(url, {
       headers: { Authorization: `Bearer ${token}` },
-      params: (page = queryParams), // Pasamos queryParams al objeto de configuración de Axios
     })
   );
 };

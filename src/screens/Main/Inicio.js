@@ -30,28 +30,58 @@ const Inicio = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1); // Estado para manejar la paginación
+  const [isFetchingMore, setIsFetchingMore] = useState(false); // Estado para saber si se están cargando más posts
 
-  const fetchFeed = async () => {
-    setIsLoading(true);
-    const url = `/api/v1/feed`;
+  const fetchFeed = async (currentPage) => {
+    setIsFetchingMore(true);
+    const url = `/api/v1/feed?page=${currentPage}`;
+    const response = await APIGet(url);
 
-    const result = await APIGet(url);
+    if (!response.error) {
+      // Ordena los posts de más nuevo a más viejo
+      const newPosts = response.data.data.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
 
-    if (result.error) {
-      console.error("Error al obtener el feed:", result.error);
+      if (currentPage === 1) {
+        setPosts(newPosts);
+      } else {
+        // Filtra los posts que ya están presentes en el estado actual
+        const filteredNewPosts = newPosts.filter(
+          (newPost) => !posts.some((post) => post.id === newPost.id)
+        );
+
+        setPosts((prevPosts) => [...prevPosts, ...filteredNewPosts]);
+      }
     } else {
-      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
-      setIsLoading(false);
-      setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
+      console.error("Error al obtener posts:", response.error);
+    }
+    setIsLoading(false);
+    setIsFetchingMore(false);
+  };
+
+  useEffect(() => {
+    fetchFeed(page);
+  }, [page]);
+
+  const handleLoadMore = () => {
+    if (!isFetchingMore) {
+      setPage((prevPage) => prevPage + 1);
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchFeed();
-    }, [])
-  );
-
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20; // cuánto espacio en la parte inferior antes de cargar más
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
   // Función para convertir la primera letra de cada palabra en mayúscula y el resto minuscula
   function titleCase(str) {
     return str
@@ -149,7 +179,15 @@ const Inicio = () => {
         />
       </TouchableOpacity>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ScrollView style={styles.scrollV}>
+        <ScrollView
+          style={styles.scrollV}
+          onScroll={({ nativeEvent }) => {
+            if (isCloseToBottom(nativeEvent)) {
+              handleLoadMore();
+            }
+          }}
+          scrollEventThrottle={400}
+        >
           <Modal transparent={true} animationType="fade" visible={isLoading}>
             <View style={styles.overlay}>
               <ActivityIndicator size={75} color="#060B4D" />
@@ -166,7 +204,6 @@ const Inicio = () => {
             <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
             <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
           </ScrollView> */}
-
           {/* Anuncio para Invertir 
           <TouchableOpacity style={styles.cuadroInvertir}>
             <Text style={styles.texto}>{banners.investment}</Text>
@@ -188,7 +225,6 @@ const Inicio = () => {
               </Text>
             </LinearGradient>
           </TouchableOpacity> */}
-
           {/* Anuncio para hacer un Crédito 
           <TouchableOpacity style={styles.cuadroCredito}>
             <Text style={[styles.texto, { color: "#060B4D" }]}>
@@ -212,7 +248,6 @@ const Inicio = () => {
               </Text>
             </LinearGradient>
           </TouchableOpacity> */}
-
           {/* TEMPLATE DE POSTS EN FEED
           <Post
             tipo={"compartir"}
@@ -286,6 +321,7 @@ const Inicio = () => {
                 </Text>
               </View>
             ))}
+          {isFetchingMore && <ActivityIndicator size="large" color="#0000ff" />}
         </ScrollView>
       </TouchableWithoutFeedback>
       <ModalPost
@@ -295,6 +331,10 @@ const Inicio = () => {
     </>
   );
 };
+
+function isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
+  return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+}
 
 // Estilos de la pantalla
 const styles = StyleSheet.create({
