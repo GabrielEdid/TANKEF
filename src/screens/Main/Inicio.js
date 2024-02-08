@@ -61,9 +61,11 @@ const Inicio = () => {
     setIsFetchingMore(false);
   };
 
-  useEffect(() => {
-    fetchFeed(page);
-  }, [page]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchFeed(page);
+    }, [page])
+  );
 
   const handleLoadMore = () => {
     if (!isFetchingMore) {
@@ -293,7 +295,7 @@ const Inicio = () => {
                   body={post.body}
                   comentarios={post.count_comments}
                   reacciones={post.count_reactions}
-                  personal={false}
+                  personal={post.user.id === user.id}
                   imagen={post.image}
                   liked={post["liked?"]}
                 />

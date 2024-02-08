@@ -71,9 +71,11 @@ const Perfil = () => {
     setIsFetchingMore(false);
   };
 
-  useEffect(() => {
-    fetchUserPosts(page);
-  }, [page]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserPosts(page);
+    }, [page])
+  );
 
   const handleLoadMore = () => {
     if (!isFetchingMore) {

@@ -29,6 +29,7 @@ const initialState = {
   firmaElectronica: "",
   RFC: "",
   avatar: null,
+  conexiones: 0,
   // Datos con backend
   userID: "", // ID del usuario en la base de datos
   userToken: "", // Token de autenticación del usuario

@@ -59,13 +59,12 @@ const Post = (props) => {
 
   const deletePost = async () => {
     const url = `/api/v1/posts/${props.postId}`;
-    console.log("URL:", url);
     const response = await APIDelete(url);
     if (response.error) {
       console.log("Post no eliminado");
     } else {
       setIsVisible(false);
-      console.error("Usuario eliminado" + response);
+      console.error("Post eliminado" + response);
     }
   };
 

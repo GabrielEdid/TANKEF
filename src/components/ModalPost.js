@@ -179,7 +179,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   { fontSize: 12, fontFamily: "opensans" },
                 ]}
               >
-                5 conexiones
+                {user.conections + " conexiones"}
               </Text>
             </View>
           </View>
