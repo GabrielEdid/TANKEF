@@ -140,7 +140,7 @@ const VerPerfiles = ({ route }) => {
       <ScrollView style={styles.scrollV}>
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
-          <Image style={styles.fotoPerfil} source={imageMap["Blank"]} />
+          <Image style={styles.fotoPerfil} source={userInfo.avatar} />
           <View style={{ marginTop: 5 }}>
             <Text style={styles.textoNombre}>
               {userInfo.nombre +
