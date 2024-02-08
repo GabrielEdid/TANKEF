@@ -43,7 +43,7 @@ const Perfil = () => {
   };
 
   const fetchUserPosts = async () => {
-    setIsLoading(true);
+    //setIsLoading(true);
     const url = `/api/v1/users/${user.userID}/posts`;
 
     const result = await APIGet(url);

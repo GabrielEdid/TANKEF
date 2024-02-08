@@ -15,9 +15,9 @@ const AuthPinPad = ({ navigation, route }) => {
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleAuthenticationSuccess = () => {
+  /*const handleAuthenticationSuccess = () => {
     fetchProfileData(); // Llama a fetchProfileData después de la autenticación exitosa
-  };
+  };*/
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -89,7 +89,7 @@ const AuthPinPad = ({ navigation, route }) => {
         id={true}
         get={pin}
         set={setPin}
-        onAuthenticationSuccess={handleAuthenticationSuccess}
+        //onAuthenticationSuccess={handleAuthenticationSuccess}
       />
       <Modal transparent={true} animationType="fade" visible={isLoading}>
         <View style={styles.overlay}>

@@ -92,7 +92,7 @@ const PinPad = ({ ...props }) => {
       setIsAuthenticated(result.success);
       console.log(result);
       if (result.success === true) {
-        props.onAuthenticationSuccess(); // Llama a la función de devolución de llamada
+        //props.onAuthenticationSuccess(); // Llama a la función de devolución de llamada
       }
     });
   }
