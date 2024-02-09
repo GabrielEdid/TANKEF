@@ -297,6 +297,7 @@ const Post = (props) => {
                 comentarios: props.comentarios,
                 reacciones: props.reacciones,
                 personal: props.personal,
+                liked: props.liked,
                 remove: setIsVisible,
               })
             }
@@ -326,6 +327,7 @@ const Post = (props) => {
               comentarios: props.comentarios,
               reacciones: props.reacciones,
               personal: props.personal,
+              liked: props.liked,
               remove: setIsVisible,
             })
           }

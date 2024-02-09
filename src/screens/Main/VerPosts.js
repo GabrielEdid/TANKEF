@@ -34,13 +34,14 @@ const VerPosts = ({ route, navigation }) => {
     comentarios,
     reacciones,
     personal,
+    liked,
     remove,
   } = route.params;
   // Estados del Componente
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(liked);
   const [comments, setComments] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -115,20 +116,53 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
-  const postReaction = async () => {
-    const url = "/api/v1/reactions";
-    const data = {
-      reactionable_type: "Post",
-      reactionable_id: postId,
-    };
+  const handleReaction = async () => {
+    if (!like) {
+      // Intentar dar like
+      const urlGiveLike = "/api/v1/reactions";
+      const data = {
+        reactionable_type: "Post",
+        reactionable_id: postId,
+      };
 
-    const response = await APIPost(url, data);
-    if (response.error) {
-      // Manejar el error
-      console.error("Error al dar Like:", response.error);
-      Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+      try {
+        const response = await APIPost(urlGiveLike, data);
+        if (!response.error) {
+          setLike(true); // Actualiza el estado para reflejar el like dado
+        }
+      } catch (error) {
+        console.error("Error al dar Like:", error);
+        Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+      }
     } else {
-      setLike(!like);
+      // Intentar quitar like
+      const urlGetReactions = `/api/v1/posts/${postId}/reactions`;
+
+      try {
+        const response = await APIGet(urlGetReactions);
+        if (
+          !response.error &&
+          response.data &&
+          Array.isArray(response.data.data)
+        ) {
+          // Buscar la reacción del usuario en la lista de reacciones del post
+          const userReaction = response.data.data.find(
+            (reaction) => reaction.user_id === user.userID
+          );
+
+          if (userReaction) {
+            console.log("Intentando quitar like", userReaction.id);
+            const urlRemoveLike = `/api/v1/reactions/${userReaction.id}`;
+            const deleteResponse = await APIDelete(urlRemoveLike);
+            if (!deleteResponse.error) {
+              setLike(false); // Actualiza el estado para reflejar la eliminación del like
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error al quitar Like:", error);
+        Alert.alert("Error", "No se pudo quitar like. Intente nuevamente.");
+      }
     }
   };
 
@@ -315,13 +349,13 @@ const VerPosts = ({ route, navigation }) => {
           {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
           <View style={styles.interactionContainer}>
             <View style={{ flex: 1, flexDirection: "row" }}>
-              <TouchableOpacity onPress={() => postReaction()}>
+              <TouchableOpacity onPress={() => handleReaction()}>
                 <Image
                   source={imageMap["Like"]}
                   style={{
                     width: 28,
                     height: 24,
-                    tintColor: !like ? "#060B4D" : "#21B6D5",
+                    tintColor: like ? "#21B6D5" : "#060B4D",
                   }}
                 />
               </TouchableOpacity>
