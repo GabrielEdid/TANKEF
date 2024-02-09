@@ -162,7 +162,7 @@ const Perfil = () => {
             marginTop: 10,
           }}
         />
-        {/* Lista de Datos de Red del Usuario 
+        {/* Lista de Datos de Red del Usuario */}
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -174,14 +174,14 @@ const Perfil = () => {
           <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
           <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
         </ScrollView>
-        {/* View de LogIn Gradual *
+        {/* View de LogIn Gradual */}
         <TouchableOpacity
           style={styles.cuadroLoginProgresivo}
           onPress={() => {
             navigation.navigate("LoginProgresivo");
           }}
         >
-          {/* Texto Incentivo del Recuadro 
+          {/* Texto Incentivo del Recuadro */}
           <Text style={styles.texto}>
             Termina tu <Text style={{ fontWeight: "bold" }}>registro</Text> para
             poder{" "}
@@ -191,7 +191,7 @@ const Perfil = () => {
             !
           </Text>
           <ProgressBar progress={0.7} />
-          {/* Boton del Recuadro 
+          {/* Boton del Recuadro */}
           <LinearGradient
             colors={["#2FF690", "#21B6D5"]}
             start={{ x: 1, y: 1 }} // Inicio del gradiente
@@ -208,7 +208,7 @@ const Perfil = () => {
               COMPLETAR PERFIL
             </Text>
           </LinearGradient>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
         <View style={{ marginTop: 5 }}>
           {!isLoading &&
@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 6,
     top: 10,
+    paddingHorizontal: 20,
   },
   fotoPerfil: {
     width: 80,
