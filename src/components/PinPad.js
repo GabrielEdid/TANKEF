@@ -24,7 +24,6 @@ import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
 const PinPad = ({ ...props }) => {
   const navigation = useNavigation();
-
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -92,7 +91,7 @@ const PinPad = ({ ...props }) => {
       setIsAuthenticated(result.success);
       console.log(result);
       if (result.success === true) {
-        //props.onAuthenticationSuccess(); // Llama a la función de devolución de llamada
+        props.onAuthenticationSuccess(); // Llama a la función de devolución de llamada
       }
     });
   }

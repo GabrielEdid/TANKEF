@@ -12,12 +12,11 @@ const AuthPinPad = ({ navigation, route }) => {
   const { userPin, userLoggedIn } = route.params; // Se obtiene el pin del AsyncStorage
   const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
-  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  /*const handleAuthenticationSuccess = () => {
+  const handleAuthenticationSuccess = () => {
     fetchProfileData(); // Llama a fetchProfileData después de la autenticación exitosa
-  };*/
+  };
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -57,14 +56,11 @@ const AuthPinPad = ({ navigation, route }) => {
         conections: result.data.data.count_conections,
       });
       console.log("Datos del perfil:", result.data);
-      setIsProfileLoaded(true);
       setIsLoading(false);
-      if (isProfileLoaded) {
-        navigation.navigate("MainFlow", {
-          screen: "Perfil",
-        });
-        //Alert.alert("Autenticado", "Bienvenido de vuelta!");
-      }
+      navigation.navigate("MainFlow", {
+        screen: "Perfil",
+      });
+      //Alert.alert("Autenticado", "Bienvenido de vuelta!");
     }
   };
 
@@ -78,7 +74,7 @@ const AuthPinPad = ({ navigation, route }) => {
         setPin("");
       }
     }
-  }, [pin, userPin, navigation, isProfileLoaded]);
+  }, [pin, userPin, navigation]);
 
   // Componente visual
   return (
@@ -90,7 +86,7 @@ const AuthPinPad = ({ navigation, route }) => {
         id={true}
         get={pin}
         set={setPin}
-        //onAuthenticationSuccess={handleAuthenticationSuccess}
+        onAuthenticationSuccess={handleAuthenticationSuccess}
       />
       <Modal transparent={true} animationType="fade" visible={isLoading}>
         <View style={styles.overlay}>
