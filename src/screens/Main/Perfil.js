@@ -167,7 +167,7 @@ const Perfil = () => {
             style={styles.fotoPerfil}
             source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
           />
-          <View style={{ marginLeft: 10, marginTop: 5 }}>
+          <View style={{ marginLeft: 10, marginTop: 5, alignSelf: "center" }}>
             <Text style={styles.textoNombre}>
               {user.nombre +
                 " " +
