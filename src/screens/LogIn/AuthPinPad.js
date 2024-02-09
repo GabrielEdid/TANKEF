@@ -95,6 +95,15 @@ const AuthPinPad = ({ navigation, route }) => {
       <Modal transparent={true} animationType="fade" visible={isLoading}>
         <View style={styles.overlay}>
           <ActivityIndicator size={75} color="white" />
+          <Text
+            style={{
+              fontFamily: "opensanssemibold",
+              marginTop: 15,
+              color: "white",
+            }}
+          >
+            Estamos recuperando tus datos
+          </Text>
         </View>
       </Modal>
     </View>
