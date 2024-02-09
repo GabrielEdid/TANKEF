@@ -42,17 +42,25 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   };
 
   const postData = async () => {
-    setEnabled(false);
-    const url = "/api/v1/posts";
+    // Primero, asegúrate de que el estado esté correctamente establecido para prevenir múltiples envíos
+    if (!text.trim() && !image) {
+      Alert.alert("Error", "No puedes publicar un post vacío.");
+      return;
+    }
 
+    setEnabled(false);
+
+    const url = "/api/v1/posts";
     const formData = new FormData();
-    // Añadir la imagen al FormData
-    formData.append("post[post_image]", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    formData.append("post[title]", "");
+
+    // Solo añade la imagen al FormData si existe
+    if (image) {
+      formData.append("post[post_image]", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
+      });
+    }
     formData.append("post[body]", text.trim());
     formData.append("post[user_id]", user.userID);
     formData.append(
@@ -60,18 +68,28 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
       quien === "Mis Conexiones" ? "friends" : "all_network"
     );
 
-    const response = await APIPost(url, formData);
-    if (response.error) {
-      // Manejar el error
-      console.error("Error al publicar:", response.error);
-      Alert.alert("Error", "No se pudo publicar. Intente nuevamente.");
-    } else {
-      // Continuar en caso de éxito
-      setText("");
-      setImage(null);
-      handleModalClose();
+    try {
+      const response = await APIPost(url, formData);
+
+      if (response.error) {
+        console.error("Error al publicar:", response.error);
+        Alert.alert("Error", "No se pudo publicar. Intente nuevamente.");
+      } else {
+        // Proceso exitoso
+        console.log("Post publicado exitosamente");
+        setText("");
+        setImage(null);
+        handleModalClose();
+      }
+    } catch (error) {
+      console.error("Excepción al publicar:", error);
+      Alert.alert(
+        "Error",
+        "Ocurrió un error al intentar publicar. Por favor, intenta de nuevo."
+      );
+    } finally {
+      setEnabled(true);
     }
-    setEnabled(true);
   };
 
   const pickImage = async () => {

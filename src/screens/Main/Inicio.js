@@ -295,7 +295,7 @@ const Inicio = () => {
                   body={post.body}
                   comentarios={post.count_comments}
                   reacciones={post.count_reactions}
-                  personal={post.user.id === user.id}
+                  personal={post.user.id === user.userID ? true : false}
                   imagen={post.image}
                   liked={post["liked?"]}
                 />

@@ -334,15 +334,14 @@ const Post = (props) => {
               >
                 <Text style={{ color: "red" }}>Eliminar Publicación</Text>
               </TouchableOpacity>
-            ) : null}
-            {!props.personal ? (
+            ) : (
               <TouchableOpacity
                 style={styles.buttonModal}
                 onPress={() => console.log("Implementación de Reportar")}
               >
                 <Text style={{ color: "red" }}>Reportar Publicación</Text>
               </TouchableOpacity>
-            ) : null}
+            )}
             <TouchableOpacity
               style={{ marginTop: 10 }}
               onPress={() => setModalVisible(false)}
