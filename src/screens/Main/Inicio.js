@@ -34,6 +34,7 @@ const Inicio = () => {
   const [isFetchingMore, setIsFetchingMore] = useState(false); // Estado para saber si se están cargando más posts
 
   const fetchFeed = async (currentPage) => {
+    setIsLoading(true);
     setIsFetchingMore(true);
     const url = `/api/v1/feed?page=${currentPage}`;
     const response = await APIGet(url);
@@ -190,11 +191,6 @@ const Inicio = () => {
           }}
           scrollEventThrottle={400}
         >
-          {isLoading && (
-            <View style={styles.overlay}>
-              <ActivityIndicator size={75} color="#060B4D" />
-            </View>
-          )}
           {/* Lista de Datos de Red del Usuario 
           <ScrollView
             horizontal={true}

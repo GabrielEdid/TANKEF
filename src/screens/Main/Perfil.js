@@ -44,6 +44,7 @@ const Perfil = () => {
   };
 
   const fetchUserPosts = async (currentPage) => {
+    setIsLoading(true);
     setIsFetchingMore(true);
     const url = `/api/v1/users/${user.userID}/posts?page=${currentPage}`;
     const response = await APIGet(url);
@@ -211,11 +212,6 @@ const Perfil = () => {
         </TouchableOpacity> */}
 
         <View style={{ marginTop: 5 }}>
-          {isLoading && (
-            <View style={styles.overlay}>
-              <ActivityIndicator size={75} color="#060B4D" />
-            </View>
-          )}
           {!isLoading &&
             (posts.length !== 0 ? (
               posts.map((post, index) => (
