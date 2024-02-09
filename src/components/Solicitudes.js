@@ -21,7 +21,7 @@ const Solicitudes = (props) => {
     setIsVisible(false);
     const url = `/api/v1/friendship_request/cancel`;
     const data = {
-      id: props.userID,
+      id: props.objectID,
     };
 
     try {
@@ -47,7 +47,7 @@ const Solicitudes = (props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
@@ -93,7 +93,7 @@ const Solicitudes = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
-    </View>
+    </TouchableOpacity>
   );
 };
 

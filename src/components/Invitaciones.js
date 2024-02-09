@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 // Importaciones de Componentes
-import { APIPost } from "../API/APIService";
+import { APIPost, APIDelete } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
@@ -20,9 +20,21 @@ const Invitaciones = (props) => {
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Para cuando se desee eliminar el Request
-  const handleRemove = () => {
+  // Para cuando se desee eliminar una conexión
+  const deleteInvitation = async () => {
     setIsVisible(false);
+    const url = `/api/v1/friendship_request/reject`;
+    const data = {
+      invitation_id: props.objectID,
+    };
+
+    try {
+      const response = await APIDelete(url, data);
+      console.log("Invitation Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.log("Error al eliminar la invitacion:", error);
+    }
   };
 
   if (!isVisible) {
@@ -32,7 +44,7 @@ const Invitaciones = (props) => {
   const postAccept = async () => {
     const url = "/api/v1/friendship_request/accept";
     const data = {
-      contact_id: props.userID,
+      contact_id: props.objectID,
     };
 
     const response = await APIPost(url, data);
@@ -58,7 +70,7 @@ const Invitaciones = (props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
@@ -99,7 +111,7 @@ const Invitaciones = (props) => {
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}
-              onPress={() => handleRemove()}
+              onPress={() => deleteInvitation()}
             >
               <Text style={{ color: "red" }}>Eliminar Solicitud</Text>
             </TouchableOpacity>
@@ -112,7 +124,7 @@ const Invitaciones = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
-    </View>
+    </TouchableOpacity>
   );
 };
 
