@@ -34,6 +34,7 @@ const VerPosts = ({ route, navigation }) => {
     comentarios,
     reacciones,
     personal,
+    remove,
   } = route.params;
   // Estados del Componente
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
@@ -139,6 +140,7 @@ const VerPosts = ({ route, navigation }) => {
     } else {
       setIsVisible(false);
       console.error("Post eliminado" + response);
+      remove(true);
       navigation.goBack();
     }
   };

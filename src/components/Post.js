@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   Modal,
   Linking,
 } from "react-native";
-import { parseISO, formatDistanceToNow } from "date-fns";
+import { parseISO, formatDistanceToNow, set } from "date-fns";
 import { es } from "date-fns/locale";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
@@ -30,7 +30,7 @@ const Post = (props) => {
   const [like, setLike] = useState(props["liked"]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const { user, setUser } = React.useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes que se necesiten
   const imageMap = {
@@ -253,7 +253,6 @@ const Post = (props) => {
             style={{ marginLeft: 10 }}
             onPress={() =>
               navigation.navigate("VerPosts", {
-                key: props.key,
                 postId: props.postId,
                 tipo: props.tipo,
                 nombre: props.nombre,
@@ -264,6 +263,7 @@ const Post = (props) => {
                 comentarios: props.comentarios,
                 reacciones: props.reacciones,
                 personal: props.personal,
+                remove: setIsVisible,
               })
             }
           >
@@ -292,6 +292,7 @@ const Post = (props) => {
               comentarios: props.comentarios,
               reacciones: props.reacciones,
               personal: props.personal,
+              remove: setIsVisible,
             })
           }
         >
