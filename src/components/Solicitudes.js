@@ -18,18 +18,31 @@ const Solicitudes = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const deleteSolicitud = async () => {
-    setIsVisible(false);
     const url = `/api/v1/friendship_request/cancel`;
     const data = {
       id: props.objectID,
     };
-
     try {
-      const response = await APIDelete(url, data);
-      console.log("Post Deleted:", response.data);
-      setIsVisible(false);
+      const response = await APIDelete(url, { data }); // Asegúrate que APIDelete acepte un objeto de configuración con datos
+      if (!response.error) {
+        console.log("Solicitud Cancelada:", response.data);
+        setIsVisible(false); // Solo modifica el estado si la operación es exitosa
+        // Retroalimentación al usuario sobre la acción exitosa
+        Alert.alert("Éxito", "La solicitud ha sido cancelada correctamente.");
+      } else {
+        // Si la API responde con algún error, es una buena práctica revertir cualquier cambio de estado anticipado.
+        setIsVisible(true);
+        throw new Error("La API respondió con un error.");
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error al cancelar la solicitud:", error);
+      // Retroalimentación al usuario en caso de error en la operación
+      Alert.alert(
+        "Error",
+        "No se pudo cancelar la solicitud. Por favor, intenta nuevamente."
+      );
+      // Considera revertir cambios de estado aquí si decidiste ocultar la UI anticipadamente
+      setIsVisible(true);
     }
   };
 

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -61,7 +62,7 @@ const VerPerfiles = ({ route }) => {
       console.error("Error al Solicitar Amistad:", response.error);
       Alert.alert(
         "Error",
-        "No se pudo hacer el solicitud. Intente nuevamente."
+        "No se pudo hacer la solicitud. Intente nuevamente."
       );
     } else {
       // Continuar en caso de éxito
