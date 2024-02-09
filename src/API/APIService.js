@@ -1,6 +1,5 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 let token = "";
 

@@ -10,6 +10,7 @@ import {
   TextInput,
   Modal,
   Linking,
+  Alert,
 } from "react-native";
 import { parseISO, formatDistanceToNow, set } from "date-fns";
 import { es } from "date-fns/locale";
@@ -17,7 +18,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
-import { APIPost, APIDelete } from "../API/APIService";
+import { APIPost, APIDelete, APIGet } from "../API/APIService";
 import { AntDesign } from "@expo/vector-icons";
 import ProgressBar from "./Componentes Olvidados/ProgressBar";
 
@@ -40,20 +41,53 @@ const Post = (props) => {
     // ... más imágenes
   };
 
-  const postReaction = async () => {
-    const url = "/api/v1/reactions";
-    const data = {
-      reactionable_type: "Post",
-      reactionable_id: props.postId,
-    };
+  const handleReaction = async () => {
+    if (!like) {
+      // Intentar dar like
+      const urlGiveLike = "/api/v1/reactions";
+      const data = {
+        reactionable_type: "Post",
+        reactionable_id: props.postId,
+      };
 
-    const response = await APIPost(url, data);
-    if (response.error) {
-      // Manejar el error
-      console.error("Error al dar Like:", response.error);
-      Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+      try {
+        const response = await APIPost(urlGiveLike, data);
+        if (!response.error) {
+          setLike(true); // Actualiza el estado para reflejar el like dado
+        }
+      } catch (error) {
+        console.error("Error al dar Like:", error);
+        Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+      }
     } else {
-      setLike(!like);
+      // Intentar quitar like
+      const urlGetReactions = `/api/v1/posts/${props.postId}/reactions`;
+
+      try {
+        const response = await APIGet(urlGetReactions);
+        if (
+          !response.error &&
+          response.data &&
+          Array.isArray(response.data.data)
+        ) {
+          // Buscar la reacción del usuario en la lista de reacciones del post
+          const userReaction = response.data.data.find(
+            (reaction) => reaction.user_id === user.userID
+          );
+
+          if (userReaction) {
+            console.log("Intentando quitar like", userReaction.id);
+            const urlRemoveLike = `/api/v1/reactions/${userReaction.id}`;
+            const deleteResponse = await APIDelete(urlRemoveLike);
+            if (!deleteResponse.error) {
+              setLike(false); // Actualiza el estado para reflejar la eliminación del like
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error al quitar Like:", error);
+        Alert.alert("Error", "No se pudo quitar like. Intente nuevamente.");
+      }
     }
   };
 
@@ -239,7 +273,7 @@ const Post = (props) => {
       <View style={styles.linea}></View>
       <View style={styles.interactionContainer}>
         <View style={{ flex: 1, flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => postReaction()}>
+          <TouchableOpacity onPress={() => handleReaction()}>
             <Image
               source={imageMap["Like"]}
               style={{
