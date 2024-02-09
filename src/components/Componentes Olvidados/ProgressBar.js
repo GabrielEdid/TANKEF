@@ -39,9 +39,9 @@ const styles = StyleSheet.create({
   },
   progressText: {
     marginLeft: 10,
-    fontSize: 12,
-    fontFamily: "conthrax",
-    marginTop: 20,
+    fontSize: 14,
+    fontFamily: "opensansbold",
+    marginTop: 15,
   },
 });
 

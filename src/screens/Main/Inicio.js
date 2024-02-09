@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   Modal,
+  RefreshControl,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
@@ -33,6 +34,13 @@ const Inicio = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1); // Estado para manejar la paginación
   const [isFetchingMore, setIsFetchingMore] = useState(false); // Estado para saber si se están cargando más posts
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Mapa para cargar todas las imagenes
+  const imageMap = {
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
+    // ... más imágenes
+  };
 
   const fetchFeed = async (currentPage) => {
     setIsFetchingMore(true);
@@ -85,6 +93,7 @@ const Inicio = () => {
       contentSize.height - paddingToBottom
     );
   };
+
   // Función para convertir la primera letra de cada palabra en mayúscula y el resto minuscula
   function titleCase(str) {
     return str
@@ -100,21 +109,14 @@ const Inicio = () => {
     setIsModalVisible(true);
   };
 
-  // Mapa para cargar todas las imagenes
-  const imageMap = {
-    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
-    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
-    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
-    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
-    Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
-    Test: require("../../../assets/images/Test.png"),
-    Test2: require("../../../assets/images/Test2.jpg"),
-    Test3: require("../../../assets/images/Test3.jpg"),
-    Test4: require("../../../assets/images/Test4.jpg"),
-    Blank: require("../../../assets/images/blankAvatar.jpg"),
-    Sliders: require("../../../assets/images/Sliders.png"),
-    // ... más imágenes
-  };
+  // Función para manejar la acción de refrescar
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    fetchFeed(1).then(() => {
+      setIsRefreshing(false);
+      setPage(1); // Reinicia a la primera página
+    });
+  }, []);
 
   /*useEffect(() => {
     const fetchBanners = async () => {
@@ -190,6 +192,15 @@ const Inicio = () => {
             }
           }}
           scrollEventThrottle={400}
+          refreshControl={
+            // Aquí agregas el RefreshControl
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
+              tintColor="#060B4D" // Usado en iOS
+              colors={["#060B4D"]} // Usado en Android
+            />
+          }
         >
           {/* Lista de Datos de Red del Usuario 
           <ScrollView

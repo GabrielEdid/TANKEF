@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -27,6 +28,7 @@ const Perfil = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
@@ -95,6 +97,14 @@ const Perfil = () => {
     );
   };
 
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    fetchUserPosts(1).then(() => {
+      setIsRefreshing(false);
+      setPage(1); // Reinicia a la primera página
+    });
+  }, []);
+
   // Componente visual
   return (
     <>
@@ -136,9 +146,23 @@ const Perfil = () => {
           }
         }}
         scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            tintColor="#060B4D" // Puedes personalizar el color según tu diseño
+            colors={["#060B4D"]} // Puedes personalizar el color según tu diseño
+          />
+        }
       >
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            backgroundColor: "white",
+            paddingBottom: 10,
+          }}
+        >
           <Image
             style={styles.fotoPerfil}
             source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
@@ -154,21 +178,13 @@ const Perfil = () => {
             <Text style={styles.textoMail}>{user.email}</Text>
           </View>
         </View>
-        <View
-          style={{
-            backgroundColor: "#F2F2F2",
-            width: "100%",
-            height: 3,
-            marginTop: 10,
-          }}
-        />
         {/* Lista de Datos de Red del Usuario */}
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           style={styles.scrollH}
         >
-          <CuadroRedUsuario titulo="Conexiones" body="75" />
+          <CuadroRedUsuario titulo="Conexiones" body={user.conections} />
           <CuadroRedUsuario titulo="Valor de Red" body="$253,500.00" />
           <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
           <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
@@ -183,34 +199,30 @@ const Perfil = () => {
         >
           {/* Texto Incentivo del Recuadro */}
           <Text style={styles.texto}>
-            Termina tu <Text style={{ fontWeight: "bold" }}>registro</Text> para
+            Termina tu{" "}
+            <Text style={{ fontFamily: "opensansbold" }}>registro</Text> para
             poder{" "}
-            <Text style={{ fontWeight: "bold" }}>
+            <Text style={{ fontFamily: "opensansbold" }}>
               solicitar créditos e invertir
             </Text>
             !
           </Text>
           <ProgressBar progress={0.7} />
           {/* Boton del Recuadro */}
-          <LinearGradient
-            colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 1, y: 1 }} // Inicio del gradiente
-            end={{ x: 0, y: 0 }} // Fin del gradiente
-            style={styles.botonGradient}
-          >
+          <View style={styles.botonCompletar}>
             <Text
               style={{
-                fontFamily: "conthrax",
-                color: "white",
+                fontFamily: "opensansbold",
+                color: "#060B4D",
                 textAlign: "center",
               }}
             >
-              COMPLETAR PERFIL
+              Completar Perfil
             </Text>
-          </LinearGradient>
+          </View>
         </TouchableOpacity>
 
-        <View style={{ marginTop: 5 }}>
+        <View style={{ marginTop: 3, backgroundColor: "white" }}>
           {!isLoading &&
             (posts.length !== 0 ? (
               posts.map((post, index) => (
@@ -307,13 +319,11 @@ const styles = StyleSheet.create({
   scrollV: {
     marginTop: 3,
     flex: 1,
-    backgroundColor: "white",
   },
   scrollH: {
-    height: 110,
-    width: "100%",
-    paddingTop: 6,
-    top: 10,
+    marginTop: 3,
+    backgroundColor: "white",
+    paddingVertical: 10,
     paddingHorizontal: 20,
   },
   fotoPerfil: {
@@ -329,34 +339,34 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   textoMail: {
-    color: "grey",
+    color: "#060B4D",
     fontFamily: "opensans",
     fontSize: 14,
-    marginLeft: 1,
+    marginLeft: 2,
   },
   cuadroLoginProgresivo: {
+    backgroundColor: "white",
     height: 163,
     width: "100%",
-    marginTop: 20,
-    borderWidth: 1.5,
-    borderColor: "#D5D5D5",
-    borderRadius: 15,
+    marginTop: 3,
     padding: 15,
   },
   texto: {
     fontSize: 15,
+    fontFamily: "opensans",
     color: "#060B4D",
     width: "70%",
     alignSelf: "center",
     textAlign: "center",
   },
-  botonGradient: {
+  botonCompletar: {
+    backgroundColor: "#2FF690",
     justifyContent: "center",
     width: "65%",
     height: 44,
     alignSelf: "center",
     borderRadius: 15,
-    top: 15,
+    marginTop: 15,
   },
   overlay: {
     flex: 1,
