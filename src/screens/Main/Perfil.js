@@ -44,7 +44,6 @@ const Perfil = () => {
   };
 
   const fetchUserPosts = async (currentPage) => {
-    setIsLoading(true);
     setIsFetchingMore(true);
     const url = `/api/v1/users/${user.userID}/posts?page=${currentPage}`;
     const response = await APIGet(url);
@@ -260,7 +259,11 @@ const Perfil = () => {
               </View>
             ))}
         </View>
-        {isFetchingMore && <ActivityIndicator size={75} color="#060B4D" />}
+        {isFetchingMore && (
+          <View style={styles.activityIndicatorContainer}>
+            <ActivityIndicator size={75} color="#060B4D" />
+          </View>
+        )}
       </ScrollView>
     </>
   );
@@ -358,6 +361,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  activityIndicatorContainer: {
+    paddingVertical: 20,
   },
 });
 

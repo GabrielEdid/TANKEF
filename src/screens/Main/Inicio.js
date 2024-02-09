@@ -23,6 +23,7 @@ import { Feather, Ionicons, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import CuadroRedUsuario from "../../components/Componentes Olvidados/CuadroRedUsuario";
 import Post from "../../components/Post";
 import ModalPost from "../../components/ModalPost";
+import { set } from "date-fns";
 
 const Inicio = () => {
   // Estados y Contexto
@@ -34,7 +35,6 @@ const Inicio = () => {
   const [isFetchingMore, setIsFetchingMore] = useState(false); // Estado para saber si se están cargando más posts
 
   const fetchFeed = async (currentPage) => {
-    setIsLoading(true);
     setIsFetchingMore(true);
     const url = `/api/v1/feed?page=${currentPage}`;
     const response = await APIGet(url);
@@ -319,7 +319,11 @@ const Inicio = () => {
                 </Text>
               </View>
             ))}
-          {isFetchingMore && <ActivityIndicator size={75} color="#060B4D" />}
+          {isFetchingMore && (
+            <View style={styles.activityIndicatorContainer}>
+              <ActivityIndicator size={75} color="#060B4D" />
+            </View>
+          )}
         </ScrollView>
       </TouchableWithoutFeedback>
       <ModalPost
@@ -329,10 +333,6 @@ const Inicio = () => {
     </>
   );
 };
-
-function isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
-  return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
-}
 
 // Estilos de la pantalla
 const styles = StyleSheet.create({
@@ -394,6 +394,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  activityIndicatorContainer: {
+    paddingVertical: 20,
   },
   // Estilos de lo que se ha eliminado
   /*scrollH: {
