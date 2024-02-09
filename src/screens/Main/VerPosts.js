@@ -42,6 +42,7 @@ const VerPosts = ({ route, navigation }) => {
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
   const [like, setLike] = useState(liked);
+  const [likeCount, setLikeCount] = useState(reacciones);
   const [comments, setComments] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -129,6 +130,7 @@ const VerPosts = ({ route, navigation }) => {
         const response = await APIPost(urlGiveLike, data);
         if (!response.error) {
           setLike(true); // Actualiza el estado para reflejar el like dado
+          setLikeCount(likeCount + 1); // Incrementa el contador de likes
         }
       } catch (error) {
         console.error("Error al dar Like:", error);
@@ -151,11 +153,11 @@ const VerPosts = ({ route, navigation }) => {
           );
 
           if (userReaction) {
-            console.log("Intentando quitar like", userReaction.id);
             const urlRemoveLike = `/api/v1/reactions/${userReaction.id}`;
             const deleteResponse = await APIDelete(urlRemoveLike);
             if (!deleteResponse.error) {
               setLike(false); // Actualiza el estado para reflejar la eliminación del like
+              setLikeCount(likeCount - 1); // Decrementa el contador de likes
             }
           }
         }
@@ -368,7 +370,7 @@ const VerPosts = ({ route, navigation }) => {
                   fontFamily: "opensans",
                 }}
               >
-                {reacciones} reacciones
+                {likeCount} reacciones
               </Text>
             </View>
             {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}

@@ -80,6 +80,7 @@ const Post = (props) => {
             const urlRemoveLike = `/api/v1/reactions/${userReaction.id}`;
             const deleteResponse = await APIDelete(urlRemoveLike);
             if (!deleteResponse.error) {
+              console.log("Like eliminado");
               setLike(false); // Actualiza el estado para reflejar la eliminación del like
             }
           }

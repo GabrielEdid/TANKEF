@@ -44,7 +44,7 @@ const handleRequest = async (requestFunc) => {
     return { data: response.data, error: null };
   } catch (error) {
     console.error("Error:", error);
-    console.log("Error entero: " + error.response.data);
+    console.log("Error completo: " + error.response.data);
     if (
       error.response &&
       error.response.data === "You need to sign in before continuing."
@@ -83,10 +83,11 @@ export const APIPut = async (url, body) => {
   );
 };
 
-export const APIDelete = async (url, body = null) => {
+export const APIDelete = async (url, body = {}) => {
   return handleRequest(() =>
-    axiosInstance.delete(url, body, {
+    axiosInstance.delete(url, {
       headers: { Authorization: `Bearer ${token}` },
+      data: body, // Incluyendo el cuerpo en la solicitud DELETE
     })
   );
 };
