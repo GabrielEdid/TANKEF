@@ -190,11 +190,11 @@ const Inicio = () => {
           }}
           scrollEventThrottle={400}
         >
-          <Modal transparent={true} animationType="fade" visible={isLoading}>
+          {isLoading && (
             <View style={styles.overlay}>
               <ActivityIndicator size={75} color="#060B4D" />
             </View>
-          </Modal>
+          )}
           {/* Lista de Datos de Red del Usuario 
           <ScrollView
             horizontal={true}
@@ -323,7 +323,7 @@ const Inicio = () => {
                 </Text>
               </View>
             ))}
-          {isFetchingMore && <ActivityIndicator size="large" color="#0000ff" />}
+          {isFetchingMore && <ActivityIndicator size={75} color="#060B4D" />}
         </ScrollView>
       </TouchableWithoutFeedback>
       <ModalPost

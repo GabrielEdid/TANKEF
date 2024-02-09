@@ -211,11 +211,11 @@ const Perfil = () => {
         </TouchableOpacity> */}
 
         <View style={{ marginTop: 5 }}>
-          <Modal transparent={true} animationType="fade" visible={isLoading}>
+          {isLoading && (
             <View style={styles.overlay}>
               <ActivityIndicator size={75} color="#060B4D" />
             </View>
-          </Modal>
+          )}
           {!isLoading &&
             (posts.length !== 0 ? (
               posts.map((post, index) => (
@@ -264,7 +264,7 @@ const Perfil = () => {
               </View>
             ))}
         </View>
-        {isFetchingMore && <ActivityIndicator size="large" color="#0000ff" />}
+        {isFetchingMore && <ActivityIndicator size={75} color="#060B4D" />}
       </ScrollView>
     </>
   );
