@@ -8,16 +8,31 @@ import {
   Image,
   Modal,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
+import { APIDelete } from "../API/APIService";
 
 const Conexion = (props) => {
+  const navigation = useNavigation();
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Para cuando se desee eliminar el Request
-  const handleRemove = () => {
+  // Para cuando se desee eliminar una conexión
+  const deleteConection = async () => {
     setIsVisible(false);
+    const url = `/api/v1/friendship_request/destroy`;
+    const data = {
+      id: props.userID,
+    };
+
+    try {
+      const response = await APIDelete(url, data);
+      console.log("Conection Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (!isVisible) {
@@ -34,7 +49,12 @@ const Conexion = (props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() =>
+        navigation.navigate("VerPerfiles", { userID: props.userID })
+      }
+    >
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
@@ -65,7 +85,7 @@ const Conexion = (props) => {
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}
-              onPress={() => handleRemove()}
+              onPress={() => deleteConection()}
             >
               <Text style={{ color: "red" }}>Eliminar Conexión</Text>
             </TouchableOpacity>
@@ -78,7 +98,7 @@ const Conexion = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
-    </View>
+    </TouchableOpacity>
   );
 };
 
