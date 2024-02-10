@@ -22,30 +22,20 @@ const Invitaciones = (props) => {
 
   // Para cuando se desee eliminar una conexión
   const deleteInvitation = async () => {
+    setIsVisible(false);
     const url = `/api/v1/friendship_request/reject`;
     const data = {
       invitation_id: props.objectID,
     };
 
     try {
-      const response = await APIDelete(url, { data }); // Asumiendo que APIDelete puede aceptar un segundo argumento para el cuerpo
+      const response = await APIDelete(url, data);
       if (!response.error) {
         console.log("Invitation Deleted:", response.data);
-        setIsVisible(false); // Solo se modifica el estado si la operación es exitosa
-        Alert.alert(
-          "Invitación eliminada",
-          "La invitación ha sido eliminada con éxito."
-        ); // Retroalimentación positiva al usuario
-      } else {
-        throw new Error(response.error); // Lanza un error si hay un mensaje de error en la respuesta
+        setIsVisible(false);
       }
     } catch (error) {
-      console.error("Error al eliminar la invitación:", error);
-      setIsVisible(true); // Asegurarse de que isVisible se maneje correctamente en caso de error
-      Alert.alert(
-        "Error",
-        "No se pudo eliminar la invitación. Por favor, intente de nuevo."
-      ); // Retroalimentación de error al usuario
+      console.log("Error al eliminar la invitacion:", error);
     }
   };
 
