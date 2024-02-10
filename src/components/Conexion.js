@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
   Modal,
-  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
@@ -21,47 +20,19 @@ const Conexion = (props) => {
 
   // Para cuando se desee eliminar una conexión
   const deleteConection = async () => {
-    // Solicitar confirmación del usuario antes de proceder
-    Alert.alert(
-      "Eliminar Conexión",
-      "¿Estás seguro de que quieres eliminar esta conexión?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => console.log("Cancelado"),
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          onPress: async () => {
-            const url = `/api/v1/friendship_request/destroy`;
-            const data = {
-              id: props.userID,
-            };
+    setIsVisible(false);
+    const url = `/api/v1/friendship_request/destroy`;
+    const data = {
+      id: props.userID,
+    };
 
-            try {
-              const response = await APIDelete(url, data);
-              if (!response.error) {
-                console.log("Conexión Eliminada:", response.data);
-                // Retroalimentación al usuario sobre la acción exitosa
-                Alert.alert("Éxito", "La conexión ha sido eliminada.");
-                setIsVisible(false); // Actualizar el estado solo después de confirmar la acción
-              } else {
-                throw new Error("La API respondió con un error.");
-              }
-            } catch (error) {
-              console.error("Error al eliminar la conexión:", error);
-              // Retroalimentación al usuario en caso de error
-              Alert.alert(
-                "Error",
-                "No se pudo eliminar la conexión. Por favor, intenta nuevamente."
-              );
-              setIsVisible(true); // Considera mantener o revertir el elemento visible en caso de error
-            }
-          },
-        },
-      ]
-    );
+    try {
+      const response = await APIDelete(url, data);
+      console.log("Conection Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (!isVisible) {
