@@ -70,7 +70,7 @@ const VerPerfiles = ({ route }) => {
 
   const fetchUserPosts = async (currentPage) => {
     setIsFetchingMore(true);
-    const url = `/api/v1/users/${user.userID}/posts?page=${currentPage}`;
+    const url = `/api/v1/users/${userID}/posts?page=${currentPage}`;
     const response = await APIGet(url);
 
     if (!response.error) {
@@ -79,14 +79,14 @@ const VerPerfiles = ({ route }) => {
         (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
       setUserInfo({
-        nombre: titleCase(result.data.profile.name),
-        apellidoPaterno: titleCase(result.data.profile.first_last_name),
-        apellidoMaterno: titleCase(result.data.profile.second_last_name),
-        mail: result.data.profile.email,
-        avatar: result.data.profile.avatar
-          ? { uri: result.data.profile.avatar }
+        nombre: titleCase(response.data.profile.name),
+        apellidoPaterno: titleCase(response.data.profile.first_last_name),
+        apellidoMaterno: titleCase(response.data.profile.second_last_name),
+        mail: response.data.profile.email,
+        avatar: response.data.profile.avatar
+          ? { uri: response.data.profile.avatar }
           : imageMap["Blank"],
-        friend: result.data.profile.is_my_friend,
+        friend: response.data.profile.is_my_friend,
       });
 
       if (currentPage === 1) {
@@ -137,6 +137,17 @@ const VerPerfiles = ({ route }) => {
       setPage(1); // Reinicia a la primera página
     });
   }, []);
+
+  // Función para convertir la primera letra de cada palabra en mayúscula y el resto minuscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
 
   // Componente visual
   return (
