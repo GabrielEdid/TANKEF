@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   Alert,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -15,7 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
-import { Feather } from "@expo/vector-icons";
+import { Feather, EvilIcons } from "@expo/vector-icons";
 import { APIGet, APIPost } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import Post from "../../components/Post";
@@ -24,7 +25,9 @@ const VerPerfiles = ({ route }) => {
   const { userID } = route.params;
   const { user, setUser } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [page, setPage] = useState(1);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [estado, setEstado] = useState("inicial"); // Estados: "inicial", "solicitudEnviada"
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,12 +42,6 @@ const VerPerfiles = ({ route }) => {
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
-    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
-    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
-    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
-    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
-    Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
-    Test: require("../../../assets/images/Test.png"),
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
@@ -71,15 +68,16 @@ const VerPerfiles = ({ route }) => {
     }
   };
 
-  const fetchUserPosts = async () => {
-    const url = `/api/v1/users/${userID}/posts`;
-    console.log("Fetching user posts from:", url);
+  const fetchUserPosts = async (currentPage) => {
+    setIsFetchingMore(true);
+    const url = `/api/v1/users/${user.userID}/posts?page=${currentPage}`;
+    const response = await APIGet(url);
 
-    const result = await APIGet(url);
-
-    if (result.error) {
-      console.error("Error al obtener posts:", result.error);
-    } else {
+    if (!response.error) {
+      // Ordena los posts de más nuevo a más viejo
+      const newPosts = response.data.data.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
       setUserInfo({
         nombre: titleCase(result.data.profile.name),
         apellidoPaterno: titleCase(result.data.profile.first_last_name),
@@ -90,26 +88,55 @@ const VerPerfiles = ({ route }) => {
           : imageMap["Blank"],
         friend: result.data.profile.is_my_friend,
       });
-      const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
-      setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
+
+      if (currentPage === 1) {
+        setPosts(newPosts);
+      } else {
+        // Filtra los posts que ya están presentes en el estado actual
+        const filteredNewPosts = newPosts.filter(
+          (newPost) => !posts.some((post) => post.id === newPost.id)
+        );
+
+        setPosts((prevPosts) => [...prevPosts, ...filteredNewPosts]);
+      }
+    } else {
+      console.error("Error al obtener posts:", response.error);
     }
+    setIsLoading(false);
+    setIsFetchingMore(false);
   };
 
   useFocusEffect(
     useCallback(() => {
-      fetchUserPosts();
-    }, [])
+      fetchUserPosts(page);
+    }, [page])
   );
 
-  function titleCase(str) {
-    return str
-      .toLowerCase()
-      .split(" ")
-      .map(function (word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(" ");
-  }
+  const handleLoadMore = () => {
+    if (!isFetchingMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20; // cuánto espacio en la parte inferior antes de cargar más
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    fetchUserPosts(1).then(() => {
+      setIsRefreshing(false);
+      setPage(1); // Reinicia a la primera página
+    });
+  }, []);
 
   // Componente visual
   return (
@@ -136,11 +163,27 @@ const VerPerfiles = ({ route }) => {
           />
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.scrollV}>
+      <ScrollView
+        style={styles.scrollV}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            handleLoadMore();
+          }
+        }}
+        scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            tintColor="#060B4D" // Puedes personalizar el color según tu diseño
+            colors={["#060B4D"]} // Puedes personalizar el color según tu diseño
+          />
+        }
+      >
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <Image style={styles.fotoPerfil} source={userInfo.avatar} />
-          <View style={{ marginTop: 5 }}>
+          <View style={{ marginTop: 5, alignSelf: "center" }}>
             <Text style={styles.textoNombre}>
               {userInfo.nombre +
                 " " +
@@ -151,7 +194,6 @@ const VerPerfiles = ({ route }) => {
             <Text style={styles.textoMail}>{userInfo.mail}</Text>
           </View>
         </View>
-
         <View style={styles.buttonContainer}>
           {estado === "inicial" && (
             <TouchableOpacity
@@ -172,12 +214,6 @@ const VerPerfiles = ({ route }) => {
             </TouchableOpacity>
           )}
         </View>
-        <Modal transparent={true} animationType="fade" visible={isLoading}>
-          <View style={styles.overlay}>
-            <ActivityIndicator size={75} color="#060B4D" />
-          </View>
-        </Modal>
-
         {/* Lista de Datos de Red del Usuario 
         <ScrollView
           horizontal={true}
@@ -190,31 +226,69 @@ const VerPerfiles = ({ route }) => {
           <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
           <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
         </ScrollView> */}
-
         {/* View de los Posts del Usuario */}
-
-        <View style={{ marginTop: 15 }}>
-          {!isLoading &&
-            posts.map((post) => (
-              <Post
-                postID={post.id}
-                tipo={"compartir"}
-                nombre={
-                  user.nombre +
-                  " " +
-                  user.apellidoPaterno +
-                  " " +
-                  user.apellidoMaterno
-                } // Reemplazar con datos reales si están disponibles
-                tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                foto={imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
-                body={post.body}
-                perfil={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
-                personal={false}
-                comentarios={post.count_comments}
-              />
-            ))}
-        </View>
+        {userInfo.friend === true && posts.length > 0 && (
+          <View style={{ marginTop: 15 }}>
+            {!isLoading &&
+              posts.map((post) => (
+                <Post
+                  postID={post.id}
+                  tipo={"compartir"}
+                  nombre={
+                    user.nombre +
+                    " " +
+                    user.apellidoPaterno +
+                    " " +
+                    user.apellidoMaterno
+                  } // Reemplazar con datos reales si están disponibles
+                  tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                  foto={imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+                  body={post.body}
+                  perfil={
+                    user.avatar ? { uri: user.avatar } : imageMap["Blank"]
+                  } // Reemplazar con datos reales si están disponibles
+                  personal={false}
+                  comentarios={post.count_comments}
+                />
+              ))}
+          </View>
+        )}
+        {userInfo.friend === true && posts.length === 0 && (
+          <View
+            style={{
+              marginTop: 150,
+              alignSelf: "center",
+            }}
+          >
+            <Text style={styles.textoMensaje}>
+              El usuario no tiene publicaciones
+            </Text>
+          </View>
+        )}
+        {userInfo.friend === false && (
+          <View
+            style={{
+              marginTop: 150,
+              alignSelf: "center",
+            }}
+          >
+            <EvilIcons
+              name="lock"
+              size={70}
+              color="grey"
+              style={{ alignSelf: "center", marginBottom: 10 }}
+            />
+            <Text style={styles.textoMensaje}>
+              No puedes ver las publicaciones de un usuario que no esta en tu
+              red
+            </Text>
+          </View>
+        )}
+        {isFetchingMore && userInfo.friend && (
+          <View style={styles.activityIndicatorContainer}>
+            <ActivityIndicator size={75} color="#060B4D" />
+          </View>
+        )}
       </ScrollView>
 
       {/* Modal para mostrar si se presióna el boton de SOLICITUD ENVIADA*/}
@@ -311,10 +385,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   textoMail: {
-    color: "grey",
+    color: "#060B4D",
     fontFamily: "opensans",
     fontSize: 14,
-    marginLeft: 1,
+    marginLeft: 2,
   },
   buttonContainer: {
     marginHorizontal: 20,
@@ -347,6 +421,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingTop: 3,
     color: "#060B4D",
+  },
+  textoMensaje: {
+    textAlign: "center",
+    color: "grey",
+    width: 250,
+    fontSize: 15,
+    fontFamily: "opensans",
   },
   // Estilos para el Modal que aparece si se elimina una conexión
   fullScreenButton: {
