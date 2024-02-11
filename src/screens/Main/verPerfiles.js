@@ -34,6 +34,7 @@ const VerPerfiles = ({ route }) => {
     apellidoMaterno: "",
     mail: "",
     avatar: null,
+    friend: false,
   });
 
   // Mapa para cargar todas las imagenes
@@ -79,6 +80,16 @@ const VerPerfiles = ({ route }) => {
     if (result.error) {
       console.error("Error al obtener posts:", result.error);
     } else {
+      setUserInfo({
+        nombre: titleCase(result.data.profile.name),
+        apellidoPaterno: titleCase(result.data.profile.first_last_name),
+        apellidoMaterno: titleCase(result.data.profile.second_last_name),
+        mail: result.data.profile.email,
+        avatar: result.data.profile.avatar
+          ? { uri: result.data.profile.avatar }
+          : imageMap["Blank"],
+        friend: result.data.profile.is_my_friend,
+      });
       const sortedPosts = result.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
       setPosts(sortedPosts); // Guardar los datos de las publicaciones en el estado
     }
@@ -99,19 +110,6 @@ const VerPerfiles = ({ route }) => {
       })
       .join(" ");
   }
-
-  useEffect(() => {
-    if (posts.length > 0) {
-      const user = posts[0].user;
-      setUserInfo({
-        nombre: titleCase(user.name),
-        apellidoPaterno: titleCase(user.first_last_name),
-        apellidoMaterno: titleCase(user.second_last_name),
-        mail: user.email,
-        avatar: user.avatar ? user.avatar : imageMap["Blank"],
-      });
-    }
-  }, [posts]);
 
   // Componente visual
   return (
