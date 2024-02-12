@@ -392,6 +392,7 @@ const VerPosts = ({ route, navigation }) => {
             {comments.map((comment, index) => (
               <Comment
                 key={index}
+                commentId={comment.id}
                 nombre={
                   titleCase(comment.user.name) +
                   " " +

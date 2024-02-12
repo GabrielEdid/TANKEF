@@ -9,15 +9,25 @@ import {
   Modal,
 } from "react-native";
 // Importaciones de Componentes
+import { APIDelete } from "../API/APIService";
 
 const Comment = (props) => {
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Para cuando se desee eliminar el Request
-  const handleRemove = () => {
+  // Para cuando se desee eliminar el Comment
+  const deleteComment = async () => {
     setIsVisible(false);
+    const url = `/api/v1/comments/${props.commentId}`;
+
+    try {
+      const response = await APIDelete(url);
+      console.log("Comment Deleted:", response.data);
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (!isVisible) {
@@ -64,7 +74,12 @@ const Comment = (props) => {
         >
           <View style={styles.modalView}>
             {props.personal ? (
-              <TouchableOpacity style={styles.buttonModal} onPress={() => {}}>
+              <TouchableOpacity
+                style={styles.buttonModal}
+                onPress={() => {
+                  deleteComment();
+                }}
+              >
                 <Text style={{ color: "red" }}>Eliminar Comentario</Text>
               </TouchableOpacity>
             ) : null}
