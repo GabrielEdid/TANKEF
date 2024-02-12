@@ -25,6 +25,7 @@ const Comment = (props) => {
       const response = await APIDelete(url);
       console.log("Comment Deleted:", response.data);
       setIsVisible(false);
+      props.setCount(props.count - 1);
     } catch (error) {
       console.error("Error:", error);
     }

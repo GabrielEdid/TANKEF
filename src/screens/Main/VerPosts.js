@@ -21,6 +21,7 @@ import { UserContext } from "../../hooks/UserContext";
 import Comment from "../../components/Comment";
 import { APIDelete, APIPost, APIGet } from "../../API/APIService";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 const VerPosts = ({ route, navigation }) => {
   const {
@@ -44,6 +45,7 @@ const VerPosts = ({ route, navigation }) => {
   const [like, setLike] = useState(liked);
   const [likeCount, setLikeCount] = useState(reacciones);
   const [comments, setComments] = useState([]);
+  const [commentCount, setCommentCount] = useState(comentarios);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const { user, setUser } = React.useContext(UserContext);
@@ -53,11 +55,6 @@ const VerPosts = ({ route, navigation }) => {
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     Like: require("../../../assets/images/Like.png"),
     Comment: require("../../../assets/images/Comment.png"),
-    Natasha: require("../../../assets/images/Fotos_Personas/Natahsa.png"),
-    Quill: require("../../../assets/images/Fotos_Personas/Quill.png"),
-    Clint: require("../../../assets/images/Fotos_Personas/Clint.png"),
-    Antonio: require("../../../assets/images/Fotos_Personas/Antonio.png"),
-    Steve: require("../../../assets/images/Fotos_Personas/Steve.png"),
     // ... más imágenes
   };
 
@@ -113,6 +110,7 @@ const VerPosts = ({ route, navigation }) => {
       );
     } else {
       setComentario("");
+      setCommentCount((prevCount) => prevCount + 1);
       fetchComments();
     }
   };
@@ -383,7 +381,7 @@ const VerPosts = ({ route, navigation }) => {
                   fontFamily: "opensans",
                 }}
               >
-                {comments.length} comentarios
+                {commentCount} comentarios
               </Text>
             </TouchableOpacity>
           </View>
@@ -403,6 +401,8 @@ const VerPosts = ({ route, navigation }) => {
                 body={comment.body}
                 imagen={comment.user.avatar}
                 personal={comment.user.id === user.userID}
+                count={commentCount}
+                setCount={setCommentCount}
               />
             ))}
           </View>
