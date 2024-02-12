@@ -11,11 +11,13 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
+  RefreshControl,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import Comment from "../../components/Comment";
@@ -48,6 +50,10 @@ const VerPosts = ({ route, navigation }) => {
   const [commentCount, setCommentCount] = useState(comentarios);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
   const { user, setUser } = React.useContext(UserContext);
 
   // Mapa para cargar todas las imagenes que se necesiten
@@ -68,28 +74,70 @@ const VerPosts = ({ route, navigation }) => {
       .join(" ");
   }
 
-  const fetchComments = async () => {
-    const url = `/api/v1/posts/${postId}/comments`;
+  const fetchComments = async (currentPage) => {
+    const url = `/api/v1/posts/${postId}/comments?page=${currentPage}`;
+    console.log("Fetching comments from:", url);
+    setIsFetchingMore(true);
     const response = await APIGet(url);
     if (response.error) {
-      // Manejar el error
       console.error("Error al obtener comentarios:", response.error);
       Alert.alert(
         "Error",
         "No se pudieron obtener los comentarios. Intente nuevamente."
       );
     } else {
-      const sortedComments = response.data.data.sort((a, b) => b.id - a.id); // Ordena los posts de más nuevo a más viejo
-      setComments(sortedComments); // Guardar los datos de las publicaciones en el estado
-      console.log("Comments:", sortedComments);
+      const newComments = response.data.data;
+      // Ordena los comentarios por ID de manera descendente antes de establecer el estado
+      const sortedComments = newComments.sort((a, b) => b.id - a.id);
+      if (currentPage === 1) {
+        setComments(sortedComments); // Si es la primera página, reemplaza los comentarios existentes
+      } else {
+        setComments((prevComments) => [...prevComments, ...sortedComments]); // Si no, concatena los nuevos comentarios
+      }
     }
+    setIsLoading(false);
+    setIsFetchingMore(false);
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchComments(1);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      fetchComments();
+      setPage(1); // Asegura reiniciar la paginación
+      fetchComments(1);
     }, [])
   );
+
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    fetchComments(1).then(() => {
+      setIsRefreshing(false);
+      setPage(1); // Reinicia a la primera página
+    });
+  }, []);
+
+  const handleLoadMore = () => {
+    if (!isFetchingMore) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchComments(nextPage);
+    }
+  };
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20; // cuánto espacio en la parte inferior antes de cargar más
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
 
   const postComment = async () => {
     const url = "/api/v1/comments";
@@ -111,7 +159,7 @@ const VerPosts = ({ route, navigation }) => {
     } else {
       setComentario("");
       setCommentCount((prevCount) => prevCount + 1);
-      fetchComments();
+      fetchComments(page);
     }
   };
 
@@ -266,6 +314,21 @@ const VerPosts = ({ route, navigation }) => {
           extraScrollHeight={100}
           enableOnAndroid={true}
           style={styles.scrollV}
+          onScroll={({ nativeEvent }) => {
+            if (isCloseToBottom(nativeEvent)) {
+              handleLoadMore();
+            }
+          }}
+          scrollEventThrottle={400}
+          refreshControl={
+            // Aquí agregas el RefreshControl
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefresh}
+              tintColor="#060B4D" // Usado en iOS
+              colors={["#060B4D"]} // Usado en Android
+            />
+          }
         >
           {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
           <View style={styles.header}>
@@ -471,6 +534,11 @@ const VerPosts = ({ route, navigation }) => {
               </View>
             </TouchableOpacity>
           </Modal>
+          {isFetchingMore && (
+            <View style={styles.activityIndicatorContainer}>
+              <ActivityIndicator size={75} color="#060B4D" />
+            </View>
+          )}
         </KeyboardAwareScrollView>
       </TouchableWithoutFeedback>
     </>
@@ -600,6 +668,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     bottom: 10,
+  },
+  activityIndicatorContainer: {
+    paddingVertical: 20,
   },
   /*  ESTILOS DE LOS OTROS TIPOS DE POST
   textSolicitado: {
