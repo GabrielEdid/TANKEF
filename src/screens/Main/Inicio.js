@@ -282,30 +282,32 @@ const Inicio = () => {
           {!isLoading &&
             (posts.length !== 0 ? (
               posts.map((post, index) => (
-                <Post
-                  key={index}
-                  postId={post.id}
-                  tipo={"compartir"}
-                  nombre={
-                    titleCase(post.user.name) +
-                    " " +
-                    titleCase(post.user.first_last_name) +
-                    " " +
-                    titleCase(post.user.second_last_name)
-                  } // Reemplazar con datos reales si están disponibles
-                  tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                  foto={
-                    post.user.avatar
-                      ? { uri: post.user.avatar }
-                      : imageMap["Blank"]
-                  } // Reemplazar con datos reales si están disponibles
-                  body={post.body}
-                  comentarios={post.count_comments}
-                  reacciones={post.count_reactions}
-                  personal={post.user.id === user.userID ? true : false}
-                  imagen={post.image}
-                  liked={post["liked?"]}
-                />
+                <View style={{ backgroundColor: "white" }}>
+                  <Post
+                    key={index}
+                    postId={post.id}
+                    tipo={"compartir"}
+                    nombre={
+                      titleCase(post.user.name) +
+                      " " +
+                      titleCase(post.user.first_last_name) +
+                      " " +
+                      titleCase(post.user.second_last_name)
+                    } // Reemplazar con datos reales si están disponibles
+                    tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                    foto={
+                      post.user.avatar
+                        ? { uri: post.user.avatar }
+                        : imageMap["Blank"]
+                    } // Reemplazar con datos reales si están disponibles
+                    body={post.body}
+                    comentarios={post.count_comments}
+                    reacciones={post.count_reactions}
+                    personal={post.user.id === user.userID ? true : false}
+                    imagen={post.image}
+                    liked={post["liked?"]}
+                  />
+                </View>
               ))
             ) : (
               <View
@@ -399,7 +401,6 @@ const styles = StyleSheet.create({
   scrollV: {
     flex: 1,
     marginTop: 3,
-    backgroundColor: "white",
   },
   overlay: {
     flex: 1,
