@@ -121,6 +121,7 @@ const VerPosts = ({ route, navigation }) => {
 
   const handleLoadMore = () => {
     if (!isFetchingMore) {
+      setIsFetchingMore(true);
       const nextPage = page + 1;
       setPage(nextPage);
       fetchComments(nextPage);
@@ -311,9 +312,11 @@ const VerPosts = ({ route, navigation }) => {
           resetScrollToCoords={{ x: 0, y: 0 }}
           contentContainerStyle={{ flexGrow: 1 }}
           scrollEnabled={true}
-          extraScrollHeight={100}
+          extraScrollHeight={30}
           enableOnAndroid={true}
           style={styles.scrollV}
+          keyboardShouldPersistTaps="handled"
+          enableAutomaticScroll={true} // Asegura el scroll automático en iOS
           onScroll={({ nativeEvent }) => {
             if (isCloseToBottom(nativeEvent)) {
               handleLoadMore();
@@ -469,6 +472,24 @@ const VerPosts = ({ route, navigation }) => {
               />
             ))}
           </View>
+          {isFetchingMore ? (
+            <ActivityIndicator size="small" color="#060B4D" />
+          ) : (
+            <TouchableOpacity
+              onPress={handleLoadMore}
+              style={styles.loadMoreButton}
+            >
+              <Text
+                style={{
+                  fontFamily: "opensans",
+                  color: "#060B4D",
+                  paddingLeft: 15,
+                }}
+              >
+                {comments.length > 0 ? "Cargar más comentarios" : null}
+              </Text>
+            </TouchableOpacity>
+          )}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -478,6 +499,8 @@ const VerPosts = ({ route, navigation }) => {
               onChangeText={(text) => setComentario(text)}
               value={comentario}
               maxLength={300}
+              onFocus={() => setIsFetchingMore(false)}
+              onBlur={() => setIsFetchingMore(true)}
             />
             <TouchableOpacity
               style={styles.sendIcon}
@@ -534,11 +557,6 @@ const VerPosts = ({ route, navigation }) => {
               </View>
             </TouchableOpacity>
           </Modal>
-          {isFetchingMore && (
-            <View style={styles.activityIndicatorContainer}>
-              <ActivityIndicator size={75} color="#060B4D" />
-            </View>
-          )}
         </KeyboardAwareScrollView>
       </TouchableWithoutFeedback>
     </>

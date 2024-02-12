@@ -35,6 +35,7 @@ const Perfil = () => {
   // Mapa para cargar todas las imagenes
   const imageMap = {
     Blank: require("../../../assets/images/blankAvatar.jpg"),
+    Sliders: require("../../../assets/images/Sliders.png"),
     // ... más imágenes
   };
 
