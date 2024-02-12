@@ -575,6 +575,7 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     flex: 1,
+    marginTop: 5,
   },
   inputContainer: {
     flexDirection: "row",

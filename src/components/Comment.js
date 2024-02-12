@@ -43,23 +43,23 @@ const Comment = (props) => {
     // Assuming it's a local image requiring require()
     imageSource = props.imagen;
   }
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={imageSource} style={styles.icon} />
-        <View style={styles.nameAndBodyContainer}>
-          <Text style={styles.textoNombre}>{props.nombre}</Text>
-          <Text style={styles.textoBody}>{props.body}</Text>
+        <View style={styles.contentContainer}>
+          <View style={styles.nameAndBodyContainer}>
+            <Text style={styles.textoNombre}>{props.nombre}</Text>
+            <Text style={styles.textoBody}>{props.body}</Text>
+          </View>
+          <TouchableOpacity
+            style={{ alignItems: "center", justifyContent: "center" }}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.tresPuntos}>...</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.botonElim}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.tresPuntos}>...</Text>
-        </TouchableOpacity>
       </View>
-      <View style={styles.linea} />
 
       {/* Modal para mostrar si se presióna el boton de eliminar */}
       <Modal
@@ -107,19 +107,26 @@ const Comment = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 3,
+    marginVertical: 5,
     paddingHorizontal: 20,
-    paddingTop: 5,
     width: "100%",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
   },
-  nameAndBodyContainer: {
-    flex: 1,
+  contentContainer: {
     marginLeft: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginRight: 25,
+  },
+  nameAndBodyContainer: {
+    backgroundColor: "#f0f2f5ff",
+    borderRadius: 20,
+    padding: 10,
     justifyContent: "center",
+    marginRight: 10,
   },
   textoNombre: {
     fontSize: 12,
@@ -132,24 +139,17 @@ const styles = StyleSheet.create({
     color: "#060B4D",
   },
   icon: {
-    height: 30,
-    width: 30,
-    borderRadius: 15,
+    height: 32,
+    width: 32,
+    borderRadius: 16,
   },
   tresPuntos: {
     fontSize: 18,
     fontFamily: "opensansbold",
     color: "#060B4D",
-    marginLeft: 10,
-    transform: [{ rotate: "90deg" }],
+    marginBottom: 10,
   },
-  linea: {
-    backgroundColor: "#cccccc",
-    height: 1,
-    width: "100%",
-    alignSelf: "center",
-    marginTop: 10,
-  },
+  // Estilos para el Modal
   fullScreenButton: {
     position: "absolute",
     top: 0,
