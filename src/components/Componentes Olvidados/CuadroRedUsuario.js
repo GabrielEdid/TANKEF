@@ -16,23 +16,20 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderRadius: 13,
     borderColor: "#060B4D",
-    height: 98,
-    width: 157,
-    marginEnd: 10,
+    marginEnd: 5,
+    padding: 10,
   },
   textoTitulo: {
-    fontSize: 15,
+    fontSize: 10,
     color: "#060B4D",
     fontFamily: "opensansbold",
     textAlign: "center",
-    paddingTop: 15,
   },
   textoBody: {
-    fontSize: 20,
+    fontSize: 12,
     color: "#060B4D",
     fontFamily: "opensansbold",
     textAlign: "center",
-    paddingTop: 15,
   },
 });
 

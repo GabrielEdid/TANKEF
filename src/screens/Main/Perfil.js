@@ -216,10 +216,10 @@ const Perfil = () => {
           </View>
         </TouchableOpacity>
 
-        <View style={{ marginTop: 3, backgroundColor: "white" }}>
-          {!isLoading &&
-            (posts.length !== 0 ? (
-              posts.map((post, index) => (
+        {!isLoading &&
+          (posts.length !== 0 ? (
+            posts.map((post, index) => (
+              <View style={{ marginTop: 3, backgroundColor: "white" }}>
                 <Post
                   key={index}
                   postId={post.id}
@@ -240,31 +240,31 @@ const Perfil = () => {
                   reacciones={post.count_reactions}
                   liked={post["liked?"]}
                 />
-              ))
-            ) : (
-              <View
+              </View>
+            ))
+          ) : (
+            <View
+              style={{
+                paddingHorizontal: 40,
+                paddingVertical: 250,
+              }}
+            >
+              <Text
                 style={{
-                  paddingHorizontal: 40,
-                  paddingVertical: 250,
+                  fontSize: 14,
+                  fontFamily: "opensans",
+                  textAlign: "center",
+                  color: "#060B4D",
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: "opensans",
-                    textAlign: "center",
-                    color: "#060B4D",
-                  }}
-                >
-                  ¡Bienvenido a{" "}
-                  <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
-                  recuerda que entre más amigos, familiares y socios, mayores
-                  beneficios reciben todos! Para comenzar empieza por contarnos
-                  en que estas pensando...
-                </Text>
-              </View>
-            ))}
-        </View>
+                ¡Bienvenido a{" "}
+                <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
+                recuerda que entre más amigos, familiares y socios, mayores
+                beneficios reciben todos! Para comenzar empieza por contarnos en
+                que estas pensando...
+              </Text>
+            </View>
+          ))}
         {isFetchingMore && (
           <View style={styles.activityIndicatorContainer}>
             <ActivityIndicator size={75} color="#060B4D" />
