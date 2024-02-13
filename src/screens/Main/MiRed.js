@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator } from "react-native-paper";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
@@ -22,6 +23,7 @@ import Conexion from "../../components/Conexion";
 import Solicitudes from "../../components/Solicitudes";
 import Invitaciones from "../../components/Invitaciones";
 import SearchResult from "../../components/SearchResult";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -31,6 +33,7 @@ const MiRed = ({ navigation }) => {
   const [text, setText] = useState("");
   const [focus, setFocus] = useState("MiRed");
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [invitations, setInvitations] = useState([]);
   const [network, setNetwork] = useState([]);
@@ -60,7 +63,7 @@ const MiRed = ({ navigation }) => {
   };
 
   const fetchNetwork = async () => {
-    // Obtener solicitudes pendientes
+    setIsLoading(true);
     const url = `/api/v1/network/members`;
 
     const result = await APIGet(url);
@@ -72,10 +75,11 @@ const MiRed = ({ navigation }) => {
       console.log("Resultados de la red:", filteredResults);
       setNetwork(filteredResults); // Guardar los datos de las publicaciones en el estado
     }
+    setIsLoading(false);
   };
 
   const fetchPending = async () => {
-    // Obtener solicitudes pendientes
+    setIsLoading(true);
     const url = `/api/v1/network/requests_pending`;
 
     const result = await APIGet(url);
@@ -90,9 +94,11 @@ const MiRed = ({ navigation }) => {
       console.log("Resultados de las solicitudes pendientes:", filteredResults);
       setPending(filteredResults); // Guardar los datos de las publicaciones en el estado
     }
+    setIsLoading(false);
   };
 
   const fetchInvitations = async () => {
+    setIsLoading(true);
     const url = `/api/v1/network/invitations`;
 
     const result = await APIGet(url);
@@ -104,6 +110,7 @@ const MiRed = ({ navigation }) => {
       console.log("Resultados de las invitaciones:", filteredResults);
       setInvitations(filteredResults); // Guardar los datos de las publicaciones en el estado
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -262,92 +269,108 @@ const MiRed = ({ navigation }) => {
           </View>
         )}
 
-        {focus === "MiRed" ? (
-          <ScrollView style={{ flex: 1 }}>
-            {network.length > 0 ? (
-              network.map((network, index) => (
-                <Conexion
-                  key={index}
-                  userID={network.id}
-                  nombre={titleCase(network.full_name)}
-                  imagen={network.avatar ? network.avatar : imageMap["Blank"]}
-                  mail={network.email}
-                />
-              ))
-            ) : (
-              <Text
-                style={{
-                  marginTop: 150,
-                  fontSize: 16,
-                  fontFamily: "opensans",
-                  color: "#060B4D",
-                  textAlign: "center",
-                }}
-              >
-                No tienes miembros en tu red.{"\n"}¡Invita a tus amigos y
-                conocidos!
-              </Text>
-            )}
-          </ScrollView>
-        ) : null}
+        {isLoading && (
+          <View style={{ marginTop: 150 }}>
+            <ActivityIndicator size={75} color="#060B4D" />
+          </View>
+        )}
 
-        {focus === "Solicitudes" ? (
-          <ScrollView style={{ flex: 1 }}>
-            {pending.length > 0 ? (
-              pending.map((pending, index) => (
-                <Solicitudes
-                  key={index}
-                  objectID={pending.id}
-                  nombre={titleCase(pending.full_name)}
-                  imagen={pending.avatar ? pending.avatar : imageMap["Blank"]}
-                  mail={pending.email}
-                />
-              ))
-            ) : (
-              <Text
-                style={{
-                  marginTop: 150,
-                  fontSize: 16,
-                  fontFamily: "opensans",
-                  color: "#060B4D",
-                  textAlign: "center",
-                }}
-              >
-                No tienes solicitudes por ser aceptadas
-              </Text>
+        {!isLoading && (
+          <>
+            {focus === "MiRed" && (
+              <ScrollView style={{ flex: 1 }}>
+                {network.length > 0 ? (
+                  network.map((network, index) => (
+                    <Conexion
+                      key={index}
+                      userID={network.id}
+                      nombre={titleCase(network.full_name)}
+                      imagen={
+                        network.avatar ? network.avatar : imageMap["Blank"]
+                      }
+                      mail={network.email}
+                    />
+                  ))
+                ) : (
+                  <Text
+                    style={{
+                      marginTop: 150,
+                      fontSize: 16,
+                      fontFamily: "opensans",
+                      color: "#060B4D",
+                      textAlign: "center",
+                    }}
+                  >
+                    No tienes miembros en tu red.{"\n"}¡Invita a tus amigos y
+                    conocidos!
+                  </Text>
+                )}
+              </ScrollView>
             )}
-          </ScrollView>
-        ) : null}
 
-        {focus === "Invitaciones" ? (
-          <ScrollView style={{ flex: 1 }}>
-            {invitations.length > 0 ? (
-              invitations.map((invitation, index) => (
-                <Invitaciones
-                  key={index}
-                  objectID={invitation.id}
-                  nombre={titleCase(invitation.full_name)}
-                  imagen={
-                    invitation.avatar ? invitation.avatar : imageMap["Blank"]
-                  }
-                  mail={invitation.email}
-                />
-              ))
-            ) : (
-              <Text
-                style={{
-                  marginTop: 150,
-                  fontSize: 16,
-                  fontFamily: "opensans",
-                  color: "#060B4D",
-                  textAlign: "center",
-                }}
-              >
-                No tienes invitaciones pendientes
-              </Text>
+            {focus === "Solicitudes" && (
+              <ScrollView style={{ flex: 1 }}>
+                {pending.length > 0 ? (
+                  pending.map((pending, index) => (
+                    <Solicitudes
+                      key={index}
+                      objectID={pending.id}
+                      nombre={titleCase(pending.full_name)}
+                      imagen={
+                        pending.avatar ? pending.avatar : imageMap["Blank"]
+                      }
+                      mail={pending.email}
+                    />
+                  ))
+                ) : (
+                  <Text
+                    style={{
+                      marginTop: 150,
+                      fontSize: 16,
+                      fontFamily: "opensans",
+                      color: "#060B4D",
+                      textAlign: "center",
+                    }}
+                  >
+                    No tienes solicitudes por ser aceptadas
+                  </Text>
+                )}
+              </ScrollView>
             )}
-          </ScrollView>
-        ) : null}
+
+            {focus === "Invitaciones" && (
+              <ScrollView style={{ flex: 1 }}>
+                {invitations.length > 0 ? (
+                  invitations.map((invitation, index) => (
+                    <Invitaciones
+                      key={index}
+                      objectID={invitation.id}
+                      nombre={titleCase(invitation.full_name)}
+                      imagen={
+                        invitation.avatar
+                          ? invitation.avatar
+                          : imageMap["Blank"]
+                      }
+                      mail={invitation.email}
+                    />
+                  ))
+                ) : (
+                  <Text
+                    style={{
+                      marginTop: 150,
+                      fontSize: 16,
+                      fontFamily: "opensans",
+                      color: "#060B4D",
+                      textAlign: "center",
+                    }}
+                  >
+                    No tienes invitaciones pendientes
+                  </Text>
+                )}
+              </ScrollView>
+            )}
+          </>
+        )}
 
         {/*<TouchableOpacity
         style={styles.administrar}
