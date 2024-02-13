@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
 } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes
 import { FontAwesome } from "@expo/vector-icons";
 import { APIDelete } from "../API/APIService";
@@ -16,9 +17,10 @@ const Solicitudes = (props) => {
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const deleteSolicitud = async () => {
-    setIsVisible(false);
+    setIsLoading(true);
     const url = `/api/v1/friendship_request/cancel`;
     const data = {
       id: props.objectID,
@@ -31,6 +33,7 @@ const Solicitudes = (props) => {
     } catch (error) {
       console.error("Error:", error);
     }
+    setIsLoading(false);
   };
 
   if (!isVisible) {
@@ -48,6 +51,13 @@ const Solicitudes = (props) => {
 
   return (
     <TouchableOpacity style={styles.container}>
+      <Modal animationType="slide" transparent={true} visible={isLoading}>
+        {isLoading && (
+          <View>
+            <ActivityIndicator />
+          </View>
+        )}
+      </Modal>
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>

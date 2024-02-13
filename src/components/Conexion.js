@@ -9,6 +9,7 @@ import {
   Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes
 import { APIDelete } from "../API/APIService";
 
@@ -17,6 +18,7 @@ const Conexion = (props) => {
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Para cuando se desee eliminar una conexión
   const deleteConection = async () => {
@@ -55,6 +57,22 @@ const Conexion = (props) => {
         navigation.navigate("VerPerfiles", { userID: props.userID })
       }
     >
+      {!isLoading && (
+        <View
+          style={{
+            flex: 1,
+            alignSelf: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0,0,0,0.1)",
+          }}
+        >
+          <ActivityIndicator
+            size="large"
+            color="#060B4D"
+            style={{ alignSelf: "center" }}
+          />
+        </View>
+      )}
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>

@@ -9,6 +9,7 @@ import {
   Modal,
   Alert,
 } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes
 import { APIPost, APIDelete } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
@@ -19,10 +20,11 @@ const Invitaciones = (props) => {
   const { user, setUser } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Para cuando se desee eliminar una conexión
   const deleteInvitation = async () => {
-    setIsVisible(false);
+    setIsLoading(true);
     const url = `/api/v1/friendship_request/reject`;
     const data = {
       invitation_id: props.objectID,
@@ -37,6 +39,7 @@ const Invitaciones = (props) => {
     } catch (error) {
       console.log("Error al eliminar la invitacion:", error);
     }
+    setIsLoading(false);
   };
 
   if (!isVisible) {
@@ -44,6 +47,7 @@ const Invitaciones = (props) => {
   }
 
   const postAccept = async () => {
+    setIsLoading(true);
     const url = "/api/v1/friendship_request/accept";
     const data = {
       contact_id: props.objectID,
@@ -58,7 +62,8 @@ const Invitaciones = (props) => {
         "No se pudo aceptar la invitacion. Intente nuevamente."
       );
     } else {
-      handleRemove();
+      setIsLoading(false);
+      setIsVisible(false);
     }
   };
 
@@ -73,6 +78,18 @@ const Invitaciones = (props) => {
 
   return (
     <TouchableOpacity style={styles.container}>
+      {isLoading && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
