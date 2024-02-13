@@ -22,7 +22,7 @@ const Conexion = (props) => {
 
   // Para cuando se desee eliminar una conexión
   const deleteConection = async () => {
-    setIsVisible(false);
+    setIsLoading(true);
     const url = `/api/v1/friendship_request/destroy`;
     const data = {
       id: props.userID,
@@ -35,6 +35,7 @@ const Conexion = (props) => {
     } catch (error) {
       console.error("Error:", error);
     }
+    setIsLoading(false);
   };
 
   if (!isVisible) {
@@ -56,23 +57,8 @@ const Conexion = (props) => {
       onPress={() =>
         navigation.navigate("VerPerfiles", { userID: props.userID })
       }
+      disabled={isLoading}
     >
-      {!isLoading && (
-        <View
-          style={{
-            flex: 1,
-            alignSelf: "center",
-            justifyContent: "center",
-            backgroundColor: "rgba(0,0,0,0.1)",
-          }}
-        >
-          <ActivityIndicator
-            size="large"
-            color="#060B4D"
-            style={{ alignSelf: "center" }}
-          />
-        </View>
-      )}
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
@@ -116,6 +102,11 @@ const Conexion = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
+      {isLoading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size="large" color="#060B4D" />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -128,6 +119,7 @@ const styles = StyleSheet.create({
     height: 75,
     width: "100%",
     flexDirection: "row",
+    position: "relative",
   },
   textoNombre: {
     fontSize: 17,
@@ -189,6 +181,12 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     marginVertical: 5,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

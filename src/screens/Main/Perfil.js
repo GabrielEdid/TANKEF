@@ -178,7 +178,7 @@ const Perfil = () => {
           showsHorizontalScrollIndicator={false}
           style={styles.scrollH}
         >
-          <CuadroRedUsuario titulo="Conexiones" body={user.conections} />
+          <CuadroRedUsuario titulo="Conexiones" body={user.conexiones} />
           <CuadroRedUsuario titulo="Valor de Red" body="$253,500.00" />
           <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
           <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />

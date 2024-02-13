@@ -77,19 +77,7 @@ const Invitaciones = (props) => {
   }
 
   return (
-    <TouchableOpacity style={styles.container}>
-      {isLoading && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
-          }}
-        >
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      )}
+    <TouchableOpacity style={styles.container} disabled={isLoading}>
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
@@ -143,6 +131,11 @@ const Invitaciones = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
+      {isLoading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size="large" color="#060B4D" />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -155,6 +148,7 @@ const styles = StyleSheet.create({
     height: 75,
     width: "100%",
     flexDirection: "row",
+    position: "relative",
   },
   textoNombre: {
     fontSize: 17,
@@ -209,6 +203,12 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     marginVertical: 5,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // Sombreado suave
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

@@ -74,6 +74,7 @@ const MiRed = ({ navigation }) => {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de la red:", filteredResults);
       setNetwork(filteredResults); // Guardar los datos de las publicaciones en el estado
+      setUser({ ...user, conexiones: network.length });
     }
     setIsLoading(false);
   };
