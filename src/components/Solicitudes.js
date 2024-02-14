@@ -28,7 +28,7 @@ const Solicitudes = (props) => {
 
     try {
       const response = await APIDelete(url, data);
-      console.log("Post Deleted:", response.data);
+      console.log("Request Deleted:", response.data);
       setIsVisible(false);
     } catch (error) {
       console.error("Error:", error);

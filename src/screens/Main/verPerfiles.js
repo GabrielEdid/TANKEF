@@ -60,7 +60,7 @@ const VerPerfiles = ({ route }) => {
       console.error("Error al Solicitar Amistad:", response.error);
       Alert.alert(
         "Error",
-        "No se pudo hacer la solicitud. Intente nuevamente."
+        "No se pudo hacer la solicitud. Verifique no tener invitaciones pendientes del usuario o intente de nuevo."
       );
     } else {
       // Continuar en caso de éxito

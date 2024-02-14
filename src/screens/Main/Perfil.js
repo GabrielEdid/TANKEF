@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   sliders: {
-    width: 25,
-    height: 23,
+    width: 26,
+    height: 25,
     marginTop: 50,
   },
   settings: {

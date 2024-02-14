@@ -23,7 +23,7 @@ const Invitaciones = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Para cuando se desee eliminar una conexión
-  const deleteInvitation = async () => {
+  const postReject = async () => {
     setIsLoading(true);
     const url = `/api/v1/friendship_request/reject`;
     const data = {
@@ -31,13 +31,13 @@ const Invitaciones = (props) => {
     };
 
     try {
-      const response = await APIDelete(url, data);
+      const response = await APIPost(url, data);
       if (!response.error) {
-        console.log("Invitation Deleted:", response.data);
+        console.log("Invitation Rejected:", response.data);
         setIsVisible(false);
       }
     } catch (error) {
-      console.log("Error al eliminar la invitacion:", error);
+      console.error("Error:", error);
     }
     setIsLoading(false);
   };
@@ -118,7 +118,7 @@ const Invitaciones = (props) => {
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}
-              onPress={() => deleteInvitation()}
+              onPress={() => postReject()}
             >
               <Text style={{ color: "red" }}>Eliminar Solicitud</Text>
             </TouchableOpacity>

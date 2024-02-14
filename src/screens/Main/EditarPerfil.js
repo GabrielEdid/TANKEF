@@ -14,6 +14,7 @@ import React, { useState, useEffect, useContext } from "react";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
+import { v4 as uuidv4 } from "uuid";
 // Importaciones de Componentes y Hooks
 import { APIPut } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
@@ -23,6 +24,8 @@ const EditarPerfil = ({ navigation }) => {
   // Estados locales
   const { user, setUser } = useContext(UserContext); //Contexo
   const [email, setEmail] = useState(user.email);
+  const [imageUri, setImageUri] = useState(user.avatar);
+  const [imageKey, setImageKey] = useState(Date.now());
   const [isLoading, setIsLoading] = useState(false);
 
   const imageMap = {
@@ -35,59 +38,53 @@ const EditarPerfil = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 0.1,
+      quality: 1,
     });
 
     if (!result.canceled) {
-      const selectedImage = result.assets[0];
-      await setUser({
-        ...user,
-        avatar: selectedImage.uri, // Accede a la URI a través de assets
-      });
-
-      updateUser();
+      const selectedImageUri = result.assets[0].uri;
+      setImageUri(selectedImageUri); // Actualizamos directamente imageUri
+      setImageKey(Date.now()); // Actualizamos la clave de la imagen para forzar el re-renderizado
     }
   };
 
+  useEffect(() => {
+    if (imageUri) {
+      updateUser(); // Ahora updateUser se llama después de que imageUri se actualiza
+    }
+  }, [imageUri]);
+
   const updateUser = async () => {
+    setIsLoading(true);
+    const uniqueFilename = `${uuidv4()}.jpg`; // Genera un nombre de archivo único
+
     const formData = new FormData();
-    // Añadir la imagen al FormData
     formData.append("user[avatar]", {
-      uri: user.avatar,
+      uri: imageUri,
       type: "image/jpeg",
-      name: "avatar.jpg",
+      name: uniqueFilename,
     });
     formData.append("user[name]", user.nombre);
     formData.append("user[last_name_1]", user.apellidoPaterno);
     formData.append("user[last_name_2]", user.apellidoMaterno);
     formData.append("user[phone]", user.telefono);
     formData.append("user[curp]", user.CURP);
-    setIsLoading(true);
-    const url = `/api/v1/users/${user.userID}`;
 
     try {
-      const response = await APIPut(url, formData);
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      console.log("Usuario actualizado:", response.data);
-      // Maneja aquí la respuesta
-      setIsLoading(false);
-      /*navigation.navigate("MainFlow", {
-        screen: "Perfil",
-        params: {
-          screen: "PerfilMain",
+      const response = await APIPut(`/api/v1/users/${user.userID}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-      });*/
+      });
+
+      if (response.error) {
+        Alert.alert("Error al actualizar el perfil", response.error);
+      } else {
+        setUser({ ...user, avatar: imageUri });
+      }
     } catch (error) {
-      console.error("Hubo un problema al actualizar el usuario:", error);
-      Alert.alert(
-        "Hubo un problema al modificar tus datos",
-        "Verificalos y vuelve a intentarlo.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
-      );
+      Alert.alert("Error al actualizar el perfil", error.toString());
+    } finally {
       setIsLoading(false);
     }
   };
