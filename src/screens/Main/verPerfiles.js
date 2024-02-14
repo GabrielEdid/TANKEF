@@ -205,26 +205,28 @@ const VerPerfiles = ({ route }) => {
             <Text style={styles.textoMail}>{userInfo.mail}</Text>
           </View>
         </View>
-        <View style={styles.buttonContainer}>
-          {estado === "inicial" && (
-            <TouchableOpacity
-              style={styles.botonConf}
-              onPress={() => postRequest()}
-            >
-              <Text style={styles.textoBoton}>Conectar</Text>
-            </TouchableOpacity>
-          )}
-          {estado === "solicitudEnviada" && (
-            <TouchableOpacity
-              style={styles.botonConectado}
-              onPress={() => setModalVisible(true)}
-            >
-              <Text style={[styles.textoBoton, { color: "grey" }]}>
-                Solicitud Enviada
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        {!userInfo.friend && (
+          <View style={styles.buttonContainer}>
+            {estado === "inicial" && (
+              <TouchableOpacity
+                style={styles.botonConf}
+                onPress={() => postRequest()}
+              >
+                <Text style={styles.textoBoton}>Conectar</Text>
+              </TouchableOpacity>
+            )}
+            {estado === "solicitudEnviada" && (
+              <TouchableOpacity
+                style={styles.botonConectado}
+                onPress={() => setModalVisible(true)}
+              >
+                <Text style={[styles.textoBoton, { color: "grey" }]}>
+                  Solicitud Enviada
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
         {/* Lista de Datos de Red del Usuario 
         <ScrollView
           horizontal={true}
