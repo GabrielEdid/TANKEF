@@ -10,6 +10,7 @@ import {
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -38,6 +39,7 @@ const MiRed = ({ navigation }) => {
   const [invitations, setInvitations] = useState([]);
   const [network, setNetwork] = useState([]);
   const [pending, setPending] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   // Mapa para cargar todas las imagenes
@@ -121,6 +123,16 @@ const MiRed = ({ navigation }) => {
       counter++;
     }
   }, []);
+
+  const onRefresh = async (fetchFunction) => {
+    setRefreshing(true);
+    try {
+      await fetchFunction();
+    } catch (e) {
+      console.error(e);
+    }
+    setRefreshing(false);
+  };
 
   function titleCase(str) {
     return str
@@ -279,7 +291,17 @@ const MiRed = ({ navigation }) => {
         {!isLoading && (
           <>
             {focus === "MiRed" && (
-              <ScrollView style={{ flex: 1 }}>
+              <ScrollView
+                style={{ flex: 1 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => onRefresh(fetchNetwork)}
+                    tintColor="#060B4D" // Usado en iOS
+                    colors={["#060B4D"]} // Usado en Android
+                  />
+                }
+              >
                 {network.length > 0 ? (
                   network.map((network, index) => (
                     <Conexion
@@ -310,7 +332,17 @@ const MiRed = ({ navigation }) => {
             )}
 
             {focus === "Solicitudes" && (
-              <ScrollView style={{ flex: 1 }}>
+              <ScrollView
+                style={{ flex: 1 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => onRefresh(fetchPending)}
+                    tintColor="#060B4D" // Usado en iOS
+                    colors={["#060B4D"]} // Usado en Android
+                  />
+                }
+              >
                 {pending.length > 0 ? (
                   pending.map((pending, index) => (
                     <Solicitudes
@@ -340,7 +372,17 @@ const MiRed = ({ navigation }) => {
             )}
 
             {focus === "Invitaciones" && (
-              <ScrollView style={{ flex: 1 }}>
+              <ScrollView
+                style={{ flex: 1 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => onRefresh(fetchInvitations)}
+                    tintColor="#060B4D" // Usado en iOS
+                    colors={["#060B4D"]} // Usado en Android
+                  />
+                }
+              >
                 {invitations.length > 0 ? (
                   invitations.map((invitation, index) => (
                     <Invitaciones
