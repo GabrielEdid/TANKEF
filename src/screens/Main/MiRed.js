@@ -46,7 +46,7 @@ const MiRed = ({ navigation }) => {
     // ... más imágenes
   };
 
-  const fetchQuery = async (query) => {
+  const fetchSearch = async (query) => {
     const url = `/api/v1/search?query=${query}`;
 
     const result = await APIGet(url);
@@ -172,7 +172,7 @@ const MiRed = ({ navigation }) => {
                 const focus = focus;
                 setIsSearching(true);
                 setFocus(null);
-                fetchQuery(text);
+                fetchSearch(text);
               } else if (text.length === 0) {
                 setIsSearching(false);
                 setFocus("MiRed");
