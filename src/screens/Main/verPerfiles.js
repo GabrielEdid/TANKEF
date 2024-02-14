@@ -84,7 +84,7 @@ const VerPerfiles = ({ route }) => {
         apellidoMaterno: titleCase(response.data.profile.second_last_name),
         mail: response.data.profile.email,
         avatar: response.data.profile.avatar
-          ? { uri: response.data.profile.avatar }
+          ? response.data.profile.avatar
           : imageMap["Blank"],
         friend: response.data.profile.is_my_friend,
       });
@@ -193,7 +193,7 @@ const VerPerfiles = ({ route }) => {
       >
         {/* Contenedor Imagen, Nombre y Correo de la persona */}
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
-          <Image style={styles.fotoPerfil} source={userInfo.avatar} />
+          <Image style={styles.fotoPerfil} source={{ uri: userInfo.avatar }} />
           <View style={{ marginTop: 5, alignSelf: "center" }}>
             <Text style={styles.textoNombre}>
               {userInfo.nombre +
@@ -205,7 +205,7 @@ const VerPerfiles = ({ route }) => {
             <Text style={styles.textoMail}>{userInfo.mail}</Text>
           </View>
         </View>
-        {!userInfo.friend && (
+        {!userInfo.friend ? (
           <View style={styles.buttonContainer}>
             {estado === "inicial" && (
               <TouchableOpacity
@@ -226,6 +226,8 @@ const VerPerfiles = ({ route }) => {
               </TouchableOpacity>
             )}
           </View>
+        ) : (
+          <View style={{ height: 3, backgroundColor: "#f2f2f2ff" }} />
         )}
         {/* Lista de Datos de Red del Usuario 
         <ScrollView
@@ -248,18 +250,20 @@ const VerPerfiles = ({ route }) => {
                   postID={post.id}
                   tipo={"compartir"}
                   nombre={
-                    user.nombre +
+                    userInfo.nombre +
                     " " +
-                    user.apellidoPaterno +
+                    userInfo.apellidoPaterno +
                     " " +
-                    user.apellidoMaterno
-                  } // Reemplazar con datos reales si están disponibles
-                  tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                  foto={imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+                    userInfo.apellidoMaterno
+                  }
+                  tiempo={post.created_at}
                   body={post.body}
-                  perfil={
-                    user.avatar ? { uri: user.avatar } : imageMap["Blank"]
-                  } // Reemplazar con datos reales si están disponibles
+                  imagen={post.image}
+                  foto={
+                    userInfo.avatar
+                      ? { uri: userInfo.avatar }
+                      : imageMap["Blank"]
+                  }
                   personal={false}
                   comentarios={post.count_comments}
                 />
