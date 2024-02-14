@@ -10,12 +10,14 @@ import {
   Alert,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
 import { APIPost, APIDelete } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
 const Invitaciones = (props) => {
+  const navigation = useNavigation();
   // Estados y Contexto
   const { user, setUser } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(true);
@@ -77,7 +79,13 @@ const Invitaciones = (props) => {
   }
 
   return (
-    <TouchableOpacity style={styles.container} disabled={isLoading}>
+    <TouchableOpacity
+      style={styles.container}
+      disabled={isLoading}
+      onPress={() =>
+        navigation.navigate("VerPerfiles", { userID: props.userID })
+      }
+    >
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>

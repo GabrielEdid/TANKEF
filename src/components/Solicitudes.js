@@ -9,11 +9,13 @@ import {
   Modal,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
 import { FontAwesome } from "@expo/vector-icons";
 import { APIDelete } from "../API/APIService";
 
 const Solicitudes = (props) => {
+  const navigation = useNavigation();
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -50,7 +52,13 @@ const Solicitudes = (props) => {
   }
 
   return (
-    <TouchableOpacity style={styles.container} disabled={isLoading}>
+    <TouchableOpacity
+      style={styles.container}
+      disabled={isLoading}
+      onPress={() =>
+        navigation.navigate("VerPerfiles", { userID: props.userID })
+      }
+    >
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>

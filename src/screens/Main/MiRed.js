@@ -348,6 +348,7 @@ const MiRed = ({ navigation }) => {
                     <Solicitudes
                       key={index}
                       objectID={pending.id}
+                      userID={pending.user_id}
                       nombre={titleCase(pending.full_name)}
                       imagen={
                         pending.avatar ? pending.avatar : imageMap["Blank"]
@@ -387,6 +388,7 @@ const MiRed = ({ navigation }) => {
                   invitations.map((invitation, index) => (
                     <Invitaciones
                       key={index}
+                      userID={invitation.user_id}
                       objectID={invitation.id}
                       nombre={titleCase(invitation.full_name)}
                       imagen={
