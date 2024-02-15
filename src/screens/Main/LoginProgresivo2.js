@@ -120,16 +120,6 @@ const LoginProgresivo2 = ({ navigation }) => {
           <Text style={styles.titulo}>TANKEF</Text>
         </View>
 
-        {/* Boton de Regresar */}
-        {/*<TouchableOpacity onPress={() => handleGoBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={40}
-            color="#29364d"
-            style={styles.back}
-          />
-        </TouchableOpacity>*/}
-
         {/* Mensaje Superior */}
         <View style={{ flex: 1 }}>
           <Text style={styles.texto}>
