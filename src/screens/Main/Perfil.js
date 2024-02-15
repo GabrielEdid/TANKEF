@@ -6,10 +6,9 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Modal,
   RefreshControl,
 } from "react-native";
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,13 +23,14 @@ import { Feather } from "@expo/vector-icons";
 import Post from "../../components/Post";
 
 const Perfil = () => {
+  // Estados y contexto
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext); // Contexto de usuario
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
@@ -39,6 +39,7 @@ const Perfil = () => {
     // ... más imágenes
   };
 
+  // Función para obtener los posts del usuario loggeado, maneja la paginación
   const fetchUserPosts = async (currentPage) => {
     setIsFetchingMore(true);
     const url = `/api/v1/users/${user.userID}/posts?page=${currentPage}`;
@@ -67,18 +68,21 @@ const Perfil = () => {
     setIsFetchingMore(false);
   };
 
+  // Efecto para obtener los posts del usuario loggeado
   useFocusEffect(
     useCallback(() => {
       fetchUserPosts(page);
     }, [page])
   );
 
+  // Función para manejar la carga de más posts
   const handleLoadMore = () => {
     if (!isFetchingMore) {
       setPage((prevPage) => prevPage + 1);
     }
   };
 
+  // Función para saber si el usuario está cerca del final de la pantalla
   const isCloseToBottom = ({
     layoutMeasurement,
     contentOffset,
@@ -91,6 +95,7 @@ const Perfil = () => {
     );
   };
 
+  // Función para manejar el refresh de la pantalla con el RefreshControl
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
     fetchUserPosts(1).then(() => {
@@ -102,8 +107,8 @@ const Perfil = () => {
   // Componente visual
   return (
     <>
+      {/* Titulo, Nombre de la Pantalla, Notificación y Sliders */}
       <View style={styles.tituloContainer}>
-        {/* Titulo */}
         <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
@@ -124,14 +129,13 @@ const Perfil = () => {
             style={{ marginTop: 50, marginRight: 15 }}
           />
         </TouchableOpacity>
+        {/* Botón de sliders para abrir el Drawer */}
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          {/*<Image
-            style={[styles.fotoPerfil, { marginTop: 65 }]}
-            source={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
-        />*/}
           <Image style={styles.sliders} source={imageMap["Sliders"]} />
         </TouchableOpacity>
       </View>
+
+      {/* Scroll de la pantalla */}
       <ScrollView
         style={styles.scrollV}
         onScroll={({ nativeEvent }) => {
@@ -172,6 +176,7 @@ const Perfil = () => {
             <Text style={styles.textoMail}>{user.email}</Text>
           </View>
         </View>
+
         {/* Lista de Datos de Red del Usuario */}
         <ScrollView
           horizontal={true}
@@ -184,6 +189,7 @@ const Perfil = () => {
           <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
           <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
         </ScrollView>
+
         {/* View de LogIn Gradual */}
         <TouchableOpacity
           style={styles.cuadroLoginProgresivo}
@@ -216,8 +222,10 @@ const Perfil = () => {
           </View>
         </TouchableOpacity>
 
+        {/* Posts del usuario, se maneja la carga y si hay post o no para mostar un mensaje si no hay */}
         {!isLoading &&
           (posts.length !== 0 ? (
+            /* Mapeo de los posts del usuario */
             posts.map((post, index) => (
               <View style={{ marginTop: 3, backgroundColor: "white" }}>
                 <Post
@@ -230,9 +238,9 @@ const Perfil = () => {
                     user.apellidoPaterno +
                     " " +
                     user.apellidoMaterno
-                  } // Reemplazar con datos reales si están disponibles
-                  tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                  foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]} // Reemplazar con datos reales si están disponibles
+                  }
+                  tiempo={post.created_at}
+                  foto={user.avatar ? { uri: user.avatar } : imageMap["Blank"]}
                   body={post.body}
                   personal={true}
                   imagen={post.image}
@@ -243,6 +251,7 @@ const Perfil = () => {
               </View>
             ))
           ) : (
+            /* Mensaje si no hay posts */
             <View
               style={{
                 paddingHorizontal: 40,
@@ -265,6 +274,8 @@ const Perfil = () => {
               </Text>
             </View>
           ))}
+
+        {/* Activity Indicator para mostrar que se están cargando más posts */}
         {isFetchingMore && (
           <View style={styles.activityIndicatorContainer}>
             <ActivityIndicator size={75} color="#060B4D" />

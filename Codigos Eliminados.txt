@@ -137,6 +137,7 @@ Estilos de lo anterior en pantalla Inicio
 
 Pantalla  Mi Red
 
+
 Mostrar Notificaciones y botones de navegacion a otras pantallas dejadas
 
     <TouchableOpacity
@@ -181,6 +182,7 @@ Mostrar Notificaciones y botones de navegacion a otras pantallas dejadas
 
 
 Pantalla MiTankef (Antes MisMovimientos)
+
 
 Diseño anterior practicamente completo
 
@@ -403,7 +405,7 @@ Diseño anterior practicamente completo
     );
     }
     } 
-    
+
 
 Estilos de lo anterior
 
@@ -537,3 +539,6 @@ Estilos de lo anterior
     color: "#29364d",
     position: "absolute",
     }, 
+
+
+
