@@ -17,7 +17,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
 import { Feather, EvilIcons } from "@expo/vector-icons";
-import { APIGet, APIPost } from "../../API/APIService";
+import { APIGet, APIPost, APIDelete } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import Post from "../../components/Post";
 
@@ -46,6 +46,31 @@ const VerPerfiles = ({ route }) => {
     // ... más imágenes
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const checkPendingRequests = async () => {
+        const urlFetchPending = `/api/v1/network/requests_pending`;
+        try {
+          const result = await APIGet(urlFetchPending);
+          const userRequests = result.data?.data;
+          const userRequest = userRequests?.find(
+            (request) => request.user_id === userID
+          );
+          if (userRequest) {
+            setEstado("solicitudEnviada");
+          }
+        } catch (error) {
+          console.error(
+            "Error al verificar las solicitudes pendientes:",
+            error
+          );
+        }
+      };
+
+      checkPendingRequests();
+    }, [])
+  );
+
   const postRequest = async () => {
     const url = "/api/v1/friendship_request";
     const data = {
@@ -66,6 +91,32 @@ const VerPerfiles = ({ route }) => {
       // Continuar en caso de éxito
       setEstado("solicitudEnviada");
     }
+  };
+
+  const deleteRequest = async () => {
+    const urlFetchPending = `/api/v1/network/requests_pending`;
+
+    try {
+      const result = await APIGet(urlFetchPending);
+      const userRequests = result.data?.data;
+      const userRequest = userRequests?.find(
+        (request) => request.user_id === userID
+      );
+      if (userRequest) {
+        const urlDeletePending = `/api/v1/friendship_request/cancel`;
+        const data = { id: userRequest.id };
+
+        const response = await APIDelete(urlDeletePending, data);
+        console.log("Solicitud eliminada:", response);
+        setModalVisible(false);
+        setEstado("inicial");
+      } else {
+        console.log("No se encontró la solicitud correspondiente al usuario.");
+      }
+    } catch (error) {
+      console.error("Error durante la eliminación de la solicitud:", error);
+    }
+    setIsLoading(false);
   };
 
   const fetchUserPosts = async (currentPage) => {
@@ -326,7 +377,7 @@ const VerPerfiles = ({ route }) => {
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}
-              onPress={() => [setEstado("inicial"), setModalVisible(false)]}
+              onPress={() => deleteRequest()}
             >
               <Text style={{ color: "red" }}>Eliminar Solicitud</Text>
             </TouchableOpacity>
