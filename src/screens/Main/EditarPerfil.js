@@ -8,7 +8,6 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
-  TextInput,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -22,17 +21,18 @@ import { Feather, FontAwesome } from "@expo/vector-icons";
 
 const EditarPerfil = ({ navigation }) => {
   // Estados locales
-  const { user, setUser } = useContext(UserContext); //Contexo
-  const [email, setEmail] = useState(user.email);
+  const { user, setUser } = useContext(UserContext); //Contexo del Usuario
   const [imageUri, setImageUri] = useState(user.avatar);
   const [imageKey, setImageKey] = useState(Date.now());
   const [isLoading, setIsLoading] = useState(false);
 
+  // Mapa para cargar todas las imagenes
   const imageMap = {
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
 
+  // Función para seleccionar una imagen de la galería
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -43,21 +43,24 @@ const EditarPerfil = ({ navigation }) => {
 
     if (!result.canceled) {
       const selectedImageUri = result.assets[0].uri;
-      setImageUri(selectedImageUri); // Actualizamos directamente imageUri
-      setImageKey(Date.now()); // Actualizamos la clave de la imagen para forzar el re-renderizado
+      setImageUri(selectedImageUri); // Se actualiza directamente imageUri
+      setImageKey(Date.now()); // Se actualiza la clave de la imagen para forzar el re-renderizado y asegurar la nueva imagen
     }
   };
 
+  // Efecto para actualizar el perfil cuando imageUri cambia
   useEffect(() => {
     if (imageUri) {
-      updateUser(); // Ahora updateUser se llama después de que imageUri se actualiza
+      updateUser(); // Se llama a la función para actualizar el perfil
     }
   }, [imageUri]);
 
+  // Función para actualizar el perfil del usuario en la base de datos
   const updateUser = async () => {
     setIsLoading(true);
     const uniqueFilename = `${uuidv4()}.jpg`; // Genera un nombre de archivo único
 
+    // Se pone toda la información del usuario en un FormData, así pide la API
     const formData = new FormData();
     formData.append("user[avatar]", {
       uri: imageUri,
@@ -107,8 +110,8 @@ const EditarPerfil = ({ navigation }) => {
     // Cerrar el teclado cuando se toca fuera de un input
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={{ flex: 1 }}>
+        {/* Titulo, Nombre de la Pantalla y Notificación */}
         <View style={styles.tituloContainer}>
-          {/* Titulo */}
           <MaskedView
             style={{ flex: 1 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
@@ -131,8 +134,8 @@ const EditarPerfil = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+        {/* Contenedor Foto de Peril y Boton para editarla */}
         <View style={{ backgroundColor: "white", marginTop: 3 }}>
-          {/* Contenedor Foto de Peril */}
           <View>
             <Image
               style={styles.imagen}
@@ -150,7 +153,7 @@ const EditarPerfil = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Contenedor Correo Electrónico */}
+        {/* Contenedor del Resto de datos del usuario, se obtienen del contexto del usuario */}
         <View
           style={{
             marginTop: 3,
@@ -178,16 +181,6 @@ const EditarPerfil = ({ navigation }) => {
           <Text style={styles.textoDato}>{user.telefono}</Text>
           <View style={styles.linea} />
         </View>
-
-        {/* Botón de Continuar 
-        
-        <TouchableOpacity
-          style={styles.botonGrande}
-          onPress={() => handleSiguiente()}
-          disabled={isLoading}
-        >
-          <Text style={styles.textoBotonGrande}>Guardar</Text>
-            </TouchableOpacity>*/}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -261,23 +254,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#cecfdbff",
     marginBottom: 10,
   },
-  /* Estilos del botón grande
-  botonGrande: {
-    width: "%",
-    height: 60,
-    alignSelf: "center",
-    justifyContent: "center",
-    backgroundColor: "#2FF690",
-    borderRadius: 25,
-    marginBottom: 20,
-    zIndex: -10,
-  },
-  textoBotonGrande: {
-    color: "#060B4D",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "opensansbold",
-  },*/
 });
 
 export default EditarPerfil;
