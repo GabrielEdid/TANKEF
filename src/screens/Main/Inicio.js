@@ -6,13 +6,12 @@ import {
   TextInput,
   Image,
   ScrollView,
-  Modal,
   RefreshControl,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
@@ -20,15 +19,13 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
-import { Feather, Ionicons, Entypo, FontAwesome5 } from "@expo/vector-icons";
-import CuadroRedUsuario from "../../components/Componentes Olvidados/CuadroRedUsuario";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import Post from "../../components/Post";
 import ModalPost from "../../components/ModalPost";
-import { set } from "date-fns";
 
 const Inicio = () => {
   // Estados y Contexto
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext); // Contexto
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -42,6 +39,7 @@ const Inicio = () => {
     // ... más imágenes
   };
 
+  // Función para obtener los posts del feed
   const fetchFeed = async (currentPage) => {
     setIsFetchingMore(true);
     const url = `/api/v1/feed?page=${currentPage}`;
@@ -70,12 +68,7 @@ const Inicio = () => {
     setIsFetchingMore(false);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchFeed(page);
-    }, [page])
-  );
-
+  // Función para manejar la carga de más posts
   const handleLoadMore = () => {
     if (!isFetchingMore) {
       setPage((prevPage) => prevPage + 1);
@@ -94,6 +87,13 @@ const Inicio = () => {
     );
   };
 
+  // Efecto para cargar los posts del feed al cargar la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      fetchFeed(page);
+    }, [page])
+  );
+
   // Función para convertir la primera letra de cada palabra en mayúscula y el resto minuscula
   function titleCase(str) {
     return str
@@ -105,11 +105,12 @@ const Inicio = () => {
       .join(" ");
   }
 
+  // Función para manejar el foco del input para crear un post
   const handleFocus = () => {
     setIsModalVisible(true);
   };
 
-  // Función para manejar la acción de refrescar
+  // Función para manejar la acción de refrescar y jalar mas posts
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
     fetchFeed(1).then(() => {
@@ -136,8 +137,8 @@ const Inicio = () => {
   // Componente visual
   return (
     <>
+      {/* Titulo, Nombre de Pantalla y Campana*/}
       <View style={styles.tituloContainer}>
-        {/* Titulo */}
         <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
@@ -159,6 +160,7 @@ const Inicio = () => {
           />
         </TouchableOpacity>
       </View>
+      {/* Contenedor de Crear Post, Parece como un input y mas pero es inactivo */}
       <TouchableOpacity
         style={styles.postContainer}
         activeOpacity={1}
@@ -183,6 +185,7 @@ const Inicio = () => {
           }}
         />
       </TouchableOpacity>
+      {/* Contenedor y Scrollview de Posts */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView
           style={styles.scrollV}
@@ -193,7 +196,6 @@ const Inicio = () => {
           }}
           scrollEventThrottle={400}
           refreshControl={
-            // Aquí agregas el RefreshControl
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={onRefresh}
@@ -202,136 +204,64 @@ const Inicio = () => {
             />
           }
         >
-          {/* Lista de Datos de Red del Usuario 
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={styles.scrollH}
-          >
-            <CuadroRedUsuario titulo="Valor de Red" body="$253,500.00" />
-            <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
-            <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
-            <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
-          </ScrollView> */}
-          {/* Anuncio para Invertir 
-          <TouchableOpacity style={styles.cuadroInvertir}>
-            <Text style={styles.texto}>{banners.investment}</Text>
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }} // Inicio del gradiente
-              end={{ x: 0, y: 0 }} // Fin del gradiente
-              style={styles.botonGradient}
-            >
-              <Text
-                style={{
-                  fontFamily: "conthrax",
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: 17,
-                }}
-              >
-                INVERTIR
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity> */}
-          {/* Anuncio para hacer un Crédito 
-          <TouchableOpacity style={styles.cuadroCredito}>
-            <Text style={[styles.texto, { color: "#060B4D" }]}>
-              {banners.credit}
-            </Text>
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }} // Inicio del gradiente
-              end={{ x: 0, y: 0 }} // Fin del gradiente
-              style={styles.botonGradient}
-            >
-              <Text
-                style={{
-                  fontFamily: "conthrax",
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: 17,
-                }}
-              >
-                CRÉDITO
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity> */}
-          {/* TEMPLATE DE POSTS EN FEED
-          <Post
-            tipo={"compartir"}
-            nombre={"Antonio Stark Rivera"}
-            tiempo={"3 horas"}
-            foto={imageMap["Antonio"]}
-            body={
-              "Explorar el mundo de las finanzas es embarcarse en un viaje fascinante hacia la libertad financiera. La clave está en la educación continua y la toma de decisiones informadas. Invertir no solo se trata de aumentar tus activos, sino también de comprender los riesgos y cómo gestionarlos. Recuerda: diversificar es vital para equilibrar tu cartera. Y lo más importante, nunca es tarde para empezar a planificar tu futuro financiero. ¡Hagamos de las finanzas una herramienta para alcanzar nuestros sueños! #FinanzasInteligentes #LibertadFinanciera 💹📊"
-            }
-            imagen={imageMap["Test"]}
-            comentarios={3}
-          />
-          <Post
-            tipo={"compartir"}
-            nombre={"Jose Antonio Quill"}
-            tiempo={"2 días"}
-            foto={imageMap["Quill"]}
-            body={
-              "Invertir es dar el primer paso hacia la libertad financiera. Al elegir sabiamente, tus ahorros pueden crecer exponencialmente. ¿Sabías que empezar joven y con constancia es clave para el éxito? Diversifica tus inversiones para minimizar riesgos y maximizar ganancias. ¡No esperes más, comienza hoy mismo a construir tu futuro! #Inversiones #LibertadFinanciera #CrecimientoEconómico 📈💼🌟"
-            }
-            comentarios={10}
-          />*/}
+          {/* Se verifica que los posts esten cargados, no este cargando y que hayan posts */}
           {!isLoading &&
-            (posts.length !== 0 ? (
-              posts.map((post, index) => (
-                <View style={{ backgroundColor: "white" }}>
-                  <Post
-                    key={index}
-                    postId={post.id}
-                    tipo={"compartir"}
-                    nombre={
-                      titleCase(post.user.name) +
-                      " " +
-                      titleCase(post.user.first_last_name) +
-                      " " +
-                      titleCase(post.user.second_last_name)
-                    } // Reemplazar con datos reales si están disponibles
-                    tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                    foto={
-                      post.user.avatar
-                        ? { uri: post.user.avatar }
-                        : imageMap["Blank"]
-                    } // Reemplazar con datos reales si están disponibles
-                    body={post.body}
-                    comentarios={post.count_comments}
-                    reacciones={post.count_reactions}
-                    personal={post.user.id === user.userID ? true : false}
-                    imagen={post.image}
-                    liked={post["liked?"]}
-                  />
-                </View>
-              ))
-            ) : (
-              <View
-                style={{
-                  paddingHorizontal: 40,
-                  paddingVertical: 250,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: "opensans",
-                    textAlign: "center",
-                    color: "#060B4D",
-                  }}
-                >
-                  ¡Bienvenido a{" "}
-                  <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
-                  recuerda que entre más amigos, familiares y socios, mayores
-                  beneficios reciben todos! Para comenzar empieza por contarnos
-                  en que estas pensando...
-                </Text>
-              </View>
-            ))}
+            (posts.length !== 0
+              ? posts.map((post, index) => (
+                  <View style={{ backgroundColor: "white" }}>
+                    <Post
+                      key={index}
+                      postId={post.id}
+                      tipo={"compartir"}
+                      nombre={
+                        titleCase(post.user.name) +
+                        " " +
+                        titleCase(post.user.first_last_name) +
+                        " " +
+                        titleCase(post.user.second_last_name)
+                      } // Reemplazar con datos reales si están disponibles
+                      tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                      foto={
+                        post.user.avatar
+                          ? { uri: post.user.avatar }
+                          : imageMap["Blank"]
+                      } // Reemplazar con datos reales si están disponibles
+                      body={post.body}
+                      comentarios={post.count_comments}
+                      reacciones={post.count_reactions}
+                      personal={post.user.id === user.userID ? true : false}
+                      imagen={post.image}
+                      liked={post["liked?"]}
+                    />
+                  </View>
+                ))
+              : {
+                  /* Si no hay posts se da un mensaje */
+                }(
+                  <View
+                    style={{
+                      paddingHorizontal: 40,
+                      paddingVertical: 250,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontFamily: "opensans",
+                        textAlign: "center",
+                        color: "#060B4D",
+                      }}
+                    >
+                      ¡Bienvenido a{" "}
+                      <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>
+                      , recuerda que entre más amigos, familiares y socios,
+                      mayores beneficios reciben todos! Para comenzar empieza
+                      por contarnos en que estas pensando...
+                    </Text>
+                  </View>
+                ))}
+
+          {/* Si se está cargando más posts se muestra un ActivityIndicator */}
           {isFetchingMore && (
             <View style={styles.activityIndicatorContainer}>
               <ActivityIndicator size={75} color="#060B4D" />
@@ -339,6 +269,7 @@ const Inicio = () => {
           )}
         </ScrollView>
       </TouchableWithoutFeedback>
+      {/* Se importa el Modal para crear un post */}
       <ModalPost
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}

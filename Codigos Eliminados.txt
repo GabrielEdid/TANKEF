@@ -1,0 +1,62 @@
+Lista de Datos de Red del Usuario en Inicio 
+
+    <ScrollView
+    horizontal={true}
+    showsHorizontalScrollIndicator={false}
+    style={styles.scrollH}
+    >
+    <CuadroRedUsuario titulo="Valor de Red" body="$253,500.00" />
+    <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
+    <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
+    <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
+    </ScrollView>
+
+
+Anuncio para Invertir en Inicio
+
+    <TouchableOpacity style={styles.cuadroInvertir}>
+    <Text style={styles.texto}>{banners.investment}</Text>
+    <LinearGradient
+        colors={["#2FF690", "#21B6D5"]}
+        start={{ x: 1, y: 1 }} // Inicio del gradiente
+        end={{ x: 0, y: 0 }} // Fin del gradiente
+        style={styles.botonGradient}
+    >
+        <Text
+        style={{
+            fontFamily: "conthrax",
+            color: "white",
+            textAlign: "center",
+            fontSize: 17,
+        }}
+        >
+        INVERTIR
+        </Text>
+    </LinearGradient>
+    </TouchableOpacity>
+
+
+Anuncio para hacer un Crédito en Inicio
+
+    <TouchableOpacity style={styles.cuadroCredito}>
+    <Text style={[styles.texto, { color: "#060B4D" }]}>
+        {banners.credit}
+    </Text>
+    <LinearGradient
+        colors={["#2FF690", "#21B6D5"]}
+        start={{ x: 1, y: 1 }} // Inicio del gradiente
+        end={{ x: 0, y: 0 }} // Fin del gradiente
+        style={styles.botonGradient}
+    >
+        <Text
+        style={{
+            fontFamily: "conthrax",
+            color: "white",
+            textAlign: "center",
+            fontSize: 17,
+        }}
+        >
+        CRÉDITO
+        </Text>
+    </LinearGradient>
+    </TouchableOpacity> 
