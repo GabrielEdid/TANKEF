@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Image,
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
@@ -24,12 +23,11 @@ import Conexion from "../../components/Conexion";
 import Solicitudes from "../../components/Solicitudes";
 import Invitaciones from "../../components/Invitaciones";
 import SearchResult from "../../components/SearchResult";
-import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
 
-const MiRed = ({ navigation }) => {
+const MiRed = () => {
   // Estados y Contexto
   const [text, setText] = useState("");
   const [focus, setFocus] = useState("MiRed");
@@ -40,7 +38,7 @@ const MiRed = ({ navigation }) => {
   const [network, setNetwork] = useState([]);
   const [pending, setPending] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext); // Contexto del usuario
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
@@ -48,6 +46,9 @@ const MiRed = ({ navigation }) => {
     // ... más imágenes
   };
 
+  // Seccion de Funciones
+
+  // Funcion para obtener las busquedas del searchbar
   const fetchSearch = async (query) => {
     const url = `/api/v1/search?query=${query}`;
 
@@ -60,10 +61,11 @@ const MiRed = ({ navigation }) => {
         .filter((post) => post.id !== user.userID) // Filtrar los posts donde post.id es igual a user.userID
         .sort((a, b) => b.id - a.id);
       console.log("Resultados de la busqueda:", filteredResults);
-      setSearchResults(filteredResults); // Guardar los datos de las publicaciones en el estado
+      setSearchResults(filteredResults);
     }
   };
 
+  // Funcion para obtener los miembros de la red del usuario loggeado
   const fetchNetwork = async () => {
     setIsLoading(true);
     const url = `/api/v1/network/members`;
@@ -75,12 +77,13 @@ const MiRed = ({ navigation }) => {
     } else {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de la red:", filteredResults);
-      setNetwork(filteredResults); // Guardar los datos de las publicaciones en el estado
+      setNetwork(filteredResults);
       setUser({ ...user, conexiones: network.length });
     }
     setIsLoading(false);
   };
 
+  // Funcion para obtener las solicitudes pendientes del usuario loggeado
   const fetchPending = async () => {
     setIsLoading(true);
     const url = `/api/v1/network/requests_pending`;
@@ -93,13 +96,15 @@ const MiRed = ({ navigation }) => {
         result.error
       );
     } else {
+      // Filtrar los resultados para que salagan de mas nuevo a mas viejo
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de las solicitudes pendientes:", filteredResults);
-      setPending(filteredResults); // Guardar los datos de las publicaciones en el estado
+      setPending(filteredResults);
     }
     setIsLoading(false);
   };
 
+  // Funcion para obtener las invitaciones pendientes del usuario loggeado
   const fetchInvitations = async () => {
     setIsLoading(true);
     const url = `/api/v1/network/invitations`;
@@ -111,11 +116,12 @@ const MiRed = ({ navigation }) => {
     } else {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de las invitaciones:", filteredResults);
-      setInvitations(filteredResults); // Guardar los datos de las publicaciones en el estado
+      setInvitations(filteredResults);
     }
     setIsLoading(false);
   };
 
+  // Efecto para cargar la red del usuario loggeado
   useEffect(() => {
     let counter = 0;
     if (focus === "MiRed" && counter === 0) {
@@ -124,6 +130,7 @@ const MiRed = ({ navigation }) => {
     }
   }, []);
 
+  // Efecto para cargar las solicitudes pasadas en el parametro fetchFunction con los RefreshControl
   const onRefresh = async (fetchFunction) => {
     setRefreshing(true);
     try {
@@ -134,6 +141,7 @@ const MiRed = ({ navigation }) => {
     setRefreshing(false);
   };
 
+  // Funcion para convertir la primera letra de cada palabra en mayuscula
   function titleCase(str) {
     return str
       .toLowerCase()
@@ -146,11 +154,10 @@ const MiRed = ({ navigation }) => {
 
   // Componente visual
   return (
-    //Fondo
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={{ flex: 1 }}>
+        {/* Titulo, Nombre de Pantalla y Campana*/}
         <View style={styles.tituloContainer}>
-          {/* Titulo */}
           <MaskedView
             style={{ flex: 1 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
@@ -173,6 +180,7 @@ const MiRed = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+        {/* Barra de Busqueda, input*/}
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.input}
@@ -209,9 +217,11 @@ const MiRed = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+        {/* Vista para mostarr los Resultados de la busqueda si se empieza a buscar */}
         {isSearching && (
           <View style={styles.searchResultsContainer}>
             <ScrollView>
+              {/* Se mapean los resultados de la API y se muestran con su componente */}
               {searchResults.map((search, index) => (
                 <SearchResult
                   key={index}
@@ -226,6 +236,7 @@ const MiRed = ({ navigation }) => {
           </View>
         )}
 
+        {/* Vista para mostrar los Tabs de Mi Red, Solicitudes e Invitaciones */}
         {!isSearching && (
           <View style={styles.tabsContainer}>
             {/* Boton Mi Red */}
@@ -282,14 +293,17 @@ const MiRed = ({ navigation }) => {
           </View>
         )}
 
+        {/* Si esta cargando los elementos mostrar un Activity Indicator */}
         {isLoading && (
           <View style={{ marginTop: 150 }}>
             <ActivityIndicator size={75} color="#060B4D" />
           </View>
         )}
 
+        {/* Si no esta cargando mostrar los elementos de la red, solicitudes o invitaciones */}
         {!isLoading && (
           <>
+            {/* Si el estado es MiRed se llama a la API y muestran los resulados del network del usuario */}
             {focus === "MiRed" && (
               <ScrollView
                 style={{ flex: 1 }}
@@ -302,35 +316,39 @@ const MiRed = ({ navigation }) => {
                   />
                 }
               >
-                {network.length > 0 ? (
-                  network.map((network, index) => (
-                    <Conexion
-                      key={index}
-                      userID={network.id}
-                      nombre={titleCase(network.full_name)}
-                      imagen={
-                        network.avatar ? network.avatar : imageMap["Blank"]
-                      }
-                      mail={network.email}
-                    />
-                  ))
-                ) : (
-                  <Text
-                    style={{
-                      marginTop: 150,
-                      fontSize: 16,
-                      fontFamily: "opensans",
-                      color: "#060B4D",
-                      textAlign: "center",
-                    }}
-                  >
-                    No tienes miembros en tu red.{"\n"}¡Invita a tus amigos y
-                    conocidos!
-                  </Text>
-                )}
+                {/* Se mapean los resultados de la API y se muestran con su componente */}
+                {network.length > 0
+                  ? network.map((network, index) => (
+                      <Conexion
+                        key={index}
+                        userID={network.id}
+                        nombre={titleCase(network.full_name)}
+                        imagen={
+                          network.avatar ? network.avatar : imageMap["Blank"]
+                        }
+                        mail={network.email}
+                      />
+                    ))
+                  : {
+                      /* Si no hay resultados mostrar un mensaje de que no hay miembros en la red */
+                    }(
+                      <Text
+                        style={{
+                          marginTop: 150,
+                          fontSize: 16,
+                          fontFamily: "opensans",
+                          color: "#060B4D",
+                          textAlign: "center",
+                        }}
+                      >
+                        No tienes miembros en tu red.{"\n"}¡Invita a tus amigos
+                        y conocidos!
+                      </Text>
+                    )}
               </ScrollView>
             )}
 
+            {/* Si el estado es Solicitudes se llama a la API y muestran los resulados de las solicitudes pendientes del usuario */}
             {focus === "Solicitudes" && (
               <ScrollView
                 style={{ flex: 1 }}
@@ -343,35 +361,39 @@ const MiRed = ({ navigation }) => {
                   />
                 }
               >
-                {pending.length > 0 ? (
-                  pending.map((pending, index) => (
-                    <Solicitudes
-                      key={index}
-                      objectID={pending.id}
-                      userID={pending.user_id}
-                      nombre={titleCase(pending.full_name)}
-                      imagen={
-                        pending.avatar ? pending.avatar : imageMap["Blank"]
-                      }
-                      mail={pending.email}
-                    />
-                  ))
-                ) : (
-                  <Text
-                    style={{
-                      marginTop: 150,
-                      fontSize: 16,
-                      fontFamily: "opensans",
-                      color: "#060B4D",
-                      textAlign: "center",
-                    }}
-                  >
-                    No tienes solicitudes por ser aceptadas
-                  </Text>
-                )}
+                {/* Se mapean los resultados de la API y se muestran con su componente */}
+                {pending.length > 0
+                  ? pending.map((pending, index) => (
+                      <Solicitudes
+                        key={index}
+                        objectID={pending.id}
+                        userID={pending.user_id}
+                        nombre={titleCase(pending.full_name)}
+                        imagen={
+                          pending.avatar ? pending.avatar : imageMap["Blank"]
+                        }
+                        mail={pending.email}
+                      />
+                    ))
+                  : {
+                      /* Si no hay resultados mostrar un mensaje de que no hay solicitudes pendientes */
+                    }(
+                      <Text
+                        style={{
+                          marginTop: 150,
+                          fontSize: 16,
+                          fontFamily: "opensans",
+                          color: "#060B4D",
+                          textAlign: "center",
+                        }}
+                      >
+                        No tienes solicitudes por ser aceptadas
+                      </Text>
+                    )}
               </ScrollView>
             )}
 
+            {/* Si el estado es Invitaciones se llama a la API y muestran los resulados de las invitaciones pendientes del usuario */}
             {focus === "Invitaciones" && (
               <ScrollView
                 style={{ flex: 1 }}
@@ -384,79 +406,41 @@ const MiRed = ({ navigation }) => {
                   />
                 }
               >
-                {invitations.length > 0 ? (
-                  invitations.map((invitation, index) => (
-                    <Invitaciones
-                      key={index}
-                      userID={invitation.user_id}
-                      objectID={invitation.id}
-                      nombre={titleCase(invitation.full_name)}
-                      imagen={
-                        invitation.avatar
-                          ? invitation.avatar
-                          : imageMap["Blank"]
-                      }
-                      mail={invitation.email}
-                    />
-                  ))
-                ) : (
-                  <Text
-                    style={{
-                      marginTop: 150,
-                      fontSize: 16,
-                      fontFamily: "opensans",
-                      color: "#060B4D",
-                      textAlign: "center",
-                    }}
-                  >
-                    No tienes invitaciones pendientes
-                  </Text>
-                )}
+                {/* Se mapean los resultados de la API y se muestran con su componente */}
+                {invitations.length > 0
+                  ? invitations.map((invitation, index) => (
+                      <Invitaciones
+                        key={index}
+                        userID={invitation.user_id}
+                        objectID={invitation.id}
+                        nombre={titleCase(invitation.full_name)}
+                        imagen={
+                          invitation.avatar
+                            ? invitation.avatar
+                            : imageMap["Blank"]
+                        }
+                        mail={invitation.email}
+                      />
+                    ))
+                  : {
+                      /* Si no hay resultados mostrar un mensaje de que no hay invitaciones pendientes */
+                    }(
+                      <Text
+                        style={{
+                          marginTop: 150,
+                          fontSize: 16,
+                          fontFamily: "opensans",
+                          color: "#060B4D",
+                          textAlign: "center",
+                        }}
+                      >
+                        No tienes invitaciones pendientes
+                      </Text>
+                    )}
               </ScrollView>
             )}
           </>
         )}
-
-        {/*<TouchableOpacity
-        style={styles.administrar}
-        onPress={() => navigation.navigate("SolicitudesConexion")}
-      >
-        <Text style={styles.texto}>Administar mi Red</Text>
-        <Text style={styles.subTexto}>3 conexiones nuevas</Text>
-        <AntDesign
-          name="arrowright"
-          size={30}
-          color="#29364d"
-          style={styles.arrow}
-        />
-      </TouchableOpacity>
-      <ScrollView style={styles.scroll}>
-        <Notificacion
-          nombre="Natahsa Ocasio Romanoff"
-          body="ha dado me gusta a tu ultima publicación."
-          imagen={imageMap["Natasha"]}
-          tiempo="45 minutos"
-        />
-        <Notificacion
-          nombre="Jose Antonio Quill"
-          body="ha dado me gusta a tu ultima publicación."
-          imagen={imageMap["Quill"]}
-          tiempo="1 hora"
-        />
-        <Notificacion
-          nombre="Clint Branton López"
-          body="ha dado me gusta a tu ultima publicación."
-          imagen={imageMap["Clint"]}
-          tiempo="1 hora"
-        />
-        <Notificacion
-          nombre="Clint Branton López"
-          body="ha comentado en tu ultima publicación."
-          imagen={imageMap["Clint"]}
-          tiempo="1 hora"
-        />
-        */}
-        {/*</ScrollView>*/}
       </View>
     </TouchableWithoutFeedback>
   );

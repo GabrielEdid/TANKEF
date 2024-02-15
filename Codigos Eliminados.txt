@@ -1,3 +1,6 @@
+Pantalla Incio
+
+
 Lista de Datos de Red del Usuario en Inicio 
 
     <ScrollView
@@ -10,6 +13,24 @@ Lista de Datos de Red del Usuario en Inicio
     <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
     <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
     </ScrollView>
+
+
+Jalar los textos de los banners
+
+    useEffect(() => {
+    const fetchBanners = async () => {
+        const url =
+        "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/banners";
+        try {
+        const response = await axios.get(url);
+        setBanners(response.data.data);
+        } catch (error) {
+        console.error("Error:", error);
+        }
+    };
+
+    fetchBanners();
+    }, []);
 
 
 Anuncio para Invertir en Inicio
@@ -60,3 +81,101 @@ Anuncio para hacer un Crédito en Inicio
         </Text>
     </LinearGradient>
     </TouchableOpacity> 
+
+
+Estilos de lo anterior en pantalla Inicio
+
+  scrollH: {
+    height: 110,
+    width: "100%",
+    paddingTop: 6,
+    position: "absolute",
+  },
+  cuadroInvertir: {
+    flexDirection: "row",
+    backgroundColor: "#060B4D",
+    alignContent: "center",
+    height: 80,
+    width: "100%",
+    top: 115,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cuadroCredito: {
+    flexDirection: "row",
+    backgroundColor: "#F1F5F9",
+    alignSelf: "center",
+    height: 80,
+    width: "100%",
+    top: 125,
+    borderRadius: 15,
+    borderColor: "#D5D5D5",
+    borderWidth: 1.5,
+    marginBottom: 140,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  texto: {
+    fontSize: 12,
+    color: "white",
+    alignContent: "center",
+    marginHorizontal: 20,
+    width: "52%",
+    alignSelf: "center",
+    flex: 2,
+  },
+  botonGradient: {
+    justifyContent: "center",
+    width: "100%",
+    height: 38,
+    flex: 1.4,
+    right: 10,
+    borderRadius: 15,
+  },
+
+
+Pantalla  Mi Red
+
+Mostrar Notificaciones y botones de navegacion a otras pantallas dejadas
+
+    <TouchableOpacity
+    style={styles.administrar}
+    onPress={() => navigation.navigate("SolicitudesConexion")}
+    >
+    <Text style={styles.texto}>Administar mi Red</Text>
+    <Text style={styles.subTexto}>3 conexiones nuevas</Text>
+    <AntDesign
+        name="arrowright"
+        size={30}
+        color="#29364d"
+        style={styles.arrow}
+    />
+    </TouchableOpacity>
+    <ScrollView style={styles.scroll}>
+    <Notificacion
+        nombre="Natahsa Ocasio Romanoff"
+        body="ha dado me gusta a tu ultima publicación."
+        imagen={imageMap["Natasha"]}
+        tiempo="45 minutos"
+    />
+    <Notificacion
+        nombre="Jose Antonio Quill"
+        body="ha dado me gusta a tu ultima publicación."
+        imagen={imageMap["Quill"]}
+        tiempo="1 hora"
+    />
+    <Notificacion
+        nombre="Clint Branton López"
+        body="ha dado me gusta a tu ultima publicación."
+        imagen={imageMap["Clint"]}
+        tiempo="1 hora"
+    />
+    <Notificacion
+        nombre="Clint Branton López"
+        body="ha comentado en tu ultima publicación."
+        imagen={imageMap["Clint"]}
+        tiempo="1 hora"
+    />
+    </ScrollView>
+

@@ -25,7 +25,7 @@ import ModalPost from "../../components/ModalPost";
 
 const Inicio = () => {
   // Estados y Contexto
-  const { user, setUser } = useContext(UserContext); // Contexto
+  const { user, setUser } = useContext(UserContext); // Contexto de Usuario
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -118,21 +118,6 @@ const Inicio = () => {
       setPage(1); // Reinicia a la primera página
     });
   }, []);
-
-  /*useEffect(() => {
-    const fetchBanners = async () => {
-      const url =
-        "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/banners";
-      try {
-        const response = await axios.get(url);
-        setBanners(response.data.data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    fetchBanners();
-  }, []);*/
 
   // Componente visual
   return (
@@ -341,55 +326,6 @@ const styles = StyleSheet.create({
   activityIndicatorContainer: {
     paddingVertical: 20,
   },
-  // Estilos de lo que se ha eliminado
-  /*scrollH: {
-    height: 110,
-    width: "100%",
-    paddingTop: 6,
-    position: "absolute",
-  },
-  cuadroInvertir: {
-    flexDirection: "row",
-    backgroundColor: "#060B4D",
-    alignContent: "center",
-    height: 80,
-    width: "100%",
-    top: 115,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  cuadroCredito: {
-    flexDirection: "row",
-    backgroundColor: "#F1F5F9",
-    alignSelf: "center",
-    height: 80,
-    width: "100%",
-    top: 125,
-    borderRadius: 15,
-    borderColor: "#D5D5D5",
-    borderWidth: 1.5,
-    marginBottom: 140,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  texto: {
-    fontSize: 12,
-    color: "white",
-    alignContent: "center",
-    marginHorizontal: 20,
-    width: "52%",
-    alignSelf: "center",
-    flex: 2,
-  },
-  botonGradient: {
-    justifyContent: "center",
-    width: "100%",
-    height: 38,
-    flex: 1.4,
-    right: 10,
-    borderRadius: 15,
-  },*/
 });
 
 export default Inicio;
