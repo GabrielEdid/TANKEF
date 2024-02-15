@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
   RefreshControl,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -22,10 +23,10 @@ import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../hooks/UserContext";
 import Comment from "../../components/Comment";
 import { APIDelete, APIPost, APIGet } from "../../API/APIService";
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
-import { set } from "date-fns";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 const VerPosts = ({ route, navigation }) => {
+  // Variables pasados de la pantalla anterior
   const {
     postId,
     tipo,
@@ -40,7 +41,7 @@ const VerPosts = ({ route, navigation }) => {
     liked,
     remove,
   } = route.params;
-  // Estados del Componente
+  // Estados de la pantalla
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
@@ -54,7 +55,7 @@ const VerPosts = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const { user, setUser } = React.useContext(UserContext);
+  const { user, setUser } = useContext(UserContext); // Contexto del Usuario
 
   // Mapa para cargar todas las imagenes que se necesiten
   const imageMap = {
@@ -64,6 +65,7 @@ const VerPosts = ({ route, navigation }) => {
     // ... más imágenes
   };
 
+  // Funcion para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
     return str
       .toLowerCase()
@@ -74,6 +76,7 @@ const VerPosts = ({ route, navigation }) => {
       .join(" ");
   }
 
+  // Funcion para obtener los comentarios de la publicación, maneja la paginación
   const fetchComments = async (currentPage) => {
     const url = `/api/v1/posts/${postId}/comments?page=${currentPage}`;
     console.log("Fetching comments from:", url);
@@ -99,11 +102,13 @@ const VerPosts = ({ route, navigation }) => {
     setIsFetchingMore(false);
   };
 
+  // Funcion para manejar la paginacion de comments
   useEffect(() => {
     setIsLoading(true);
     fetchComments(1);
   }, []);
 
+  // Efecto para manejar el refresco de la pantalla y comments
   useFocusEffect(
     useCallback(() => {
       setPage(1); // Asegura reiniciar la paginación
@@ -111,6 +116,7 @@ const VerPosts = ({ route, navigation }) => {
     }, [])
   );
 
+  // Funcion para manejar el refresco de la pantalla
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
     fetchComments(1).then(() => {
@@ -119,6 +125,7 @@ const VerPosts = ({ route, navigation }) => {
     });
   }, []);
 
+  // Funcion para manejar la carga de más comments
   const handleLoadMore = () => {
     if (!isFetchingMore) {
       setIsFetchingMore(true);
@@ -128,6 +135,7 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
+  // Funcion para determinar si el usuario ha llegado al final de la pantalla
   const isCloseToBottom = ({
     layoutMeasurement,
     contentOffset,
@@ -140,6 +148,7 @@ const VerPosts = ({ route, navigation }) => {
     );
   };
 
+  // Funcion para publicar un comentario
   const postComment = async () => {
     const url = "/api/v1/comments";
     const data = {
@@ -164,6 +173,7 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
+  // Funcion para manejar las reacciones de los usuarios, se verifica si existe la reacción del usuario, si existe se elimina, si no se crea.
   const handleReaction = async () => {
     if (!like) {
       // Intentar dar like
@@ -215,6 +225,7 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
+  // Funcion para eliminar un post
   const deletePost = async () => {
     const url = `/api/v1/posts/${postId}`;
     const response = await APIDelete(url);
@@ -228,6 +239,7 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
+  // Si el post fue eliminado, no se muestra nada
   if (!isVisible) {
     return null;
   }
@@ -235,10 +247,8 @@ const VerPosts = ({ route, navigation }) => {
   // Para manejar las imagenes usadas en las publicaciones
   let imageSource;
   if (typeof imagen === "string") {
-    // Assuming it's a URL for a network image
     imageSource = { uri: imagen };
   } else {
-    // Assuming it's a local image requiring require()
     imageSource = imagen;
   }
 
@@ -261,11 +271,7 @@ const VerPosts = ({ route, navigation }) => {
     setImageSize({ width: newWidth, height: newHeight });
   };
 
-  // Calculo del porcentaje de la barra de progreso para un Credito
-  //const porcentaje =
-  //parseFloat(props.contribuidos) / parseFloat(props.solicitado);
-
-  // Funcion para mostrar el texto completo con Ver Más
+  // Funcion para mostrar el texto completo con boton de Ver Más
   const toggleShowFullText = () => {
     setShowFullText(!showFullText);
   };
@@ -283,10 +289,9 @@ const VerPosts = ({ route, navigation }) => {
 
   // Componente visual
   return (
-    // Cuadro del Post
     <>
+      {/* Titulo y Boton de Notificaciones */}
       <View style={styles.tituloContainer}>
-        {/* Titulo */}
         <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
@@ -307,6 +312,8 @@ const VerPosts = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
+
+      {/* Scroll View con el contenido de la pantalla, contiene un refresh control */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAwareScrollView
           resetScrollToCoords={{ x: 0, y: 0 }}
@@ -324,7 +331,6 @@ const VerPosts = ({ route, navigation }) => {
           }}
           scrollEventThrottle={400}
           refreshControl={
-            // Aquí agregas el RefreshControl
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={onRefresh}
@@ -333,7 +339,7 @@ const VerPosts = ({ route, navigation }) => {
             />
           }
         >
-          {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
+          {/* Header del Post, Incluye Foto, Nombre y Tiempo */}
           <View style={styles.header}>
             <Image source={foto} style={styles.fotoPerfil} />
             <View style={styles.headerText}>
@@ -342,7 +348,7 @@ const VerPosts = ({ route, navigation }) => {
             </View>
           </View>
 
-          {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
+          {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto */}
           {tipo === "compartir" && (
             <>
               <Text style={styles.textoBody}>{displayedText}</Text>
@@ -367,53 +373,9 @@ const VerPosts = ({ route, navigation }) => {
             </>
           )}
 
-          {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
-      {tipo === "credito" && (
-        <>
-          <Text style={styles.titulo}>{props.titulo}</Text>
-          <Text style={styles.textoBody}>{displayedText}</Text>
-          {needsMoreButton && (
-            <TouchableOpacity onPress={toggleShowFullText}>
-              <Text style={styles.verMas}>Ver Más</Text>
-            </TouchableOpacity>
-          )}
-          <Text style={styles.textSolicitado}>
-            Credito Solicitado: ${props.solicitado}
-          </Text>
-          <ProgressBar progress={porcentaje} />
-          <Text style={styles.textContribuidos}>
-            Contribuidos: ${props.contribuidos}
-          </Text>
-          <TouchableOpacity style={styles.cuadroGradient}>
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }} // Inicio del gradiente
-              end={{ x: 0, y: 0 }} // Fin del gradiente
-              style={styles.gradient}
-            >
-              <Text
-                style={{ fontFamily: "conthrax", color: "white", fontSize: 17 }}
-              >
-                CONTRIBUIR
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </>
-      )} */}
-
-          {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
-      {tipo === "invertir" && (
-        <>
-          <Text style={styles.titulo}>¡Realice una Inversión!</Text>
-          <Text style={styles.textoBody}>
-            Acabo de hacer una inversión en Tankef con un rendimiento de{" "}
-            <Text style={{ fontWeight: "bold" }}>{props.body}</Text>
-          </Text>
-        </>
-      )} */}
-
-          {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
+          {/* Cuador con boton de Like, numero de likes y numero de comments */}
           <View style={styles.interactionContainer}>
+            {/* Vista sobre Likes */}
             <View style={{ flex: 1, flexDirection: "row" }}>
               <TouchableOpacity onPress={() => handleReaction()}>
                 <Image
@@ -437,8 +399,9 @@ const VerPosts = ({ route, navigation }) => {
                 {likeCount} reacciones
               </Text>
             </View>
-            {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
-            <TouchableOpacity>
+
+            {/* Vista sobre comments */}
+            <View>
               <Text
                 style={{
                   fontSize: 13,
@@ -449,29 +412,51 @@ const VerPosts = ({ route, navigation }) => {
               >
                 {commentCount} comentarios
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
+
+          {/* Linea divisoria */}
           <View style={styles.linea} />
+
+          {/* Contender de los cometarios de la publicación, se maneja si no hay comments */}
           <View style={styles.commentContainer}>
-            {comments.map((comment, index) => (
-              <Comment
-                key={index}
-                commentId={comment.id}
-                nombre={
-                  titleCase(comment.user.name) +
-                  " " +
-                  titleCase(comment.user.first_last_name) +
-                  " " +
-                  titleCase(comment.user.second_last_name)
-                }
-                body={comment.body}
-                imagen={comment.user.avatar}
-                personal={comment.user.id === user.userID}
-                count={commentCount}
-                setCount={setCommentCount}
-              />
-            ))}
+            {/* Se mapean los comentarios y se distribuyen en su componente */}
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <Comment
+                  key={index}
+                  commentId={comment.id}
+                  nombre={
+                    titleCase(comment.user.name) +
+                    " " +
+                    titleCase(comment.user.first_last_name) +
+                    " " +
+                    titleCase(comment.user.second_last_name)
+                  }
+                  body={comment.body}
+                  imagen={comment.user.avatar}
+                  personal={comment.user.id === user.userID}
+                  count={commentCount}
+                  setCount={setCommentCount}
+                />
+              ))
+            ) : (
+              // Si no hay comentarios, se muestra un mensaje
+              <View
+                style={{
+                  marginTop: imagen ? 50 : 150,
+                  alignSelf: "center",
+                }}
+              >
+                <Text style={styles.textoMensaje}>
+                  Esta publicación no tiene comentarios.{"\n"}¡Se el primero en
+                  comentar!
+                </Text>
+              </View>
+            )}
           </View>
+
+          {/* Boton para cargar más comentarios, tambien se muestra un activity indicator */}
           {isFetchingMore ? (
             <ActivityIndicator size="small" color="#060B4D" />
           ) : (
@@ -490,6 +475,8 @@ const VerPosts = ({ route, navigation }) => {
               </Text>
             </TouchableOpacity>
           )}
+
+          {/* Input para escribir un comentario */}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -513,6 +500,7 @@ const VerPosts = ({ route, navigation }) => {
               />
             </TouchableOpacity>
           </View>
+
           {/* Modal y Tres puntos para eliminar o reportar publicación  */}
           <TouchableOpacity
             style={styles.opciones}
@@ -520,6 +508,7 @@ const VerPosts = ({ route, navigation }) => {
           >
             <Text style={styles.tresPuntos}>...</Text>
           </TouchableOpacity>
+          {/* Modal para eliminar o reportar publicación, se maneja si el post es propio o no */}
           <Modal
             animationType="slide"
             transparent={true}
@@ -625,10 +614,10 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginTop: 10,
-    backgroundColor: "black", // Fondo negro para el espacio sobrante
-    alignItems: "center", // Centrar la imagen horizontalmente
-    justifyContent: "center", // Centrar la imagen verticalmente
-    width: "100%", // Ancho total del contenedor
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   imagen: {
     alignSelf: "center",
@@ -663,6 +652,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 5,
   },
+  textoMensaje: {
+    textAlign: "center",
+    color: "grey",
+    width: 300,
+    fontSize: 15,
+    fontFamily: "opensans",
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -690,37 +686,6 @@ const styles = StyleSheet.create({
   activityIndicatorContainer: {
     paddingVertical: 20,
   },
-  /*  ESTILOS DE LOS OTROS TIPOS DE POST
-  textSolicitado: {
-    fontSize: 13,
-    marginBottom: -10,
-    left: 5,
-    color: "#060B4D",
-    marginTop: 10,
-  },
-  textContribuidos: {
-    fontSize: 13,
-    left: 5,
-    top: -5,
-    color: "#060B4D",
-    marginTop: 10,
-  },
-  cuadroGradient: {
-    width: 317,
-    height: 34,
-    alignSelf: "center",
-    borderRadius: 15,
-    top: 5,
-    marginBottom: 5,
-  },
-  gradient: {
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    width: 317,
-    height: 34,
-    borderRadius: 15,
-  },*/
   // Estilos para el Modal que aparece si se presionan los 3 puntos
   fullScreenButton: {
     position: "absolute",

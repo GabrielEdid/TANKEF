@@ -541,4 +541,84 @@ Estilos de lo anterior
     }, 
 
 
+Pantalla VerPerfiles
 
+Manejo de los Posts de Invertir y Credito
+{/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
+    {tipo === "credito" && (
+    <>
+        <Text style={styles.titulo}>{props.titulo}</Text>
+        <Text style={styles.textoBody}>{displayedText}</Text>
+        {needsMoreButton && (
+        <TouchableOpacity onPress={toggleShowFullText}>
+            <Text style={styles.verMas}>Ver Más</Text>
+        </TouchableOpacity>
+        )}
+        <Text style={styles.textSolicitado}>
+        Credito Solicitado: ${props.solicitado}
+        </Text>
+        <ProgressBar progress={porcentaje} />
+        <Text style={styles.textContribuidos}>
+        Contribuidos: ${props.contribuidos}
+        </Text>
+        <TouchableOpacity style={styles.cuadroGradient}>
+        <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 1, y: 1 }} // Inicio del gradiente
+            end={{ x: 0, y: 0 }} // Fin del gradiente
+            style={styles.gradient}
+        >
+            <Text
+            style={{ fontFamily: "conthrax", color: "white", fontSize: 17 }}
+            >
+            CONTRIBUIR
+            </Text>
+        </LinearGradient>
+        </TouchableOpacity>
+    </>
+    )} */}
+
+        {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
+    {tipo === "invertir" && (
+    <>
+        <Text style={styles.titulo}>¡Realice una Inversión!</Text>
+        <Text style={styles.textoBody}>
+        Acabo de hacer una inversión en Tankef con un rendimiento de{" "}
+        <Text style={{ fontWeight: "bold" }}>{props.body}</Text>
+        </Text>
+    </>
+    )} */}
+
+
+Estilos de lo anterior
+
+  textSolicitado: {
+    fontSize: 13,
+    marginBottom: -10,
+    left: 5,
+    color: "#060B4D",
+    marginTop: 10,
+  },
+  textContribuidos: {
+    fontSize: 13,
+    left: 5,
+    top: -5,
+    color: "#060B4D",
+    marginTop: 10,
+  },
+  cuadroGradient: {
+    width: 317,
+    height: 34,
+    alignSelf: "center",
+    borderRadius: 15,
+    top: 5,
+    marginBottom: 5,
+  },
+  gradient: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    width: 317,
+    height: 34,
+    borderRadius: 15,
+  },

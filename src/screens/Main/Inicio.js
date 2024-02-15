@@ -191,60 +191,59 @@ const Inicio = () => {
         >
           {/* Se verifica que los posts esten cargados, no este cargando y que hayan posts */}
           {!isLoading &&
-            (posts.length !== 0
-              ? posts.map((post, index) => (
-                  <View style={{ backgroundColor: "white" }}>
-                    <Post
-                      key={index}
-                      postId={post.id}
-                      tipo={"compartir"}
-                      nombre={
-                        titleCase(post.user.name) +
-                        " " +
-                        titleCase(post.user.first_last_name) +
-                        " " +
-                        titleCase(post.user.second_last_name)
-                      } // Reemplazar con datos reales si están disponibles
-                      tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
-                      foto={
-                        post.user.avatar
-                          ? { uri: post.user.avatar }
-                          : imageMap["Blank"]
-                      } // Reemplazar con datos reales si están disponibles
-                      body={post.body}
-                      comentarios={post.count_comments}
-                      reacciones={post.count_reactions}
-                      personal={post.user.id === user.userID ? true : false}
-                      imagen={post.image}
-                      liked={post["liked?"]}
-                    />
-                  </View>
-                ))
-              : {
-                  /* Si no hay posts se da un mensaje */
-                }(
-                  <View
-                    style={{
-                      paddingHorizontal: 40,
-                      paddingVertical: 250,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontFamily: "opensans",
-                        textAlign: "center",
-                        color: "#060B4D",
-                      }}
-                    >
-                      ¡Bienvenido a{" "}
-                      <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>
-                      , recuerda que entre más amigos, familiares y socios,
-                      mayores beneficios reciben todos! Para comenzar empieza
-                      por contarnos en que estas pensando...
-                    </Text>
-                  </View>
-                ))}
+            (posts.length !== 0 ? (
+              posts.map((post, index) => (
+                <View style={{ backgroundColor: "white" }}>
+                  <Post
+                    key={index}
+                    postId={post.id}
+                    tipo={"compartir"}
+                    nombre={
+                      titleCase(post.user.name) +
+                      " " +
+                      titleCase(post.user.first_last_name) +
+                      " " +
+                      titleCase(post.user.second_last_name)
+                    } // Reemplazar con datos reales si están disponibles
+                    tiempo={post.created_at} // Reemplazar con datos reales si están disponibles
+                    foto={
+                      post.user.avatar
+                        ? { uri: post.user.avatar }
+                        : imageMap["Blank"]
+                    } // Reemplazar con datos reales si están disponibles
+                    body={post.body}
+                    comentarios={post.count_comments}
+                    reacciones={post.count_reactions}
+                    personal={post.user.id === user.userID ? true : false}
+                    imagen={post.image}
+                    liked={post["liked?"]}
+                  />
+                </View>
+              ))
+            ) : (
+              /* Si no hay posts se da un mensaje */
+              <View
+                style={{
+                  paddingHorizontal: 40,
+                  paddingVertical: 250,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "opensans",
+                    textAlign: "center",
+                    color: "#060B4D",
+                  }}
+                >
+                  ¡Bienvenido a{" "}
+                  <Text style={{ fontFamily: "opensansbold" }}>Tankef</Text>,
+                  recuerda que entre más amigos, familiares y socios, mayores
+                  beneficios reciben todos! Para comenzar empieza por contarnos
+                  en que estas pensando...
+                </Text>
+              </View>
+            ))}
 
           {/* Si se está cargando más posts se muestra un ActivityIndicator */}
           {isFetchingMore && (
