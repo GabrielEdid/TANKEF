@@ -178,17 +178,20 @@ const Perfil = () => {
         </View>
 
         {/* Lista de Datos de Red del Usuario */}
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={styles.scrollH}
-        >
-          <CuadroRedUsuario titulo="Conexiones" body={user.conexiones} />
-          <CuadroRedUsuario titulo="Valor de Red" body="$253,500.00" />
-          <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
-          <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
-          <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
-        </ScrollView>
+        <View style={styles.datosUsuario}>
+          <View>
+            <Text style={styles.textoConcepto}>Conexiones</Text>
+            <Text style={styles.textoValor}>{user.conexiones}</Text>
+          </View>
+          <View>
+            <Text style={styles.textoConcepto}>Publicaciones</Text>
+            <Text style={styles.textoValor}>{posts.length}</Text>
+          </View>
+          <View>
+            <Text style={styles.textoConcepto}>Valor de Red</Text>
+            <Text style={styles.textoValor}>$120,000.00</Text>
+          </View>
+        </View>
 
         {/* View de LogIn Gradual */}
         <TouchableOpacity
@@ -325,11 +328,25 @@ const styles = StyleSheet.create({
     marginTop: 3,
     flex: 1,
   },
-  scrollH: {
+  datosUsuario: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 3,
     backgroundColor: "white",
     paddingVertical: 10,
     paddingHorizontal: 20,
+  },
+  textoConcepto: {
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+    fontSize: 14,
+    textAlign: "center",
+  },
+  textoValor: {
+    textAlign: "center",
+    color: "#060B4D",
+    fontFamily: "opensans",
+    fontSize: 16,
   },
   fotoPerfil: {
     width: 80,
