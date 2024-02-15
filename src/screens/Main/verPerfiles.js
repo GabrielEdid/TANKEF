@@ -144,6 +144,7 @@ const VerPerfiles = ({ route }) => {
         avatar: response.data.profile.avatar
           ? response.data.profile.avatar
           : imageMap["Blank"],
+        conexiones: response.data.profile.count_conections,
         friend: response.data.profile.is_my_friend,
       });
 
@@ -267,6 +268,19 @@ const VerPerfiles = ({ route }) => {
                 userInfo.apellidoMaterno}
             </Text>
             <Text style={styles.textoMail}>{userInfo.mail}</Text>
+          </View>
+        </View>
+
+        <View style={{ height: 3, backgroundColor: "#F5F5F5" }} />
+        {/* Lista de Datos de Red del Usuario */}
+        <View style={styles.datosUsuario}>
+          <View>
+            <Text style={styles.textoConcepto}>Conexiones</Text>
+            <Text style={styles.textoValor}>{userInfo.conexiones}</Text>
+          </View>
+          <View>
+            <Text style={styles.textoConcepto}>Publicaciones</Text>
+            <Text style={styles.textoValor}>{posts.length}</Text>
           </View>
         </View>
 
@@ -466,6 +480,25 @@ const styles = StyleSheet.create({
     fontFamily: "opensans",
     fontSize: 14,
     marginLeft: 2,
+  },
+  datosUsuario: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    paddingVertical: 10,
+    paddingHorizontal: 80,
+  },
+  textoConcepto: {
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+    fontSize: 14,
+    textAlign: "center",
+  },
+  textoValor: {
+    textAlign: "center",
+    color: "#060B4D",
+    fontFamily: "opensans",
+    fontSize: 16,
   },
   buttonContainer: {
     marginHorizontal: 20,

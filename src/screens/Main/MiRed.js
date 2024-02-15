@@ -78,7 +78,7 @@ const MiRed = () => {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de la red:", filteredResults);
       setNetwork(filteredResults);
-      setUser({ ...user, conexiones: network.length });
+      setUser({ ...user, conexiones: filteredResults.length });
     }
     setIsLoading(false);
   };
