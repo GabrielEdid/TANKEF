@@ -10,7 +10,7 @@ import {
   Alert,
   RefreshControl,
 } from "react-native";
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -22,8 +22,8 @@ import { UserContext } from "../../hooks/UserContext";
 import Post from "../../components/Post";
 
 const VerPerfiles = ({ route }) => {
+  // Estados locales y contexto
   const { userID } = route.params;
-  const { user, setUser } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
@@ -32,6 +32,7 @@ const VerPerfiles = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userInfo, setUserInfo] = useState({
+    // Estado para la información del usuario que se esta visitando
     nombre: "",
     apellidoPaterno: "",
     apellidoMaterno: "",
@@ -46,6 +47,8 @@ const VerPerfiles = ({ route }) => {
     // ... más imágenes
   };
 
+  // Función para verificar si el usuario loogeado ya solicito al usuario que se esta visitando y cambiar el estado del boton de solicitud
+  // Se llama al renderizar la pantalla
   useFocusEffect(
     useCallback(() => {
       const checkPendingRequests = async () => {
@@ -71,6 +74,7 @@ const VerPerfiles = ({ route }) => {
     }, [])
   );
 
+  // Función para enviar una solicitud de amistad al usuario que se esta visitando
   const postRequest = async () => {
     const url = "/api/v1/friendship_request";
     const data = {
@@ -93,6 +97,8 @@ const VerPerfiles = ({ route }) => {
     }
   };
 
+  // Función para eliminar la solicitud de amistad al usuario que se esta visitando
+  // Se verifica si existe una solicitud pendiente, se obtiene el ID del pending request y se elimina
   const deleteRequest = async () => {
     const urlFetchPending = `/api/v1/network/requests_pending`;
 
@@ -119,6 +125,7 @@ const VerPerfiles = ({ route }) => {
     setIsLoading(false);
   };
 
+  // Función para obtener los posts del usuario que se esta visitando, se maneja la paginación
   const fetchUserPosts = async (currentPage) => {
     setIsFetchingMore(true);
     const url = `/api/v1/users/${userID}/posts?page=${currentPage}`;
@@ -157,18 +164,21 @@ const VerPerfiles = ({ route }) => {
     setIsFetchingMore(false);
   };
 
+  // Función para obtener los posts del usuario que se esta visitando al cargar la pantalla
   useFocusEffect(
     useCallback(() => {
       fetchUserPosts(page);
     }, [page])
   );
 
+  // Función para manejar la paginación
   const handleLoadMore = () => {
     if (!isFetchingMore) {
       setPage((prevPage) => prevPage + 1);
     }
   };
 
+  // Función para verificar si el usuario esta cerca del final de la pantalla
   const isCloseToBottom = ({
     layoutMeasurement,
     contentOffset,
@@ -181,6 +191,7 @@ const VerPerfiles = ({ route }) => {
     );
   };
 
+  // Función para manejar el refresh de la pantalla con el RefreshControl
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
     fetchUserPosts(1).then(() => {
@@ -203,8 +214,8 @@ const VerPerfiles = ({ route }) => {
   // Componente visual
   return (
     <>
+      {/* Titulo y Campanita */}
       <View style={styles.tituloContainer}>
-        {/* Titulo */}
         <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
@@ -225,6 +236,8 @@ const VerPerfiles = ({ route }) => {
           />
         </TouchableOpacity>
       </View>
+
+      {/* Scroll principal */}
       <ScrollView
         style={styles.scrollV}
         onScroll={({ nativeEvent }) => {
@@ -256,6 +269,8 @@ const VerPerfiles = ({ route }) => {
             <Text style={styles.textoMail}>{userInfo.mail}</Text>
           </View>
         </View>
+
+        {/* Boton para Conectar, si no son amigos se muestra, si son amigos no se muestra */}
         {!userInfo.friend ? (
           <View style={styles.buttonContainer}>
             {estado === "inicial" && (
@@ -280,22 +295,12 @@ const VerPerfiles = ({ route }) => {
         ) : (
           <View style={{ height: 3, backgroundColor: "#f2f2f2ff" }} />
         )}
-        {/* Lista de Datos de Red del Usuario 
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={styles.scrollH}
-        >
-          <CuadroRedUsuario titulo="Conexiones" body="75" />
-          <CuadroRedUsuario titulo="Valor de Red" body="$253,500.00" />
-          <CuadroRedUsuario titulo="Mi Crédito" body="$15,000.00" />
-          <CuadroRedUsuario titulo="Mi Inversión" body="$15,000.00" />
-          <CuadroRedUsuario titulo="Obligado Solidario" body="$7,500.00" />
-        </ScrollView> */}
-        {/* View de los Posts del Usuario */}
+
+        {/* View de los Posts del Usuario Visitado, se verifica que hayan posts */}
         {userInfo.friend === true && posts.length > 0 && (
           <View style={{ marginTop: 15 }}>
             {!isLoading &&
+              // Se mapean los posts del usuario visitado para mostrarlos en la pantalla
               posts.map((post) => (
                 <Post
                   postID={post.id}
@@ -321,6 +326,8 @@ const VerPerfiles = ({ route }) => {
               ))}
           </View>
         )}
+
+        {/* Mensaje si el usuario no tiene publicaciones */}
         {userInfo.friend === true && posts.length === 0 && (
           <View
             style={{
@@ -333,6 +340,8 @@ const VerPerfiles = ({ route }) => {
             </Text>
           </View>
         )}
+
+        {/* Mensaje si el usuario no esta en la red, solo se muestra eso */}
         {userInfo.friend === false && (
           <View
             style={{
@@ -359,7 +368,7 @@ const VerPerfiles = ({ route }) => {
         )}
       </ScrollView>
 
-      {/* Modal para mostrar si se presióna el boton de SOLICITUD ENVIADA*/}
+      {/* Modal para mostrar si se presióna el boton de SOLICITUD ENVIADA, es para manejar el cancelar la solicitud de conexion */}
       <Modal
         animationType="slide"
         transparent={true}
