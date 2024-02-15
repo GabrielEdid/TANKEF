@@ -1,8 +1,10 @@
+// Importaciones
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let token = "";
 
+// Funcion para estabelcer el token del usuario en el AsyncStorage
 export const setToken = async (newToken) => {
   token = newToken;
   try {
@@ -20,10 +22,12 @@ export const getToken = () => {
   return token;
 };
 
+// Se define la instancia de Axios
 const axiosInstance = axios.create({
   baseURL: "https://market-web-pr477-x6cn34axca-uc.a.run.app",
 });
 
+// Funcion para refrescar el token
 const refreshAPI = async () => {
   console.log("Refreshing token..." + getToken());
   try {
@@ -38,6 +42,7 @@ const refreshAPI = async () => {
   }
 };
 
+// Funcion para manejar las solicitudes a la API, ya sea GET, POST, PUT o DELETE
 const handleRequest = async (requestFunc) => {
   try {
     const response = await requestFunc();
@@ -59,6 +64,7 @@ const handleRequest = async (requestFunc) => {
   }
 };
 
+// Funcion para realizar solicitudes a la API de tipo GET
 export const APIGet = async (url) => {
   return handleRequest(() =>
     axiosInstance.get(url, {
@@ -67,6 +73,7 @@ export const APIGet = async (url) => {
   );
 };
 
+// Funcion para realizar solicitudes a la API de tipo POST
 export const APIPost = async (url, body) => {
   return handleRequest(() =>
     axiosInstance.post(url, body, {
@@ -75,6 +82,7 @@ export const APIPost = async (url, body) => {
   );
 };
 
+// Funcion para realizar solicitudes a la API de tipo PUT
 export const APIPut = async (url, body) => {
   return handleRequest(() =>
     axiosInstance.put(url, body, {
@@ -83,11 +91,12 @@ export const APIPut = async (url, body) => {
   );
 };
 
+// Funcion para realizar solicitudes a la API de tipo DELETE
 export const APIDelete = async (url, body = {}) => {
   return handleRequest(() =>
     axiosInstance.delete(url, {
       headers: { Authorization: `Bearer ${token}` },
-      data: body, // Incluyendo el cuerpo en la solicitud DELETE
+      data: body,
     })
   );
 };
