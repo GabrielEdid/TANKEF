@@ -11,16 +11,19 @@ import {
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 const CrearModal = ({ isVisible, onClose }) => {
-  const [modalY] = useState(new Animated.Value(300)); // Ajusta el valor inicial según la altura de tu modal
+  // Animación para el modal
+  const [modalY] = useState(new Animated.Value(300));
 
+  // Función para cerrar el modal
   const handleClose = () => {
     Animated.timing(modalY, {
       toValue: 300,
       duration: 500,
       useNativeDriver: true,
-    }).start(onClose); // Llama a onClose después de que la animación termine
+    }).start(onClose);
   };
 
+  // Efecto para mostrar el modal
   useEffect(() => {
     if (isVisible) {
       Animated.timing(modalY, {
@@ -31,12 +34,14 @@ const CrearModal = ({ isVisible, onClose }) => {
     }
   }, [isVisible, modalY]);
 
+  // Componente Visual
   return (
     <TouchableOpacity
       style={styles.fullScreenButton}
       activeOpacity={1}
       onPress={() => handleClose()}
     >
+      {/* Vista animada */}
       <Animated.View
         style={[
           styles.modalView,
@@ -45,7 +50,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           },
         ]}
       >
-        {/* Linea en la parte superior */}
+        {/* Linea en la parte superior para cerrar */}
         <TouchableOpacity onPress={() => handleClose()}>
           <View
             style={{
@@ -57,6 +62,7 @@ const CrearModal = ({ isVisible, onClose }) => {
             }}
           ></View>
         </TouchableOpacity>
+
         {/* Boton Invertir */}
         <TouchableOpacity
           style={styles.buttonModal}
@@ -65,6 +71,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           <FontAwesome5 name="money-bill-alt" size={30} color="#060B4D" />
           <Text style={styles.texto}>Invertir</Text>
         </TouchableOpacity>
+
         {/* Boton Crédito */}
         <TouchableOpacity
           style={styles.buttonModal}
@@ -73,6 +80,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           <FontAwesome name="credit-card" size={30} color="#060B4D" />
           <Text style={styles.texto}>Solicitar Crédito</Text>
         </TouchableOpacity>
+
         {/* Boton Ahorro */}
         <TouchableOpacity
           style={styles.buttonModal}
@@ -86,7 +94,7 @@ const CrearModal = ({ isVisible, onClose }) => {
   );
 };
 
-// Estilos para el Modal que aparece si se elimina una conexión
+// Estilos del Componente
 const styles = StyleSheet.create({
   fullScreenButton: {
     height: "100%",
@@ -94,14 +102,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "flex-end",
     backgroundColor: "rgba(0,0,0,0.5)",
-    bottom: 79, // Dejar espacio para el Tab Navigator
+    bottom: 79,
   },
   modalView: {
     position: "absolute",
     width: "100%",
     alignSelf: "center",
     justifyContent: "space-between",
-    zIndex: -1, // Poner detrás del TabNavigator
+    zIndex: -1,
     height: 250,
     backgroundColor: "white",
     borderTopEndRadius: 20,
