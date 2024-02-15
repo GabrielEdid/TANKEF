@@ -317,34 +317,33 @@ const MiRed = () => {
                 }
               >
                 {/* Se mapean los resultados de la API y se muestran con su componente */}
-                {network.length > 0
-                  ? network.map((network, index) => (
-                      <Conexion
-                        key={index}
-                        userID={network.id}
-                        nombre={titleCase(network.full_name)}
-                        imagen={
-                          network.avatar ? network.avatar : imageMap["Blank"]
-                        }
-                        mail={network.email}
-                      />
-                    ))
-                  : {
-                      /* Si no hay resultados mostrar un mensaje de que no hay miembros en la red */
-                    }(
-                      <Text
-                        style={{
-                          marginTop: 150,
-                          fontSize: 16,
-                          fontFamily: "opensans",
-                          color: "#060B4D",
-                          textAlign: "center",
-                        }}
-                      >
-                        No tienes miembros en tu red.{"\n"}¡Invita a tus amigos
-                        y conocidos!
-                      </Text>
-                    )}
+                {network.length > 0 ? (
+                  network.map((network, index) => (
+                    <Conexion
+                      key={index}
+                      userID={network.id}
+                      nombre={titleCase(network.full_name)}
+                      imagen={
+                        network.avatar ? network.avatar : imageMap["Blank"]
+                      }
+                      mail={network.email}
+                    />
+                  ))
+                ) : (
+                  /* Si no hay resultados mostrar un mensaje de que no hay miembros en la red */
+                  <Text
+                    style={{
+                      marginTop: 150,
+                      fontSize: 16,
+                      fontFamily: "opensans",
+                      color: "#060B4D",
+                      textAlign: "center",
+                    }}
+                  >
+                    No tienes miembros en tu red.{"\n"}¡Invita a tus amigos y
+                    conocidos!
+                  </Text>
+                )}
               </ScrollView>
             )}
 
@@ -362,34 +361,33 @@ const MiRed = () => {
                 }
               >
                 {/* Se mapean los resultados de la API y se muestran con su componente */}
-                {pending.length > 0
-                  ? pending.map((pending, index) => (
-                      <Solicitudes
-                        key={index}
-                        objectID={pending.id}
-                        userID={pending.user_id}
-                        nombre={titleCase(pending.full_name)}
-                        imagen={
-                          pending.avatar ? pending.avatar : imageMap["Blank"]
-                        }
-                        mail={pending.email}
-                      />
-                    ))
-                  : {
-                      /* Si no hay resultados mostrar un mensaje de que no hay solicitudes pendientes */
-                    }(
-                      <Text
-                        style={{
-                          marginTop: 150,
-                          fontSize: 16,
-                          fontFamily: "opensans",
-                          color: "#060B4D",
-                          textAlign: "center",
-                        }}
-                      >
-                        No tienes solicitudes por ser aceptadas
-                      </Text>
-                    )}
+                {pending.length > 0 ? (
+                  pending.map((pending, index) => (
+                    <Solicitudes
+                      key={index}
+                      objectID={pending.id}
+                      userID={pending.user_id}
+                      nombre={titleCase(pending.full_name)}
+                      imagen={
+                        pending.avatar ? pending.avatar : imageMap["Blank"]
+                      }
+                      mail={pending.email}
+                    />
+                  ))
+                ) : (
+                  /* Si no hay resultados mostrar un mensaje de que no hay solicitudes pendientes */
+                  <Text
+                    style={{
+                      marginTop: 150,
+                      fontSize: 16,
+                      fontFamily: "opensans",
+                      color: "#060B4D",
+                      textAlign: "center",
+                    }}
+                  >
+                    No tienes solicitudes por ser aceptadas
+                  </Text>
+                )}
               </ScrollView>
             )}
 
@@ -407,36 +405,35 @@ const MiRed = () => {
                 }
               >
                 {/* Se mapean los resultados de la API y se muestran con su componente */}
-                {invitations.length > 0
-                  ? invitations.map((invitation, index) => (
-                      <Invitaciones
-                        key={index}
-                        userID={invitation.user_id}
-                        objectID={invitation.id}
-                        nombre={titleCase(invitation.full_name)}
-                        imagen={
-                          invitation.avatar
-                            ? invitation.avatar
-                            : imageMap["Blank"]
-                        }
-                        mail={invitation.email}
-                      />
-                    ))
-                  : {
-                      /* Si no hay resultados mostrar un mensaje de que no hay invitaciones pendientes */
-                    }(
-                      <Text
-                        style={{
-                          marginTop: 150,
-                          fontSize: 16,
-                          fontFamily: "opensans",
-                          color: "#060B4D",
-                          textAlign: "center",
-                        }}
-                      >
-                        No tienes invitaciones pendientes
-                      </Text>
-                    )}
+                {invitations.length > 0 ? (
+                  invitations.map((invitation, index) => (
+                    <Invitaciones
+                      key={index}
+                      userID={invitation.user_id}
+                      objectID={invitation.id}
+                      nombre={titleCase(invitation.full_name)}
+                      imagen={
+                        invitation.avatar
+                          ? invitation.avatar
+                          : imageMap["Blank"]
+                      }
+                      mail={invitation.email}
+                    />
+                  ))
+                ) : (
+                  /* Si no hay resultados mostrar un mensaje de que no hay invitaciones pendientes */
+                  <Text
+                    style={{
+                      marginTop: 150,
+                      fontSize: 16,
+                      fontFamily: "opensans",
+                      color: "#060B4D",
+                      textAlign: "center",
+                    }}
+                  >
+                    No tienes invitaciones pendientes
+                  </Text>
+                )}
               </ScrollView>
             )}
           </>
