@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../hooks/UserContext";
 import { APIPost, APIDelete, APIGet } from "../API/APIService";
 import { AntDesign } from "@expo/vector-icons";
-import ProgressBar from "./Componentes Olvidados/ProgressBar";
+import ProgressBar from "./ProgressBar";
 
 const Post = (props) => {
   const navigation = useNavigation();

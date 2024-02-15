@@ -17,8 +17,8 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
-import CuadroRedUsuario from "../../components/Componentes Olvidados/CuadroRedUsuario";
-import ProgressBar from "../../components/Componentes Olvidados/ProgressBar";
+import CuadroRedUsuario from "../../components/CuadroRedUsuario";
+import ProgressBar from "../../components/ProgressBar";
 import { Feather } from "@expo/vector-icons";
 import Post from "../../components/Post";
 
