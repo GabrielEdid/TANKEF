@@ -180,6 +180,7 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
+  // Referencia para el input de comentarios (para enfocar el input al responder)
   const inputRef = useRef(null);
 
   // Esta función se llama cuando se presiona "Contestar" en un comentario
