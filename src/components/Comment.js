@@ -51,6 +51,11 @@ const Comment = (props) => {
           <View style={styles.nameAndBodyContainer}>
             <Text style={styles.textoNombre}>{props.nombre}</Text>
             <Text style={styles.textoBody}>{props.body}</Text>
+            <TouchableOpacity onPress={() => props.onReply(props.nombre)}>
+              <Text style={[styles.textoBody, { color: "grey", marginTop: 3 }]}>
+                Contestar
+              </Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}

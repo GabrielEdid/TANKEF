@@ -1,5 +1,11 @@
 // Importaciones de React Native y React
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import {
   View,
   Text,
@@ -45,6 +51,7 @@ const VerPosts = ({ route, navigation }) => {
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
+  const [replyingTo, setReplyingTo] = useState(null);
   const [like, setLike] = useState(liked);
   const [likeCount, setLikeCount] = useState(reacciones);
   const [comments, setComments] = useState([]);
@@ -171,6 +178,16 @@ const VerPosts = ({ route, navigation }) => {
       setCommentCount((prevCount) => prevCount + 1);
       fetchComments(page);
     }
+  };
+
+  const inputRef = useRef(null);
+
+  // Esta función se llama cuando se presiona "Contestar" en un comentario
+  const handleReply = (comment) => {
+    setReplyingTo(
+      titleCase(comment.user.name + " " + comment.user.first_last_name)
+    );
+    inputRef.current.focus();
   };
 
   // Funcion para manejar las reacciones de los usuarios, se verifica si existe la reacción del usuario, si existe se elimina, si no se crea.
@@ -438,6 +455,7 @@ const VerPosts = ({ route, navigation }) => {
                   personal={comment.user.id === user.userID}
                   count={commentCount}
                   setCount={setCommentCount}
+                  onReply={() => handleReply(comment)}
                 />
               ))
             ) : (
@@ -479,15 +497,20 @@ const VerPosts = ({ route, navigation }) => {
           {/* Input para escribir un comentario */}
           <View style={styles.inputContainer}>
             <TextInput
+              ref={inputRef}
               style={styles.input}
-              placeholder="Escribe un comentario..."
+              placeholder={
+                replyingTo
+                  ? `Respondiendo a ${replyingTo}...`
+                  : "Escribe un comentario..."
+              }
               placeholderTextColor="#D5D5D5"
               multiline={true}
               onChangeText={(text) => setComentario(text)}
               value={comentario}
               maxLength={300}
               onFocus={() => setIsFetchingMore(false)}
-              onBlur={() => setIsFetchingMore(true)}
+              onBlur={() => [setIsFetchingMore(true), setReplyingTo(null)]}
             />
             <TouchableOpacity
               style={styles.sendIcon}
