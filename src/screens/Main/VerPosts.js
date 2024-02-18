@@ -490,6 +490,7 @@ const VerPosts = ({ route, navigation }) => {
                   count={commentCount}
                   setCount={setCommentCount}
                   onReply={() => handleReply(comment)}
+                  replies={comment.replies}
                 />
               ))
             ) : (

@@ -10,21 +10,40 @@ import {
 } from "react-native";
 // Importaciones de Componentes
 import { APIDelete } from "../API/APIService";
+import { set } from "date-fns";
 
 const Comment = (props) => {
   // Estados y Contexto
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  const imageMap = {
+    Blank: require("../../assets/images/blankAvatar.jpg"),
+    // ... más imágenes
+  };
+
+  // Funcion para convertir la primera letra de cada palabra en mayúscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
 
   // Para cuando se desee eliminar el Comment
   const deleteComment = async () => {
     setIsVisible(false);
-    const url = `/api/v1/comments/${props.commentId}`;
+    const url = `/api/v1/comments/${deleteId}`;
 
     try {
       const response = await APIDelete(url);
       console.log("Comment Deleted:", response.data);
       setIsVisible(false);
+      setDeleteId(null);
       props.setCount(props.count - 1);
     } catch (error) {
       console.error("Error:", error);
@@ -43,6 +62,43 @@ const Comment = (props) => {
     // Assuming it's a local image requiring require()
     imageSource = props.imagen;
   }
+
+  const renderReplies = (replies) => {
+    return replies.map((reply) => {
+      let replyImageSource = reply.user.avatar
+        ? { uri: reply.user.avatar }
+        : imageMap["Blank"]; // Usa el avatar del usuario de la respuesta
+      return (
+        <View style={[styles.container, { marginLeft: 20 }]}>
+          <View style={[styles.header]}>
+            <Image source={replyImageSource} style={styles.icon} />
+            <View style={styles.contentContainer}>
+              <View style={styles.nameAndBodyContainer}>
+                <Text style={styles.textoNombre}>
+                  {titleCase(reply.user.full_name)}
+                </Text>
+                <Text style={styles.textoBody}>{reply.body}</Text>
+                <TouchableOpacity onPress={() => props.onReply(props.nombre)}>
+                  <Text
+                    style={[styles.textoBody, { color: "grey", marginTop: 3 }]}
+                  >
+                    Contestar
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => [setModalVisible(true), setDeleteId(reply.id)]}
+              >
+                <Text style={styles.tresPuntos}>...</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      );
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -59,12 +115,18 @@ const Comment = (props) => {
           </View>
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
-            onPress={() => setModalVisible(true)}
+            onPress={() => [
+              setModalVisible(true),
+              setDeleteId(props.commentId),
+            ]}
           >
             <Text style={styles.tresPuntos}>...</Text>
           </TouchableOpacity>
         </View>
       </View>
+      {props.replies &&
+        props.replies.length > 0 &&
+        renderReplies(props.replies)}
 
       {/* Modal para mostrar si se presióna el boton de eliminar */}
       <Modal
