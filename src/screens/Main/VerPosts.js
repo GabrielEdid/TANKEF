@@ -30,6 +30,7 @@ import { UserContext } from "../../hooks/UserContext";
 import Comment from "../../components/Comment";
 import { APIDelete, APIPost, APIGet } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 const VerPosts = ({ route, navigation }) => {
   // Variables pasados de la pantalla anterior
@@ -52,6 +53,7 @@ const VerPosts = ({ route, navigation }) => {
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
+  const [replyingToId, setReplyingToId] = useState(null);
   const [like, setLike] = useState(liked);
   const [likeCount, setLikeCount] = useState(reacciones);
   const [comments, setComments] = useState([]);
@@ -85,6 +87,7 @@ const VerPosts = ({ route, navigation }) => {
 
   // Funcion para obtener los comentarios de la publicación, maneja la paginación
   const fetchComments = async (currentPage) => {
+    console.log("Fetching comments for:", postId);
     const url = `/api/v1/posts/${postId}/comments?page=${currentPage}`;
     console.log("Fetching comments from:", url);
     setIsFetchingMore(true);
@@ -180,6 +183,35 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
+  // Funcion para publicar una respuesta a un comentario
+  const postCommentReply = async () => {
+    const url = `/api/v1/comments/${replyingToId}/reply`;
+    const data = {
+      body: comentario,
+      user_id: user.userID,
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error(
+        "Error al publicar respuesta a comentario:",
+        response.error
+      );
+      Alert.alert(
+        "Error",
+        "No se pudo publicar el comentario. Intente nuevamente."
+      );
+    } else {
+      console.log("Respuesta publicada:", response.data);
+      setReplyingTo(null);
+      setReplyingToId(null);
+      setComentario("");
+      setCommentCount((prevCount) => prevCount + 1);
+      fetchComments(page);
+    }
+  };
+
   // Referencia para el input de comentarios (para enfocar el input al responder)
   const inputRef = useRef(null);
 
@@ -188,6 +220,7 @@ const VerPosts = ({ route, navigation }) => {
     setReplyingTo(
       titleCase(comment.user.name + " " + comment.user.first_last_name)
     );
+    setReplyingToId(comment.id);
     inputRef.current.focus();
   };
 
@@ -511,11 +544,17 @@ const VerPosts = ({ route, navigation }) => {
               value={comentario}
               maxLength={300}
               onFocus={() => setIsFetchingMore(false)}
-              onBlur={() => [setIsFetchingMore(true), setReplyingTo(null)]}
+              onBlur={() => [
+                setIsFetchingMore(true),
+                setReplyingTo(null),
+                setReplyingToId(null),
+              ]}
             />
             <TouchableOpacity
               style={styles.sendIcon}
-              onPress={() => postComment()}
+              onPress={() =>
+                replyingTo && replyingToId ? postCommentReply() : postComment()
+              }
             >
               <Ionicons
                 name="send"
