@@ -16,6 +16,29 @@ import { APIPost, APIDelete } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
+/**
+ * `Invitaciones` es un componente que muestra información de una Invitación específica enviada al usuario,
+ * como una tarjeta interactuable. Ofrece la funcionalidad para navegar a una vista detallada
+ * del perfil asociado y la opción de eliminar (con confirmación mediante un modal) o aceptar esta invitación
+ * para añadirlo a la red del usuario.
+ *
+ * Props:
+ * - `objectID`: Identificador único del objeto renderizado, se utiliza para eliminar la invitación.
+ * - `userID`: Identificador único del usuario asociado a la invitaciones.
+ * - `imagen`: Puede ser una URL de imagen o un recurso local para mostrar como avatar del usuario.
+ * - `nombre`: Nombre del usuario a mostrar en la tarjeta de invitaciones.
+ * - `mail`: Correo electrónico del usuario asociado a la invitaciones.
+ *
+ * Ejemplo de uso (o ver en MiRed.js):
+ * <Invitaciones
+ *   userID="123"
+ *   objectID="456"
+ *   imagen="https://ruta/a/imagen.jpg"
+ *   nombre="John Doe"
+ *   mail="johndoe@gmail.com"
+ * />
+ */
+
 const Invitaciones = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
@@ -24,7 +47,7 @@ const Invitaciones = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Para cuando se desee eliminar una conexión
+  // Para cuando se desee eliminar una Invitacion
   const postReject = async () => {
     setIsLoading(true);
     const url = `/api/v1/friendship_request/reject`;
@@ -44,10 +67,12 @@ const Invitaciones = (props) => {
     setIsLoading(false);
   };
 
+  // Si la invitacion ya no es visible, no se renderiza
   if (!isVisible) {
     return null;
   }
 
+  // Para cuando se desee aceptar una Invitacion
   const postAccept = async () => {
     setIsLoading(true);
     const url = "/api/v1/friendship_request/accept";
@@ -69,6 +94,7 @@ const Invitaciones = (props) => {
     }
   };
 
+  // Determinar la fuente de la imagen
   let imageSource;
   if (typeof props.imagen === "string") {
     // Assuming it's a URL for a network image
@@ -78,7 +104,9 @@ const Invitaciones = (props) => {
     imageSource = props.imagen;
   }
 
+  // Componente visual
   return (
+    // Lo hace un boton
     <TouchableOpacity
       style={styles.container}
       disabled={isLoading}
@@ -90,7 +118,7 @@ const Invitaciones = (props) => {
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
       </View>
-      {/* Para Mostrar Boton de Eliminar */}
+      {/* Boton de Eliminar */}
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <MaterialIcons
           name="highlight-remove"
@@ -99,6 +127,7 @@ const Invitaciones = (props) => {
           style={{ marginTop: 16 }}
         />
       </TouchableOpacity>
+      {/* Boton de Aceptar */}
       <TouchableOpacity onPress={() => postAccept()}>
         <FontAwesome5
           name="check-circle"
@@ -139,6 +168,7 @@ const Invitaciones = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
+      {/* Overlay para mostrar un indicator al eliminar */}
       {isLoading && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#060B4D" />
@@ -148,6 +178,7 @@ const Invitaciones = (props) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
@@ -179,6 +210,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 80,
   },
+  // Estilos para el modal
   fullScreenButton: {
     position: "absolute",
     top: 0,
@@ -214,7 +246,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Sombreado suave
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
     justifyContent: "center",
     alignItems: "center",
   },

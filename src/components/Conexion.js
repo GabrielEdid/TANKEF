@@ -13,6 +13,26 @@ import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes
 import { APIDelete } from "../API/APIService";
 
+/**
+ * `Conexion` es un componente que muestra información de una conexión específica,
+ * como una tarjeta interactuable. Ofrece la funcionalidad para navegar a una vista detallada
+ * del perfil asociado y la opción de eliminar esta conexión con confirmación mediante un modal.
+ *
+ * Props:
+ * - `userID`: Identificador único del usuario asociado a la conexión.
+ * - `imagen`: Puede ser una URL de imagen o un recurso local para mostrar como avatar del usuario.
+ * - `nombre`: Nombre del usuario a mostrar en la tarjeta de conexión.
+ * - `mail`: Correo electrónico del usuario asociado a la conexión.
+ *
+ * Ejemplo de uso (o ver en MiRed.js):
+ * <Conexion
+ *   userID="123"
+ *   imagen="https://ruta/a/imagen.jpg"
+ *   nombre="John Doe"
+ *   mail="johndoe@gmail.com"
+ * />
+ */
+
 const Conexion = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
@@ -38,10 +58,12 @@ const Conexion = (props) => {
     setIsLoading(false);
   };
 
+  // Si la conexión no es visible, no se renderiza
   if (!isVisible) {
     return null;
   }
 
+  // Determinar la fuente de la imagen
   let imageSource;
   if (typeof props.imagen === "string") {
     // Assuming it's a URL for a network image
@@ -51,7 +73,9 @@ const Conexion = (props) => {
     imageSource = props.imagen;
   }
 
+  // Componente visual
   return (
+    // Lo hace un boton
     <TouchableOpacity
       style={styles.container}
       onPress={() =>
@@ -102,6 +126,7 @@ const Conexion = (props) => {
           </View>
         </TouchableOpacity>
       </Modal>
+      {/* Overlay para mostrar un indicator al eliminar */}
       {isLoading && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#060B4D" />
@@ -111,6 +136,7 @@ const Conexion = (props) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",

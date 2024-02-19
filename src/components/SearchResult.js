@@ -11,15 +11,36 @@ import {
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
 
+/**
+ * `SearchResult` es un componente que muestra información de una busqueda de usuarios específica,
+ * como una tarjeta interactuable. Ofrece la funcionalidad para navegar a una vista detallada
+ * del perfil asociado.
+ *
+ * Props:
+ * - `userID`: Identificador único del usuario asociado a la busqueda.
+ * - `imagen`: Puede ser una URL de imagen o un recurso local para mostrar como avatar del usuario.
+ * - `nombre`: Nombre del usuario a mostrar en la tarjeta de busqueda.
+ *
+ * Ejemplo de uso (o ver en MiRed.js):
+ * <SearchResult
+ *   userID="123"
+ *   imagen="https://ruta/a/imagen.jpg"
+ *   nombre="John Doe"
+ * />
+ *
+ */
+
 const SearchResult = ({ nombre, imagen, userID }) => {
   const navigation = useNavigation();
   // Estados y Contexto
 
   return (
+    //Lo hace boton y maneja la navegacion
     <TouchableOpacity
       style={styles.container}
       onPress={() => navigation.navigate("VerPerfiles", { userID: userID })}
     >
+      {/* Datos del usuario a mostrar */}
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imagen} style={styles.icon} />
         <Text style={styles.textoNombre}>{nombre}</Text>
@@ -28,6 +49,7 @@ const SearchResult = ({ nombre, imagen, userID }) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
