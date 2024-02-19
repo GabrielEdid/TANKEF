@@ -111,13 +111,6 @@ const Comment = (props) => {
                   {titleCase(reply.user.full_name)}
                 </Text>
                 <Text style={styles.textoBody}>{reply.body}</Text>
-                <TouchableOpacity onPress={() => props.onReply(props.nombre)}>
-                  <Text
-                    style={[styles.textoBody, { color: "grey", marginTop: 3 }]}
-                  >
-                    Contestar
-                  </Text>
-                </TouchableOpacity>
               </View>
               <TouchableOpacity
                 style={{ alignItems: "center", justifyContent: "center" }}
@@ -141,11 +134,6 @@ const Comment = (props) => {
           <View style={styles.nameAndBodyContainer}>
             <Text style={styles.textoNombre}>{props.nombre}</Text>
             <Text style={styles.textoBody}>{props.body}</Text>
-            <TouchableOpacity onPress={() => props.onReply(props.nombre)}>
-              <Text style={[styles.textoBody, { color: "grey", marginTop: 3 }]}>
-                Contestar
-              </Text>
-            </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
@@ -157,6 +145,13 @@ const Comment = (props) => {
             <Text style={styles.tresPuntos}>...</Text>
           </TouchableOpacity>
         </View>
+      </View>
+      <View style={{ marginLeft: 50 }}>
+        <TouchableOpacity onPress={() => props.onReply(props.nombre)}>
+          <Text style={[styles.textoBody, { color: "grey", marginTop: 3 }]}>
+            Contestar
+          </Text>
+        </TouchableOpacity>
       </View>
       {props.replies &&
         props.replies.length > 0 &&
