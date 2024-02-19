@@ -14,14 +14,31 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const imageMap = {
-  Bill: require("../../assets/images/BillInvest.png"),
-  // ... más imágenes
-};
+/**
+ * `MiTankefInversion` es un componente que visualiza las inversiones personales y muestra
+ * información relevante como el estatus, plazo y totales de inversiónes.
+ * Está diseñado para ofrecer una visión rápida y efectiva de los recursos financieros del usuario
+ * dentro de la pantalla MiTankef, es un componente que NO debe ser reusable.
+ *
+ * Props:
+ * Este componente no recibe props directamente, pero se espera que la data necesaria para
+ * las inversiones sea recuperada a través de una llamada a una API.
+ *
+ * Ejemplo de uso (o ver en MiTankef.js):
+ * <MiTankefInversion />
+ */
 
 const MiTankefInversion = (props) => {
+  // Mapa de imágenes
+  const imageMap = {
+    Bill: require("../../assets/images/BillInvest.png"),
+    // ... más imágenes
+  };
+
+  // Componente visual
   return (
     <View>
+      {/* Vista de las distintas inversiones */}
       <View style={{ flexDirection: "row", marginBottom: 5 }}>
         <TouchableOpacity
           style={{
@@ -71,7 +88,7 @@ const MiTankefInversion = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
-
+      {/* Vista de la información total de las inversiónes */}
       <View
         style={{
           justifyContent: "space-between",
@@ -101,7 +118,7 @@ const MiTankefInversion = (props) => {
           </View>
         </View>
       </View>
-
+      {/* Información relevante de la inversión, estatus, folio y plazo */}|
       <View
         style={{
           marginTop: 5,
@@ -133,11 +150,13 @@ const MiTankefInversion = (props) => {
           </View>
         </View>
         <View style={styles.seperacion} />
+
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.concepto}>Folio</Text>
           <Text style={styles.valorConcepto}>4225fd6f64</Text>
         </View>
         <View style={styles.seperacion} />
+
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <Text style={styles.concepto}>Plazo</Text>
           <Text style={styles.valorConcepto}>36 meses</Text>
@@ -147,6 +166,7 @@ const MiTankefInversion = (props) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   tituloMonto: {
     fontFamily: "opensans",

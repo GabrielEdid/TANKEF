@@ -14,14 +14,31 @@ import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
+/**
+ * `MiTankefCaja` es un componente que visualiza cajas de ahorro personalizadas y muestra
+ * información relevante como el total acumulado y el rendimiento neto de las inversiones.
+ * Está diseñado para ofrecer una visión rápida y efectiva de los recursos financieros del usuario
+ * dentro de la pantalla MiTankef, es un componente que NO debe ser reusable.
+ *
+ * Props:
+ * Este componente no recibe props directamente, pero se espera que la data necesaria para
+ * las diferentes cajas de ahorro se recuperada a través de una llamada a una API.
+ *
+ * Ejemplo de uso (o ver en MiTankef.js):
+ * <MiTankefCaja />
+ */
+
 const MiTankefCaja = (props) => {
+  // Mapa de imágenes
   const imageMap = {
     Bill: require("../../assets/images/BillInvest.png"),
     // ... más imágenes
   };
 
+  // Componente visual
   return (
     <View>
+      {/* Vista de las distintas cajas de ahorro */}
       <View style={{ flexDirection: "row", marginBottom: 5 }}>
         <TouchableOpacity
           style={{
@@ -53,7 +70,7 @@ const MiTankefCaja = (props) => {
           </Text>
         </TouchableOpacity>
 
-        {/* Componente repetible */}
+        {/* Componente repetible con nombre y valor de la caja */}
         <TouchableOpacity
           style={{
             alignItems: "center",
@@ -86,6 +103,7 @@ const MiTankefCaja = (props) => {
         </TouchableOpacity>
       </View>
 
+      {/* Valores relevantes generales de la caja de ahorro */}
       <View
         style={{
           justifyContent: "space-between",
@@ -119,6 +137,7 @@ const MiTankefCaja = (props) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   tituloMonto: {
     fontFamily: "opensans",

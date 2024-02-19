@@ -13,9 +13,24 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
+/**
+ * `MiTankefCredito` es un componente que visualiza los creditos personales y muestra
+ * información relevante como el estatus, plazo, rendimiento y totales de crédito.
+ * Está diseñado para ofrecer una visión rápida y efectiva de los recursos financieros del usuario
+ * dentro de la pantalla MiTankef, es un componente que NO debe ser reusable.
+ *
+ * Props:
+ * Este componente no recibe props directamente, pero se espera que la data necesaria para
+ * los creditos sea recuperada a través de una llamada a una API.
+ *
+ * Ejemplo de uso (o ver en MiTankef.js):
+ * <MiTankefCredito />
+ */
+
 const MiTankefCredito = (props) => {
   return (
     <View>
+      {/* Vista de los distintos valores del crédito */}
       <View
         style={{
           justifyContent: "space-between",
@@ -68,6 +83,7 @@ const MiTankefCredito = (props) => {
         </View>
       </View>
 
+      {/* Información relevante del crédito, estatus, folio, plazo y tipo */}
       <View
         style={{
           marginTop: 5,
@@ -99,16 +115,19 @@ const MiTankefCredito = (props) => {
           </View>
         </View>
         <View style={styles.seperacion} />
+
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.concepto}>Folio</Text>
           <Text style={styles.valorConcepto}>4225fd6f64</Text>
         </View>
         <View style={styles.seperacion} />
+
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.concepto}>Plazo</Text>
           <Text style={styles.valorConcepto}>6 meses</Text>
         </View>
         <View style={styles.seperacion} />
+
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <Text style={styles.concepto}>Tipo</Text>
           <Text style={styles.valorConcepto}>Red</Text>

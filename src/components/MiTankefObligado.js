@@ -3,12 +3,28 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 // Importaciones de Componentes y Hooks
 
+/**
+ * `MiTankefObligado` es un componente que visualiza el obligado solidario y muestra
+ * información relevante como los montos y el nombre del obligado.
+ * Está diseñado para ofrecer una visión rápida y efectiva de los recursos financieros del usuario
+ * dentro de la pantalla MiTankef, es un componente que NO debe ser reusable.
+ *
+ * Props:
+ * Este componente no recibe props directamente, pero se espera que la data necesaria para
+ * los obligados solidarios sea recuperada a través de una llamada a una API.
+ *
+ * Ejemplo de uso (o ver en MiTankef.js):
+ * <MiTankefObligado />
+ */
+
 const MiTankefObligado = (props) => {
+  // Mapa de imágenes
   const imageMap = {
     MiRed: require("../../assets/images/MiRed.png"),
     // ... más imágenes
   };
 
+  // Componente visual
   return (
     <View>
       {/* Componente repetible */}
@@ -44,6 +60,7 @@ const MiTankefObligado = (props) => {
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   bill: {
     height: 30,
