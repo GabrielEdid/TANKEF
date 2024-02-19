@@ -10,7 +10,34 @@ import {
 } from "react-native";
 // Importaciones de Componentes
 import { APIDelete } from "../API/APIService";
-import { set } from "date-fns";
+
+/**
+ * `Comment` es un componente que muestra un comentario individual, con la opción
+ * de eliminarlo si el usuario tiene permisos. Soporta respuestas anidadas y ofrece
+ * una interfaz para interactuar, como contestar o reportar comentarios.
+ *
+ * Props:
+ * - `imagen`: Puede ser una URL o un recurso local para la imagen del usuario que hizo el comentario.
+ * - `nombre`: Nombre del usuario que hizo el comentario.
+ * - `body`: El contenido del comentario.
+ * - `replies`: Un arreglo de respuestas al comentario.
+ * - `commentId`: Identificador único del comentario.
+ * - `setCount`: Función para actualizar el contador de comentarios tras una eliminación.
+ * - `onReply`: Función invocada cuando se presiona el botón de contestar.
+ * - `personal`: Booleano que indica si el comentario pertenece al usuario actual, permitiendo la opción de eliminar.
+ *
+ * Ejemplo de uso (o ver en VerPosts.js):
+ * <Comment
+ *   imagen="https://ruta/a/la/imagen.jpg"
+ *   nombre="John Doe"
+ *   body="Este es un comentario de ejemplo"
+ *   replies={[{ user: { avatar: "https://ruta/a/avatar.jpg", full_name: "Jane Doe" }, body: "Una respuesta" }]}
+ *   commentId="123"
+ *   setCount={actualizarContador}
+ *   onReply={manejadorRespuesta}
+ *   personal={true}
+ * />
+ */
 
 const Comment = (props) => {
   // Estados y Contexto
@@ -18,6 +45,7 @@ const Comment = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Mapa de imágenes para avatares
   const imageMap = {
     Blank: require("../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
@@ -50,10 +78,12 @@ const Comment = (props) => {
     }
   };
 
+  // Si el comentario no es visible, no lo renderiza
   if (!isVisible) {
     return null;
   }
 
+  // Determina la fuente de la imagen del usuario
   let imageSource;
   if (typeof props.imagen === "string") {
     // Assuming it's a URL for a network image
@@ -63,11 +93,14 @@ const Comment = (props) => {
     imageSource = props.imagen;
   }
 
+  // Renderiza las respuestas al comentario
   const renderReplies = (replies) => {
     return replies.map((reply) => {
+      // Verifica la fuene de la imagen del usuario
       let replyImageSource = reply.user.avatar
         ? { uri: reply.user.avatar }
         : imageMap["Blank"]; // Usa el avatar del usuario de la respuesta
+      // Se renderizan los replies
       return (
         <View style={[styles.container, { marginLeft: 20 }]}>
           <View style={[styles.header]}>
@@ -99,6 +132,7 @@ const Comment = (props) => {
     });
   };
 
+  // Componente Visual
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -128,7 +162,7 @@ const Comment = (props) => {
         props.replies.length > 0 &&
         renderReplies(props.replies)}
 
-      {/* Modal para mostrar si se presióna el boton de eliminar */}
+      {/* Modal para mostrar si se presiónan los 3 puntos */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -172,6 +206,7 @@ const Comment = (props) => {
   );
 };
 
+// Estilos para el componente
 const styles = StyleSheet.create({
   container: {
     marginVertical: 5,
