@@ -118,7 +118,7 @@ const MiTankefInversion = (props) => {
           </View>
         </View>
       </View>
-      {/* Información relevante de la inversión, estatus, folio y plazo */}|
+      {/* Información relevante de la inversión, estatus, folio y plazo */}
       <View
         style={{
           marginTop: 5,
