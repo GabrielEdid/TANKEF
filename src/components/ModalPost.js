@@ -24,6 +24,12 @@ import {
   FontAwesome,
 } from "@expo/vector-icons";
 
+/**
+ * Este "componente" es un modal que se muestra sobre toda la pantalla como la "pantalla" de crear una publicación.
+ * Consta de algunos datos del usuario, un text input y algunos botones para customizar el post.
+ * Es más una pantalla que un componente, NO debe de ser reusado.
+ */
+
 const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   // Estados y Contexto
   const { user, setUser } = useContext(UserContext);
@@ -41,8 +47,8 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
     // ... más imágenes
   };
 
+  // Función para publicar el post
   const postData = async () => {
-    // Primero, asegúrate de que el estado esté correctamente establecido para prevenir múltiples envíos
     if (!text.trim() && !image) {
       Alert.alert("Error", "No puedes publicar un post vacío.");
       return;
@@ -92,6 +98,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
     }
   };
 
+  // Función para seleccionar una imagen del carrete
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -110,23 +117,27 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
     }
   };
 
+  // Se obtiene el ancho de la pantalla y se escala la imagen
   const windowWidth = Dimensions.get("window").width;
   const scaledHeight = imageSize.height
     ? (imageSize.height / imageSize.width) * windowWidth
     : 0;
 
+  // Función para cerrar el modal
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
 
   // Componente visual
   return (
+    // Modal del componente
     <Modal
       animationType="slide"
       transparent={true}
       visible={isModalVisible}
       onRequestClose={handleModalClose}
     >
+      {/* Vista que ocupa toda la pantalla con el boton de cerrar, titulo del componente y boton de compartir */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.modalView}>
           <View style={styles.headers}>
@@ -171,6 +182,8 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               </Text>
             </TouchableOpacity>
           </View>
+
+          {/* Vista con la foto de perfil y el nombre del usuario */}
           <View
             style={{
               flexDirection: "row",
@@ -197,10 +210,12 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   { fontSize: 12, fontFamily: "opensans" },
                 ]}
               >
-                {user.conections + " conexiones"}
+                {user.conexiones + " conexiones"}
               </Text>
             </View>
           </View>
+
+          {/* Vista con el boton de a quien compartir */}
           <TouchableOpacity
             onPress={() => setModalQuien(true)}
             style={{
@@ -256,6 +271,8 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               />
             </View>
           </TouchableOpacity>
+
+          {/* Vista con el input de texto y la posibilidad de imagen */}
           <TextInput
             style={styles.input}
             placeholder=" ¿De que quieres hablar?"
@@ -306,7 +323,8 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
               <Text style={styles.textoImagen}>Eliminar Imagen</Text>
             </TouchableOpacity>
           )}
-          {/* Modal de Quien puede ver el post */}
+
+          {/* Modal de Quien puede ver el post a presiónar "Compartir a y su boton"*/}
           <Modal animationType="slide" transparent={true} visible={modalQuien}>
             <TouchableOpacity
               style={styles.fullScreenButton}
@@ -325,6 +343,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                     }}
                   ></View>
                 </TouchableOpacity>
+
                 {/* Boton Toda la Red */}
                 <TouchableOpacity
                   style={styles.buttonModal}

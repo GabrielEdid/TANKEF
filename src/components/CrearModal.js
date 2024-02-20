@@ -12,7 +12,7 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 // Este "componente" es un modal que se muestra en la parte inferior de la pantalla como la "pantalla" de crear.
 // Es practicamente un menú con tres botones que al presionarlos se cierra el modal y se ejecuta la acción correspondiente.
-// Es más una pantalla que un componente, no debe de ser reusado.
+// Es más una pantalla que un componente, NO debe de ser reusado.
 
 const CrearModal = ({ isVisible, onClose }) => {
   // Animación para el modal
