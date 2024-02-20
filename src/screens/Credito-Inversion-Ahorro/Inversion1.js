@@ -121,25 +121,10 @@ const Inversion1 = () => {
               <BulletPointText titulo="Banco" body="Nombre de Banco" />
             </View>
             <TouchableOpacity
-              style={{
-                marginBottom: 5,
-                backgroundColor: "#060B4D",
-                width: "80%",
-                alignSelf: "center",
-                borderRadius: 5,
-              }}
+              style={styles.botonContinuar}
+              onPress={() => setFocus("Beneficiarios")}
             >
-              <Text
-                style={{
-                  color: "white",
-                  alignSelf: "center",
-                  padding: 10,
-                  fontFamily: "opensanssemibold",
-                  fontSize: 16,
-                }}
-              >
-                Continuar
-              </Text>
+              <Text style={styles.textoBotonContinuar}>Continuar</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -170,6 +155,20 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
+  },
+  botonContinuar: {
+    marginBottom: 5,
+    backgroundColor: "#060B4D",
+    width: "80%",
+    alignSelf: "center",
+    borderRadius: 5,
+  },
+  textoBotonContinuar: {
+    color: "white",
+    alignSelf: "center",
+    padding: 10,
+    fontFamily: "opensanssemibold",
+    fontSize: 16,
   },
 });
 
