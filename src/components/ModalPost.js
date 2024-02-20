@@ -499,9 +499,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    position: "absolute", // Posición absoluta
-    bottom: 0, // En la parte inferior de la pantalla
-    justifyContent: "flex-end", // Alinea los hijos al final
+    position: "absolute",
+    bottom: 0,
+    justifyContent: "flex-end",
   },
   buttonModal: {
     flexDirection: "row",
