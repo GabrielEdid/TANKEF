@@ -7,17 +7,11 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
-import { APIGet } from "../../API/APIService";
+import BulletPointText from "../../components/BulletPointText";
 import { Feather } from "@expo/vector-icons";
-import StackedImages from "../../components/StackedImages";
-import MiTankefCredito from "../../components/MiTankefCredito";
-import MiTankefInversion from "../../components/MiTankefInversion";
-import MiTankefCaja from "../../components/MiTankefCaja";
-import MiTankefObligado from "../../components/MiTankefObligado";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -25,33 +19,13 @@ const widthHalf = screenWidth / 2;
 
 const Inversion1 = () => {
   // Estados y Contexto
-  const [focus, setFocus] = useState("Credito");
-  const [dashboard, setDashboard] = useState({});
-  const [secondFocus, setSecondFocus] = useState("Detalle");
+  const [focus, setFocus] = useState("Documentacion");
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     // ... más imágenes
   };
-
-  // Función para obtener el Dashboard, datos generales del usuario
-  const fetchDashboard = async () => {
-    const url = "/api/v1/dashboard";
-    const response = await APIGet(url);
-    if (response.error) {
-      console.error("Error al obtener el Dashboard:", response.error);
-    } else {
-      setDashboard(response.data);
-    }
-  };
-
-  // Efecto para obtener el Dashboard al cargar la pantalla
-  useFocusEffect(
-    useCallback(() => {
-      fetchDashboard();
-    }, [])
-  );
 
   // Componente Visual
   return (
@@ -79,6 +53,97 @@ const Inversion1 = () => {
           />
         </TouchableOpacity>
       </View>
+
+      {focus === "Documentacion" && (
+        <>
+          <View
+            style={{
+              marginTop: 5,
+              backgroundColor: "white",
+              alignItems: "center",
+              padding: 15,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 25,
+                color: "#060B4D",
+                fontFamily: "opensanssemibold",
+              }}
+            >
+              Documentación
+            </Text>
+            <Text
+              style={{
+                marginTop: 10,
+                marginBottom: 10,
+                fontSize: 14,
+                color: "#060B4D",
+                fontFamily: "opensanssemibold",
+                textAlign: "center",
+              }}
+            >
+              Para agilizar el proceso te recomendamos tener los siguientes
+              documentos a la mano.
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 5,
+              backgroundColor: "white",
+              paddingBottom: 15,
+              flex: 1,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <BulletPointText
+                titulo="INE"
+                body="Identificación oficial actualizada"
+              />
+              <BulletPointText titulo="CURP" body="Documento actualizado" />
+              <BulletPointText
+                titulo="Constancia de situación fiscal"
+                body="Identificación oficial actualizada"
+              />
+              <BulletPointText
+                titulo="Comprobante de Domicilio"
+                body="Documento actualizado"
+              />
+              <BulletPointText
+                titulo="No. de Cuenta Bancaria"
+                body="Cuenta a la cuál se deberá depositar"
+              />
+              <BulletPointText
+                titulo="Comprobante de No. de Cuenta Bancaria"
+                body="Documento actualizado"
+              />
+              <BulletPointText titulo="CLABE" body="CLABE Interbancaria" />
+              <BulletPointText titulo="Banco" body="Nombre de Banco" />
+            </View>
+            <TouchableOpacity
+              style={{
+                marginBottom: 5,
+                backgroundColor: "#060B4D",
+                width: "80%",
+                alignSelf: "center",
+                borderRadius: 5,
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  alignSelf: "center",
+                  padding: 10,
+                  fontFamily: "opensanssemibold",
+                  fontSize: 16,
+                }}
+              >
+                Continuar
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 };
