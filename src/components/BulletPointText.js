@@ -4,6 +4,22 @@ import React from "react";
 // Importaciones de Componentes y Hooks
 import { Entypo } from "@expo/vector-icons";
 
+/**
+ * `BulletPointText` es un componente que muestra un texto con un ícono de punto (bullet) al lado.
+ * Este componente se utiliza para destacar elementos en una lista o para presentar información de manera puntual.
+ *
+ * Props:
+ * - `titulo`: Una cadena de texto que se muestra como el título o encabezado al lado del punto (bullet).
+ * - `body`: Una cadena de texto que proporciona detalles adicionales o descripción debajo del título.
+ *
+ * Ejemplo de uso (o ver en Inversion2.js):
+ *
+ * <BulletPointText
+ *   titulo="Punto Destacado"
+ *   body="Este es un detalle importante que acompaña al título."
+ * />
+ */
+
 const BulletPointText = (props) => {
   // Componente Visual
   return (

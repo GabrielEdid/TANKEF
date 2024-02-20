@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  TextInput,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -19,13 +20,7 @@ const widthHalf = screenWidth / 2;
 
 const Inversion1 = () => {
   // Estados y Contexto
-  const [focus, setFocus] = useState("Documentacion");
-
-  // Mapa para cargar todas las imagenes
-  const imageMap = {
-    Blank: require("../../../assets/images/blankAvatar.jpg"),
-    // ... más imágenes
-  };
+  const [text, setText] = useState("");
 
   // Componente Visual
   return (
@@ -52,6 +47,53 @@ const Inversion1 = () => {
             style={{ marginTop: 50 }}
           />
         </TouchableOpacity>
+      </View>
+      <View style={{ alignItems: "center", paddingVertical: 30 }}>
+        <Text
+          style={{
+            fontFamily: "opensanssemibold",
+            fontSize: 20,
+            color: "#060B4D",
+          }}
+        >
+          Total de la inversión
+        </Text>
+        <Text
+          style={{
+            fontFamily: "opensanssemibold",
+            fontSize: 30,
+            color: "#060B4D",
+            marginTop: 10,
+          }}
+        >
+          $105,400.00 MXN
+        </Text>
+      </View>
+      <View
+        style={{
+          backgroundColor: "white",
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+        }}
+      >
+        <Text
+          style={{
+            color: "#9c9db8ff",
+            fontFamily: "opensanssemibold",
+            fontSize: 16,
+          }}
+        >
+          Monto a Invertir
+        </Text>
+        <TextInput
+          style={styles.input}
+          placeholder="$0.00"
+          placeholderTextColor="#060B4D"
+          onChangeText={setText}
+          multiline={true}
+          value={text}
+          maxLength={500}
+        />
       </View>
     </View>
   );
@@ -93,6 +135,16 @@ const styles = StyleSheet.create({
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
+  },
+  input: {
+    marginTop: 3,
+    fontSize: 12,
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    textAlignVertical: "top",
+    backgroundColor: "white",
+    fontFamily: "opensans",
   },
 });
 
