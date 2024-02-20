@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
@@ -15,6 +16,7 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 // Es más una pantalla que un componente, NO debe de ser reusado.
 
 const CrearModal = ({ isVisible, onClose }) => {
+  const navigation = useNavigation();
   // Animación para el modal
   const [modalY] = useState(new Animated.Value(300));
 
@@ -70,7 +72,7 @@ const CrearModal = ({ isVisible, onClose }) => {
         {/* Boton Invertir */}
         <TouchableOpacity
           style={styles.buttonModal}
-          onPress={() => handleClose()}
+          onPress={() => [handleClose(), navigation.navigate("Inversion1")]}
         >
           <FontAwesome5 name="money-bill-alt" size={30} color="#060B4D" />
           <Text style={styles.texto}>Invertir</Text>

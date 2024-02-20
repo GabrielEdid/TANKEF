@@ -33,6 +33,7 @@ import MisConexiones from "./src/screens/Main/Pantallas Main Dejadas/MisConexion
 import LoginProgresivo from "./src/screens/Main/LoginProgresivo";
 import LoginProgresivo2 from "./src/screens/Main/LoginProgresivo2";
 import EditarPerfil from "./src/screens/Main/EditarPerfil";
+import Inversion1 from "./src/screens/Credito-Inversion-Ahorro/Inversion1";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -142,6 +143,15 @@ function InicioStack() {
   );
 }
 
+function CrearStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Placeholder" component={Placeholder} />
+      <Stack.Screen name="Inversion1" component={Inversion1} />
+    </Stack.Navigator>
+  );
+}
+
 function MainFlow() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [customFocusedTab, setCustomFocusedTab] = useState("");
@@ -218,7 +228,7 @@ function MainFlow() {
         />
         <Tab.Screen
           name="Crear"
-          component={Placeholder}
+          component={CrearStack}
           listeners={{
             tabPress: (e) => handleTabPress(e, "Crear"),
           }}
