@@ -14,13 +14,45 @@ import {
 } from "react-native";
 import { parseISO, formatDistanceToNow, set } from "date-fns";
 import { es } from "date-fns/locale";
-import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
 import { APIPost, APIDelete, APIGet } from "../API/APIService";
-import { AntDesign } from "@expo/vector-icons";
-import ProgressBar from "./ProgressBar";
+
+/**
+ * `Post` es un componente que representa una publicación individual dentro de la aplicación.
+ * Soporta múltiples tipos de contenido como texto, imágenes, y enlaces. Este componente
+ * permite interactuar con la publicación a través de acciones como "me gusta", comentar,
+ * y, dependiendo del usuario, eliminar o reportar la publicación.
+ *
+ * Props:
+ * - `postId`: Identificador único de la publicación.
+ * - `liked`: Estado inicial del "me gusta" de la publicación por el usuario actual.
+ * - `imagen`: URL de la imagen asociada a la publicación, si existe.
+ * - `nombre`: Nombre del usuario que realiza la publicación.
+ * - `foto`: Imagen de perfil del usuario que realiza la publicación.
+ * - `tiempo`: Timestamp de la creación de la publicación.
+ * - `body`: Contenido textual de la publicación.
+ * - `tipo`: Tipo de publicación, por ejemplo, "compartir", "credito", "invertir".
+ * - `comentarios`: Número de comentarios realizados en la publicación.
+ * - `reacciones`: Número de reacciones recibidas por la publicación.
+ * - `personal`: Indica si la publicación pertenece al usuario actual, permitiendo la opción de eliminar.
+ *
+ * Ejemplo de uso (o ver en Inicio.js o Perfil.js):
+ * <Post
+ *   postId="123"
+ *   liked={false}
+ *   imagen="https://example.com/image.jpg"
+ *   nombre="John Doe"
+ *   foto={require("../../assets/images/profile.jpg")}
+ *   tiempo="2020-01-01T00:00:00.000Z"
+ *   body="Este es un ejemplo de publicación en MiTankef."
+ *   tipo="compartir"
+ *   comentarios={10}
+ *   reacciones={5}
+ *   personal={true} // Indica que el usuario actual es el autor de la publicación
+ * />
+ */
 
 const Post = (props) => {
   const navigation = useNavigation();
@@ -31,7 +63,7 @@ const Post = (props) => {
   const [like, setLike] = useState(props["liked"]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext); // Contexto de Usuario
 
   // Mapa para cargar todas las imagenes que se necesiten
   const imageMap = {
@@ -41,6 +73,7 @@ const Post = (props) => {
     // ... más imágenes
   };
 
+  // Función para manejar la reacción de "me gusta" en una publicación, la elimina o crea
   const handleReaction = async () => {
     if (!like) {
       // Intentar dar like
@@ -92,6 +125,7 @@ const Post = (props) => {
     }
   };
 
+  // Función para eliminar una publicación
   const deletePost = async () => {
     const url = `/api/v1/posts/${props.postId}`;
     const response = await APIDelete(url);
@@ -103,10 +137,12 @@ const Post = (props) => {
     }
   };
 
+  // Si la publicación no es visible, no se renderiza
   if (!isVisible) {
     return null;
   }
 
+  // Función para obtener el tiempo transcurrido desde la publicación en una notación amigable
   const getTiempo = () => {
     const timestamp = props.tiempo;
     const date = parseISO(timestamp);
@@ -114,12 +150,14 @@ const Post = (props) => {
     return timeAgo;
   };
 
+  // Componente para manejar los enlaces en el texto
   const Link = (props) => (
     <Text style={{ fontFamily: "opensansbold", color: "#22BAD2", top: 4 }}>
       {props.children}
     </Text>
   );
 
+  // Función para parsear el texto y convertir los enlaces en componentes interactivos
   const parseTextForLinks = (text) => {
     const words = text.split(" ");
     const textComponents = words.map((word, index) => {
@@ -142,10 +180,8 @@ const Post = (props) => {
   // Para manejar las imagenes usadas en las publicaciones
   let imageSource;
   if (typeof props.imagen === "string") {
-    // Assuming it's a URL for a network image
     imageSource = { uri: props.imagen };
   } else {
-    // Assuming it's a local image requiring require()
     imageSource = props.imagen;
   }
 
@@ -168,10 +204,6 @@ const Post = (props) => {
     setImageSize({ width: newWidth, height: newHeight });
   };
 
-  // Calculo del porcentaje de la barra de progreso para un Credito
-  const porcentaje =
-    parseFloat(props.contribuidos) / parseFloat(props.solicitado);
-
   // Funcion para mostrar el texto completo con Ver Más
   const toggleShowFullText = () => {
     setShowFullText(!showFullText);
@@ -192,7 +224,7 @@ const Post = (props) => {
   return (
     // Cuadro del Post
     <View style={styles.Cuadro}>
-      {/* Header del Post, Incluye Foto, Nombre y Tiempo, todos los Posts lo tienen */}
+      {/* Header del Post, Incluye Foto, Nombre y Tiempo */}
       <View style={styles.header}>
         <Image source={props.foto} style={styles.fotoPerfil} />
         <View style={styles.headerText}>
@@ -201,7 +233,7 @@ const Post = (props) => {
         </View>
       </View>
 
-      {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto cuando el tipo de post es Compartir  */}
+      {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto */}
       {props.tipo === "compartir" && (
         <>
           <Text style={styles.textoBody}>
@@ -225,55 +257,11 @@ const Post = (props) => {
         </>
       )}
 
-      {/* Cuerpo del Post, Incluye Titulo y Texto del Credito, barra de complición y numeros  
-      {props.tipo === "credito" && (
-        <>
-          <Text style={styles.titulo}>{props.titulo}</Text>
-          <Text style={styles.textoBody}>{displayedText}</Text>
-          {needsMoreButton && (
-            <TouchableOpacity onPress={toggleShowFullText}>
-              <Text style={styles.verMas}>Ver Más</Text>
-            </TouchableOpacity>
-          )}
-          <Text style={styles.textSolicitado}>
-            Credito Solicitado: ${props.solicitado}
-          </Text>
-          <ProgressBar progress={porcentaje} />
-          <Text style={styles.textContribuidos}>
-            Contribuidos: ${props.contribuidos}
-          </Text>
-          <TouchableOpacity style={styles.cuadroGradient}>
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }} // Inicio del gradiente
-              end={{ x: 0, y: 0 }} // Fin del gradiente
-              style={styles.gradient}
-            >
-              <Text
-                style={{ fontFamily: "conthrax", color: "white", fontSize: 17 }}
-              >
-                CONTRIBUIR
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </>
-      )} */}
-
-      {/* Cuerpo del Post, Incluye Titulo y Texto de la Inversion 
-      {props.tipo === "invertir" && (
-        <>
-          <Text style={styles.titulo}>¡Realice una Inversión!</Text>
-          <Text style={styles.textoBody}>
-            Acabo de hacer una inversión en Tankef con un rendimiento de{" "}
-            <Text style={{ fontWeight: "bold" }}>{props.body}</Text>
-          </Text>
-        </>
-      )} */}
-
-      {/* Cuadro con boton de Like, Imagen de tu usuario y cuadro de comments, todos los Posts lo tienen  */}
+      {/* Cuadro con boton de Like, icono de comments y cantidad de comments */}
       <View style={styles.linea}></View>
       <View style={styles.interactionContainer}>
         <View style={{ flex: 1, flexDirection: "row" }}>
+          {/* Boton para dar like a la publicación */}
           <TouchableOpacity onPress={() => handleReaction()}>
             <Image
               source={imageMap["Like"]}
@@ -284,6 +272,8 @@ const Post = (props) => {
               }}
             />
           </TouchableOpacity>
+
+          {/* Para navegar a ver la publicación completa al presionar el icono de comments */}
           <TouchableOpacity
             style={{ marginLeft: 10 }}
             onPress={() =>
@@ -313,7 +303,8 @@ const Post = (props) => {
             />
           </TouchableOpacity>
         </View>
-        {/* Boton de Publicar y se evalua para aparecer cuando si hay un texto */}
+
+        {/* Para navegar a ver la publicación completa al presionar el numero de comments */}
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("VerPosts", {
@@ -346,7 +337,7 @@ const Post = (props) => {
         </TouchableOpacity>
       </View>
 
-      {/* Modal y Tres puntos para eliminar o reportar publicación  */}
+      {/* Modal y Tres puntos para eliminar o reportar publicación */}
       <TouchableOpacity
         style={styles.opciones}
         onPress={() => setModalVisible(true)}
@@ -442,9 +433,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginTop: 10,
     backgroundColor: "black", // Fondo negro para el espacio sobrante
-    alignItems: "center", // Centrar la imagen horizontalmente
-    justifyContent: "center", // Centrar la imagen verticalmente
-    width: "100%", // Ancho total del contenedor
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   imagen: {
     alignSelf: "center",
@@ -475,37 +466,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 22,
   },
-  /*  ESTILOS DE LOS OTROS TIPOS DE POST
-  textSolicitado: {
-    fontSize: 13,
-    marginBottom: -10,
-    left: 5,
-    color: "#060B4D",
-    marginTop: 10,
-  },
-  textContribuidos: {
-    fontSize: 13,
-    left: 5,
-    top: -5,
-    color: "#060B4D",
-    marginTop: 10,
-  },
-  cuadroGradient: {
-    width: 317,
-    height: 34,
-    alignSelf: "center",
-    borderRadius: 15,
-    top: 5,
-    marginBottom: 5,
-  },
-  gradient: {
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    width: 317,
-    height: 34,
-    borderRadius: 15,
-  },*/
   // Estilos para el Modal que aparece si se presionan los 3 puntos
   fullScreenButton: {
     position: "absolute",

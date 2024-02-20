@@ -30,7 +30,6 @@ import { UserContext } from "../../hooks/UserContext";
 import Comment from "../../components/Comment";
 import { APIDelete, APIPost, APIGet } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { set } from "date-fns";
 
 const VerPosts = ({ route, navigation }) => {
   // Variables pasados de la pantalla anterior
