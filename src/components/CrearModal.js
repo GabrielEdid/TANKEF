@@ -72,7 +72,12 @@ const CrearModal = ({ isVisible, onClose }) => {
         {/* Boton Invertir */}
         <TouchableOpacity
           style={styles.buttonModal}
-          onPress={() => [handleClose(), navigation.navigate("Inversion1")]}
+          onPress={() => {
+            handleClose();
+            navigation.navigate("Crear", {
+              screen: "Inversion1",
+            });
+          }}
         >
           <FontAwesome5 name="money-bill-alt" size={30} color="#060B4D" />
           <Text style={styles.texto}>Invertir</Text>
