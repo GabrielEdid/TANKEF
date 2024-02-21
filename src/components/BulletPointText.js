@@ -33,7 +33,7 @@ const BulletPointText = (props) => {
   );
 };
 
-// Estilos de la pantalla
+// Estilos del componente
 const styles = StyleSheet.create({
   titulo: {
     fontSize: 16,
