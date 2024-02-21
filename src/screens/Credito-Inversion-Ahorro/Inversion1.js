@@ -212,13 +212,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   input: {
-    marginTop: 3,
     fontSize: 18,
     width: "100%",
     color: "#060B4D",
     marginTop: 10,
     marginBottom: 10,
-    backgroundColor: "white",
     fontFamily: "opensanssemibold",
   },
   tab: {
