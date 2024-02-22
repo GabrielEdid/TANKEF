@@ -22,7 +22,7 @@ import { Feather } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const Inversion2 = () => {
+const Inversion2 = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
@@ -281,9 +281,9 @@ const Inversion2 = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.botonContinuar}
-                  onPress={() => setFocus("Documentacion")}
+                  onPress={() => navigation.navigate("Inversion3")}
                 >
-                  <Text style={styles.textoBotonContinuar}>Continuar</Text>
+                  <Text style={styles.textoBotonContinuar}>Aceptar</Text>
                 </TouchableOpacity>
               </View>
             </KeyboardAwareScrollView>
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
-    textAlign: "center",
+    textAlign: "justify",
   },
   tituloCampo: {
     marginTop: 10,
