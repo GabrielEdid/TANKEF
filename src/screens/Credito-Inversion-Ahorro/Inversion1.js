@@ -13,7 +13,7 @@ import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
-import BulletPointText from "../../components/BulletPointText";
+import BulletPointTextSmall from "../../components/BulletPointTextSmall";
 import { Feather } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -66,46 +66,90 @@ const Inversion1 = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center", paddingVertical: 30 }}>
+        <View
+          style={{
+            alignItems: "center",
+            paddingVertical: 30,
+            backgroundColor: "white",
+            marginTop: 3,
+          }}
+        >
           <Text
             style={{
-              fontFamily: "opensanssemibold",
-              fontSize: 20,
+              fontFamily: "opensansbold",
+              fontSize: 18,
               color: "#060B4D",
             }}
           >
-            Total de la inversión
+            Retorno de inversión neto
           </Text>
           <Text
             style={{
               fontFamily: "opensanssemibold",
-              fontSize: 30,
-              color: "#060B4D",
+              fontSize: 34,
+              color: "#8185a6ff",
               marginTop: 10,
             }}
           >
-            $105,400.00 MXN
+            $0.00 MXN
           </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <View style={styles.contenedores}>
-            <Text style={styles.texto}>Monto a Invertir</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={handleChangeText}
-              value={text}
-              onBlur={handleBlur}
-              maxLength={20}
-              keyboardType="numeric"
-            />
+          <View
+            style={{
+              flexDirection: "row",
+              marginLeft: -10,
+              marginTop: 5,
+            }}
+          >
+            <BulletPointTextSmall titulo="Rendimiento" body="$0.00" />
+            <BulletPointTextSmall titulo="Impuesto" body="$0.00" />
+            <BulletPointTextSmall titulo="Tasa de Interés" body="0%" />
           </View>
-          <View style={[styles.contenedores, { marginTop: 2 }]}>
-            <Text style={styles.texto}>Plazo de Inversión</Text>
+        </View>
+        <View style={{ flex: 1, marginTop: 5, backgroundColor: "white" }}>
+          <View style={styles.contenedores}>
+            <Text style={styles.texto}>Monto de la inversión</Text>
+            <Text style={styles.subTexto}>
+              Por favor, introduce el monto que deseas invertir.
+            </Text>
+            <View style={styles.inputWrapper}>
+              <Text
+                style={[
+                  styles.dollarSign,
+                  { color: text ? "#060B4D" : "#b3b5c9ff" },
+                ]}
+              >
+                $
+              </Text>
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                maxLength={20}
+                value={text}
+                placeholderTextColor={"#b3b5c9ff"}
+                onChangeText={setText}
+                placeholder="0.00"
+              />
+            </View>
+            <View style={styles.separacion} />
+
+            <View
+              style={{ backgroundColor: "#2FF690", padding: 5, marginTop: 10 }}
+            >
+              <Text style={[styles.subTexto, { marginTop: 0, fontSize: 13 }]}>
+                Monto mínimo por inversión $5000.00 MXN
+              </Text>
+            </View>
+            <Text style={[styles.texto, { marginTop: 20 }]}>
+              Plazo de Inversión
+            </Text>
+            <Text style={[styles.subTexto]}>
+              Ahora, selecciona el plazo de los pagos.
+            </Text>
             <View
               style={{
                 flexDirection: "row",
                 marginLeft: -5,
-                alignItems: "center",
+                alignSelf: "center",
               }}
             >
               <TouchableOpacity
@@ -144,6 +188,7 @@ const Inversion1 = ({ navigation }) => {
                   styles.tab,
                   {
                     backgroundColor: focusTab === "24" ? "#2FF690" : "#F3F3F3",
+                    marginRight: 0,
                   },
                 ]}
                 onPress={() => setFocusTab("24")}
@@ -151,13 +196,17 @@ const Inversion1 = ({ navigation }) => {
                 <Text style={styles.textoTab}>24</Text>
               </TouchableOpacity>
             </View>
+            <Text style={[styles.subTexto, { marginTop: 15, fontSize: 13 }]}>
+              Esta es una cotización preliminar, la tasa definitiva dependerá
+              del análisis completo de tu solicitud.
+            </Text>
           </View>
         </View>
         <TouchableOpacity
           style={styles.botonContinuar}
           onPress={() => navigation.navigate("Inversion2")}
         >
-          <Text style={styles.textoBotonContinuar}>Simular Inversión</Text>
+          <Text style={styles.textoBotonContinuar}>Aceptar</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
@@ -204,20 +253,44 @@ const styles = StyleSheet.create({
   contenedores: {
     backgroundColor: "white",
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
+    alignItems: "center",
   },
   texto: {
-    color: "#9c9db8ff",
+    color: "#060B4D",
+    textAlign: "center",
     fontFamily: "opensanssemibold",
     fontSize: 18,
   },
+  subTexto: {
+    color: "#060B4D",
+    textAlign: "center",
+    fontFamily: "opensans",
+    marginTop: 5,
+    fontSize: 14,
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    alignItems: "center",
+    alignContent: "center",
+  },
+  dollarSign: {
+    fontSize: 24,
+    fontFamily: "opensanssemibold",
+  },
   input: {
-    fontSize: 18,
-    width: "100%",
+    paddingVertical: 8,
+    fontSize: 24,
     color: "#060B4D",
     marginTop: 10,
     marginBottom: 10,
     fontFamily: "opensanssemibold",
+  },
+  separacion: {
+    height: 1,
+    width: "100%",
+    backgroundColor: "#cecfdbff",
   },
   tab: {
     marginTop: 10,

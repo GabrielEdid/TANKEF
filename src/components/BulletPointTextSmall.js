@@ -5,16 +5,16 @@ import React from "react";
 import { Entypo } from "@expo/vector-icons";
 
 /**
- * `BulletPointText` es un componente que muestra un texto con un ícono de punto (bullet) al lado.
+ * `BulletPointTextSmall` es un componente que muestra un texto con un ícono de punto (bullet) al lado.
  * Este componente se utiliza para destacar elementos en una lista o para presentar información de manera puntual.
  *
  * Props:
  * - `titulo`: Una cadena de texto que se muestra como el título o encabezado al lado del punto (bullet).
  * - `body`: Una cadena de texto que proporciona detalles adicionales o descripción debajo del título.
  *
- * Ejemplo de uso (o ver en Inversion2.js):
+ * Ejemplo de uso (o ver en Inversion1.js):
  *
- * <BulletPointText
+ * <BulletPointTextSmall
  *   titulo="Punto Destacado"
  *   body="Este es un detalle importante que acompaña al título."
  * />
@@ -24,8 +24,8 @@ const BulletPointText = (props) => {
   // Componente Visual
   return (
     <View style={{ flexDirection: "row", marginTop: -2 }}>
-      <Entypo name="dot-single" size={60} color="#2FF690" />
-      <View style={{ marginTop: 17.5, marginLeft: -12.5 }}>
+      <Entypo name="dot-single" size={40} color="#2FF690" />
+      <View style={{ marginTop: 12, marginLeft: -10 }}>
         <Text style={styles.titulo}>{props.titulo}</Text>
         <Text style={styles.body}>{props.body}</Text>
       </View>
@@ -33,15 +33,17 @@ const BulletPointText = (props) => {
   );
 };
 
-// Estilos de la pantalla
+// Estilos del componente
 const styles = StyleSheet.create({
   titulo: {
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: "opensanssemibold",
     color: "#060B4D",
   },
   body: {
-    fontSize: 14,
+    fontSize: 18,
+    marginLeft: -10,
+    textAlign: "center",
     fontFamily: "opensanssemibold",
     color: "#9a9cb8ff",
   },
