@@ -202,12 +202,14 @@ const Inversion1 = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.botonContinuar}
-          onPress={() => navigation.navigate("Inversion2")}
-        >
-          <Text style={styles.textoBotonContinuar}>Aceptar</Text>
-        </TouchableOpacity>
+        <View style={{ backgroundColor: "white" }}>
+          <TouchableOpacity
+            style={styles.botonContinuar}
+            onPress={() => navigation.navigate("Inversion2")}
+          >
+            <Text style={styles.textoBotonContinuar}>Aceptar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
