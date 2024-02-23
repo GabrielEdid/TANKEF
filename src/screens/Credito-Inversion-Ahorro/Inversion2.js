@@ -12,11 +12,12 @@ import {
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import CountryPicker from "react-native-country-picker-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
 import BulletPointText from "../../components/BulletPointText";
-import { Feather } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -37,6 +38,11 @@ const Inversion2 = ({ navigation }) => {
   const [telefono2, setTelefono2] = useState("");
   const [porcentaje2, setPorcentaje2] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [countryCode, setCountryCode] = useState("MX");
+  const [callingCode, setCallingCode] = useState("52");
+  const [countryCode2, setCountryCode2] = useState("MX");
+  const [callingCode2, setCallingCode2] = useState("52");
 
   // Función para manejar la cancelación del segundo beneficiario
   const handleCancelBeneficiario = () => {
@@ -225,12 +231,47 @@ const Inversion2 = ({ navigation }) => {
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Teléfono</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setTelefono}
-                  value={telefono}
-                  keyboardType="numeric"
-                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingHorizontal: 15,
+                    alignItems: "center",
+                    marginTop: -5,
+                    marginBottom: 5,
+                  }}
+                >
+                  <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                    <AntDesign
+                      name="caretdown"
+                      size={20}
+                      color="grey"
+                      style={{ marginRight: 5 }}
+                    />
+                  </TouchableOpacity>
+                  <CountryPicker
+                    withFilter
+                    countryCode={countryCode}
+                    withCallingCode
+                    withCloseButton
+                    onSelect={(country) => {
+                      const { cca2, callingCode } = country;
+                      setCountryCode(cca2);
+                      setCallingCode(callingCode[0]);
+                    }}
+                    visible={pickerVisible}
+                    onClose={() => setPickerVisible(false)}
+                  />
+                  <Text style={styles.countryCodeText}>
+                    +{callingCode} {" |"}
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
+                    onChangeText={setTelefono}
+                    value={telefono}
+                    keyboardType="numeric"
+                    maxLength={10}
+                  />
+                </View>
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Porcentaje</Text>
@@ -280,12 +321,50 @@ const Inversion2 = ({ navigation }) => {
                     <View style={styles.separacion} />
 
                     <Text style={styles.tituloCampo}>Teléfono</Text>
-                    <TextInput
-                      style={styles.input}
-                      onChangeText={setTelefono2}
-                      value={telefono2}
-                      keyboardType="numeric"
-                    />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        paddingHorizontal: 15,
+                        alignItems: "center",
+                        marginTop: -5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                        <AntDesign
+                          name="caretdown"
+                          size={20}
+                          color="grey"
+                          style={{ marginRight: 5 }}
+                        />
+                      </TouchableOpacity>
+                      <CountryPicker
+                        withFilter
+                        countryCode={countryCode2}
+                        withCallingCode
+                        withCloseButton
+                        onSelect={(country) => {
+                          const { cca2, callingCode } = country;
+                          setCountryCode2(cca2);
+                          setCallingCode2(callingCode[0]);
+                        }}
+                        visible={pickerVisible}
+                        onClose={() => setPickerVisible(false)}
+                      />
+                      <Text style={styles.countryCodeText}>
+                        +{callingCode2} {" |"}
+                      </Text>
+                      <TextInput
+                        style={[
+                          styles.input,
+                          { paddingLeft: 0, marginBottom: 0 },
+                        ]}
+                        onChangeText={setTelefono2}
+                        value={telefono2}
+                        keyboardType="numeric"
+                        maxLength={10}
+                      />
+                    </View>
                     <View style={styles.separacion} />
 
                     <Text style={styles.tituloCampo}>Porcentaje</Text>
@@ -396,12 +475,18 @@ const styles = StyleSheet.create({
     fontFamily: "opensanssemibold",
   },
   input: {
-    paddingLeft: 15,
     fontSize: 17,
     width: "100%",
     color: "#060B4D",
-    marginBottom: 10,
     fontFamily: "opensanssemibold",
+    paddingLeft: 15,
+    marginBottom: 10,
+  },
+  countryCodeText: {
+    fontSize: 17,
+    color: "grey",
+    fontFamily: "opensanssemibold",
+    marginRight: 10,
   },
   separacion: {
     height: 1,
@@ -409,6 +494,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#cecfdbff",
   },
   botonContinuar: {
+    backgroundColor: "#060B4D",
     marginTop: 15,
     width: "80%",
     alignSelf: "center",
@@ -416,6 +502,7 @@ const styles = StyleSheet.create({
   },
   textoBotonContinuar: {
     alignSelf: "center",
+    color: "white",
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
