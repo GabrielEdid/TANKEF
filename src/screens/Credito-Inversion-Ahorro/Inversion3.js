@@ -23,7 +23,7 @@ import { Feather } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const Inversion3 = () => {
+const Inversion3 = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
@@ -137,7 +137,7 @@ const Inversion3 = () => {
           <View style={{ backgroundColor: "white" }}>
             <TouchableOpacity
               style={styles.botonContinuar}
-              onPress={() => setFocus("Documentacion")}
+              onPress={() => navigation.navigate("Inversion4")}
             >
               <Text style={styles.textoBotonContinuar}>Aceptar</Text>
             </TouchableOpacity>

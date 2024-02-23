@@ -36,6 +36,8 @@ import EditarPerfil from "./src/screens/Main/EditarPerfil";
 import Inversion1 from "./src/screens/Credito-Inversion-Ahorro/Inversion1";
 import Inversion2 from "./src/screens/Credito-Inversion-Ahorro/Inversion2";
 import Inversion3 from "./src/screens/Credito-Inversion-Ahorro/Inversion3";
+import Inversion4 from "./src/screens/Credito-Inversion-Ahorro/Inversion4";
+import Inversion5 from "./src/screens/Credito-Inversion-Ahorro/Inversion5";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -152,6 +154,8 @@ function CrearStack() {
       <Stack.Screen name="Inversion1" component={Inversion1} />
       <Stack.Screen name="Inversion2" component={Inversion2} />
       <Stack.Screen name="Inversion3" component={Inversion3} />
+      <Stack.Screen name="Inversion4" component={Inversion4} />
+      <Stack.Screen name="Inversion5" component={Inversion5} />
     </Stack.Navigator>
   );
 }
