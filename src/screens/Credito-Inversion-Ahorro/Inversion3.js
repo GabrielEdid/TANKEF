@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -25,12 +25,19 @@ const widthHalf = screenWidth / 2;
 
 const Inversion3 = ({ navigation }) => {
   // Estados y Contexto
-  const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [parentesco, setParentesco] = useState("");
   const [telefono, setTelefono] = useState("");
   const [porcentaje, setPorcentaje] = useState("");
+  const [disabled, setDisabled] = useState(true);
+
+  // Efecto para deshabilitar el botón si algún campo está vacío
+  useEffect(() => {
+    const camposLlenos =
+      nombre && apellidos && parentesco && telefono && porcentaje;
+    setDisabled(!camposLlenos);
+  }, [nombre, apellidos, parentesco, telefono, porcentaje]);
 
   // Componente Visual
   return (
@@ -136,10 +143,21 @@ const Inversion3 = ({ navigation }) => {
           {/* Boton de Aceptar */}
           <View style={{ backgroundColor: "white" }}>
             <TouchableOpacity
-              style={styles.botonContinuar}
+              style={[
+                styles.botonContinuar,
+                { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
+              ]}
               onPress={() => navigation.navigate("Inversion4")}
+              disabled={disabled}
             >
-              <Text style={styles.textoBotonContinuar}>Aceptar</Text>
+              <Text
+                style={[
+                  styles.textoBotonContinuar,
+                  { color: disabled ? "grey" : "white" },
+                ]}
+              >
+                Aceptar
+              </Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
@@ -213,7 +231,7 @@ const styles = StyleSheet.create({
   },
   botonContinuar: {
     marginTop: 15,
-    marginBottom: 15,
+    marginBottom: 20,
     backgroundColor: "#060B4D",
     width: "80%",
     alignSelf: "center",

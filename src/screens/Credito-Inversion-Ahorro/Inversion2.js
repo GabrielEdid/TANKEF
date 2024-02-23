@@ -10,7 +10,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -36,6 +36,7 @@ const Inversion2 = ({ navigation }) => {
   const [parentesco2, setParentesco2] = useState("");
   const [telefono2, setTelefono2] = useState("");
   const [porcentaje2, setPorcentaje2] = useState("");
+  const [disabled, setDisabled] = useState(true);
 
   // Función para manejar la cancelación del segundo beneficiario
   const handleCancelBeneficiario = () => {
@@ -46,6 +47,41 @@ const Inversion2 = ({ navigation }) => {
     setTelefono2("");
     setPorcentaje2("");
   };
+
+  // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
+  useEffect(() => {
+    const camposLlenos =
+      nombre !== "" &&
+      apellidos !== "" &&
+      parentesco !== "" &&
+      telefono !== "" &&
+      porcentaje !== "";
+
+    const camposSegundoBeneficiarioLlenos =
+      nombre2 !== "" &&
+      apellidos2 !== "" &&
+      parentesco2 !== "" &&
+      telefono2 !== "" &&
+      porcentaje2 !== "";
+
+    const todosCamposLlenos = segundoBeneficiaro
+      ? camposLlenos && camposSegundoBeneficiarioLlenos
+      : camposLlenos;
+
+    setDisabled(!todosCamposLlenos);
+  }, [
+    nombre,
+    apellidos,
+    parentesco,
+    telefono,
+    porcentaje,
+    nombre2,
+    apellidos2,
+    parentesco2,
+    telefono2,
+    porcentaje2,
+    segundoBeneficiaro,
+  ]);
 
   // Componente Visual
   return (
@@ -193,6 +229,7 @@ const Inversion2 = ({ navigation }) => {
                   style={styles.input}
                   onChangeText={setTelefono}
                   value={telefono}
+                  keyboardType="numeric"
                 />
                 <View style={styles.separacion} />
 
@@ -201,6 +238,7 @@ const Inversion2 = ({ navigation }) => {
                   style={styles.input}
                   onChangeText={setPorcentaje}
                   value={porcentaje}
+                  keyboardType="numeric"
                 />
                 <View style={styles.separacion} />
 
@@ -246,6 +284,7 @@ const Inversion2 = ({ navigation }) => {
                       style={styles.input}
                       onChangeText={setTelefono2}
                       value={telefono2}
+                      keyboardType="numeric"
                     />
                     <View style={styles.separacion} />
 
@@ -254,6 +293,7 @@ const Inversion2 = ({ navigation }) => {
                       style={styles.input}
                       onChangeText={setPorcentaje2}
                       value={porcentaje2}
+                      keyboardType="numeric"
                     />
                     <View style={styles.separacion} />
                   </View>
@@ -280,10 +320,21 @@ const Inversion2 = ({ navigation }) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.botonContinuar}
+                  style={[
+                    styles.botonContinuar,
+                    { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
+                  ]}
                   onPress={() => navigation.navigate("Inversion3")}
+                  disabled={disabled}
                 >
-                  <Text style={styles.textoBotonContinuar}>Aceptar</Text>
+                  <Text
+                    style={[
+                      styles.textoBotonContinuar,
+                      { color: disabled ? "grey" : "white" },
+                    ]}
+                  >
+                    Aceptar
+                  </Text>
                 </TouchableOpacity>
               </View>
             </KeyboardAwareScrollView>
@@ -359,13 +410,11 @@ const styles = StyleSheet.create({
   },
   botonContinuar: {
     marginTop: 15,
-    backgroundColor: "#060B4D",
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,
   },
   textoBotonContinuar: {
-    color: "white",
     alignSelf: "center",
     padding: 10,
     fontFamily: "opensanssemibold",

@@ -15,6 +15,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
 import BulletPointTextSmall from "../../components/BulletPointTextSmall";
 import { Feather } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -22,22 +23,9 @@ const widthFourth = screenWidth / 4 - 15;
 
 const Inversion1 = ({ navigation }) => {
   // Estados y Contexto
-  const [text, setText] = useState("$0.00");
-  const [focusTab, setFocusTab] = useState("6");
-
-  // Función para manejar el cambio de texto
-  const handleChangeText = (inputText) => {
-    const newText = inputText.charAt(0) === "$" ? inputText : `$${inputText}`;
-    setText(newText);
-  };
-
-  // Función para manejar el evento onBlur
-  const handleBlur = () => {
-    // Si el texto es igual al signo de dólar o está vacío, se establece a "$0.00"
-    if (text === "$" || text === "") {
-      setText("$0.00");
-    }
-  };
+  const [monto, setMonto] = useState(null);
+  const [plazo, setPlazo] = useState("");
+  const [focusTab, setFocusTab] = useState("");
 
   // Componente Visual
   return (
@@ -115,7 +103,7 @@ const Inversion1 = ({ navigation }) => {
               <Text
                 style={[
                   styles.dollarSign,
-                  { color: text ? "#060B4D" : "#b3b5c9ff" },
+                  { color: monto ? "#060B4D" : "#b3b5c9ff" },
                 ]}
               >
                 $
@@ -124,9 +112,9 @@ const Inversion1 = ({ navigation }) => {
                 style={styles.input}
                 keyboardType="numeric"
                 maxLength={20}
-                value={text}
+                value={monto}
                 placeholderTextColor={"#b3b5c9ff"}
-                onChangeText={setText}
+                onChangeText={setMonto}
                 placeholder="0.00"
               />
             </View>
@@ -157,7 +145,7 @@ const Inversion1 = ({ navigation }) => {
                   styles.tab,
                   { backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3" },
                 ]}
-                onPress={() => setFocusTab("6")}
+                onPress={() => [setFocusTab("6"), setPlazo(6)]}
               >
                 <Text style={styles.textoTab}>6</Text>
               </TouchableOpacity>
@@ -168,7 +156,7 @@ const Inversion1 = ({ navigation }) => {
                     backgroundColor: focusTab === "12" ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => setFocusTab("12")}
+                onPress={() => [setFocusTab("12"), setPlazo(12)]}
               >
                 <Text style={styles.textoTab}>12</Text>
               </TouchableOpacity>
@@ -179,7 +167,7 @@ const Inversion1 = ({ navigation }) => {
                     backgroundColor: focusTab === "18" ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => setFocusTab("18")}
+                onPress={() => [setFocusTab("18"), setPlazo(18)]}
               >
                 <Text style={styles.textoTab}>18</Text>
               </TouchableOpacity>
@@ -191,7 +179,7 @@ const Inversion1 = ({ navigation }) => {
                     marginRight: 0,
                   },
                 ]}
-                onPress={() => setFocusTab("24")}
+                onPress={() => [setFocusTab("24"), setPlazo(24)]}
               >
                 <Text style={styles.textoTab}>24</Text>
               </TouchableOpacity>
@@ -204,10 +192,24 @@ const Inversion1 = ({ navigation }) => {
         </View>
         <View style={{ backgroundColor: "white" }}>
           <TouchableOpacity
-            style={styles.botonContinuar}
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor:
+                  monto && monto >= 5000 && plazo ? "#060B4D" : "#D5D5D5",
+              },
+            ]}
             onPress={() => navigation.navigate("Inversion2")}
+            disabled={monto && monto >= 5000 && plazo ? false : true}
           >
-            <Text style={styles.textoBotonContinuar}>Aceptar</Text>
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: monto && monto >= 5000 && plazo ? "white" : "grey" },
+              ]}
+            >
+              Aceptar
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -308,13 +310,11 @@ const styles = StyleSheet.create({
   },
   botonContinuar: {
     marginBottom: 20,
-    backgroundColor: "#060B4D",
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,
   },
   textoBotonContinuar: {
-    color: "white",
     alignSelf: "center",
     padding: 10,
     fontFamily: "opensanssemibold",
