@@ -23,9 +23,25 @@ const widthFourth = screenWidth / 4 - 15;
 
 const Inversion1 = ({ navigation }) => {
   // Estados y Contexto
-  const [monto, setMonto] = useState(null);
+  const [monto, setMonto] = useState("0.00");
+  const [montoCentavos, setMontoCentavos] = useState(0);
   const [plazo, setPlazo] = useState("");
   const [focusTab, setFocusTab] = useState("");
+
+  const montoDisplay = (montoCentavos / 100)
+    .toFixed(2)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  // Actualiza el monto basado en la entrada del usuario
+  const handleMontoChange = (text) => {
+    const numericValue = text.replace(/[^0-9]/g, ""); // Elimina todo excepto números
+    setMontoCentavos(parseInt(numericValue, 10) || 0); // Actualiza el monto en centavos
+  };
+
+  // Lógica para manejar la eliminación de dígitos
+  const handleBackspace = () => {
+    setMontoCentavos(Math.floor(montoCentavos / 10)); // Elimina el último dígito
+  };
 
   // Componente Visual
   return (
@@ -112,9 +128,14 @@ const Inversion1 = ({ navigation }) => {
                 style={styles.input}
                 keyboardType="numeric"
                 maxLength={20}
-                value={monto}
+                value={montoDisplay}
                 placeholderTextColor={"#b3b5c9ff"}
-                onChangeText={setMonto}
+                onChangeText={handleMontoChange}
+                onKeyPress={({ nativeEvent }) => {
+                  if (nativeEvent.key === "Backspace") {
+                    handleBackspace();
+                  }
+                }}
                 placeholder="0.00"
               />
             </View>
