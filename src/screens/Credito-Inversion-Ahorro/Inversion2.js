@@ -13,6 +13,7 @@ import {
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import CountryPicker from "react-native-country-picker-modal";
+import DropDownPicker from "react-native-dropdown-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
@@ -43,6 +44,14 @@ const Inversion2 = ({ navigation }) => {
   const [callingCode, setCallingCode] = useState("52");
   const [countryCode2, setCountryCode2] = useState("MX");
   const [callingCode2, setCallingCode2] = useState("52");
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+
+  const [dataParentesco, setDataParentesco] = useState([
+    { label: "Familiar", value: "Familiar" },
+    { label: "Conocido", value: "Conocido" },
+    { label: "Amistad", value: "Amistad" },
+  ]);
 
   // Función para manejar la cancelación del segundo beneficiario
   const handleCancelBeneficiario = () => {
@@ -223,11 +232,20 @@ const Inversion2 = ({ navigation }) => {
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Parentesco</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setParentesco}
+                <DropDownPicker
+                  open={open}
                   value={parentesco}
+                  items={dataParentesco}
+                  placeholder="Elige una opción"
+                  setOpen={setOpen}
+                  placeholderStyle={{ color: "grey", paddingHorizontal: 5 }}
+                  setValue={setParentesco}
+                  onChangeValue={(value) => setParentesco(value)}
+                  style={styles.DropDownPicker}
+                  dropDownContainerStyle={styles.DropDownContainer}
+                  textStyle={styles.DropDownText}
                 />
+
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Teléfono</Text>
@@ -242,9 +260,9 @@ const Inversion2 = ({ navigation }) => {
                 >
                   <TouchableOpacity onPress={() => setPickerVisible(true)}>
                     <AntDesign
-                      name="caretdown"
-                      size={20}
-                      color="grey"
+                      name="down"
+                      size={16}
+                      color="#060B4D"
                       style={{ marginRight: 5 }}
                     />
                   </TouchableOpacity>
@@ -487,6 +505,19 @@ const styles = StyleSheet.create({
     color: "grey",
     fontFamily: "opensanssemibold",
     marginRight: 10,
+  },
+  DropDownPicker: {
+    borderColor: "transparent",
+    marginTop: -10,
+    paddingRight: 20,
+    borderRadius: 0,
+    alignSelf: "center",
+  },
+  DropDownText: {
+    fontSize: 17,
+    fontFamily: "opensans",
+    color: "#060B4D",
+    alignSelf: "center",
   },
   separacion: {
     height: 1,
