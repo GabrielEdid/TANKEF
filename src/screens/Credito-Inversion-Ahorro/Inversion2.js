@@ -18,7 +18,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
 import BulletPointText from "../../components/BulletPointText";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -40,6 +41,7 @@ const Inversion2 = ({ navigation }) => {
   const [porcentaje2, setPorcentaje2] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
+  const [pickerVisible2, setPickerVisible2] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
   const [countryCode2, setCountryCode2] = useState("MX");
@@ -61,6 +63,8 @@ const Inversion2 = ({ navigation }) => {
     setParentesco2("");
     setTelefono2("");
     setPorcentaje2("");
+    setCallingCode2("52");
+    setCountryCode2("MX");
   };
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
@@ -238,14 +242,14 @@ const Inversion2 = ({ navigation }) => {
                   items={dataParentesco}
                   placeholder="Elige una opción"
                   setOpen={setOpen}
-                  placeholderStyle={{ color: "grey", paddingHorizontal: 5 }}
                   setValue={setParentesco}
                   onChangeValue={(value) => setParentesco(value)}
                   style={styles.DropDownPicker}
+                  arrowIconStyle={{ tintColor: "#060B4D" }}
+                  placeholderStyle={{ color: "grey" }}
                   dropDownContainerStyle={styles.DropDownContainer}
                   textStyle={styles.DropDownText}
                 />
-
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Teléfono</Text>
@@ -259,9 +263,9 @@ const Inversion2 = ({ navigation }) => {
                   }}
                 >
                   <TouchableOpacity onPress={() => setPickerVisible(true)}>
-                    <AntDesign
-                      name="down"
-                      size={16}
+                    <Entypo
+                      name="chevron-thin-down"
+                      size={15}
                       color="#060B4D"
                       style={{ marginRight: 5 }}
                     />
@@ -331,10 +335,19 @@ const Inversion2 = ({ navigation }) => {
                     <View style={styles.separacion} />
 
                     <Text style={styles.tituloCampo}>Parentesco</Text>
-                    <TextInput
-                      style={styles.input}
-                      onChangeText={setParentesco2}
+                    <DropDownPicker
+                      open={open2}
                       value={parentesco2}
+                      items={dataParentesco}
+                      placeholder="Elige una opción"
+                      setOpen={setOpen2}
+                      setValue={setParentesco2}
+                      onChangeValue={(value) => setParentesco2(value)}
+                      style={styles.DropDownPicker}
+                      arrowIconStyle={{ tintColor: "#060B4D" }}
+                      placeholderStyle={{ color: "grey" }}
+                      dropDownContainerStyle={styles.DropDownContainer}
+                      textStyle={styles.DropDownText}
                     />
                     <View style={styles.separacion} />
 
@@ -348,11 +361,11 @@ const Inversion2 = ({ navigation }) => {
                         marginBottom: 5,
                       }}
                     >
-                      <TouchableOpacity onPress={() => setPickerVisible(true)}>
-                        <AntDesign
-                          name="caretdown"
-                          size={20}
-                          color="grey"
+                      <TouchableOpacity onPress={() => setPickerVisible2(true)}>
+                        <Entypo
+                          name="chevron-thin-down"
+                          size={15}
+                          color="#060B4D"
                           style={{ marginRight: 5 }}
                         />
                       </TouchableOpacity>
@@ -366,8 +379,8 @@ const Inversion2 = ({ navigation }) => {
                           setCountryCode2(cca2);
                           setCallingCode2(callingCode[0]);
                         }}
-                        visible={pickerVisible}
-                        onClose={() => setPickerVisible(false)}
+                        visible={pickerVisible2}
+                        onClose={() => setPickerVisible2(false)}
                       />
                       <Text style={styles.countryCodeText}>
                         +{callingCode2} {" |"}
@@ -509,6 +522,7 @@ const styles = StyleSheet.create({
   DropDownPicker: {
     borderColor: "transparent",
     marginTop: -10,
+    paddingLeft: 15,
     paddingRight: 20,
     borderRadius: 0,
     alignSelf: "center",
@@ -518,6 +532,14 @@ const styles = StyleSheet.create({
     fontFamily: "opensans",
     color: "#060B4D",
     alignSelf: "center",
+  },
+  DropDownContainer: {
+    marginTop: -10,
+    paddingHorizontal: 5,
+    width: "100%",
+    alignSelf: "center",
+    borderRadius: 10,
+    borderColor: "#060B4D",
   },
   separacion: {
     height: 1,
