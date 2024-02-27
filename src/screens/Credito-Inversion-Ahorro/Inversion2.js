@@ -16,6 +16,7 @@ import CountryPicker from "react-native-country-picker-modal";
 import DropDownPicker from "react-native-dropdown-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { AsYouType } from "libphonenumber-js";
 // Importaciones de Componentes y Hooks
 import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
@@ -127,6 +128,13 @@ const Inversion2 = ({ navigation }) => {
       const otherValue = calculateOtherPercentage(numericValue);
       setPorcentaje(otherValue.toString());
     }
+  };
+
+  // Function to format the phone number as user types
+  const formatPhoneNumber = (text, setFunction, country) => {
+    const formatter = new AsYouType(country);
+    const formatted = formatter.input(text);
+    setFunction(formatted);
   };
 
   // Componente Visual
@@ -306,6 +314,7 @@ const Inversion2 = ({ navigation }) => {
                       const { cca2, callingCode } = country;
                       setCountryCode(cca2);
                       setCallingCode(callingCode[0]);
+                      setTelefono("");
                     }}
                     visible={pickerVisible}
                     onClose={() => setPickerVisible(false)}
@@ -315,10 +324,11 @@ const Inversion2 = ({ navigation }) => {
                   </Text>
                   <TextInput
                     style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
-                    onChangeText={setTelefono}
+                    onChangeText={(text) =>
+                      formatPhoneNumber(text, setTelefono, countryCode)
+                    }
                     value={telefono}
-                    keyboardType="numeric"
-                    maxLength={10}
+                    keyboardType="phone-pad"
                   />
                 </View>
                 <View style={styles.separacion} />
@@ -425,6 +435,7 @@ const Inversion2 = ({ navigation }) => {
                           const { cca2, callingCode } = country;
                           setCountryCode2(cca2);
                           setCallingCode2(callingCode[0]);
+                          setTelefono2("");
                         }}
                         visible={pickerVisible2}
                         onClose={() => setPickerVisible2(false)}
@@ -437,10 +448,11 @@ const Inversion2 = ({ navigation }) => {
                           styles.input,
                           { paddingLeft: 0, marginBottom: 0 },
                         ]}
-                        onChangeText={setTelefono2}
+                        onChangeText={(text) =>
+                          formatPhoneNumber(text, setTelefono2, countryCode2)
+                        }
                         value={telefono2}
-                        keyboardType="numeric"
-                        maxLength={10}
+                        keyboardType="phone-pad"
                       />
                     </View>
                     <View style={styles.separacion} />
