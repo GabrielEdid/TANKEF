@@ -23,24 +23,61 @@ const widthFourth = screenWidth / 4 - 15;
 
 const Inversion1 = ({ navigation }) => {
   // Estados y Contexto
-  const [monto, setMonto] = useState("0.00");
-  const [montoCentavos, setMontoCentavos] = useState(0);
+  const [monto, setMonto] = useState("");
+  const [montoShow, setMontoShow] = useState("");
   const [plazo, setPlazo] = useState("");
   const [focusTab, setFocusTab] = useState("");
 
-  const montoDisplay = (montoCentavos / 100)
-    .toFixed(2)
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  // Funcion para manejar el cambio de texto en el input de monto
+  const handleChangeText = (inputText) => {
+    // Allow digits and one decimal point
+    let newText = inputText.replace(/[^0-9.]/g, "");
 
-  // Actualiza el monto basado en la entrada del usuario
-  const handleMontoChange = (text) => {
-    const numericValue = text.replace(/[^0-9]/g, ""); // Elimina todo excepto números
-    setMontoCentavos(parseInt(numericValue, 10) || 0); // Actualiza el monto en centavos
+    // Prevent multiple decimal points
+    if ((newText.match(/\./g) || []).length > 1) {
+      newText = newText.replace(/\.(?=.*\.)/, "");
+    }
+
+    // Split the newText into integer and decimal parts
+    let [integer, decimal] = newText.split(".");
+
+    // Remove leading zeros from the integer part and add commas
+    integer = integer.replace(/^0+/, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // If there's a decimal part, limit it to two digits
+    if (decimal && decimal.length > 2) {
+      decimal = decimal.substring(0, 2);
+    }
+
+    // Combine the parts again for the displayed value
+    const formattedText =
+      decimal !== undefined ? `${integer}.${decimal}` : integer;
+
+    // Update the displayed value (with formatting) and the actual value (without formatting, for validation)
+    setMontoShow(formattedText); // Display value with formatting
+    setMonto(newText); // Actual value used for validation
   };
 
-  // Lógica para manejar la eliminación de dígitos
-  const handleBackspace = () => {
-    setMontoCentavos(Math.floor(montoCentavos / 10)); // Elimina el último dígito
+  // Funcion para formatear el input de monto
+  const formatInput = (text) => {
+    // Elimina comas para el cálculo
+    const numericValue = parseInt(text.replace(/,/g, ""), 10);
+    if (!isNaN(numericValue)) {
+      // Vuelve a formatear con comas
+      return numericValue.toLocaleString();
+    }
+    return "";
+  };
+
+  // Funcion para manejar el input de monto al seleccionar
+  const handleFocus = () => {
+    const numericValue = monto.replace(/,/g, "");
+    setMonto(numericValue);
+  };
+
+  // Funcion para manejar el input de monto al deseleccionar
+  const handleBlur = () => {
+    setMonto(formatInput(monto));
   };
 
   // Componente Visual
@@ -126,17 +163,14 @@ const Inversion1 = ({ navigation }) => {
               </Text>
               <TextInput
                 style={styles.input}
+                value={montoShow}
                 keyboardType="numeric"
                 maxLength={20}
-                value={montoDisplay}
                 placeholderTextColor={"#b3b5c9ff"}
-                onChangeText={handleMontoChange}
-                onKeyPress={({ nativeEvent }) => {
-                  if (nativeEvent.key === "Backspace") {
-                    handleBackspace();
-                  }
-                }}
                 placeholder="0.00"
+                onChangeText={handleChangeText}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
               />
             </View>
             <View style={styles.separacion} />
@@ -217,16 +251,25 @@ const Inversion1 = ({ navigation }) => {
               styles.botonContinuar,
               {
                 backgroundColor:
-                  monto && monto >= 5000 && plazo ? "#060B4D" : "#D5D5D5",
+                  monto && parseFloat(monto) >= 5000 && plazo
+                    ? "#060B4D"
+                    : "#D5D5D5",
               },
             ]}
             onPress={() => navigation.navigate("Inversion2")}
-            disabled={monto && monto >= 5000 && plazo ? false : true}
+            disabled={
+              monto && parseFloat(monto) >= 5000 && plazo ? false : true
+            }
           >
             <Text
               style={[
                 styles.textoBotonContinuar,
-                { color: monto && monto >= 5000 && plazo ? "white" : "grey" },
+                {
+                  color:
+                    monto && parseFloat(monto) >= 5000 && plazo
+                      ? "white"
+                      : "grey",
+                },
               ]}
             >
               Aceptar
