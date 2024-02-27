@@ -14,11 +14,9 @@ import {
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
-import BulletPointText from "../../components/BulletPointText";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -122,11 +120,24 @@ const Inversion3 = ({ navigation }) => {
             <View style={styles.separacion} />
 
             <Text style={styles.tituloCampo}>Comprobante No. de Cuenta</Text>
-            <TextInput
+            <TouchableOpacity style={{ flexDirection: "row" }}>
+              <Text
+                style={[styles.input, { fontFamily: "opensans", width: "90%" }]}
+              >
+                Selecciona un documento
+              </Text>
+              <MaterialIcons
+                name="upload-file"
+                size={30}
+                color="#060B4D"
+                style={{ marginTop: -5 }}
+              />
+            </TouchableOpacity>
+            {/* <TextInput
               style={styles.input}
               onChangeText={setComprobanteNCuenta}
               value={comprobanteNCuenta}
-            />
+            /> */}
             <View style={styles.separacion} />
 
             <Text style={styles.tituloCampo}>Banco</Text>

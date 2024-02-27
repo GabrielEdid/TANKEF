@@ -54,8 +54,15 @@ const Inversion4 = ({ navigation }) => {
         </View>
 
         {/* Boton de Aceptar */}
+        <View style={{ flex: 1 }}>
+          <View style={styles.seccion}>
+            <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
+            <Text style={styles.bodySeccion}>
+              Selecciona el método para recibir y firmar los contratos.
+            </Text>
+          </View>
+        </View>
         <View style={{ backgroundColor: "white" }}>
-          <Text>Pantalla Inversion 4</Text>
           <TouchableOpacity
             style={styles.botonContinuar}
             onPress={() => navigation.navigate("Inversion5")}
@@ -93,7 +100,7 @@ const styles = StyleSheet.create({
   },
   botonContinuar: {
     marginTop: 15,
-    marginBottom: 15,
+    marginBottom: 20,
     backgroundColor: "#060B4D",
     width: "80%",
     alignSelf: "center",
@@ -105,6 +112,25 @@ const styles = StyleSheet.create({
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
+  },
+  seccion: {
+    marginTop: 5,
+    backgroundColor: "white",
+    alignItems: "center",
+    padding: 15,
+  },
+  tituloSeccion: {
+    fontSize: 25,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+  },
+  bodySeccion: {
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 14,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "justify",
   },
 });
 
