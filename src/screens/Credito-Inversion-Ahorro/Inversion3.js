@@ -42,10 +42,18 @@ const Inversion3 = ({ navigation }) => {
       alias &&
       clabe &&
       NCuenta &&
-      comprobanteNCuenta &&
+      //comprobanteNCuenta &&
       banco;
     setDisabled(!camposLlenos);
-  }, [nombre, apellidos, alias, clabe, NCuenta, comprobanteNCuenta, banco]);
+  }, [
+    nombre,
+    apellidos,
+    alias,
+    clabe,
+    NCuenta /*comprobanteNCuenta*/,
+    ,
+    banco,
+  ]);
 
   // Componente Visual
   return (
