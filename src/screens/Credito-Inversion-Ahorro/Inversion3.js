@@ -2,10 +2,11 @@
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
+  Modal,
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
@@ -25,19 +26,28 @@ const widthHalf = screenWidth / 2;
 
 const Inversion3 = ({ navigation }) => {
   // Estados y Contexto
+  const [alias, setAlias] = useState("");
+  const [clabe, setClabe] = useState("");
+  const [NCuenta, setNCuenta] = useState("");
+  const [comprobanteNCuenta, setComprobanteNCuenta] = useState("");
+  const [banco, setBanco] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
-  const [parentesco, setParentesco] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [porcentaje, setPorcentaje] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
     const camposLlenos =
-      nombre && apellidos && parentesco && telefono && porcentaje;
+      nombre &&
+      apellidos &&
+      alias &&
+      clabe &&
+      NCuenta &&
+      comprobanteNCuenta &&
+      banco;
     setDisabled(!camposLlenos);
-  }, [nombre, apellidos, parentesco, telefono, porcentaje]);
+  }, [nombre, apellidos, alias, clabe, NCuenta, comprobanteNCuenta, banco]);
 
   // Componente Visual
   return (
@@ -75,9 +85,7 @@ const Inversion3 = ({ navigation }) => {
           <View style={styles.seccion}>
             <Text style={styles.tituloSeccion}>Datos Bancarios</Text>
             <Text style={styles.bodySeccion}>
-              En caso de un imprevisto, es importante asegurarse de que tus
-              bienes financieros se transfieran de manera rápida y eficiente a
-              las personas que más te importan.
+              Ingresa los datos solicitados para continuar.
             </Text>
           </View>
           <View
@@ -88,17 +96,47 @@ const Inversion3 = ({ navigation }) => {
               flex: 1,
             }}
           >
-            {/* Campos para introducir los datos del primer beneficiario */}
-            <Text
-              style={{
-                fontSize: 20,
-                paddingLeft: 15,
-                color: "#060B4D",
-                fontFamily: "opensanssemibold",
-              }}
-            >
-              Primer Beneficiario
-            </Text>
+            {/* Campos para introducir los datos bancarios */}
+            <Text style={styles.tituloCampo}>Alias</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setAlias}
+              value={alias}
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setClabe}
+              value={clabe}
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>No. Cuenta</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setNCuenta}
+              value={NCuenta}
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Comprobante No. de Cuenta</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setComprobanteNCuenta}
+              value={comprobanteNCuenta}
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Banco</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setBanco}
+              value={banco}
+            />
+            <View style={styles.separacion} />
+
             <Text style={styles.tituloCampo}>Nombre(s)</Text>
             <TextInput
               style={styles.input}
@@ -114,30 +152,6 @@ const Inversion3 = ({ navigation }) => {
               value={apellidos}
             />
             <View style={styles.separacion} />
-
-            <Text style={styles.tituloCampo}>Parentesco</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setParentesco}
-              value={parentesco}
-            />
-            <View style={styles.separacion} />
-
-            <Text style={styles.tituloCampo}>Teléfono</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setTelefono}
-              value={telefono}
-            />
-            <View style={styles.separacion} />
-
-            <Text style={styles.tituloCampo}>Porcentaje</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setPorcentaje}
-              value={porcentaje}
-            />
-            <View style={styles.separacion} />
           </View>
 
           {/* Boton de Aceptar */}
@@ -147,7 +161,7 @@ const Inversion3 = ({ navigation }) => {
                 styles.botonContinuar,
                 { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
               ]}
-              onPress={() => navigation.navigate("Inversion4")}
+              onPress={() => setModalVisible(true)}
               disabled={disabled}
             >
               <Text
@@ -161,6 +175,35 @@ const Inversion3 = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Image
+                style={{ width: 70, height: 70, marginBottom: 10 }}
+                source={require("../../../assets/images/Circle-Tick.png")}
+              />
+              <Text style={styles.modalText}>Validacion</Text>
+              <Text style={styles.modalTextBody}>
+                Espera un momento, estamos validando la información
+                proporcionada.
+              </Text>
+              <TouchableOpacity
+                style={[
+                  styles.botonContinuar,
+                  { marginBottom: 0, width: "100%" },
+                ]}
+                onPress={() => [
+                  setModalVisible(false),
+                  navigation.navigate("Inversion4"),
+                ]}
+              >
+                <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
+                  Aceptar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -243,6 +286,42 @@ const styles = StyleSheet.create({
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo semitransparente
+  },
+  modalView: {
+    width: "80%", // Asegúrate de que el contenedor del modal tenga un ancho definido.
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    fontSize: 25,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "center",
+  },
+  modalTextBody: {
+    marginTop: 5,
+    marginBottom: 5,
+    fontSize: 14,
+    color: "#060B4D",
+    fontFamily: "opensans",
+    textAlign: "center",
   },
 });
 
