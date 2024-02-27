@@ -32,7 +32,7 @@ const Inversion2 = ({ navigation }) => {
   const [apellidos, setApellidos] = useState("");
   const [parentesco, setParentesco] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [porcentaje, setPorcentaje] = useState("");
+  const [porcentaje, setPorcentaje] = useState("100");
   const [segundoBeneficiaro, setSegundoBeneficiaro] = useState(false);
   const [nombre2, setNombre2] = useState("");
   const [apellidos2, setApellidos2] = useState("");
@@ -58,6 +58,7 @@ const Inversion2 = ({ navigation }) => {
   // Función para manejar la cancelación del segundo beneficiario
   const handleCancelBeneficiario = () => {
     setSegundoBeneficiaro(false);
+    setPorcentaje("100");
     setNombre2("");
     setApellidos2("");
     setParentesco2("");
@@ -105,11 +106,12 @@ const Inversion2 = ({ navigation }) => {
   // Helper function to calculate the other percentage
   const calculateOtherPercentage = (currentPercentage) => {
     const otherPercentage = 100 - currentPercentage;
-    return otherPercentage > 0 ? otherPercentage : 0; // Ensure the value is not negative
+    return otherPercentage > 0 ? otherPercentage : 0;
   };
 
   const handlePorcentajeChange = (value) => {
-    const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0; // Remove non-numeric characters and default to 0 if NaN
+    let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
+    numericValue = Math.max(numericValue, 1); // Asegura que el valor mínimo sea 1
     if (numericValue <= 100) {
       setPorcentaje(numericValue.toString());
       const otherValue = calculateOtherPercentage(numericValue);
@@ -118,7 +120,8 @@ const Inversion2 = ({ navigation }) => {
   };
 
   const handlePorcentaje2Change = (value) => {
-    const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0; // Remove non-numeric characters and default to 0 if NaN
+    let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
+    numericValue = Math.max(numericValue, 1); // Asegura que el valor mínimo sea 1
     if (numericValue <= 100) {
       setPorcentaje2(numericValue.toString());
       const otherValue = calculateOtherPercentage(numericValue);
@@ -321,14 +324,32 @@ const Inversion2 = ({ navigation }) => {
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Porcentaje</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) =>
-                    handlePorcentajeChange(text.replace("%", ""))
-                  } // Remove percentage sign before processing
-                  value={`${porcentaje}%`} // Display with percentage sign
-                  keyboardType="numeric"
-                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <TextInput
+                    style={[styles.input, { flex: 0.08 }]}
+                    onChangeText={handlePorcentajeChange}
+                    value={porcentaje}
+                    keyboardType="numeric"
+                    maxLength={3}
+                    editable={segundoBeneficiaro}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      marginTop: -7.5,
+                      color: "#060B4D",
+                      fontFamily: "opensanssemibold",
+                    }}
+                  >
+                    %
+                  </Text>
+                </View>
+
                 <View style={styles.separacion} />
 
                 {/* Opcion de introducir un Segundo Beneficiario */}
@@ -425,14 +446,30 @@ const Inversion2 = ({ navigation }) => {
                     <View style={styles.separacion} />
 
                     <Text style={styles.tituloCampo}>Porcentaje</Text>
-                    <TextInput
-                      style={styles.input}
-                      onChangeText={(text) =>
-                        handlePorcentaje2Change(text.replace("%", ""))
-                      }
-                      value={`${porcentaje2}%`}
-                      keyboardType="numeric"
-                    />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <TextInput
+                        style={[styles.input, { flex: 0.08 }]}
+                        onChangeText={handlePorcentaje2Change}
+                        value={porcentaje2}
+                        keyboardType="numeric"
+                        maxLength={3}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          marginTop: -7.5,
+                          color: "#060B4D",
+                          fontFamily: "opensanssemibold",
+                        }}
+                      >
+                        %
+                      </Text>
+                    </View>
                     <View style={styles.separacion} />
                   </View>
                 )}
@@ -446,7 +483,11 @@ const Inversion2 = ({ navigation }) => {
                   onPress={() =>
                     segundoBeneficiaro
                       ? handleCancelBeneficiario()
-                      : setSegundoBeneficiaro(true)
+                      : [
+                          setSegundoBeneficiaro(true),
+                          setPorcentaje("50"),
+                          setPorcentaje2("50"),
+                        ]
                   }
                 >
                   <Text
