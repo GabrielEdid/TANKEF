@@ -24,39 +24,35 @@ const widthFourth = screenWidth / 4 - 15;
 const Inversion1 = ({ navigation }) => {
   // Estados y Contexto
   const [monto, setMonto] = useState("");
+  const [montoNumeric, setMontoNumeric] = useState(0);
   const [montoShow, setMontoShow] = useState("");
   const [plazo, setPlazo] = useState("");
   const [focusTab, setFocusTab] = useState("");
 
   // Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
-    // Allow digits and one decimal point
     let newText = inputText.replace(/[^0-9.]/g, "");
-
-    // Prevent multiple decimal points
     if ((newText.match(/\./g) || []).length > 1) {
       newText = newText.replace(/\.(?=.*\.)/, "");
     }
 
-    // Split the newText into integer and decimal parts
     let [integer, decimal] = newText.split(".");
-
-    // Remove leading zeros from the integer part and add commas
     integer = integer.replace(/^0+/, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // If there's a decimal part, limit it to two digits
     if (decimal && decimal.length > 2) {
       decimal = decimal.substring(0, 2);
     }
 
-    // Combine the parts again for the displayed value
     const formattedText =
       decimal !== undefined ? `${integer}.${decimal}` : integer;
-
-    // Update the displayed value (with formatting) and the actual value (without formatting, for validation)
     setMontoShow(formattedText); // Display value with formatting
-    setMonto(newText); // Actual value used for validation
+    setMonto(newText); // Store raw value for further processing
+
+    // Parse the raw input to a float and update montoNumeric for validation
+    const numericValue = parseFloat(newText.replace(/,/g, ""));
+    setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
   };
+
+  const isAcceptable = montoNumeric >= 5000 && plazo;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -249,27 +245,18 @@ const Inversion1 = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.botonContinuar,
-              {
-                backgroundColor:
-                  monto && parseFloat(monto) >= 5000 && plazo
-                    ? "#060B4D"
-                    : "#D5D5D5",
-              },
+              { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
             ]}
-            onPress={() => navigation.navigate("Inversion2")}
-            disabled={
-              monto && parseFloat(monto) >= 5000 && plazo ? false : true
-            }
+            onPress={() => [
+              navigation.navigate("Inversion2"),
+              console.log(monto),
+            ]}
+            disabled={!isAcceptable}
           >
             <Text
               style={[
                 styles.textoBotonContinuar,
-                {
-                  color:
-                    monto && parseFloat(monto) >= 5000 && plazo
-                      ? "white"
-                      : "grey",
-                },
+                { color: isAcceptable ? "white" : "grey" },
               ]}
             >
               Aceptar

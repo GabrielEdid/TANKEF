@@ -102,6 +102,30 @@ const Inversion2 = ({ navigation }) => {
     segundoBeneficiaro,
   ]);
 
+  // Helper function to calculate the other percentage
+  const calculateOtherPercentage = (currentPercentage) => {
+    const otherPercentage = 100 - currentPercentage;
+    return otherPercentage > 0 ? otherPercentage : 0; // Ensure the value is not negative
+  };
+
+  const handlePorcentajeChange = (value) => {
+    const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0; // Remove non-numeric characters and default to 0 if NaN
+    if (numericValue <= 100) {
+      setPorcentaje(numericValue.toString());
+      const otherValue = calculateOtherPercentage(numericValue);
+      setPorcentaje2(otherValue.toString());
+    }
+  };
+
+  const handlePorcentaje2Change = (value) => {
+    const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0; // Remove non-numeric characters and default to 0 if NaN
+    if (numericValue <= 100) {
+      setPorcentaje2(numericValue.toString());
+      const otherValue = calculateOtherPercentage(numericValue);
+      setPorcentaje(otherValue.toString());
+    }
+  };
+
   // Componente Visual
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -299,8 +323,10 @@ const Inversion2 = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Porcentaje</Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={setPorcentaje}
-                  value={porcentaje}
+                  onChangeText={(text) =>
+                    handlePorcentajeChange(text.replace("%", ""))
+                  } // Remove percentage sign before processing
+                  value={`${porcentaje}%`} // Display with percentage sign
                   keyboardType="numeric"
                 />
                 <View style={styles.separacion} />
@@ -401,8 +427,10 @@ const Inversion2 = ({ navigation }) => {
                     <Text style={styles.tituloCampo}>Porcentaje</Text>
                     <TextInput
                       style={styles.input}
-                      onChangeText={setPorcentaje2}
-                      value={porcentaje2}
+                      onChangeText={(text) =>
+                        handlePorcentaje2Change(text.replace("%", ""))
+                      }
+                      value={`${porcentaje2}%`}
                       keyboardType="numeric"
                     />
                     <View style={styles.separacion} />
