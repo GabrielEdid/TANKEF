@@ -16,7 +16,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
-import { Feather } from "@expo/vector-icons";
+import {
+  Feather,
+  MaterialCommunityIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -24,6 +29,7 @@ const widthHalf = screenWidth / 2;
 
 const Inversion4 = ({ navigation }) => {
   // Estados y Contexto
+  const [focus, setFocus] = useState("Firma");
 
   // Componente Visual
   return (
@@ -53,7 +59,6 @@ const Inversion4 = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* Boton de Aceptar */}
         <View style={{ flex: 1 }}>
           <View style={styles.seccion}>
             <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
@@ -61,8 +66,90 @@ const Inversion4 = ({ navigation }) => {
               Selecciona el método para recibir y firmar los contratos.
             </Text>
           </View>
+          {/* Firma Digital */}
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => setFocus("Firma")}
+          >
+            <View
+              style={[
+                styles.imagenConcepto,
+                { backgroundColor: focus === "Firma" ? "#2FF690" : "#D5D5D5" },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name="signature-freehand"
+                size={35}
+                color={focus === "Firma" ? "#060B4D" : "grey"}
+              />
+            </View>
+            <View style={{ marginLeft: 10, paddingRight: 65 }}>
+              <Text style={styles.tituloConcepto}>Firma digital</Text>
+              <Text style={styles.bodyConcepto}>
+                La firma digital se realiza mediante una plataforma segura y
+                confidencial para ambas partes.
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Presencial */}
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => setFocus("Presencial")}
+          >
+            <View
+              style={[
+                styles.imagenConcepto,
+                {
+                  backgroundColor:
+                    focus === "Presencial" ? "#2FF690" : "#D5D5D5",
+                },
+              ]}
+            >
+              <FontAwesome
+                name="handshake-o"
+                size={30}
+                color={focus === "Presencial" ? "#060B4D" : "grey"}
+              />
+            </View>
+            <View style={{ marginLeft: 10, paddingRight: 65 }}>
+              <Text style={styles.tituloConcepto}>Presencial</Text>
+              <Text style={styles.bodyConcepto}>
+                Se agenda una visita en nuestra oficina principal para la firma
+                de contratos.
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Enviar a Domicilio */}
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => setFocus("Enviar")}
+          >
+            <View
+              style={[
+                styles.imagenConcepto,
+                { backgroundColor: focus === "Enviar" ? "#2FF690" : "#D5D5D5" },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name="truck-fast-outline"
+                size={40}
+                color={focus === "Enviar" ? "#060B4D" : "grey"}
+              />
+            </View>
+            <View style={{ marginLeft: 10, paddingRight: 65 }}>
+              <Text style={styles.tituloConcepto}>Enviar a Domicilio</Text>
+              <Text style={styles.bodyConcepto}>
+                Se envían los documentos a domicilio para la firma de los
+                contratos.
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
-        <View style={{ backgroundColor: "white" }}>
+
+        {/* Boton de Aceptar */}
+        <View style={{}}>
           <TouchableOpacity
             style={styles.botonContinuar}
             onPress={() => navigation.navigate("Inversion5")}
@@ -130,6 +217,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
+    textAlign: "justify",
+  },
+  container: {
+    backgroundColor: "white",
+    marginTop: 5,
+    paddingVertical: 20,
+    paddingHorizontal: 25,
+    flexDirection: "row",
+  },
+  imagenConcepto: {
+    alignSelf: "center",
+    height: 60,
+    width: 60,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  tituloConcepto: {
+    fontSize: 16,
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+  },
+  bodyConcepto: {
+    fontSize: 14,
+    color: "#060B4D",
+    fontFamily: "opensans",
     textAlign: "justify",
   },
 });
