@@ -75,7 +75,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           onPress={() => {
             handleClose();
             navigation.navigate("Crear", {
-              screen: "Inversion4",
+              screen: "Inversion3",
             });
           }}
         >

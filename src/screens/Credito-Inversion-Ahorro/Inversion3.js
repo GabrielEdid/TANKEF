@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Modal,
+  Alert,
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
@@ -15,8 +16,11 @@ import {
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 // Importaciones de Componentes y Hooks
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -54,6 +58,62 @@ const Inversion3 = ({ navigation }) => {
     ,
     banco,
   ]);
+
+  const showUploadOptions = () => {
+    Alert.alert(
+      "Seleccionar Documento",
+      "Elige de donde deseas subir tu documento:",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Galería de Fotos",
+          onPress: () => {
+            pickImage();
+            console.log("Photo Gallery Pressed");
+          },
+        },
+        {
+          text: "Documentos",
+          onPress: () => {
+            pickDocument();
+            console.log("Documents Pressed");
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const pickDocument = async () => {
+    let result = await DocumentPicker.getDocumentAsync({});
+    if (!result.canceled && result.assets) {
+      const selectedDocument = result.assets[0];
+      setComprobanteNCuenta(selectedDocument.uri);
+    } else {
+      console.log("Operación cancelada o no se seleccionó ningún documento");
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.2,
+    });
+
+    if (!result.canceled) {
+      const selectedImage = result.assets[0];
+      setComprobanteNCuenta(selectedImage.uri);
+    }
+    else {
+      console.log("Operación cancelada o no se seleccionó ninguna imagen");
+    }
+  };
 
   // Componente Visual
   return (
@@ -128,19 +188,41 @@ const Inversion3 = ({ navigation }) => {
             <View style={styles.separacion} />
 
             <Text style={styles.tituloCampo}>Comprobante No. de Cuenta</Text>
-            <TouchableOpacity style={{ flexDirection: "row" }}>
-              <Text
-                style={[styles.input, { fontFamily: "opensans", width: "90%" }]}
+
+            {!comprobanteNCuenta ? (
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={showUploadOptions}
               >
-                Selecciona un documento
-              </Text>
-              <MaterialIcons
-                name="upload-file"
-                size={30}
-                color="#060B4D"
-                style={{ marginTop: -5 }}
-              />
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.input,
+                    { fontFamily: "opensans", width: "90%" },
+                  ]}
+                >
+                  Selecciona un documento
+                </Text>
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={20}
+                  color="#060B4D"
+                />
+              </TouchableOpacity>
+            ) : (
+              <View style={{ flexDirection: "row" }}>
+                <Text style={[styles.input, { width: "90%" }]}>
+                  Comprobante seleccionado
+                </Text>
+                <TouchableOpacity onPress={() => setComprobanteNCuenta("")}>
+                  <FontAwesome
+                    name="trash-o"
+                    size={25}
+                    color="#F95C5C"
+                    style={{ marginTop: -5 }}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
             {/* <TextInput
               style={styles.input}
               onChangeText={setComprobanteNCuenta}
