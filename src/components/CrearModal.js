@@ -57,17 +57,17 @@ const CrearModal = ({ isVisible, onClose }) => {
         ]}
       >
         {/* Linea en la parte superior para cerrar */}
-        <TouchableOpacity onPress={() => handleClose()}>
-          <View
-            style={{
-              height: 10,
-              backgroundColor: "#F0F0F0",
-              width: 150,
-              borderRadius: 10,
-              alignSelf: "center",
-            }}
-          ></View>
-        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleClose()}
+          style={{
+            height: 10,
+            backgroundColor: "#F0F0F0",
+            width: 150,
+            borderRadius: 10,
+            alignSelf: "center",
+          }}
+          activeOpacity={1}
+        />
 
         {/* Boton Invertir */}
         <TouchableOpacity
