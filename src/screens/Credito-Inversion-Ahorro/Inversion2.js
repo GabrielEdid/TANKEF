@@ -646,7 +646,7 @@ const styles = StyleSheet.create({
   },
   DropDownText: {
     fontSize: 17,
-    fontFamily: "opensans",
+    fontFamily: "opensanssemibold",
     color: "#060B4D",
     alignSelf: "center",
   },
