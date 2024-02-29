@@ -42,7 +42,7 @@ const Credito5 = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>Inversión</Text>
+          <Text style={styles.tituloPantalla}>Crédito</Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
+    marginRight: 65,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
