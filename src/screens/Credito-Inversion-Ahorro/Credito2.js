@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
-    textAlign: "justify",
+    textAlign: "center",
   },
   tituloCampo: {
     marginTop: 10,

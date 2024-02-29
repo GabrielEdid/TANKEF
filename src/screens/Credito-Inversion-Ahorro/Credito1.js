@@ -52,7 +52,7 @@ const Credito1 = ({ navigation }) => {
     setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
   };
 
-  const isAcceptable = montoNumeric >= 5000 && plazo;
+  const isAcceptable = montoNumeric >= 10000 && plazo;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -248,7 +248,7 @@ const Credito1 = ({ navigation }) => {
               { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
             ]}
             onPress={() => [
-              navigation.navigate("Inversion2"),
+              navigation.navigate("Credito2"),
               console.log(monto),
             ]}
             disabled={!isAcceptable}
