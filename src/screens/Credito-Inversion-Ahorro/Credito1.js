@@ -118,7 +118,7 @@ const Credito1 = ({ navigation }) => {
               color: "#060B4D",
             }}
           >
-            Retorno de inversión neto
+            Total a Pagar
           </Text>
           <Text
             style={{
@@ -137,16 +137,16 @@ const Credito1 = ({ navigation }) => {
               marginTop: 5,
             }}
           >
-            <BulletPointTextSmall titulo="Rendimiento" body="$0.00" />
-            <BulletPointTextSmall titulo="Impuesto" body="$0.00" />
-            <BulletPointTextSmall titulo="Tasa de Interés" body="0%" />
+            <BulletPointTextSmall titulo="Comisión por apertura" body="$0.00" />
+            <BulletPointTextSmall titulo="Tasa de Operación" body="$0.00" />
+            <BulletPointTextSmall titulo="Pago Mensual" body="$0.00" />
           </View>
         </View>
         <View style={{ flex: 1, marginTop: 5, backgroundColor: "white" }}>
           <View style={styles.contenedores}>
-            <Text style={styles.texto}>Monto de la inversión</Text>
+            <Text style={styles.texto}>Monto del crédito</Text>
             <Text style={styles.subTexto}>
-              Por favor, introduce el monto que deseas invertir.
+              Por favor, introduce el monto que deseas solicitar.
             </Text>
             <View style={styles.inputWrapper}>
               <Text
@@ -175,11 +175,11 @@ const Credito1 = ({ navigation }) => {
               style={{ backgroundColor: "#2FF690", padding: 5, marginTop: 10 }}
             >
               <Text style={[styles.subTexto, { marginTop: 0, fontSize: 13 }]}>
-                Monto mínimo por inversión $5000.00 MXN
+                Monto mínimo $10,000.00/MN
               </Text>
             </View>
             <Text style={[styles.texto, { marginTop: 20 }]}>
-              Plazo de Inversión
+              Plazo de pagos
             </Text>
             <Text style={[styles.subTexto]}>
               Ahora, selecciona el plazo de los pagos.
