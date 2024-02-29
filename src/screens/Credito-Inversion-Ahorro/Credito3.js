@@ -291,7 +291,7 @@ const Credito3 = ({ navigation }) => {
                 ]}
                 onPress={() => [
                   setModalVisible(false),
-                  navigation.navigate("Inversion4"),
+                  navigation.navigate("Credito4"),
                 ]}
               >
                 <Text style={[styles.textoBotonContinuar, { color: "white" }]}>

@@ -9,12 +9,13 @@ import {
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import CountryPicker from "react-native-country-picker-modal";
 import DropDownPicker from "react-native-dropdown-picker";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AsYouType } from "libphonenumber-js";
 // Importaciones de Componentes y Hooks
@@ -28,106 +29,43 @@ const widthHalf = screenWidth / 2;
 const Credito2 = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
-  const [nombre, setNombre] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [parentesco, setParentesco] = useState("");
+  const [domicilio, setDomicilio] = useState("");
+  const [politico, setPolitico] = useState("");
+  const [profesion, setProfesion] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [porcentaje, setPorcentaje] = useState("100");
-  const [segundoBeneficiaro, setSegundoBeneficiaro] = useState(false);
-  const [nombre2, setNombre2] = useState("");
-  const [apellidos2, setApellidos2] = useState("");
-  const [parentesco2, setParentesco2] = useState("");
-  const [telefono2, setTelefono2] = useState("");
-  const [porcentaje2, setPorcentaje2] = useState("");
+  const [mail, setMail] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [pickerVisible2, setPickerVisible2] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
-  const [countryCode2, setCountryCode2] = useState("MX");
-  const [callingCode2, setCallingCode2] = useState("52");
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
-  const [dataParentesco, setDataParentesco] = useState([
-    { label: "Familiar", value: "Familiar" },
-    { label: "Conocido", value: "Conocido" },
-    { label: "Amistad", value: "Amistad" },
+  const [dataDomicilio] = useState([
+    { label: "Real", value: "Real" },
+    { label: "Convencional", value: "Convencional" },
+    { label: "Legal", value: "Legal" },
+    { label: "Fiscal", value: "Fiscal" },
   ]);
 
-  // Función para manejar la cancelación del segundo beneficiario
-  const handleCancelBeneficiario = () => {
-    setSegundoBeneficiaro(false);
-    setPorcentaje("100");
-    setNombre2("");
-    setApellidos2("");
-    setParentesco2("");
-    setTelefono2("");
-    setPorcentaje2("");
-    setCallingCode2("52");
-    setCountryCode2("MX");
-  };
+  const [dataPolitico] = useState([
+    { label: "Si", value: "Si" },
+    { label: "No", value: "No" },
+  ]);
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
     const camposLlenos =
-      nombre !== "" &&
-      apellidos !== "" &&
-      parentesco !== "" &&
+      domicilio !== "" &&
+      politico !== "" &&
+      profesion !== "" &&
       telefono !== "" &&
-      porcentaje !== "";
+      mail !== "" &&
+      descripcion !== "";
 
-    const camposSegundoBeneficiarioLlenos =
-      nombre2 !== "" &&
-      apellidos2 !== "" &&
-      parentesco2 !== "" &&
-      telefono2 !== "" &&
-      porcentaje2 !== "";
-
-    const todosCamposLlenos = segundoBeneficiaro
-      ? camposLlenos && camposSegundoBeneficiarioLlenos
-      : camposLlenos;
-
-    setDisabled(!todosCamposLlenos);
-  }, [
-    nombre,
-    apellidos,
-    parentesco,
-    telefono,
-    porcentaje,
-    nombre2,
-    apellidos2,
-    parentesco2,
-    telefono2,
-    porcentaje2,
-    segundoBeneficiaro,
-  ]);
-
-  // Helper function to calculate the other percentage
-  const calculateOtherPercentage = (currentPercentage) => {
-    const otherPercentage = 100 - currentPercentage;
-    return otherPercentage > 0 ? otherPercentage : 0;
-  };
-
-  const handlePorcentajeChange = (value) => {
-    let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
-    numericValue = Math.max(numericValue, 1); // Asegura que el valor mínimo sea 1
-    if (numericValue <= 100) {
-      setPorcentaje(numericValue.toString());
-      const otherValue = calculateOtherPercentage(numericValue);
-      setPorcentaje2(otherValue.toString());
-    }
-  };
-
-  const handlePorcentaje2Change = (value) => {
-    let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
-    numericValue = Math.max(numericValue, 1); // Asegura que el valor mínimo sea 1
-    if (numericValue <= 100) {
-      setPorcentaje2(numericValue.toString());
-      const otherValue = calculateOtherPercentage(numericValue);
-      setPorcentaje(otherValue.toString());
-    }
-  };
+    setDisabled(!camposLlenos);
+  }, [domicilio, politico, profesion, telefono, mail, descripcion]);
 
   // Function to format the phone number as user types
   const formatPhoneNumber = (text, setFunction, country) => {
@@ -208,7 +146,7 @@ const Credito2 = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 style={styles.botonContinuar}
-                onPress={() => setFocus("Beneficiarios")}
+                onPress={() => setFocus("General")}
               >
                 <Text style={styles.textoBotonContinuar}>Continuar</Text>
               </TouchableOpacity>
@@ -216,22 +154,13 @@ const Credito2 = ({ navigation }) => {
           </>
         )}
 
-        {focus === "Beneficiarios" && (
+        {focus === "General" && (
           <>
-            <KeyboardAwareScrollView
-              contentContainerStyle={{ flexGrow: 1 }}
-              scrollEnabled={true}
-              enableOnAndroid={true}
-              style={styles.scrollV}
-              keyboardShouldPersistTaps="handled"
-              enableAutomaticScroll={true}
-            >
+            <KeyboardAvoidingView style={{ flex: 1 }}>
               <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Beneficiarios</Text>
+                <Text style={styles.tituloSeccion}>Información General</Text>
                 <Text style={styles.bodySeccion}>
-                  En caso de un imprevisto, es importante asegurarse de que tus
-                  bienes financieros se transfieran de manera rápida y eficiente
-                  a las personas que más te importan.
+                  Ingresa los datos solicitados para continuar.
                 </Text>
               </View>
               <View style={{ flex: 1 }}>
@@ -242,35 +171,63 @@ const Credito2 = ({ navigation }) => {
                     paddingTop: 15,
                   }}
                 >
-                  {/* Campos para introducir los datos del primer beneficiario */}
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      paddingLeft: 15,
-                      marginBottom: 10,
-                      color: "#060B4D",
+                  {/* Campos para introducir de la información general */}
+
+                  <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
+                    Tipo de Domicilio
+                  </Text>
+                  <DropDownPicker
+                    open={open}
+                    value={domicilio}
+                    items={dataDomicilio}
+                    placeholder="Selecciona una opción"
+                    setOpen={setOpen}
+                    setValue={setDomicilio}
+                    onChangeValue={(value) => setDomicilio(value)}
+                    style={styles.DropDownPicker}
+                    arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                    placeholderStyle={{
+                      color: "#c7c7c9ff",
                       fontFamily: "opensanssemibold",
                     }}
-                  >
-                    Primer Beneficiario
-                  </Text>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Nombre(s)</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setNombre}
-                    value={nombre}
-                    placeholder="Eje. Humberto Arturo"
+                    dropDownContainerStyle={styles.DropDownContainer}
+                    textStyle={styles.DropDownText}
                   />
                   <View style={styles.separacion} />
 
-                  <Text style={styles.tituloCampo}>Apellidos</Text>
+                  <Text style={styles.tituloCampo}>
+                    ¿Ha desempeñado algún cargo político?
+                  </Text>
+                  <View style={{ zIndex: open ? -1 : 1 }}>
+                    <DropDownPicker
+                      open={open2}
+                      value={politico}
+                      items={dataPolitico}
+                      placeholder="Selecciona una opción"
+                      setOpen={setOpen2}
+                      setValue={setPolitico}
+                      onChangeValue={(value) => setPolitico(value)}
+                      style={styles.DropDownPicker}
+                      arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                      placeholderStyle={{
+                        color: "#c7c7c9ff",
+                        fontFamily: "opensanssemibold",
+                      }}
+                      dropDownContainerStyle={[
+                        styles.DropDownContainer,
+                        { marginTop: -9 },
+                      ]}
+                      textStyle={styles.DropDownText}
+                    />
+                  </View>
+                  <View style={styles.separacion} />
+
+                  <Text style={styles.tituloCampo}>Profesión</Text>
                   <TextInput
                     style={styles.input}
-                    onChangeText={setApellidos}
-                    value={apellidos}
-                    placeholder="Eje. Flores Guillán"
+                    onChangeText={setProfesion}
+                    value={profesion}
+                    placeholder="Eje. Arquitecto"
                   />
                   <View style={styles.separacion} />
 
@@ -324,51 +281,12 @@ const Credito2 = ({ navigation }) => {
                   </View>
                   <View style={styles.separacion} />
 
-                  <Text style={styles.tituloCampo}>Porcentaje</Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <TextInput
-                      style={[styles.input, { flex: 0.08 }]}
-                      onChangeText={handlePorcentajeChange}
-                      value={porcentaje}
-                      keyboardType="numeric"
-                      maxLength={3}
-                      editable={segundoBeneficiaro}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 17,
-                        marginTop: -7.5,
-                        color: "#060B4D",
-                        fontFamily: "opensanssemibold",
-                      }}
-                    >
-                      %
-                    </Text>
-                  </View>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Parentesco</Text>
-                  <DropDownPicker
-                    open={open}
-                    value={parentesco}
-                    items={dataParentesco}
-                    placeholder="Selecciona una opción"
-                    setOpen={setOpen}
-                    setValue={setParentesco}
-                    onChangeValue={(value) => setParentesco(value)}
-                    style={styles.DropDownPicker}
-                    arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                    placeholderStyle={{
-                      color: "#c7c7c9ff",
-                      fontFamily: "opensanssemibold",
-                    }}
-                    dropDownContainerStyle={styles.DropDownContainer}
-                    textStyle={styles.DropDownText}
+                  <Text style={styles.tituloCampo}>Correo Electrónico</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setMail}
+                    value={mail}
+                    placeholder="nombre@mail.com"
                   />
                   <View style={styles.separacion} />
                   <View
@@ -377,144 +295,19 @@ const Credito2 = ({ navigation }) => {
                       { backgroundColor: "#f2f2f2ff", height: 5 },
                     ]}
                   />
-
-                  {/* Opcion de introducir un Segundo Beneficiario */}
-                  {segundoBeneficiaro === true && (
-                    <View style={{ marginTop: 15 }}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          paddingLeft: 15,
-                          marginBottom: 10,
-                          color: "#060B4D",
-                          fontFamily: "opensanssemibold",
-                        }}
-                      >
-                        Segundo Beneficiario
-                      </Text>
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Nombre(s)</Text>
-                      <TextInput
-                        style={styles.input}
-                        onChangeText={setNombre2}
-                        value={nombre2}
-                        placeholder="Eje. Humberto Arturo"
-                      />
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Apellidos</Text>
-                      <TextInput
-                        style={styles.input}
-                        onChangeText={setApellidos2}
-                        value={apellidos2}
-                        placeholder="Eje. Flores Guillán"
-                      />
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Teléfono</Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          paddingHorizontal: 15,
-                          alignItems: "center",
-                          marginTop: -5,
-                          marginBottom: 5,
-                        }}
-                      >
-                        <TouchableOpacity
-                          onPress={() => setPickerVisible2(true)}
-                        >
-                          <Entypo
-                            name="chevron-thin-down"
-                            size={15}
-                            color="#060B4D"
-                            style={{ marginRight: 5 }}
-                          />
-                        </TouchableOpacity>
-                        <CountryPicker
-                          withFilter
-                          countryCode={countryCode2}
-                          withCallingCode
-                          withCloseButton
-                          onSelect={(country) => {
-                            const { cca2, callingCode } = country;
-                            setCountryCode2(cca2);
-                            setCallingCode2(callingCode[0]);
-                            setTelefono2("");
-                          }}
-                          visible={pickerVisible2}
-                          onClose={() => setPickerVisible2(false)}
-                        />
-                        <Text style={styles.countryCodeText}>
-                          +{callingCode2} {" |"}
-                        </Text>
-                        <TextInput
-                          style={[
-                            styles.input,
-                            { paddingLeft: 0, marginBottom: 0 },
-                          ]}
-                          onChangeText={(text) =>
-                            formatPhoneNumber(text, setTelefono2, countryCode2)
-                          }
-                          value={telefono2}
-                          keyboardType="phone-pad"
-                          placeholder="10 dígitos"
-                        />
-                      </View>
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Porcentaje</Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <TextInput
-                          style={[styles.input, { flex: 0.08 }]}
-                          onChangeText={handlePorcentaje2Change}
-                          value={porcentaje2}
-                          keyboardType="numeric"
-                          maxLength={3}
-                        />
-                        <Text
-                          style={{
-                            fontSize: 17,
-                            marginTop: -7.5,
-                            color: "#060B4D",
-                            fontFamily: "opensanssemibold",
-                          }}
-                        >
-                          %
-                        </Text>
-                      </View>
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Parentesco</Text>
-                      <DropDownPicker
-                        open={open2}
-                        value={parentesco2}
-                        items={dataParentesco}
-                        placeholder="Selecciona una opción"
-                        setOpen={setOpen2}
-                        setValue={setParentesco2}
-                        onChangeValue={(value) => setParentesco2(value)}
-                        style={styles.DropDownPicker}
-                        arrowIconStyle={{
-                          tintColor: "#060B4D",
-                          width: 25,
-                        }}
-                        placeholderStyle={{
-                          color: "#c7c7c9ff",
-                          fontFamily: "opensanssemibold",
-                        }}
-                        dropDownContainerStyle={styles.DropDownContainer}
-                        textStyle={styles.DropDownText}
-                      />
-                      <View style={[styles.separacion]} />
-                    </View>
-                  )}
+                  <Text style={styles.tituloCampo}>
+                    Describe brevemente la solicitud del crédito
+                  </Text>
+                  <View style={{ paddingHorizontal: 15 }}>
+                    <TextInput
+                      style={styles.inputDescription}
+                      onChangeText={setDescripcion}
+                      value={descripcion}
+                      placeholder="Describe información"
+                      multiline={true}
+                      maxLength={300}
+                    />
+                  </View>
                 </View>
               </View>
               {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
@@ -522,35 +315,9 @@ const Credito2 = ({ navigation }) => {
                 <TouchableOpacity
                   style={[
                     styles.botonContinuar,
-                    { backgroundColor: "#E1E1E1" },
-                  ]}
-                  onPress={() =>
-                    segundoBeneficiaro
-                      ? handleCancelBeneficiario()
-                      : [
-                          setSegundoBeneficiaro(true),
-                          setPorcentaje("50"),
-                          setPorcentaje2("50"),
-                        ]
-                  }
-                >
-                  <Text
-                    style={[
-                      styles.textoBotonContinuar,
-                      { color: segundoBeneficiaro ? "#F95C5C" : "#060B4D" },
-                    ]}
-                  >
-                    {segundoBeneficiaro
-                      ? "Eliminar Beneficiario"
-                      : "Agregar Beneficiario"}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.botonContinuar,
                     { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
                   ]}
-                  onPress={() => navigation.navigate("Inversion3")}
+                  onPress={() => navigation.navigate("Credito3")}
                   disabled={disabled}
                 >
                   <Text
@@ -563,7 +330,7 @@ const Credito2 = ({ navigation }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </KeyboardAwareScrollView>
+            </KeyboardAvoidingView>
           </>
         )}
       </View>
@@ -627,6 +394,20 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     paddingLeft: 15,
+    marginBottom: 10,
+  },
+  inputDescription: {
+    borderRadius: 10,
+    borderColor: "#afb0c4ff",
+    borderWidth: 1,
+    backgroundColor: "#F7F7F7",
+    fontSize: 16,
+    height: 120,
+    width: "100%",
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
     marginBottom: 10,
   },
   countryCodeText: {
