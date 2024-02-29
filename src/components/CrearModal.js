@@ -75,7 +75,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           onPress={() => {
             handleClose();
             navigation.navigate("Crear", {
-              screen: "Inversion3",
+              screen: "Inversion1",
             });
           }}
         >
@@ -86,7 +86,12 @@ const CrearModal = ({ isVisible, onClose }) => {
         {/* Boton Crédito */}
         <TouchableOpacity
           style={styles.buttonModal}
-          onPress={() => handleClose()}
+          onPress={() => {
+            handleClose();
+            navigation.navigate("Crear", {
+              screen: "Credito1",
+            });
+          }}
         >
           <FontAwesome name="credit-card" size={30} color="#060B4D" />
           <Text style={styles.texto}>Solicitar Crédito</Text>

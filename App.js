@@ -38,6 +38,11 @@ import Inversion2 from "./src/screens/Credito-Inversion-Ahorro/Inversion2";
 import Inversion3 from "./src/screens/Credito-Inversion-Ahorro/Inversion3";
 import Inversion4 from "./src/screens/Credito-Inversion-Ahorro/Inversion4";
 import Inversion5 from "./src/screens/Credito-Inversion-Ahorro/Inversion5";
+import Credito1 from "./src/screens/Credito-Inversion-Ahorro/Credito1";
+import Credito2 from "./src/screens/Credito-Inversion-Ahorro/Credito2";
+import Credito3 from "./src/screens/Credito-Inversion-Ahorro/Credito3";
+import Credito4 from "./src/screens/Credito-Inversion-Ahorro/Credito4";
+import Credito5 from "./src/screens/Credito-Inversion-Ahorro/Credito5";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -156,6 +161,11 @@ function CrearStack() {
       <Stack.Screen name="Inversion3" component={Inversion3} />
       <Stack.Screen name="Inversion4" component={Inversion4} />
       <Stack.Screen name="Inversion5" component={Inversion5} />
+      <Stack.Screen name="Credito1" component={Credito1} />
+      <Stack.Screen name="Credito2" component={Credito2} />
+      <Stack.Screen name="Credito3" component={Credito3} />
+      <Stack.Screen name="Credito4" component={Credito4} />
+      <Stack.Screen name="Credito5" component={Credito5} />
     </Stack.Navigator>
   );
 }
