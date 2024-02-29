@@ -74,13 +74,13 @@ const Inversion4 = ({ navigation }) => {
             <View
               style={[
                 styles.imagenConcepto,
-                { backgroundColor: focus === "Firma" ? "#2FF690" : "#D5D5D5" },
+                { backgroundColor: focus === "Firma" ? "#2FF690" : "#F0F0F0" },
               ]}
             >
               <MaterialCommunityIcons
                 name="signature-freehand"
                 size={35}
-                color={focus === "Firma" ? "#060B4D" : "grey"}
+                color={focus === "Firma" ? "#060B4D" : "black"}
               />
             </View>
             <View style={{ marginLeft: 10, paddingRight: 65 }}>
@@ -102,14 +102,14 @@ const Inversion4 = ({ navigation }) => {
                 styles.imagenConcepto,
                 {
                   backgroundColor:
-                    focus === "Presencial" ? "#2FF690" : "#D5D5D5",
+                    focus === "Presencial" ? "#2FF690" : "#F0F0F0",
                 },
               ]}
             >
               <FontAwesome
                 name="handshake-o"
                 size={30}
-                color={focus === "Presencial" ? "#060B4D" : "grey"}
+                color={focus === "Presencial" ? "#060B4D" : "black"}
               />
             </View>
             <View style={{ marginLeft: 10, paddingRight: 65 }}>
@@ -129,13 +129,13 @@ const Inversion4 = ({ navigation }) => {
             <View
               style={[
                 styles.imagenConcepto,
-                { backgroundColor: focus === "Enviar" ? "#2FF690" : "#D5D5D5" },
+                { backgroundColor: focus === "Enviar" ? "#2FF690" : "#F0F0F0" },
               ]}
             >
               <MaterialCommunityIcons
                 name="truck-fast-outline"
                 size={40}
-                color={focus === "Enviar" ? "#060B4D" : "grey"}
+                color={focus === "Enviar" ? "#060B4D" : "black"}
               />
             </View>
             <View style={{ marginLeft: 10, paddingRight: 65 }}>
@@ -152,7 +152,7 @@ const Inversion4 = ({ navigation }) => {
         <View style={{}}>
           <TouchableOpacity
             style={styles.botonContinuar}
-            onPress={() => navigation.navigate("Inversion5")}
+            onPress={() => navigation.navigate("MiTankef")}
           >
             <Text style={styles.textoBotonContinuar}>Aceptar</Text>
           </TouchableOpacity>
