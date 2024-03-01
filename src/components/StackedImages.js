@@ -1,8 +1,10 @@
 // Importaciones de React Native y React
 import React, { useCallback, useState } from "react";
-import { View, Image, StyleSheet, Text } from "react-native";
+import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import { APIGet } from "../API/APIService";
 
 // Constantes para los tamaño de las imágenes
@@ -28,6 +30,7 @@ const borderSize = 2;
  */
 
 const StackedImages = () => {
+  const navigation = useNavigation();
   // Estados locales
   const [images, setImages] = useState([]);
 
@@ -58,16 +61,39 @@ const StackedImages = () => {
 
   // Componente visual
   return (
-    // Contenedor de las imágenes
     <View style={styles.container}>
-      {/* Mapea las imagenes y las renderiza una por una */}
-      {images.map((imgUrl, index) => (
-        <View key={index} style={styles.imageWrapper}>
-          <View style={styles.borderWrapper}>
-            <Image source={{ uri: imgUrl }} style={styles.image} />
+      {/* Si hay miembros en la red se muestran sus imagenes */}
+      {!images.length > 0 ? (
+        images.map((imgUrl, index) => (
+          <View key={index} style={styles.imageWrapper}>
+            <View style={styles.borderWrapper}>
+              <Image source={{ uri: imgUrl }} style={styles.image} />
+            </View>
           </View>
+        ))
+      ) : (
+        /* Si no hay miembros en la red se muestra un texto */
+        <View style={styles.addButtonContainer}>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => navigation.navigate("MiRed")}
+          >
+            <MaterialCommunityIcons
+              name="account-plus"
+              size={25}
+              color="#060B4D"
+              style={{ transform: [{ scaleX: -1 }] }}
+            />
+            <Text style={styles.addButtonText}>Agregar amigo</Text>
+          </TouchableOpacity>
+          <Text style={styles.addButtonTextInfo}>
+            Haz crecer tu red financiera agregando amigos, socios o familiares,
+            solicita un crédito, invierte y/o crea tu caja de ahorro presionando
+            el icono{" "}
+            <FontAwesome name="plus-square-o" size={20} color="#060B4D" />
+          </Text>
         </View>
-      ))}
+      )}
     </View>
   );
 };
@@ -103,6 +129,31 @@ const styles = StyleSheet.create({
     height: imageSize,
     alignItems: "center",
     justifyContent: "center",
+  },
+  addButtonContainer: {
+    marginTop: 5,
+    alignItems: "center",
+  },
+  addButton: {
+    backgroundColor: "#2FF690",
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+  },
+  addButtonText: {
+    marginLeft: 5,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
+  },
+  addButtonTextInfo: {
+    marginTop: 10,
+    paddingHorizontal: 40,
+    textAlign: "center",
+    fontFamily: "opensans",
+    color: "#060B4D",
   },
 });
 
