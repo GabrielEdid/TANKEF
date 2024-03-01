@@ -5,9 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
-  TextInput,
+  Image,
   Keyboard,
+  Modal,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
@@ -29,6 +29,18 @@ const widthHalf = screenWidth / 2;
 const Inversion4 = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Firma");
+  const [modalPresencial, setModalPresencial] = useState(false);
+
+  // Función para manejar el botón de Aceptar
+  const handleSiguiente = () => {
+    if (focus === "Presencial") {
+      setModalPresencial(true);
+    } else if (focus === "Enviar") {
+      navigation.navigate("MiTankef");
+    } else if (focus === "Firma") {
+      navigation.navigate("Inversion5");
+    }
+  };
 
   // Componente Visual
   return (
@@ -151,11 +163,43 @@ const Inversion4 = ({ navigation }) => {
         <View style={{}}>
           <TouchableOpacity
             style={styles.botonContinuar}
-            onPress={() => navigation.navigate("MiTankef")}
+            onPress={() => handleSiguiente()}
           >
             <Text style={styles.textoBotonContinuar}>Aceptar</Text>
           </TouchableOpacity>
         </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalPresencial}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Image
+                style={{ width: 70, height: 70, marginBottom: 10 }}
+                source={require("../../../assets/images/Presencial.png")}
+              />
+              <Text style={styles.modalText}>Presencial</Text>
+              <Text style={styles.modalTextBody}>
+                Nos pondremos en contacto
+              </Text>
+              <TouchableOpacity
+                style={[
+                  styles.botonContinuar,
+                  { marginBottom: 0, width: "100%" },
+                ]}
+                onPress={() => [
+                  setModalPresencial(false),
+                  navigation.navigate("MiTankef"),
+                ]}
+              >
+                <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
+                  Aceptar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -243,6 +287,42 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensans",
     textAlign: "justify",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo semitransparente
+  },
+  modalView: {
+    width: "80%", // Asegúrate de que el contenedor del modal tenga un ancho definido.
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    fontSize: 30,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "center",
+  },
+  modalTextBody: {
+    marginTop: 5,
+    marginBottom: 5,
+    fontSize: 14,
+    color: "#060B4D",
+    fontFamily: "opensans",
+    textAlign: "center",
   },
 });
 
