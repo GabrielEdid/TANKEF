@@ -34,6 +34,7 @@ const Credito2 = ({ navigation }) => {
   const [profesion, setProfesion] = useState("");
   const [telefono, setTelefono] = useState("");
   const [mail, setMail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
   const [descripcion, setDescripcion] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
@@ -56,22 +57,38 @@ const Credito2 = ({ navigation }) => {
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
+    setIsEmailValid(isValidEmail(mail));
     const camposLlenos =
       domicilio !== "" &&
       politico !== "" &&
       profesion !== "" &&
       telefono !== "" &&
       mail !== "" &&
-      descripcion !== "";
+      descripcion !== "" &&
+      isEmailValid;
 
     setDisabled(!camposLlenos);
-  }, [domicilio, politico, profesion, telefono, mail, descripcion]);
+  }, [
+    domicilio,
+    politico,
+    profesion,
+    telefono,
+    mail,
+    descripcion,
+    isEmailValid,
+  ]);
 
   // Function to format the phone number as user types
   const formatPhoneNumber = (text, setFunction, country) => {
     const formatter = new AsYouType(country);
     const formatted = formatter.input(text);
     setFunction(formatted);
+  };
+
+  const isValidEmail = (email) => {
+    const regex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(String(email).toLowerCase());
   };
 
   // Componente Visual
@@ -277,7 +294,6 @@ const Credito2 = ({ navigation }) => {
                       value={telefono}
                       keyboardType="phone-pad"
                       placeholder="10 dígitos"
-                      maxLength={12}
                     />
                   </View>
                   <View style={styles.separacion} />
@@ -285,7 +301,9 @@ const Credito2 = ({ navigation }) => {
                   <Text style={styles.tituloCampo}>Correo Electrónico</Text>
                   <TextInput
                     style={styles.input}
-                    onChangeText={setMail}
+                    onChangeText={(text) => {
+                      setMail(text);
+                    }}
                     value={mail}
                     placeholder="nombre@mail.com"
                   />

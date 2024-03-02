@@ -320,7 +320,6 @@ const Inversion2 = ({ navigation }) => {
                       value={telefono}
                       keyboardType="phone-pad"
                       placeholder="10 dígitos"
-                      maxLength={12}
                     />
                   </View>
                   <View style={styles.separacion} />
@@ -461,7 +460,6 @@ const Inversion2 = ({ navigation }) => {
                           value={telefono2}
                           keyboardType="phone-pad"
                           placeholder="10 dígitos"
-                          maxLength={12}
                         />
                       </View>
                       <View style={styles.separacion} />
