@@ -181,22 +181,43 @@ const Inversion4 = ({ navigation }) => {
               />
               <Text style={styles.modalText}>Presencial</Text>
               <Text style={styles.modalTextBody}>
-                Nos pondremos en contacto
+                ¡Gracias por tu interés! Nos pondremos en contacto contigo para
+                coordinar la firma del contrato en breve.
               </Text>
-              <TouchableOpacity
-                style={[
-                  styles.botonContinuar,
-                  { marginBottom: 0, width: "100%" },
-                ]}
-                onPress={() => [
-                  setModalPresencial(false),
-                  navigation.navigate("MiTankef"),
-                ]}
-              >
-                <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
-                  Aceptar
-                </Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={[
+                    styles.botonContinuar,
+                    {
+                      marginBottom: 0,
+                      marginRight: 5,
+                      flex: 1,
+                      backgroundColor: "white",
+                      borderColor: "#060B4D",
+                      borderWidth: 1,
+                    },
+                  ]}
+                  onPress={() => [setModalPresencial(false)]}
+                >
+                  <Text
+                    style={[styles.textoBotonContinuar, { color: "#060B4D" }]}
+                  >
+                    Cancelar
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.botonContinuar,
+                    { marginBottom: 0, flex: 1, marginLeft: 5 },
+                  ]}
+                  onPress={() => [
+                    setModalPresencial(false),
+                    navigation.navigate("MiTankef"),
+                  ]}
+                >
+                  <Text style={[styles.textoBotonContinuar]}>Aceptar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
@@ -299,7 +320,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
