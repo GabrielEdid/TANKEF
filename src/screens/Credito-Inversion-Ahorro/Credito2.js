@@ -277,6 +277,7 @@ const Credito2 = ({ navigation }) => {
                       value={telefono}
                       keyboardType="phone-pad"
                       placeholder="10 dígitos"
+                      maxLength={12}
                     />
                   </View>
                   <View style={styles.separacion} />
