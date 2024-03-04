@@ -9,19 +9,17 @@ import {
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
   Alert,
 } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import CountryPicker from "react-native-country-picker-modal";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
+import CountryPicker from "react-native-country-picker-modal";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AsYouType } from "libphonenumber-js";
 // Importaciones de Componentes y Hooks
-import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
-import Inversion4 from "./Inversion4";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -30,17 +28,26 @@ const widthHalf = screenWidth / 2;
 const Inversion5 = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
+  const [nombre, setNombre] = useState("");
+  const [calle, setCalle] = useState("");
+  const [numeroExterior, setNumeroExterior] = useState("");
+  const [numeroInterior, setNumeroInterior] = useState("");
+  const [codigoPostal, setCodigoPostal] = useState("");
+  const [pais, setPais] = useState("México");
+  const [estado, setEstado] = useState("");
+  const [ciudad, setCiudad] = useState("");
+  const [municipio, setMunicipio] = useState("");
+  const [colonia, setColonia] = useState("");
   const [domicilio, setDomicilio] = useState("");
   const [politico, setPolitico] = useState("");
   const [profesion, setProfesion] = useState("");
   const [telefono, setTelefono] = useState("");
   const [mail, setMail] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true);
   const [descripcion, setDescripcion] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
-  const [callingCode, setCallingCode] = useState("52");
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
@@ -120,7 +127,14 @@ const Inversion5 = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <KeyboardAvoidingView style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          scrollEnabled={true}
+          enableOnAndroid={true}
+          style={styles.scrollV}
+          keyboardShouldPersistTaps="handled"
+          enableAutomaticScroll={true}
+        >
           <View style={styles.seccion}>
             <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
             <Text style={styles.bodySeccion}>Enviar a Domicilio</Text>
@@ -136,8 +150,86 @@ const Inversion5 = ({ navigation }) => {
               {/* Campos para introducir de la información general */}
 
               <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
-                Tipo de Domicilio
+                Nombre Completo{" "}
               </Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setProfesion}
+                value={profesion}
+                placeholder="Eje. Raúl Guizar Torres"
+              />
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Nombre de la Calle</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setProfesion}
+                value={profesion}
+                placeholder="Eje. Acueducto de las Fuentes"
+              />
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Número Exterior</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setProfesion}
+                value={profesion}
+                placeholder="Eje. 22"
+              />
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Número Interior</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setProfesion}
+                value={profesion}
+                placeholder="Eje. 4B"
+              />
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Código Postal</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setProfesion}
+                value={profesion}
+                placeholder="Eje. 53290"
+              />
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Teléfono</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingHorizontal: 15,
+                  alignItems: "center",
+                  marginTop: -5,
+                  marginBottom: 5,
+                }}
+              >
+                <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                  <Entypo
+                    name="chevron-thin-down"
+                    size={15}
+                    color="#060B4D"
+                    style={{ marginRight: 5 }}
+                  />
+                </TouchableOpacity>
+                <CountryPicker
+                  withFilter
+                  countryCode={countryCode}
+                  withCloseButton
+                  onSelect={(country) => {
+                    const { cca2 } = country;
+                    setPais(cca2);
+                  }}
+                  visible={pickerVisible}
+                  onClose={() => setPickerVisible(false)}
+                />
+                <Text style={styles.countryCodeText}>{pais}</Text>
+              </View>
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
               <DropDownPicker
                 open={open}
                 value={domicilio}
@@ -183,79 +275,6 @@ const Inversion5 = ({ navigation }) => {
                 />
               </View>
               <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Profesión</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setProfesion}
-                value={profesion}
-                placeholder="Eje. Arquitecto"
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Teléfono</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  paddingHorizontal: 15,
-                  alignItems: "center",
-                  marginTop: -5,
-                  marginBottom: 5,
-                }}
-              >
-                <TouchableOpacity onPress={() => setPickerVisible(true)}>
-                  <Entypo
-                    name="chevron-thin-down"
-                    size={15}
-                    color="#060B4D"
-                    style={{ marginRight: 5 }}
-                  />
-                </TouchableOpacity>
-                <CountryPicker
-                  withFilter
-                  countryCode={countryCode}
-                  withCallingCode
-                  withCloseButton
-                  onSelect={(country) => {
-                    const { cca2, callingCode } = country;
-                    setCountryCode(cca2);
-                    setCallingCode(callingCode[0]);
-                    setTelefono("");
-                  }}
-                  visible={pickerVisible}
-                  onClose={() => setPickerVisible(false)}
-                />
-                <Text style={styles.countryCodeText}>
-                  +{callingCode} {" |"}
-                </Text>
-                <TextInput
-                  style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
-                  onChangeText={(text) =>
-                    formatPhoneNumber(text, setTelefono, countryCode)
-                  }
-                  value={telefono}
-                  keyboardType="phone-pad"
-                  placeholder="10 dígitos"
-                />
-              </View>
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Correo Electrónico</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={(text) => {
-                  setMail(text);
-                }}
-                value={mail}
-                placeholder="nombre@mail.com"
-              />
-              <View style={styles.separacion} />
-              <View
-                style={[
-                  styles.separacion,
-                  { backgroundColor: "#f2f2f2ff", height: 5 },
-                ]}
-              />
             </View>
           </View>
           {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
@@ -278,7 +297,7 @@ const Inversion5 = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
       </View>
     </TouchableWithoutFeedback>
   );
