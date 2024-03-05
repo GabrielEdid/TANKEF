@@ -48,8 +48,11 @@ const Inversion5 = ({ navigation }) => {
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
-  const [open, setOpen] = useState(false);
-  const [open2, setOpen2] = useState(false);
+  const [openPais, setOpenPais] = useState(false);
+  const [openEstado, setOpenEstado] = useState(false);
+  const [openCiudad, setOpenCiudad] = useState(false);
+  const [openMunicipio, setOpenMunicipio] = useState(false);
+  const [openColonia, setOpenColonia] = useState(false);
 
   const [dataDomicilio] = useState([
     { label: "Real", value: "Real" },
@@ -196,7 +199,7 @@ const Inversion5 = ({ navigation }) => {
               />
               <View style={styles.separacion} />
 
-              <Text style={styles.tituloCampo}>Teléfono</Text>
+              <Text style={styles.tituloCampo}>País</Text>
               <View
                 style={{
                   flexDirection: "row",
@@ -206,7 +209,7 @@ const Inversion5 = ({ navigation }) => {
                   marginBottom: 5,
                 }}
               >
-                <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                <TouchableOpacity onPress={() => setOpenPais(true)}>
                   <Entypo
                     name="chevron-thin-down"
                     size={15}
@@ -229,38 +232,88 @@ const Inversion5 = ({ navigation }) => {
               </View>
               <View style={styles.separacion} />
 
-              <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
-              <DropDownPicker
-                open={open}
-                value={domicilio}
-                items={dataDomicilio}
-                placeholder="Selecciona una opción"
-                setOpen={setOpen}
-                setValue={setDomicilio}
-                onChangeValue={(value) => setDomicilio(value)}
-                style={styles.DropDownPicker}
-                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                placeholderStyle={{
-                  color: "#c7c7c9ff",
-                  fontFamily: "opensanssemibold",
-                }}
-                dropDownContainerStyle={styles.DropDownContainer}
-                textStyle={styles.DropDownText}
-              />
+              <Text style={styles.tituloCampo}>Estado</Text>
+              <View style={{ zIndex: openEstado ? -1 : 1 }}>
+                <DropDownPicker
+                  open={openEstado}
+                  value={estado}
+                  items={dataDomicilio}
+                  placeholder="Selecciona una opción"
+                  setOpen={setOpenEstado}
+                  setValue={setEstado}
+                  onChangeValue={(value) => setEstado(value)}
+                  style={styles.DropDownPicker}
+                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                  placeholderStyle={{
+                    color: "#c7c7c9ff",
+                    fontFamily: "opensanssemibold",
+                  }}
+                  dropDownContainerStyle={styles.DropDownContainer}
+                  textStyle={styles.DropDownText}
+                />
+              </View>
               <View style={styles.separacion} />
 
-              <Text style={styles.tituloCampo}>
-                ¿Ha desempeñado algún cargo político?
-              </Text>
-              <View style={{ zIndex: open ? -1 : 1 }}>
+              <Text style={styles.tituloCampo}>Ciudad</Text>
+              <View style={{ zIndex: openCiudad ? -1 : 1 }}>
                 <DropDownPicker
-                  open={open2}
-                  value={politico}
+                  open={openCiudad}
+                  value={ciudad}
                   items={dataPolitico}
                   placeholder="Selecciona una opción"
-                  setOpen={setOpen2}
-                  setValue={setPolitico}
-                  onChangeValue={(value) => setPolitico(value)}
+                  setOpen={setOpenCiudad}
+                  setValue={setCiudad}
+                  onChangeValue={(value) => setCiudad(value)}
+                  style={styles.DropDownPicker}
+                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                  placeholderStyle={{
+                    color: "#c7c7c9ff",
+                    fontFamily: "opensanssemibold",
+                  }}
+                  dropDownContainerStyle={[
+                    styles.DropDownContainer,
+                    { marginTop: -9 },
+                  ]}
+                  textStyle={styles.DropDownText}
+                />
+              </View>
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Municipio</Text>
+              <View style={{ zIndex: openMunicipio ? -1 : 1 }}>
+                <DropDownPicker
+                  open={openMunicipio}
+                  value={municipio}
+                  items={dataPolitico}
+                  placeholder="Selecciona una opción"
+                  setOpen={setOpenMunicipio}
+                  setValue={setMunicipio}
+                  onChangeValue={(value) => setMunicipio(value)}
+                  style={styles.DropDownPicker}
+                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                  placeholderStyle={{
+                    color: "#c7c7c9ff",
+                    fontFamily: "opensanssemibold",
+                  }}
+                  dropDownContainerStyle={[
+                    styles.DropDownContainer,
+                    { marginTop: -9 },
+                  ]}
+                  textStyle={styles.DropDownText}
+                />
+              </View>
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Colonia</Text>
+              <View style={{ zIndex: openColonia ? -1 : 1 }}>
+                <DropDownPicker
+                  open={openColonia}
+                  value={colonia}
+                  items={dataPolitico}
+                  placeholder="Selecciona una opción"
+                  setOpen={setOpenColonia}
+                  setValue={setColonia}
+                  onChangeValue={(value) => setColonia(value)}
                   style={styles.DropDownPicker}
                   arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
                   placeholderStyle={{

@@ -30,6 +30,17 @@ const Credito4 = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Firma");
 
+  // Función para manejar el botón de Aceptar
+  const handleSiguiente = () => {
+    if (focus === "Presencial") {
+      setModalPresencial(true);
+    } else if (focus === "Enviar") {
+      navigation.navigate("Inversion5");
+    } else if (focus === "Firma") {
+      navigation.navigate("MiTankef");
+    }
+  };
+
   // Componente Visual
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -151,7 +162,7 @@ const Credito4 = ({ navigation }) => {
         <View style={{}}>
           <TouchableOpacity
             style={styles.botonContinuar}
-            onPress={() => navigation.navigate("MiTankef")}
+            onPress={() => handleSiguiente()}
           >
             <Text style={styles.textoBotonContinuar}>Aceptar</Text>
           </TouchableOpacity>
