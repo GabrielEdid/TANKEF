@@ -102,7 +102,7 @@ const StackedImages = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    marginBottom: 20,
+    marginBottom: 10,
     marginTop: 5,
     marginLeft: 15,
     alignSelf: "center",

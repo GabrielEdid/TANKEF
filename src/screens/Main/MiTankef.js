@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -169,57 +170,8 @@ const MiTankef = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Segunda Barra de Tabs, al precionar detalle o movimientos cambia el enfoque de toda la pantalla segun este tab y el anterior */}
-      <View style={styles.secondTabsContainer}>
-        {/* Boton Tab Detalle */}
-        <TouchableOpacity
-          style={styles.secondTabButton}
-          onPress={() => setSecondFocus("Detalle")}
-        >
-          <Text
-            style={[
-              styles.secondTabText,
-              {
-                color: secondFocus === "Detalle" ? "#060B4D" : "#9596AF",
-                fontFamily:
-                  secondFocus === "Detalle"
-                    ? "opensansbold"
-                    : "opensanssemibold",
-              },
-            ]}
-          >
-            Detalle
-          </Text>
-          {secondFocus === "Detalle" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
-
-        {/* Boton Tab Movimientos */}
-        <TouchableOpacity
-          style={styles.secondTabButton}
-          onPress={() => setSecondFocus("Movimientos")}
-        >
-          <Text
-            style={[
-              styles.secondTabText,
-              {
-                color: secondFocus === "Movimientos" ? "#060B4D" : "#9596AF",
-                fontFamily:
-                  secondFocus === "Movimientos"
-                    ? "opensansbold"
-                    : "opensanssemibold",
-              },
-            ]}
-          >
-            Movimientos
-          </Text>
-          {secondFocus === "Movimientos" ? (
-            <View style={styles.focusLine} />
-          ) : null}
-        </TouchableOpacity>
-      </View>
-
       {/* Se llaman los respectivos componentes segun los estados de los dos tabs anteriores */}
-      <View style={{ marginTop: 5 }}>
+      <ScrollView style={{ marginTop: 5 }}>
         {focus === "Credito" && secondFocus === "Detalle" && (
           <MiTankefCredito />
         )}
@@ -230,7 +182,7 @@ const MiTankef = () => {
         {focus === "Obligado" && secondFocus === "Detalle" && (
           <MiTankefObligado />
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -263,14 +215,13 @@ const styles = StyleSheet.create({
     fontFamily: "opensansbold",
     fontSize: 14,
     color: "#060B4D",
-    marginTop: 20,
+    marginTop: 10,
   },
   valorRed: {
     textAlign: "center",
     fontFamily: "opensansbold",
     fontSize: 30,
     color: "#060B4D",
-    marginTop: 0,
   },
   imagen: {
     alignSelf: "center",
@@ -285,14 +236,15 @@ const styles = StyleSheet.create({
     marginTop: 3,
     backgroundColor: "white",
     flexDirection: "row",
-    paddingVertical: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
     justifyContent: "space-between",
   },
   tabButton: {
     alignItems: "center",
-    borderRadius: 100,
+    borderRadius: 5,
     paddingVertical: 10,
-    marginHorizontal: 7,
+    marginHorizontal: 3,
     flex: 1,
   },
   tabText: {

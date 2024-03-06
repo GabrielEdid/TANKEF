@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,10 @@ import {
   Image,
 } from "react-native";
 // Importaciones de Componentes y Hooks
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 
 const screenWidth = Dimensions.get("window").width;
+const widthThird = screenWidth / 3;
 const widthHalf = screenWidth / 2;
 
 /**
@@ -29,6 +30,8 @@ const widthHalf = screenWidth / 2;
  */
 
 const MiTankefInversion = (props) => {
+  // Estados y Contexto
+  const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
   // Mapa de imágenes
   const imageMap = {
     Bill: require("../../assets/images/BillInvest.png"),
@@ -45,16 +48,24 @@ const MiTankefInversion = (props) => {
             justifyContent: "center",
             alignItems: "center",
             marginLeft: 10,
-            borderColor: "#bcbeccff",
-            borderWidth: 2,
+            backgroundColor: "white",
             paddingHorizontal: 17.5,
-            paddingVertical: 20,
+            paddingVertical: 5,
+            width: 120,
             borderRadius: 10,
           }}
         >
-          <Image source={imageMap["Bill"]} style={styles.bill} />
-          <Text style={{ color: "#bcbeccff", fontFamily: "opensansbold" }}>
-            Invertir
+          <Entypo name="plus" size={30} color="black" />
+          <Text
+            style={{
+              color: "#060B4D",
+              fontFamily: "opensansbold",
+              textAlign: "center",
+              fontSize: 12,
+              marginTop: -5,
+            }}
+          >
+            Nueva{"\n"}Inversión
           </Text>
         </TouchableOpacity>
 
@@ -63,29 +74,65 @@ const MiTankefInversion = (props) => {
           style={{
             alignItems: "center",
             marginLeft: 10,
-            paddingVertical: 20,
-            paddingHorizontal: 5,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
             borderRadius: 10,
-            maxWidth: 100,
-            backgroundColor: "white",
+            width: 120,
+            backgroundColor: "#2FF690",
           }}
         >
-          <Image
-            source={imageMap["Bill"]}
-            style={[styles.bill, { tintColor: "#060B4D" }]}
-          />
+          <Image source={imageMap["Bill"]} style={styles.bill} />
           <Text
             style={{
               color: "#060B4D",
-              fontFamily: "opensans",
+              fontFamily: "opensanssemibold",
               textAlign: "center",
+              fontSize: 12,
             }}
           >
             Inversión Roberto Hijo
           </Text>
-          <Text style={{ color: "#060B4D", fontFamily: "opensansbold" }}>
-            $350K
+        </TouchableOpacity>
+      </View>
+      <View style={styles.tabsContainer}>
+        {/* Boton Tab Balance */}
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setFocus("Balance")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: focus === "Balance" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  focus === "Balance" ? "opensansbold" : "opensanssemibold",
+              },
+            ]}
+          >
+            Balance General
           </Text>
+          {focus === "Balance" ? <View style={styles.focusLine} /> : null}
+        </TouchableOpacity>
+
+        {/* Boton Tab Movimientos */}
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setFocus("Movimientos")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  focus === "Movimientos" ? "opensansbold" : "opensanssemibold",
+              },
+            ]}
+          >
+            Movimientos
+          </Text>
+          {focus === "Movimientos" ? <View style={styles.focusLine} /> : null}
         </TouchableOpacity>
       </View>
       {/* Vista de la información total de las inversiónes */}
@@ -93,73 +140,67 @@ const MiTankefInversion = (props) => {
         style={{
           justifyContent: "space-between",
           backgroundColor: "white",
-        }}
-      >
-        <View
-          style={{
-            paddingVertical: 10,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Monto acumulado</Text>
-            <Text style={styles.monto}>$450,000.00</Text>
-          </View>
-          <Ionicons
-            name="remove-outline"
-            size={30}
-            color="#e1e2ebff"
-            style={styles.line}
-          />
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Rendimiento neto</Text>
-            <Text style={styles.monto}>$443.06</Text>
-          </View>
-        </View>
-      </View>
-      {/* Información relevante de la inversión, estatus, folio y plazo */}
-      <View
-        style={{
-          marginTop: 5,
-          backgroundColor: "white",
           paddingHorizontal: 20,
+          paddingVertical: 15,
+          alignItems: "center",
+          marginTop: 5,
         }}
       >
-        <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Text style={styles.concepto}>Estatus</Text>
-          <Text style={styles.valorConcepto}>A tiempo</Text>
-          {/* View para tener la palomita negra */}
-          <View
-            style={{
-              backgroundColor: "#060B4D",
-              alignSelf: "center",
-              borderRadius: 15,
-              marginLeft: 5,
-            }}
-          >
-            <AntDesign
-              name="checkcircle"
-              size={18}
-              color="#2FF690"
-              style={{
-                alignSelf: "center",
-                bottom: 0.1,
-              }}
-            />
-          </View>
-        </View>
-        <View style={styles.seperacion} />
+        <Text style={styles.tituloMonto}>Retorno de inversión neto</Text>
+        <Text style={styles.monto}>$11,106.11 MXN</Text>
+      </View>
 
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.concepto}>Folio</Text>
+      <View style={styles.container}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Folio de{"\n"}inversión</Text>
           <Text style={styles.valorConcepto}>4225fd6f64</Text>
         </View>
-        <View style={styles.seperacion} />
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Plazo de{"\n"}inversión</Text>
+          <Text style={styles.valorConcepto}>12 meses</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Rendimiento{"\n"}neto mensual</Text>
+          <Text style={styles.valorConcepto}>$91.67</Text>
+        </View>
+      </View>
 
-        <View style={{ flexDirection: "row", marginBottom: 15 }}>
-          <Text style={styles.concepto}>Plazo</Text>
-          <Text style={styles.valorConcepto}>36 meses</Text>
+      <View style={styles.container}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
+          <Text style={styles.valorConcepto}>$10,000.00</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+          <Text style={styles.valorConcepto}>11.50%</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
+          <Text style={styles.valorConcepto}>$2.75</Text>
         </View>
       </View>
     </View>
@@ -175,31 +216,58 @@ const styles = StyleSheet.create({
   },
   monto: {
     fontFamily: "opensansbold",
-    fontSize: 18,
+    fontSize: 22,
     color: "#060B4D",
   },
   line: {
     transform: [{ rotate: "90deg" }],
-    position: "absolute",
-    left: widthHalf - 10,
-    alignSelf: "center",
+    right: 10,
   },
   bill: {
-    height: 30,
-    width: 30,
+    height: 20,
+    width: 20,
     marginBottom: 5,
-    tintColor: "#bcbeccff",
+    tintColor: "#060B4D",
+  },
+  //Estilos para la segunda barra de Tabs
+  tabsContainer: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    paddingTop: 16,
+    justifyContent: "space-between",
+  },
+  tabButton: {
+    alignItems: "center",
+    flex: 1,
+  },
+  tabText: {
+    fontFamily: "opensansbold",
+    fontSize: 16,
+  },
+  focusLine: {
+    height: 4,
+    width: widthHalf,
+    marginTop: 12,
+    backgroundColor: "#060B4D",
+  },
+  container: {
+    backgroundColor: "white",
+    marginTop: 5,
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   concepto: {
-    fontFamily: "opensansbold",
-    fontSize: 15,
+    fontFamily: "opensans",
+    fontSize: 14,
     color: "#060B4D",
-    flex: 1,
+    textAlign: "center",
   },
   valorConcepto: {
     fontFamily: "opensanssemibold",
-    fontSize: 15,
+    fontSize: 16,
     color: "#060B4D",
+    textAlign: "center",
   },
   seperacion: {
     width: "100%",
