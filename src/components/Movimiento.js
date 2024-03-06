@@ -82,13 +82,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#060B4D",
     fontFamily: "opensansbold",
-    marginLeft: 10,
   },
   textoFecha: {
     fontSize: 14,
     color: "#060B4D",
     fontFamily: "opensans",
-    marginLeft: 10,
   },
   textoMonto: {
     fontSize: 16,
