@@ -146,7 +146,7 @@ const MiTankefInversion = (props) => {
               paddingHorizontal: 20,
               paddingVertical: 15,
               alignItems: "center",
-              marginTop: 5,
+              marginTop: 3,
             }}
           >
             <Text style={styles.tituloMonto}>Retorno de inversión neto</Text>
@@ -211,16 +211,18 @@ const MiTankefInversion = (props) => {
 
       {focus === "Movimientos" && (
         <>
-          <View
-            style={{
-              marginTop: 5,
-            }}
-          >
+          <View>
             <Movimiento
               movimiento={"Inicio Crédito"}
-              fecha={"29.FEB.2024"}
-              monto={"$10,000"}
+              fecha={"10.ENE.2024"}
+              monto={"$10,000.00 MN"}
               positive={true}
+            />
+            <Movimiento
+              movimiento={"Pago mensual"}
+              fecha={"10.FEB.2024"}
+              monto={"$2,174.20 MN"}
+              positive={false}
             />
           </View>
         </>
@@ -274,7 +276,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "white",
-    marginTop: 5,
+    marginTop: 3,
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 10,

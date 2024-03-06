@@ -53,7 +53,7 @@ const Movimiento = (props) => {
       <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
         {/* Ensure alignment and spacing */}
         <AntDesign
-          name="arrowup"
+          name={props.positive === true ? "arrowup" : "arrowdown"}
           size={24}
           color={props.positive === true ? "#2FF690" : "#F33B45"}
         />
@@ -72,11 +72,10 @@ const Movimiento = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    marginTop: 3,
     paddingHorizontal: 10,
     paddingVertical: 5,
+    marginTop: 3,
     width: "100%",
-    flexDirection: "row",
     position: "relative",
   },
   textoMovimiento: {
@@ -96,12 +95,6 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     alignSelf: "center",
     fontFamily: "opensansbold",
-  },
-  linea: {
-    backgroundColor: "#cccccc",
-    height: 1,
-    width: "100%",
-    marginTop: 5,
   },
 });
 
