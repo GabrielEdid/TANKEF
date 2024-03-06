@@ -10,6 +10,7 @@ import {
 } from "react-native";
 // Importaciones de Componentes y Hooks
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
+import Movimiento from "./Movimiento";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -136,73 +137,94 @@ const MiTankefInversion = (props) => {
         </TouchableOpacity>
       </View>
       {/* Vista de la información total de las inversiónes */}
-      <View
-        style={{
-          justifyContent: "space-between",
-          backgroundColor: "white",
-          paddingHorizontal: 20,
-          paddingVertical: 15,
-          alignItems: "center",
-          marginTop: 5,
-        }}
-      >
-        <Text style={styles.tituloMonto}>Retorno de inversión neto</Text>
-        <Text style={styles.monto}>$11,106.11 MXN</Text>
-      </View>
+      {focus === "Balance" && (
+        <>
+          <View
+            style={{
+              justifyContent: "space-between",
+              backgroundColor: "white",
+              paddingHorizontal: 20,
+              paddingVertical: 15,
+              alignItems: "center",
+              marginTop: 5,
+            }}
+          >
+            <Text style={styles.tituloMonto}>Retorno de inversión neto</Text>
+            <Text style={styles.monto}>$11,106.11 MXN</Text>
+          </View>
 
-      <View style={styles.container}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Folio de{"\n"}inversión</Text>
-          <Text style={styles.valorConcepto}>4225fd6f64</Text>
-        </View>
-        <Ionicons
-          name="remove-outline"
-          size={30}
-          color="#e1e2ebff"
-          style={styles.line}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Plazo de{"\n"}inversión</Text>
-          <Text style={styles.valorConcepto}>12 meses</Text>
-        </View>
-        <Ionicons
-          name="remove-outline"
-          size={30}
-          color="#e1e2ebff"
-          style={styles.line}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Rendimiento{"\n"}neto mensual</Text>
-          <Text style={styles.valorConcepto}>$91.67</Text>
-        </View>
-      </View>
+          <View style={styles.container}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Folio de{"\n"}inversión</Text>
+              <Text style={styles.valorConcepto}>4225fd6f64</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Plazo de{"\n"}inversión</Text>
+              <Text style={styles.valorConcepto}>12 meses</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Rendimiento{"\n"}neto mensual</Text>
+              <Text style={styles.valorConcepto}>$91.67</Text>
+            </View>
+          </View>
 
-      <View style={styles.container}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-          <Text style={styles.valorConcepto}>$10,000.00</Text>
-        </View>
-        <Ionicons
-          name="remove-outline"
-          size={30}
-          color="#e1e2ebff"
-          style={styles.line}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-          <Text style={styles.valorConcepto}>11.50%</Text>
-        </View>
-        <Ionicons
-          name="remove-outline"
-          size={30}
-          color="#e1e2ebff"
-          style={styles.line}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-          <Text style={styles.valorConcepto}>$2.75</Text>
-        </View>
-      </View>
+          <View style={styles.container}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
+              <Text style={styles.valorConcepto}>$10,000.00</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+              <Text style={styles.valorConcepto}>11.50%</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
+              <Text style={styles.valorConcepto}>$2.75</Text>
+            </View>
+          </View>
+        </>
+      )}
+
+      {focus === "Movimientos" && (
+        <>
+          <View
+            style={{
+              marginTop: 5,
+            }}
+          >
+            <Movimiento
+              movimiento={"Inicio Crédito"}
+              fecha={"29.FEB.2024"}
+              monto={"$10,000"}
+              positive={true}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };
