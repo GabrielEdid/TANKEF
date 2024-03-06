@@ -213,16 +213,16 @@ const MiTankefInversion = (props) => {
         <>
           <View>
             <Movimiento
-              movimiento={"Inicio Crédito"}
+              movimiento={"Inicio Inversión"}
               fecha={"10.ENE.2024"}
-              monto={"$10,000.00 MN"}
+              monto={"$10,000.00 MXN"}
               positive={true}
             />
             <Movimiento
-              movimiento={"Pago mensual"}
+              movimiento={"Abono"}
               fecha={"10.FEB.2024"}
-              monto={"$2,174.20 MN"}
-              positive={false}
+              monto={"$5,000.00 MXN"}
+              positive={true}
             />
           </View>
         </>

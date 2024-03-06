@@ -17,35 +17,27 @@ import { UserContext } from "../hooks/UserContext";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 /**
- * `Invitaciones` es un componente que muestra información de una Invitación específica enviada al usuario,
- * como una tarjeta interactuable. Ofrece la funcionalidad para navegar a una vista detallada
- * del perfil asociado y la opción de eliminar (con confirmación mediante un modal) o aceptar esta invitación
- * para añadirlo a la red del usuario.
+ * `Movimiento` es un componente que muestra información de un movimiento específico para créditos o inversiones del usuario.
+ * permite ver fechas, montos y detalles de los movimientos realizados en la pantalla de MiTankef.
  *
  * Props:
- * - `objectID`: Identificador único del objeto renderizado, se utiliza para eliminar la invitación.
- * - `userID`: Identificador único del usuario asociado a la invitaciones.
- * - `imagen`: Puede ser una URL de imagen o un recurso local para mostrar como avatar del usuario.
- * - `nombre`: Nombre del usuario a mostrar en la tarjeta de invitaciones.
- * - `mail`: Correo electrónico del usuario asociado a la invitaciones.
+ * - `movimiento`: Nombre del movimiento
+ * - `fecha`: Fecha del movimiento
+ * - `monto`: Monto del movimiento
+ * - `positive`: Si el movimiento es positivo o negativo
  *
- * Ejemplo de uso (o ver en MiRed.js):
- * <Invitaciones
- *   userID="123"
- *   objectID="456"
- *   imagen="https://ruta/a/imagen.jpg"
- *   nombre="John Doe"
- *   mail="johndoe@gmail.com"
- * />
+ * Ejemplo de uso (o ver en MiTankefInversion.js):
+ * <Movimiento
+ *  movimiento={"Pago mensual"}
+ *  fecha={"10.FEB.2024"}
+ *  monto={"$2,174.20 MN"}
+ *  positive={false}
+ *  />
  */
 
 const Movimiento = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
-  const { user, setUser } = useContext(UserContext);
-  const [isVisible, setIsVisible] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Componente visual
   return (

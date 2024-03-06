@@ -1,16 +1,19 @@
 // Importaciones de React Native y React
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
 // Importaciones de Componentes y Hooks
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
+import Movimiento from "./Movimiento";
 
 const screenWidth = Dimensions.get("window").width;
+const widthThird = screenWidth / 3;
 const widthHalf = screenWidth / 2;
 
 /**
@@ -28,115 +31,210 @@ const widthHalf = screenWidth / 2;
  */
 
 const MiTankefCredito = (props) => {
+  // Estados y Contexto
+  const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
+  // Mapa de imágenes
+  const imageMap = {
+    Bill: require("../../assets/images/BillInvest.png"),
+    Card: require("../../assets/images/tarjeta.png"),
+
+    // ... más imágenes
+  };
+
+  // Componente visual
   return (
     <View>
-      {/* Vista de los distintos valores del crédito */}
-      <View
-        style={{
-          justifyContent: "space-between",
-          backgroundColor: "white",
-        }}
-      >
-        <View
+      {/* Vista de las distintas inversiones */}
+      <View style={{ flexDirection: "row", marginBottom: 5 }}>
+        {/* Opcion para tener boton de "Nuevo Crédito" */}
+        {/*<TouchableOpacity
           style={{
-            paddingVertical: 10,
-            flexDirection: "row",
+            justifyContent: "center",
             alignItems: "center",
+            marginLeft: 10,
+            backgroundColor: "white",
+            paddingHorizontal: 17.5,
+            paddingVertical: 5,
+            width: 120,
+            borderRadius: 10,
           }}
         >
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Crédito solicitado</Text>
-            <Text style={styles.monto}>$20,000.00</Text>
-          </View>
-          <Ionicons
-            name="remove-outline"
-            size={30}
-            color="#e1e2ebff"
-            style={styles.line}
-          />
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Mensualidades</Text>
-            <Text style={styles.monto}>$3,500.00</Text>
-          </View>
-        </View>
-
-        <View
-          style={{
-            paddingVertical: 10,
-            flexDirection: "row",
-          }}
-        >
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Por pagar</Text>
-            <Text style={[styles.monto, { color: "#2EC379" }]}>$16,450.00</Text>
-          </View>
-          <Ionicons
-            name="remove-outline"
-            size={30}
-            color="#e1e2ebff"
-            style={styles.line}
-          />
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Fecha de pago</Text>
-            <Text style={styles.monto}>29.30.24</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Información relevante del crédito, estatus, folio, plazo y tipo */}
-      <View
-        style={{
-          marginTop: 5,
-          backgroundColor: "white",
-          paddingHorizontal: 20,
-        }}
-      >
-        <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Text style={styles.concepto}>Estatus</Text>
-          <Text style={styles.valorConcepto}>A tiempo</Text>
-          {/* View para tener la palomita negra */}
-          <View
+          <Entypo name="plus" size={30} color="black" />
+          <Text
             style={{
-              backgroundColor: "#060B4D",
-              alignSelf: "center",
-              borderRadius: 15,
-              marginLeft: 5,
+              color: "#060B4D",
+              fontFamily: "opensansbold",
+              textAlign: "center",
+              fontSize: 12,
+              marginTop: -5,
             }}
           >
-            <AntDesign
-              name="checkcircle"
-              size={18}
-              color="#2FF690"
-              style={{
-                alignSelf: "center",
-                bottom: 0.1,
-              }}
+            Nuevo{"\n"}Crédito
+          </Text>
+          </TouchableOpacity>*/}
+
+        {/* Componente repetible */}
+        <TouchableOpacity
+          style={{
+            alignItems: "center",
+            marginLeft: 10,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            borderRadius: 10,
+            width: 120,
+            backgroundColor: "#2FF690",
+          }}
+        >
+          <FontAwesome name="credit-card" size={24} color="#060B4D" />
+          <Text
+            style={{
+              color: "#060B4D",
+              fontFamily: "opensanssemibold",
+              textAlign: "center",
+              fontSize: 12,
+            }}
+          >
+            Crédito por comité
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.tabsContainer}>
+        {/* Boton Tab Balance */}
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setFocus("Balance")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: focus === "Balance" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  focus === "Balance" ? "opensansbold" : "opensanssemibold",
+              },
+            ]}
+          >
+            Balance General
+          </Text>
+          {focus === "Balance" ? <View style={styles.focusLine} /> : null}
+        </TouchableOpacity>
+
+        {/* Boton Tab Movimientos */}
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setFocus("Movimientos")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  focus === "Movimientos" ? "opensansbold" : "opensanssemibold",
+              },
+            ]}
+          >
+            Movimientos
+          </Text>
+          {focus === "Movimientos" ? <View style={styles.focusLine} /> : null}
+        </TouchableOpacity>
+      </View>
+      {/* Vista de la información total de las inversiónes */}
+      {focus === "Balance" && (
+        <>
+          <View
+            style={{
+              justifyContent: "space-between",
+              backgroundColor: "white",
+              paddingHorizontal: 20,
+              paddingVertical: 15,
+              alignItems: "center",
+              marginTop: 3,
+            }}
+          >
+            <Text style={styles.tituloMonto}>Total a pagar</Text>
+            <Text style={styles.monto}>$12,913.12 MXN</Text>
+          </View>
+
+          <View style={styles.container}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Folio de{"\n"}crédito</Text>
+              <Text style={styles.valorConcepto}>4225fd6f64</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Plazo de{"\n"}crédito</Text>
+              <Text style={styles.valorConcepto}>6 meses</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Comisión por{"\n"}apertura</Text>
+              <Text style={styles.valorConcepto}>$200.00</Text>
+            </View>
+          </View>
+
+          <View style={styles.container}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Monto{"\n"}solicitado</Text>
+              <Text style={styles.valorConcepto}>$10,000.00</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+              <Text style={styles.valorConcepto}>7.84%</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Pago{"\n"}mensual</Text>
+              <Text style={styles.valorConcepto}>$2,174.20</Text>
+            </View>
+          </View>
+        </>
+      )}
+
+      {focus === "Movimientos" && (
+        <>
+          <View>
+            <Movimiento
+              movimiento={"Inicio Crédito"}
+              fecha={"10.ENE.2024"}
+              monto={"$10,000.00 MXN"}
+              positive={true}
+            />
+            <Movimiento
+              movimiento={"Pago mensual"}
+              fecha={"10.FEB.2024"}
+              monto={"$2,174.20 MXN"}
+              positive={false}
             />
           </View>
-        </View>
-        <View style={styles.seperacion} />
-
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.concepto}>Folio</Text>
-          <Text style={styles.valorConcepto}>4225fd6f64</Text>
-        </View>
-        <View style={styles.seperacion} />
-
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.concepto}>Plazo</Text>
-          <Text style={styles.valorConcepto}>6 meses</Text>
-        </View>
-        <View style={styles.seperacion} />
-
-        <View style={{ flexDirection: "row", marginBottom: 15 }}>
-          <Text style={styles.concepto}>Tipo</Text>
-          <Text style={styles.valorConcepto}>Red</Text>
-        </View>
-      </View>
+        </>
+      )}
     </View>
   );
 };
 
+// Estilos del componente
 const styles = StyleSheet.create({
   tituloMonto: {
     fontFamily: "opensans",
@@ -145,25 +243,58 @@ const styles = StyleSheet.create({
   },
   monto: {
     fontFamily: "opensansbold",
-    fontSize: 18,
+    fontSize: 22,
     color: "#060B4D",
   },
   line: {
     transform: [{ rotate: "90deg" }],
-    position: "absolute",
-    left: widthHalf - 10,
-    alignSelf: "center",
+    right: 10,
+  },
+  bill: {
+    height: 20,
+    width: 20,
+    marginBottom: 5,
+    tintColor: "#060B4D",
+  },
+  //Estilos para la segunda barra de Tabs
+  tabsContainer: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    paddingTop: 16,
+    justifyContent: "space-between",
+  },
+  tabButton: {
+    alignItems: "center",
+    flex: 1,
+  },
+  tabText: {
+    fontFamily: "opensansbold",
+    fontSize: 16,
+  },
+  focusLine: {
+    height: 4,
+    width: widthHalf,
+    marginTop: 12,
+    backgroundColor: "#060B4D",
+  },
+  container: {
+    backgroundColor: "white",
+    marginTop: 3,
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   concepto: {
-    fontFamily: "opensansbold",
-    fontSize: 15,
+    fontFamily: "opensans",
+    fontSize: 14,
     color: "#060B4D",
-    flex: 1,
+    textAlign: "center",
   },
   valorConcepto: {
     fontFamily: "opensanssemibold",
-    fontSize: 15,
+    fontSize: 16,
     color: "#060B4D",
+    textAlign: "center",
   },
   seperacion: {
     width: "100%",
