@@ -17,6 +17,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AsYouType } from "libphonenumber-js";
+import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
@@ -26,6 +27,8 @@ const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
 const Inversion2 = ({ navigation }) => {
+  const route = useRoute();
+  const { flujo } = route.params;
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
@@ -153,7 +156,7 @@ const Inversion2 = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>Inversión</Text>
+          <Text style={styles.tituloPantalla}>{flujo}</Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -550,7 +553,9 @@ const Inversion2 = ({ navigation }) => {
                     styles.botonContinuar,
                     { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
                   ]}
-                  onPress={() => navigation.navigate("Inversion3")}
+                  onPress={() => {
+                    navigation.navigate("DatosBancarios", { flujo: flujo });
+                  }}
                   disabled={disabled}
                 >
                   <Text

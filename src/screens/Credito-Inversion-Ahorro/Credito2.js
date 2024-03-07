@@ -5,18 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Alert,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import CountryPicker from "react-native-country-picker-modal";
 import DropDownPicker from "react-native-dropdown-picker";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AsYouType } from "libphonenumber-js";
 // Importaciones de Componentes y Hooks
 import BulletPointText from "../../components/BulletPointText";
@@ -57,7 +55,9 @@ const Credito2 = ({ navigation }) => {
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
-    setIsEmailValid(isValidEmail(mail));
+    const emailValido = isValidEmail(mail);
+    setIsEmailValid(emailValido);
+
     const camposLlenos =
       domicilio !== "" &&
       politico !== "" &&
@@ -65,18 +65,10 @@ const Credito2 = ({ navigation }) => {
       telefono !== "" &&
       mail !== "" &&
       descripcion !== "" &&
-      isEmailValid;
+      emailValido; // Utiliza la variable local para la validación
 
     setDisabled(!camposLlenos);
-  }, [
-    domicilio,
-    politico,
-    profesion,
-    telefono,
-    mail,
-    descripcion,
-    isEmailValid,
-  ]);
+  }, [domicilio, politico, profesion, telefono, mail, descripcion]);
 
   // Function to format the phone number as user types
   const formatPhoneNumber = (text, setFunction, country) => {
@@ -173,7 +165,14 @@ const Credito2 = ({ navigation }) => {
 
         {focus === "General" && (
           <>
-            <KeyboardAvoidingView style={{ flex: 1 }}>
+            <KeyboardAwareScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              scrollEnabled={true}
+              enableOnAndroid={true}
+              style={styles.scrollV}
+              keyboardShouldPersistTaps="handled"
+              enableAutomaticScroll={true}
+            >
               <View style={styles.seccion}>
                 <Text style={styles.tituloSeccion}>Información General</Text>
                 <Text style={styles.bodySeccion}>
@@ -349,7 +348,7 @@ const Credito2 = ({ navigation }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
           </>
         )}
       </View>

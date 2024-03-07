@@ -9,7 +9,6 @@ import {
   Keyboard,
   Modal,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";

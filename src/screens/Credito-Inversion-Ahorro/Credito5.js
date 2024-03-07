@@ -15,9 +15,8 @@ import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
-import CountryPicker from "react-native-country-picker-modal";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { AsYouType } from "libphonenumber-js";
+import axios from "axios";
 // Importaciones de Componentes y Hooks
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
@@ -25,7 +24,7 @@ import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const Inversion5 = ({ navigation }) => {
+const Credito5 = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
@@ -34,9 +33,11 @@ const Inversion5 = ({ navigation }) => {
   const [numeroInterior, setNumeroInterior] = useState("");
   const [codigoPostal, setCodigoPostal] = useState("");
   const [pais, setPais] = useState("México");
-  const [estado, setEstado] = useState("");
-  const [ciudad, setCiudad] = useState("");
+  const [estado, setEstado] = useState();
+  const [estadosData, setEstadosData] = useState([]);
+  //const [ciudad, setCiudad] = useState("");
   const [municipio, setMunicipio] = useState("");
+  const [municipiosData, setMunicipiosData] = useState([]);
   const [colonia, setColonia] = useState("");
   const [domicilio, setDomicilio] = useState("");
   const [politico, setPolitico] = useState("");
@@ -46,11 +47,9 @@ const Inversion5 = ({ navigation }) => {
   const [descripcion, setDescripcion] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [pickerVisible, setPickerVisible] = useState(false);
-  const [countryCode, setCountryCode] = useState("MX");
-  const [openPais, setOpenPais] = useState(false);
+  //const [openPais, setOpenPais] = useState(false);
   const [openEstado, setOpenEstado] = useState(false);
-  const [openCiudad, setOpenCiudad] = useState(false);
+  //const [openCiudad, setOpenCiudad] = useState(false);
   const [openMunicipio, setOpenMunicipio] = useState(false);
   const [openColonia, setOpenColonia] = useState(false);
 
@@ -89,12 +88,51 @@ const Inversion5 = ({ navigation }) => {
     isEmailValid,
   ]);
 
-  // Function to format the phone number as user types
-  const formatPhoneNumber = (text, setFunction, country) => {
-    const formatter = new AsYouType(country);
-    const formatted = formatter.input(text);
-    setFunction(formatted);
-  };
+  useEffect(() => {
+    const config = {
+      method: "get",
+      url: "https://api.countrystatecity.in/v1/countries/MX/states",
+      headers: {
+        "X-CSCAPI-KEY":
+          "UndSbjVseEw1MkFkTENGMFVNYUtZUXVmdHNZdWNoQ1pHUEFRMW1uUw==",
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        const formattedData = response.data.map((item) => ({
+          label: item.name,
+          value: [item.name, item.iso2],
+        }));
+        setEstadosData(formattedData);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
+  useEffect(() => {
+    // Verifica que estado tenga contenido y sea un arreglo con al menos dos elementos
+    if (Array.isArray(estado)) {
+      const isoCode = estado[1]; // Asumiendo que el segundo elemento contiene el código ISO necesario para la API
+      const config = {
+        method: "get",
+        url: `https://api.countrystatecity.in/v1/countries/MX/states/${isoCode}/cities`,
+        headers: {
+          "X-CSCAPI-KEY":
+            "UndSbjVseEw1MkFkTENGMFVNYUtZUXVmdHNZdWNoQ1pHUEFRMW1uUw==",
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          const formattedData = response.data.map((item) => ({
+            label: item.name,
+            value: item.name,
+          }));
+          setMunicipiosData(formattedData);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [estado]);
 
   const isValidEmail = (email) => {
     const regex =
@@ -119,7 +157,7 @@ const Inversion5 = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>Crédito</Text>
+          <Text style={styles.tituloPantalla}>Inversión</Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -200,62 +238,110 @@ const Inversion5 = ({ navigation }) => {
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>País</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  paddingHorizontal: 15,
-                  alignItems: "center",
-                  marginTop: -5,
-                  marginBottom: 5,
-                }}
-              >
-                <TouchableOpacity onPress={() => setOpenPais(true)}>
-                  <Entypo
-                    name="chevron-thin-down"
-                    size={15}
-                    color="#060B4D"
-                    style={{ marginRight: 5 }}
-                  />
-                </TouchableOpacity>
-                <CountryPicker
-                  withFilter
-                  countryCode={countryCode}
-                  withCloseButton
-                  onSelect={(country) => {
-                    const { cca2 } = country;
-                    setPais(cca2);
-                  }}
-                  visible={pickerVisible}
-                  onClose={() => setPickerVisible(false)}
-                />
-                <Text style={styles.countryCodeText}>{pais}</Text>
-              </View>
+              {/* Dropdown estatico en país */}
+              <DropDownPicker
+                items={[{ label: "México", value: "México" }]}
+                placeholder={pais}
+                showArrowIcon={false}
+                style={styles.DropDownPicker}
+                textStyle={styles.DropDownText}
+                disabled={true}
+                //setValue={setPais}
+                //onChangeValue={(value) => setPais(value)}
+                //value={pais}
+                //setOpen={setOpenPais}
+                //arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                //dropDownContainerStyle={styles.DropDownContainer}
+              />
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Estado</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setEstado}
+              <DropDownPicker
+                searchable={true}
+                searchPlaceholder="Busca un Estado"
+                open={openEstado}
                 value={estado}
-                placeholder="Eje. Nuevo León"
+                items={estadosData}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                placeholder="Selecciona una opción"
+                setOpen={setOpenEstado}
+                setValue={setEstado}
+                onSelectItem={(selection) => {
+                  setEstado(selection.value);
+                }}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={styles.DropDownContainer}
+                textStyle={styles.DropDownText}
               />
               <View style={styles.separacion} />
 
-              <Text style={styles.tituloCampo}>Ciudad</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setCiudad}
+              {/*<Text style={styles.tituloCampo}>Ciudad</Text>
+              <DropDownPicker
+                searchable={true}
+                open={openCiudad}
                 value={ciudad}
-                placeholder="Eje. Monterrey"
+                items={dataPolitico}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                placeholder="Selecciona una opción"
+                setOpen={setOpenCiudad}
+                setValue={setCiudad}
+                onChangeValue={(value) => setCiudad(value)}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={[
+                  styles.DropDownContainer,
+                  { marginTop: -9 },
+                ]}
+                textStyle={styles.DropDownText}
               />
-              <View style={styles.separacion} />
+              <View style={styles.separacion} /> */}
 
               <Text style={styles.tituloCampo}>Municipio</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setMunicipio}
+              <DropDownPicker
+                searchable={true}
+                searchPlaceholder="Busca un Municipio"
+                open={openMunicipio}
                 value={municipio}
-                placeholder="Eje. Bosques de las Lomas"
+                items={municipiosData}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                placeholder={
+                  estado
+                    ? "Selecciona una opción"
+                    : "Primero selecciona un estado"
+                }
+                setOpen={setOpenMunicipio}
+                setValue={setMunicipio}
+                onChangeValue={(value) => setMunicipio(value)}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={[
+                  styles.DropDownContainer,
+                  { marginTop: -9 },
+                ]}
+                textStyle={styles.DropDownText}
+                disabled={estado === undefined || municipiosData.length === 0}
               />
               <View style={styles.separacion} />
 
@@ -312,7 +398,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 65,
+    marginRight: 85,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
@@ -416,4 +502,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Inversion5;
+export default Credito5;

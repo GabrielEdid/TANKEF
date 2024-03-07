@@ -12,6 +12,7 @@ import {
 import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import BulletPointTextSmall from "../../components/BulletPointTextSmall";
 import { Feather } from "@expo/vector-icons";
@@ -21,7 +22,9 @@ import { set } from "date-fns";
 const screenWidth = Dimensions.get("window").width;
 const widthFourth = screenWidth / 4 - 15;
 
-const Inversion1 = ({ navigation }) => {
+const DefinirInversion = ({ navigation }) => {
+  const route = useRoute();
+  const { flujo } = route.params;
   // Estados y Contexto
   const [monto, setMonto] = useState("");
   const [montoNumeric, setMontoNumeric] = useState(0);
@@ -247,10 +250,9 @@ const Inversion1 = ({ navigation }) => {
               styles.botonContinuar,
               { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
             ]}
-            onPress={() => [
-              navigation.navigate("Inversion2"),
-              console.log(monto),
-            ]}
+            onPress={() => {
+              navigation.navigate("Beneficiarios", { flujo: flujo });
+            }}
             disabled={!isAcceptable}
           >
             <Text
@@ -373,4 +375,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Inversion1;
+export default DefinirInversion;

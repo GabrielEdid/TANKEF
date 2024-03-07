@@ -15,9 +15,8 @@ import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
-import CountryPicker from "react-native-country-picker-modal";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { AsYouType } from "libphonenumber-js";
+import axios from "axios";
 // Importaciones de Componentes y Hooks
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
@@ -34,9 +33,11 @@ const Inversion5 = ({ navigation }) => {
   const [numeroInterior, setNumeroInterior] = useState("");
   const [codigoPostal, setCodigoPostal] = useState("");
   const [pais, setPais] = useState("México");
-  const [estado, setEstado] = useState("");
-  const [ciudad, setCiudad] = useState("");
+  const [estado, setEstado] = useState();
+  const [estadosData, setEstadosData] = useState([]);
+  //const [ciudad, setCiudad] = useState("");
   const [municipio, setMunicipio] = useState("");
+  const [municipiosData, setMunicipiosData] = useState([]);
   const [colonia, setColonia] = useState("");
   const [domicilio, setDomicilio] = useState("");
   const [politico, setPolitico] = useState("");
@@ -46,11 +47,9 @@ const Inversion5 = ({ navigation }) => {
   const [descripcion, setDescripcion] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [pickerVisible, setPickerVisible] = useState(false);
-  const [countryCode, setCountryCode] = useState("MX");
-  const [openPais, setOpenPais] = useState(false);
+  //const [openPais, setOpenPais] = useState(false);
   const [openEstado, setOpenEstado] = useState(false);
-  const [openCiudad, setOpenCiudad] = useState(false);
+  //const [openCiudad, setOpenCiudad] = useState(false);
   const [openMunicipio, setOpenMunicipio] = useState(false);
   const [openColonia, setOpenColonia] = useState(false);
 
@@ -89,12 +88,51 @@ const Inversion5 = ({ navigation }) => {
     isEmailValid,
   ]);
 
-  // Function to format the phone number as user types
-  const formatPhoneNumber = (text, setFunction, country) => {
-    const formatter = new AsYouType(country);
-    const formatted = formatter.input(text);
-    setFunction(formatted);
-  };
+  useEffect(() => {
+    const config = {
+      method: "get",
+      url: "https://api.countrystatecity.in/v1/countries/MX/states",
+      headers: {
+        "X-CSCAPI-KEY":
+          "UndSbjVseEw1MkFkTENGMFVNYUtZUXVmdHNZdWNoQ1pHUEFRMW1uUw==",
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        const formattedData = response.data.map((item) => ({
+          label: item.name,
+          value: [item.name, item.iso2],
+        }));
+        setEstadosData(formattedData);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
+  useEffect(() => {
+    // Verifica que estado tenga contenido y sea un arreglo con al menos dos elementos
+    if (Array.isArray(estado)) {
+      const isoCode = estado[1]; // Asumiendo que el segundo elemento contiene el código ISO necesario para la API
+      const config = {
+        method: "get",
+        url: `https://api.countrystatecity.in/v1/countries/MX/states/${isoCode}/cities`,
+        headers: {
+          "X-CSCAPI-KEY":
+            "UndSbjVseEw1MkFkTENGMFVNYUtZUXVmdHNZdWNoQ1pHUEFRMW1uUw==",
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          const formattedData = response.data.map((item) => ({
+            label: item.name,
+            value: item.name,
+          }));
+          setMunicipiosData(formattedData);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [estado]);
 
   const isValidEmail = (email) => {
     const regex =
@@ -220,9 +258,10 @@ const Inversion5 = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Estado</Text>
               <DropDownPicker
                 searchable={true}
+                searchPlaceholder="Busca un Estado"
                 open={openEstado}
                 value={estado}
-                items={dataDomicilio}
+                items={estadosData}
                 listMode="MODAL"
                 modalProps={{
                   animationType: "slide",
@@ -230,7 +269,9 @@ const Inversion5 = ({ navigation }) => {
                 placeholder="Selecciona una opción"
                 setOpen={setOpenEstado}
                 setValue={setEstado}
-                onChangeValue={(value) => setEstado(value)}
+                onSelectItem={(selection) => {
+                  setEstado(selection.value);
+                }}
                 style={styles.DropDownPicker}
                 arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
                 placeholderStyle={{
@@ -242,7 +283,7 @@ const Inversion5 = ({ navigation }) => {
               />
               <View style={styles.separacion} />
 
-              <Text style={styles.tituloCampo}>Ciudad</Text>
+              {/*<Text style={styles.tituloCampo}>Ciudad</Text>
               <DropDownPicker
                 searchable={true}
                 open={openCiudad}
@@ -268,18 +309,24 @@ const Inversion5 = ({ navigation }) => {
                 ]}
                 textStyle={styles.DropDownText}
               />
-              <View style={styles.separacion} />
+              <View style={styles.separacion} /> */}
 
               <Text style={styles.tituloCampo}>Municipio</Text>
               <DropDownPicker
+                searchable={true}
+                searchPlaceholder="Busca un Municipio"
                 open={openMunicipio}
                 value={municipio}
-                items={dataPolitico}
+                items={municipiosData}
                 listMode="MODAL"
                 modalProps={{
                   animationType: "slide",
                 }}
-                placeholder="Selecciona una opción"
+                placeholder={
+                  estado
+                    ? "Selecciona una opción"
+                    : "Primero selecciona un estado"
+                }
                 setOpen={setOpenMunicipio}
                 setValue={setMunicipio}
                 onChangeValue={(value) => setMunicipio(value)}
@@ -294,33 +341,16 @@ const Inversion5 = ({ navigation }) => {
                   { marginTop: -9 },
                 ]}
                 textStyle={styles.DropDownText}
+                disabled={estado === undefined || municipiosData.length === 0}
               />
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Colonia</Text>
-              <DropDownPicker
-                open={openColonia}
+              <TextInput
+                style={styles.input}
+                onChangeText={setColonia}
                 value={colonia}
-                listMode="MODAL"
-                modalProps={{
-                  animationType: "slide",
-                }}
-                items={dataPolitico}
-                placeholder="Selecciona una opción"
-                setOpen={setOpenColonia}
-                setValue={setColonia}
-                onChangeValue={(value) => setColonia(value)}
-                style={styles.DropDownPicker}
-                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                placeholderStyle={{
-                  color: "#c7c7c9ff",
-                  fontFamily: "opensanssemibold",
-                }}
-                dropDownContainerStyle={[
-                  styles.DropDownContainer,
-                  { marginTop: -9 },
-                ]}
-                textStyle={styles.DropDownText}
+                placeholder="Eje. Vista del Valle"
               />
               <View style={styles.separacion} />
             </View>

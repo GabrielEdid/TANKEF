@@ -33,11 +33,11 @@ import MisConexiones from "./src/screens/Main/Pantallas Main Dejadas/MisConexion
 import LoginProgresivo from "./src/screens/Main/LoginProgresivo";
 import LoginProgresivo2 from "./src/screens/Main/LoginProgresivo2";
 import EditarPerfil from "./src/screens/Main/EditarPerfil";
-import Inversion1 from "./src/screens/Credito-Inversion-Ahorro/Inversion1";
-import Inversion2 from "./src/screens/Credito-Inversion-Ahorro/Inversion2";
-import Inversion3 from "./src/screens/Credito-Inversion-Ahorro/Inversion3";
-import Inversion4 from "./src/screens/Credito-Inversion-Ahorro/Inversion4";
-import Inversion5 from "./src/screens/Credito-Inversion-Ahorro/Inversion5";
+import DefinirInversion from "./src/screens/Credito-Inversion-Ahorro/DefinirInversion";
+import Beneficiarios from "./src/screens/Credito-Inversion-Ahorro/Beneficiarios";
+import DatosBancarios from "./src/screens/Credito-Inversion-Ahorro/DatosBancarios";
+import DefinirFirma from "./src/screens/Credito-Inversion-Ahorro/DefinirFirma";
+import FirmaPresencial from "./src/screens/Credito-Inversion-Ahorro/FirmaPresencial";
 import Credito1 from "./src/screens/Credito-Inversion-Ahorro/Credito1";
 import Credito2 from "./src/screens/Credito-Inversion-Ahorro/Credito2";
 import Credito3 from "./src/screens/Credito-Inversion-Ahorro/Credito3";
@@ -156,11 +156,11 @@ function CrearStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Placeholder" component={Placeholder} />
-      <Stack.Screen name="Inversion1" component={Inversion1} />
-      <Stack.Screen name="Inversion2" component={Inversion2} />
-      <Stack.Screen name="Inversion3" component={Inversion3} />
-      <Stack.Screen name="Inversion4" component={Inversion4} />
-      <Stack.Screen name="Inversion5" component={Inversion5} />
+      <Stack.Screen name="DefinirInversion" component={DefinirInversion} />
+      <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
+      <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
+      <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
+      <Stack.Screen name="FirmaPresencial" component={FirmaPresencial} />
       <Stack.Screen name="Credito1" component={Credito1} />
       <Stack.Screen name="Credito2" component={Credito2} />
       <Stack.Screen name="Credito3" component={Credito3} />
@@ -356,11 +356,11 @@ function LoginFlow() {
   }
 
   // Determinar la pantalla inicial basada en el estado de inicio de sesión del usuario
-  const initialRouteName =
-    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";
+  //const initialRouteName =
+  //userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
-  //const initialRouteName = "MainFlow";
+  const initialRouteName = "MainFlow";
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (
