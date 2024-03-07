@@ -42,7 +42,7 @@ import DefinirCredito from "./src/screens/Credito-Inversion-Ahorro/DefinirCredit
 import InfoGeneral from "./src/screens/Credito-Inversion-Ahorro/InfoGeneral";
 import Credito3 from "./src/screens/Credito-Inversion-Ahorro/Credito3";
 import Credito4 from "./src/screens/Credito-Inversion-Ahorro/Credito4";
-import Credito5 from "./src/screens/Credito-Inversion-Ahorro/Credito5";
+import Credito5 from "./src/screens/Credito-Inversion-Ahorro/Credito5-INPUTS";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 

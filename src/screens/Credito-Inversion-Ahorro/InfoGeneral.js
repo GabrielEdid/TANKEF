@@ -199,6 +199,10 @@ const Credito2 = ({ navigation }) => {
                     open={open}
                     value={domicilio}
                     items={dataDomicilio}
+                    listMode="MODAL"
+                    modalProps={{
+                      animationType: "slide",
+                    }}
                     placeholder="Selecciona una opción"
                     setOpen={setOpen}
                     setValue={setDomicilio}
@@ -222,6 +226,10 @@ const Credito2 = ({ navigation }) => {
                       open={open2}
                       value={politico}
                       items={dataPolitico}
+                      listMode="MODAL"
+                      modalProps={{
+                        animationType: "slide",
+                      }}
                       placeholder="Selecciona una opción"
                       setOpen={setOpen2}
                       setValue={setPolitico}

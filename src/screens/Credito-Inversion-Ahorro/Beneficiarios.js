@@ -361,6 +361,10 @@ const Inversion2 = ({ navigation }) => {
                     value={parentesco}
                     items={dataParentesco}
                     placeholder="Selecciona una opción"
+                    listMode="MODAL"
+                    modalProps={{
+                      animationType: "slide",
+                    }}
                     setOpen={setOpen}
                     setValue={setParentesco}
                     onChangeValue={(value) => setParentesco(value)}
@@ -499,6 +503,10 @@ const Inversion2 = ({ navigation }) => {
                         open={open2}
                         value={parentesco2}
                         items={dataParentesco}
+                        listMode="MODAL"
+                        modalProps={{
+                          animationType: "slide",
+                        }}
                         placeholder="Selecciona una opción"
                         setOpen={setOpen2}
                         setValue={setParentesco2}
