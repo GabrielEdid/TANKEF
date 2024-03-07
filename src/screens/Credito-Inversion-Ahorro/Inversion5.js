@@ -200,133 +200,128 @@ const Inversion5 = ({ navigation }) => {
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>País</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  paddingHorizontal: 15,
-                  alignItems: "center",
-                  marginTop: -5,
-                  marginBottom: 5,
-                }}
-              >
-                <TouchableOpacity onPress={() => setOpenPais(true)}>
-                  <Entypo
-                    name="chevron-thin-down"
-                    size={15}
-                    color="#060B4D"
-                    style={{ marginRight: 5 }}
-                  />
-                </TouchableOpacity>
-                <CountryPicker
-                  withFilter
-                  countryCode={countryCode}
-                  withCloseButton
-                  onSelect={(country) => {
-                    const { cca2 } = country;
-                    setPais(cca2);
-                  }}
-                  visible={pickerVisible}
-                  onClose={() => setPickerVisible(false)}
-                />
-                <Text style={styles.countryCodeText}>{pais}</Text>
-              </View>
+              {/* Dropdown estatico en país */}
+              <DropDownPicker
+                items={[{ label: "México", value: "México" }]}
+                placeholder={pais}
+                showArrowIcon={false}
+                style={styles.DropDownPicker}
+                textStyle={styles.DropDownText}
+                disabled={true}
+                //setValue={setPais}
+                //onChangeValue={(value) => setPais(value)}
+                //value={pais}
+                //setOpen={setOpenPais}
+                //arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                //dropDownContainerStyle={styles.DropDownContainer}
+              />
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Estado</Text>
-              <View style={{ zIndex: openEstado ? -1 : 1 }}>
-                <DropDownPicker
-                  open={openEstado}
-                  value={estado}
-                  items={dataDomicilio}
-                  placeholder="Selecciona una opción"
-                  setOpen={setOpenEstado}
-                  setValue={setEstado}
-                  onChangeValue={(value) => setEstado(value)}
-                  style={styles.DropDownPicker}
-                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                  placeholderStyle={{
-                    color: "#c7c7c9ff",
-                    fontFamily: "opensanssemibold",
-                  }}
-                  dropDownContainerStyle={styles.DropDownContainer}
-                  textStyle={styles.DropDownText}
-                />
-              </View>
+              <DropDownPicker
+                searchable={true}
+                open={openEstado}
+                value={estado}
+                items={dataDomicilio}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                placeholder="Selecciona una opción"
+                setOpen={setOpenEstado}
+                setValue={setEstado}
+                onChangeValue={(value) => setEstado(value)}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={styles.DropDownContainer}
+                textStyle={styles.DropDownText}
+              />
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Ciudad</Text>
-              <View style={{ zIndex: openCiudad ? -1 : 1 }}>
-                <DropDownPicker
-                  open={openCiudad}
-                  value={ciudad}
-                  items={dataPolitico}
-                  placeholder="Selecciona una opción"
-                  setOpen={setOpenCiudad}
-                  setValue={setCiudad}
-                  onChangeValue={(value) => setCiudad(value)}
-                  style={styles.DropDownPicker}
-                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                  placeholderStyle={{
-                    color: "#c7c7c9ff",
-                    fontFamily: "opensanssemibold",
-                  }}
-                  dropDownContainerStyle={[
-                    styles.DropDownContainer,
-                    { marginTop: -9 },
-                  ]}
-                  textStyle={styles.DropDownText}
-                />
-              </View>
+              <DropDownPicker
+                searchable={true}
+                open={openCiudad}
+                value={ciudad}
+                items={dataPolitico}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                placeholder="Selecciona una opción"
+                setOpen={setOpenCiudad}
+                setValue={setCiudad}
+                onChangeValue={(value) => setCiudad(value)}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={[
+                  styles.DropDownContainer,
+                  { marginTop: -9 },
+                ]}
+                textStyle={styles.DropDownText}
+              />
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Municipio</Text>
-              <View style={{ zIndex: openMunicipio ? -1 : 1 }}>
-                <DropDownPicker
-                  open={openMunicipio}
-                  value={municipio}
-                  items={dataPolitico}
-                  placeholder="Selecciona una opción"
-                  setOpen={setOpenMunicipio}
-                  setValue={setMunicipio}
-                  onChangeValue={(value) => setMunicipio(value)}
-                  style={styles.DropDownPicker}
-                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                  placeholderStyle={{
-                    color: "#c7c7c9ff",
-                    fontFamily: "opensanssemibold",
-                  }}
-                  dropDownContainerStyle={[
-                    styles.DropDownContainer,
-                    { marginTop: -9 },
-                  ]}
-                  textStyle={styles.DropDownText}
-                />
-              </View>
+              <DropDownPicker
+                open={openMunicipio}
+                value={municipio}
+                items={dataPolitico}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                placeholder="Selecciona una opción"
+                setOpen={setOpenMunicipio}
+                setValue={setMunicipio}
+                onChangeValue={(value) => setMunicipio(value)}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={[
+                  styles.DropDownContainer,
+                  { marginTop: -9 },
+                ]}
+                textStyle={styles.DropDownText}
+              />
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Colonia</Text>
-              <View style={{ zIndex: openColonia ? -1 : 1 }}>
-                <DropDownPicker
-                  open={openColonia}
-                  value={colonia}
-                  items={dataPolitico}
-                  placeholder="Selecciona una opción"
-                  setOpen={setOpenColonia}
-                  setValue={setColonia}
-                  onChangeValue={(value) => setColonia(value)}
-                  style={styles.DropDownPicker}
-                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                  placeholderStyle={{
-                    color: "#c7c7c9ff",
-                    fontFamily: "opensanssemibold",
-                  }}
-                  dropDownContainerStyle={[
-                    styles.DropDownContainer,
-                    { marginTop: -9 },
-                  ]}
-                  textStyle={styles.DropDownText}
-                />
-              </View>
+              <DropDownPicker
+                open={openColonia}
+                value={colonia}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                items={dataPolitico}
+                placeholder="Selecciona una opción"
+                setOpen={setOpenColonia}
+                setValue={setColonia}
+                onChangeValue={(value) => setColonia(value)}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={[
+                  styles.DropDownContainer,
+                  { marginTop: -9 },
+                ]}
+                textStyle={styles.DropDownText}
+              />
               <View style={styles.separacion} />
             </View>
           </View>
