@@ -249,7 +249,7 @@ const Credito1 = ({ navigation }) => {
               styles.botonContinuar,
               { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
             ]}
-            onPress={() => navigation.navigate("Credito2", { flujo: flujo })}
+            onPress={() => navigation.navigate("InfoGeneral", { flujo: flujo })}
             disabled={!isAcceptable}
           >
             <Text

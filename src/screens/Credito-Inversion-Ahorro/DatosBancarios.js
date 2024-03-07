@@ -183,6 +183,7 @@ const Inversion3 = ({ navigation }) => {
                   value={clabe}
                   placeholder="18 dígitos"
                   maxLength={18}
+                  keyboardType="numeric"
                 />
                 <View style={styles.separacion} />
                 <Text style={styles.tituloCampo}>No. Cuenta</Text>
@@ -192,6 +193,7 @@ const Inversion3 = ({ navigation }) => {
                   value={NCuenta}
                   placeholder="10 dígitos"
                   maxLength={10}
+                  keyboardType="numeric"
                 />
                 <View style={styles.separacion} />
                 <Text style={styles.tituloCampo}>Banco</Text>
