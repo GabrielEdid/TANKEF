@@ -12,8 +12,8 @@ import {
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import {
   Feather,
@@ -26,6 +26,8 @@ const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
 const Inversion4 = ({ navigation }) => {
+  const route = useRoute();
+  const { flujo } = route.params;
   // Estados y Contexto
   const [focus, setFocus] = useState("Firma");
   const [modalPresencial, setModalPresencial] = useState(false);
@@ -35,7 +37,7 @@ const Inversion4 = ({ navigation }) => {
     if (focus === "Presencial") {
       setModalPresencial(true);
     } else if (focus === "Enviar") {
-      navigation.navigate("Inversion5");
+      navigation.navigate("FirmaPresencial", { flujo: flujo });
     } else if (focus === "Firma") {
       navigation.navigate("MiTankef");
     }
@@ -58,7 +60,14 @@ const Inversion4 = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>Inversión</Text>
+          <Text
+            style={[
+              styles.tituloPantalla,
+              { marginRight: flujo === "Inversión" ? 85 : 65 },
+            ]}
+          >
+            {flujo}
+          </Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -212,6 +221,7 @@ const Inversion4 = ({ navigation }) => {
                   onPress={() => [
                     setModalPresencial(false),
                     navigation.navigate("MiTankef"),
+                    { flujo: flujo },
                   ]}
                 >
                   <Text style={[styles.textoBotonContinuar]}>Aceptar</Text>

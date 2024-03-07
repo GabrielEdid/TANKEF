@@ -12,16 +12,18 @@ import {
 import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import BulletPointTextSmall from "../../components/BulletPointTextSmall";
 import { Feather } from "@expo/vector-icons";
-import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
 const widthFourth = screenWidth / 4 - 15;
 
 const Credito1 = ({ navigation }) => {
+  const route = useRoute();
+  const { flujo } = route.params;
   // Estados y Contexto
   const [monto, setMonto] = useState("");
   const [montoNumeric, setMontoNumeric] = useState(0);
@@ -93,7 +95,7 @@ const Credito1 = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>Crédito</Text>
+          <Text style={styles.tituloPantalla}>{flujo}</Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -247,10 +249,7 @@ const Credito1 = ({ navigation }) => {
               styles.botonContinuar,
               { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
             ]}
-            onPress={() => [
-              navigation.navigate("Credito2"),
-              console.log(monto),
-            ]}
+            onPress={() => navigation.navigate("Credito2", { flujo: flujo })}
             disabled={!isAcceptable}
           >
             <Text

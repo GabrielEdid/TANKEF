@@ -126,7 +126,14 @@ const Inversion3 = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>{flujo}</Text>
+          <Text
+            style={[
+              styles.tituloPantalla,
+              { marginRight: flujo === "Inversión" ? 85 : 65 },
+            ]}
+          >
+            {flujo}
+          </Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -308,7 +315,7 @@ const Inversion3 = ({ navigation }) => {
                 ]}
                 onPress={() => [
                   setModalVisible(false),
-                  navigation.navigate("Inversion4"),
+                  navigation.navigate("DefinirFirma", { flujo: flujo }),
                 ]}
               >
                 <Text style={[styles.textoBotonContinuar, { color: "white" }]}>

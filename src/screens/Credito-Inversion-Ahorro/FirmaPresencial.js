@@ -16,6 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 // Importaciones de Componentes y Hooks
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
@@ -25,6 +26,8 @@ const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
 const Inversion5 = ({ navigation }) => {
+  const route = useRoute();
+  const { flujo } = route.params;
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
@@ -157,7 +160,14 @@ const Inversion5 = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>Inversión</Text>
+          <Text
+            style={[
+              styles.tituloPantalla,
+              { marginRight: flujo === "Inversión" ? 85 : 65 },
+            ]}
+          >
+            {flujo}
+          </Text>
           <TouchableOpacity>
             <Feather
               name="bell"

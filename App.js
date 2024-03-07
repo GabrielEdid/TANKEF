@@ -38,8 +38,8 @@ import Beneficiarios from "./src/screens/Credito-Inversion-Ahorro/Beneficiarios"
 import DatosBancarios from "./src/screens/Credito-Inversion-Ahorro/DatosBancarios";
 import DefinirFirma from "./src/screens/Credito-Inversion-Ahorro/DefinirFirma";
 import FirmaPresencial from "./src/screens/Credito-Inversion-Ahorro/FirmaPresencial";
-import Credito1 from "./src/screens/Credito-Inversion-Ahorro/Credito1";
-import Credito2 from "./src/screens/Credito-Inversion-Ahorro/Credito2";
+import DefinirCredito from "./src/screens/Credito-Inversion-Ahorro/DefinirCredito";
+import InfoGeneral from "./src/screens/Credito-Inversion-Ahorro/InfoGeneral";
 import Credito3 from "./src/screens/Credito-Inversion-Ahorro/Credito3";
 import Credito4 from "./src/screens/Credito-Inversion-Ahorro/Credito4";
 import Credito5 from "./src/screens/Credito-Inversion-Ahorro/Credito5";
@@ -161,8 +161,8 @@ function CrearStack() {
       <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
       <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
       <Stack.Screen name="FirmaPresencial" component={FirmaPresencial} />
-      <Stack.Screen name="Credito1" component={Credito1} />
-      <Stack.Screen name="Credito2" component={Credito2} />
+      <Stack.Screen name="DefinirCredito" component={DefinirCredito} />
+      <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
       <Stack.Screen name="Credito3" component={Credito3} />
       <Stack.Screen name="Credito4" component={Credito4} />
       <Stack.Screen name="Credito5" component={Credito5} />
