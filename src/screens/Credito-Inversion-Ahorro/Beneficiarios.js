@@ -199,15 +199,9 @@ const Inversion2 = ({ navigation }) => {
                   body="Documento actualizado"
                 />
                 <BulletPointText
-                  titulo="No. de Cuenta Bancaria"
-                  body="Cuenta a la cuál se deberá depositar"
-                />
-                <BulletPointText
-                  titulo="Comprobante de No. de Cuenta Bancaria"
+                  titulo="Carátula de estado de cuenta bancaria"
                   body="Documento actualizado"
                 />
-                <BulletPointText titulo="CLABE" body="CLABE Interbancaria" />
-                <BulletPointText titulo="Banco" body="Nombre de Banco" />
               </View>
               <TouchableOpacity
                 style={styles.botonContinuar}

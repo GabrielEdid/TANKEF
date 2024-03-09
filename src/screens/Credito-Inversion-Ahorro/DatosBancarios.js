@@ -215,7 +215,7 @@ const Inversion3 = ({ navigation }) => {
                 </View>
                 <View style={styles.separacion} />
                 <Text style={styles.tituloCampo}>
-                  Comprobante No. de Cuenta
+                  Carátula de Estado de Cuenta
                 </Text>
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
