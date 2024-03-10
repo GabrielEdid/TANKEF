@@ -70,25 +70,27 @@ const Inversion5 = ({ navigation }) => {
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
-    setIsEmailValid(isValidEmail(mail));
     const camposLlenos =
-      domicilio !== "" &&
-      politico !== "" &&
-      profesion !== "" &&
-      telefono !== "" &&
-      mail !== "" &&
-      descripcion !== "" &&
-      isEmailValid;
-
+      nombre !== "" &&
+      calle !== "" &&
+      numeroExterior !== "" &&
+      numeroInterior !== "" &&
+      codigoPostal !== "" &&
+      pais !== "" &&
+      estado !== "" &&
+      municipio !== "" &&
+      colonia !== "";
     setDisabled(!camposLlenos);
   }, [
-    domicilio,
-    politico,
-    profesion,
-    telefono,
-    mail,
-    descripcion,
-    isEmailValid,
+    nombre,
+    calle,
+    numeroExterior,
+    numeroInterior,
+    codigoPostal,
+    pais,
+    estado,
+    municipio,
+    colonia,
   ]);
 
   useEffect(() => {
@@ -137,12 +139,6 @@ const Inversion5 = ({ navigation }) => {
     }
   }, [estado]);
 
-  const isValidEmail = (email) => {
-    const regex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(String(email).toLowerCase());
-  };
-
   // Componente Visual
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -185,6 +181,7 @@ const Inversion5 = ({ navigation }) => {
           style={styles.scrollV}
           keyboardShouldPersistTaps="handled"
           enableAutomaticScroll={true}
+          removeClippedSubviews={true}
         >
           <View style={styles.seccion}>
             <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
@@ -205,8 +202,8 @@ const Inversion5 = ({ navigation }) => {
               </Text>
               <TextInput
                 style={styles.input}
-                onChangeText={setProfesion}
-                value={profesion}
+                onChangeText={setNombre}
+                value={nombre}
                 placeholder="Eje. Raúl Guizar Torres"
               />
               <View style={styles.separacion} />
@@ -214,8 +211,8 @@ const Inversion5 = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Nombre de la Calle</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={setProfesion}
-                value={profesion}
+                onChangeText={setCalle}
+                value={calle}
                 placeholder="Eje. Acueducto de las Fuentes"
               />
               <View style={styles.separacion} />
@@ -223,8 +220,8 @@ const Inversion5 = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Número Exterior</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={setProfesion}
-                value={profesion}
+                onChangeText={setNumeroExterior}
+                value={numeroExterior}
                 placeholder="Eje. 22"
               />
               <View style={styles.separacion} />
@@ -232,8 +229,8 @@ const Inversion5 = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Número Interior</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={setProfesion}
-                value={profesion}
+                onChangeText={setNumeroInterior}
+                value={numeroInterior}
                 placeholder="Eje. 4B"
               />
               <View style={styles.separacion} />
@@ -241,8 +238,9 @@ const Inversion5 = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Código Postal</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={setProfesion}
-                value={profesion}
+                onChangeText={setCodigoPostal}
+                value={codigoPostal}
+                keyboardType="numeric"
                 placeholder="Eje. 53290"
               />
               <View style={styles.separacion} />
@@ -372,7 +370,7 @@ const Inversion5 = ({ navigation }) => {
                 styles.botonContinuar,
                 { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
               ]}
-              onPress={() => navigation.navigate("Credito3")}
+              onPress={() => navigation.navigate("MiTankef")}
               disabled={disabled}
             >
               <Text

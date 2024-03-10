@@ -37,7 +37,7 @@ const Inversion4 = ({ navigation }) => {
     if (focus === "Presencial") {
       setModalPresencial(true);
     } else if (focus === "Enviar") {
-      navigation.navigate("FirmaPresencial", { flujo: flujo });
+      navigation.navigate("FirmaDomicilio", { flujo: flujo });
     } else if (focus === "Firma") {
       navigation.navigate("MiTankef");
     }

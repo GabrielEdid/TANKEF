@@ -151,7 +151,7 @@ const Inversion3 = ({ navigation }) => {
             enableOnAndroid={true}
             style={styles.scrollV}
             keyboardShouldPersistTaps="handled"
-            extraScrollHeight={30}
+            extraScrollHeight={100}
           >
             <View style={{ flex: 1 }}>
               <View style={styles.seccion}>
