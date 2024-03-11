@@ -9,7 +9,6 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "./src/hooks/UserContext";
-import { CreditProvider } from "./src/hooks/CreditContext";
 import { setToken, getToken } from "./src/API/APIService";
 // Importar pantallas de la aplicación
 import InitialScreen from "./src/screens/LogIn/InitialScreen";
@@ -466,11 +465,9 @@ export default App = () => {
   // Contenedor de navegación para la aplicación
   return (
     <UserProvider>
-      <CreditProvider>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </CreditProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
     </UserProvider>
   );
 };
