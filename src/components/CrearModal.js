@@ -102,7 +102,13 @@ const CrearModal = ({ isVisible, onClose }) => {
         {/* Boton Ahorro */}
         <TouchableOpacity
           style={styles.buttonModal}
-          onPress={() => handleClose()}
+          onPress={() => {
+            handleClose();
+            navigation.navigate("Crear", {
+              screen: "DefinirCajaAhorro",
+              params: { flujo: "Caja de ahorro" },
+            });
+          }}
         >
           <FontAwesome5 name="piggy-bank" size={30} color="#060B4D" />
           <Text style={styles.texto}>Caja de Ahorro</Text>
