@@ -85,26 +85,28 @@ const DefinirCajaAhorro = ({ navigation }) => {
       <View style={{ flex: 1 }}>
         {/* Titulo, Nombre de Pantalla y Campana */}
         <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 1 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
+          <View
+            style={{ flexDirection: "row", alignItems: "center", height: 60 }}
           >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0.8, y: 0.8 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text style={styles.tituloPantalla}>Inversión</Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
+            {/* Ajuste según sea necesario */}
+            <MaskedView maskElement={<Text style={styles.titulo}>tankef</Text>}>
+              <LinearGradient
+                colors={["#2FF690", "#21B6D5"]}
+                start={{ x: 0.8, y: 0.8 }}
+                end={{ x: 0, y: 0 }}
+                style={{ width: 100, height: 100 }}
+              />
+            </MaskedView>
+            <Text style={styles.tituloPantalla}>Caja de ahorro</Text>
+            <TouchableOpacity>
+              <Feather
+                name="bell"
+                size={25}
+                color="#060B4D"
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <ScrollView
           style={{ flex: 1 }}
@@ -335,8 +337,8 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
-    fontSize: 24,
+    marginRight: 75,
+    fontSize: 18,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
