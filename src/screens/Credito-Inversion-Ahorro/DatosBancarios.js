@@ -129,7 +129,7 @@ const Inversion3 = ({ navigation }) => {
           <Text
             style={[
               styles.tituloPantalla,
-              { marginRight: flujo === "Inversión" ? 85 : 65 },
+              { marginLeft: flujo === "Inversión" ? 0 : 15 },
             ]}
           >
             {flujo}
