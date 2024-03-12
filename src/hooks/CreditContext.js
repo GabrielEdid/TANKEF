@@ -20,6 +20,7 @@ const initialState = {
   celular: "",
   cuenta_bancaria: "",
   descripcion: "",
+  paso: 1,
 };
 
 // Componente UserProvider
