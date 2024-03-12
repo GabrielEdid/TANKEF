@@ -146,7 +146,7 @@ const Inversion2 = ({ navigation }) => {
         {/* Titulo, Nombre de Pantalla y Campana */}
         <View style={styles.tituloContainer}>
           <MaskedView
-            style={{ flex: 0.7 }}
+            style={{ flex: 0.6 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
           >
             <LinearGradient
@@ -161,7 +161,7 @@ const Inversion2 = ({ navigation }) => {
               styles.tituloPantalla,
               {
                 fontSize: flujo === "Caja de ahorro" && 20,
-                marginLeft: flujo === "Caja de ahorro" && 25,
+                marginRight: flujo === "Caja de ahorro" && 35,
               },
             ]}
           >
@@ -567,7 +567,7 @@ const Inversion2 = ({ navigation }) => {
                     { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
                   ]}
                   onPress={() => {
-                    navigation.navigate("DatosBancarios", { flujo: flujo });
+                    navigation.navigate("Documentacion", { flujo: flujo });
                   }}
                   disabled={disabled}
                 >
@@ -606,7 +606,6 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

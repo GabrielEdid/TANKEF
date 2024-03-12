@@ -260,7 +260,7 @@ const DatosBancarios = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {comprobanteNCuenta}
+                        {comprobanteNCuenta.split("/").pop()}
                       </Text>
                       <TouchableOpacity
                         onPress={() => setComprobanteNCuenta("")}

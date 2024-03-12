@@ -30,7 +30,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const [monto, setMonto] = useState("25000");
   const [montoNumeric, setMontoNumeric] = useState(25000);
   const [montoShow, setMontoShow] = useState("25,000.00");
-  const [plazo, setPlazo] = useState("");
+  const [plazo, setPlazo] = useState("6");
   const [focusTab, setFocusTab] = useState("");
 
   // Funcion para manejar el cambio de texto en el input de monto

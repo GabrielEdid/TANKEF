@@ -22,6 +22,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { subISOWeekYears } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -31,30 +32,19 @@ const Documentacion = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const [alias, setAlias] = useState("");
-  const [clabe, setClabe] = useState("");
-  const [NCuenta, setNCuenta] = useState("");
-  const [comprobanteNCuenta, setComprobanteNCuenta] = useState("");
-  const [banco, setBanco] = useState("");
-  const [nombre, setNombre] = useState("");
+  const [CURP, setCURP] = useState("");
+  const [situacionFiscal, setSituacionFiscal] = useState("");
+  const [comprobanteDomicilio, setComprobanteDomicilio] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
-    const camposLlenos =
-      nombre &&
-      alias &&
-      clabe &&
-      clabe.length === 18 &&
-      NCuenta &&
-      NCuenta.length === 10 &&
-      comprobanteNCuenta &&
-      banco;
+    const camposLlenos = CURP && situacionFiscal && comprobanteDomicilio;
     setDisabled(!camposLlenos);
-  }, [nombre, alias, clabe, NCuenta, comprobanteNCuenta, banco]);
+  }, [CURP, situacionFiscal, comprobanteDomicilio]);
 
-  const showUploadOptions = () => {
+  const showUploadOptions = (setType) => {
     Alert.alert(
       "Seleccionar Documento",
       "Elige de donde deseas subir tu documento:",
@@ -66,34 +56,32 @@ const Documentacion = ({ navigation }) => {
         },
         {
           text: "Galería de Fotos",
-          onPress: () => {
-            pickImage();
-            console.log("Photo Gallery Pressed");
-          },
+          onPress: () => pickImage(setType),
         },
         {
           text: "Documentos",
-          onPress: () => {
-            pickDocument();
-            console.log("Documents Pressed");
-          },
+          onPress: () => pickDocument(setType),
         },
       ],
       { cancelable: true }
     );
   };
 
-  const pickDocument = async () => {
+  const pickDocument = async (setType) => {
     let result = await DocumentPicker.getDocumentAsync({});
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
-      setComprobanteNCuenta(selectedDocument.uri);
+      if (setType === "fiscal") {
+        setSituacionFiscal(selectedDocument.uri);
+      } else if (setType === "domicilio") {
+        setComprobanteDomicilio(selectedDocument.uri);
+      }
     } else {
       console.log("Operación cancelada o no se seleccionó ningún documento");
     }
   };
 
-  const pickImage = async () => {
+  const pickImage = async (setType) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -103,7 +91,11 @@ const Documentacion = ({ navigation }) => {
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
-      setComprobanteNCuenta(selectedImage.uri);
+      if (setType === "fiscal") {
+        setSituacionFiscal(selectedImage.uri);
+      } else if (setType === "domicilio") {
+        setComprobanteDomicilio(selectedImage.uri);
+      }
     } else {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
     }
@@ -116,24 +108,17 @@ const Documentacion = ({ navigation }) => {
         {/* Titulo, Nombre de Pantalla y Campana */}
         <View style={styles.tituloContainer}>
           <MaskedView
-            style={{ flex: 1 }}
+            style={{ flex: 0.6 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
           >
             <LinearGradient
               colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0.8, y: 0.8 }}
+              start={{ x: 1, y: 1 }}
               end={{ x: 0, y: 0 }}
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text
-            style={[
-              styles.tituloPantalla,
-              { marginLeft: flujo === "Inversión" ? 0 : 15 },
-            ]}
-          >
-            {flujo}
-          </Text>
+          <Text style={styles.tituloPantalla}>{flujo}</Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -155,7 +140,7 @@ const Documentacion = ({ navigation }) => {
           >
             <View style={{ flex: 1 }}>
               <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Datos Bancarios</Text>
+                <Text style={styles.tituloSeccion}>Documentación</Text>
                 <Text style={styles.bodySeccion}>
                   Ingresa los datos solicitados para continuar.
                 </Text>
@@ -164,62 +149,26 @@ const Documentacion = ({ navigation }) => {
                 style={{
                   marginTop: 5,
                   backgroundColor: "white",
-                  paddingTop: 15,
                 }}
               >
                 {/* Campos para introducir los datos bancarios */}
-                <Text style={styles.tituloCampo}>Alias Cuenta</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setAlias}
-                  value={alias}
-                  placeholder="Eje. Raúl G. Torres"
-                />
-                <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setClabe}
-                  value={clabe}
-                  placeholder="18 dígitos"
-                  maxLength={18}
-                  keyboardType="numeric"
-                />
-                <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>No. Cuenta</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setNCuenta}
-                  value={NCuenta}
-                  placeholder="10 dígitos"
-                  maxLength={10}
-                  keyboardType="numeric"
-                />
-                <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>Banco</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setBanco}
-                  value={banco}
-                  placeholder="Nombre Banco"
-                />
-                <View style={styles.separacion} />
+
                 <View>
-                  <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
+                  <Text style={styles.tituloCampo}>CURP</Text>
                   <TextInput
                     style={styles.input}
-                    onChangeText={setNombre}
-                    value={nombre}
+                    onChangeText={setCURP}
+                    value={CURP}
                     placeholder="Nombre Cuentahabiente"
                   />
                 </View>
                 <View style={styles.separacion} />
                 <Text style={styles.tituloCampo}>
-                  Carátula de Estado de Cuenta
+                  Constancia de situación fiscal
                 </Text>
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
-                  onPress={showUploadOptions}
+                  onPress={() => showUploadOptions("fiscal")}
                 >
                   <Text
                     style={[
@@ -234,7 +183,7 @@ const Documentacion = ({ navigation }) => {
                   </Text>
                   <Feather name="upload" size={20} color="#060B4D" />
                 </TouchableOpacity>
-                {comprobanteNCuenta && (
+                {situacionFiscal && (
                   <>
                     <View style={styles.separacion} />
                     <View
@@ -260,10 +209,69 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {comprobanteNCuenta}
+                        {situacionFiscal.split("/").pop()}
+                      </Text>
+                      <TouchableOpacity onPress={() => setSituacionFiscal("")}>
+                        <FontAwesome
+                          name="trash-o"
+                          size={25}
+                          color="#F95C5C"
+                          style={{ marginRight: 15 }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )}
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Comprobante de domicilio</Text>
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("domicilio")}
+                >
+                  <Text
+                    style={[
+                      styles.input,
+                      {
+                        width: "92%",
+                        color: "#c7c7c9ff",
+                      },
+                    ]}
+                  >
+                    Selecciona documento
+                  </Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+                {comprobanteDomicilio && (
+                  <>
+                    <View style={styles.separacion} />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        paddingVertical: 10,
+                      }}
+                    >
+                      <FontAwesome
+                        name="image"
+                        size={20}
+                        color="#060B4D"
+                        style={{ marginLeft: 15 }}
+                      />
+                      <Text
+                        style={{
+                          flex: 1,
+                          paddingHorizontal: 15,
+                          fontSize: 16,
+                          color: "#060B4D",
+                          fontFamily: "opensans",
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {comprobanteDomicilio.split("/").pop()}
                       </Text>
                       <TouchableOpacity
-                        onPress={() => setComprobanteNCuenta("")}
+                        onPress={() => setComprobanteDomicilio("")}
                       >
                         <FontAwesome
                           name="trash-o"
@@ -349,8 +357,8 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
-    fontSize: 24,
+    marginRight: 35,
+    fontSize: 20,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
