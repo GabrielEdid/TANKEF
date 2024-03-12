@@ -146,12 +146,12 @@ const FirmaDomicilio = ({ navigation }) => {
         {/* Titulo, Nombre de Pantalla y Campana */}
         <View style={styles.tituloContainer}>
           <MaskedView
-            style={{ flex: 1 }}
+            style={{ flex: 0.6 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
           >
             <LinearGradient
               colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0.8, y: 0.8 }}
+              start={{ x: 1, y: 1 }}
               end={{ x: 0, y: 0 }}
               style={StyleSheet.absoluteFill}
             />
@@ -159,7 +159,10 @@ const FirmaDomicilio = ({ navigation }) => {
           <Text
             style={[
               styles.tituloPantalla,
-              { marginLeft: flujo === "Inversión" ? 0 : 15 },
+              {
+                fontSize: flujo === "Caja de ahorro" && 20,
+                marginRight: flujo === "Caja de ahorro" && 35,
+              },
             ]}
           >
             {flujo}
