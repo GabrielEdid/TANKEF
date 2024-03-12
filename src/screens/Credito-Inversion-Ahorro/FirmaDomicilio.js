@@ -25,7 +25,7 @@ import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const Inversion5 = ({ navigation }) => {
+const FirmaDomicilio = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
@@ -510,4 +510,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Inversion5;
+export default FirmaDomicilio;

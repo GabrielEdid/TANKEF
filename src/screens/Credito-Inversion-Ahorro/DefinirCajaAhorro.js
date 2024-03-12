@@ -70,7 +70,8 @@ const DefinirCajaAhorro = ({ navigation }) => {
     setMontoShow(formattedValue);
   };
 
-  const isAcceptable = montoNumeric >= 5000 && plazo && nombreInversion;
+  const isAcceptable =
+    montoNumeric >= 25000 && montoNumeric <= 35000 && plazo && nombreInversion;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
   },
   tituloPantalla: {
     flex: 1,
-    marginTop: 50,
+    marginTop: 47,
     marginRight: 35,
     fontSize: 20,
     color: "#060B4D",

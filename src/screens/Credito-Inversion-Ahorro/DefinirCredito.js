@@ -21,7 +21,7 @@ import { Feather } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthFourth = screenWidth / 4 - 15;
 
-const Credito1 = ({ navigation }) => {
+const DefinirCredito = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
@@ -372,4 +372,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Credito1;
+export default DefinirCredito;

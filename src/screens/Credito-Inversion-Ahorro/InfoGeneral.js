@@ -25,7 +25,7 @@ import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const Credito2 = ({ navigation }) => {
+const InfoGeneral = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
@@ -484,4 +484,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Credito2;
+export default InfoGeneral;

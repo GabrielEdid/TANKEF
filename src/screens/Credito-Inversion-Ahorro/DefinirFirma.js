@@ -25,7 +25,7 @@ import {
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const Inversion4 = ({ navigation }) => {
+const DefinirFirma = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
@@ -356,4 +356,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Inversion4;
+export default DefinirFirma;

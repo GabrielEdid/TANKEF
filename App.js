@@ -42,6 +42,7 @@ import FirmaDomicilio from "./src/screens/Credito-Inversion-Ahorro/FirmaDomicili
 import DefinirCredito from "./src/screens/Credito-Inversion-Ahorro/DefinirCredito";
 import InfoGeneral from "./src/screens/Credito-Inversion-Ahorro/InfoGeneral";
 import DefinirCajaAhorro from "./src/screens/Credito-Inversion-Ahorro/DefinirCajaAhorro";
+import Documentacion from "./src/screens/Credito-Inversion-Ahorro/Documentacion";
 // Importar Componnetes de la aplicación
 import SettingsDrawer from "./src/components/SettingsDrawer";
 
@@ -163,6 +164,7 @@ function CrearStack() {
       <Stack.Screen name="DefinirCredito" component={DefinirCredito} />
       <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
       <Stack.Screen name="DefinirCajaAhorro" component={DefinirCajaAhorro} />
+      <Stack.Screen name="Documentacion" component={Documentacion} />
     </Stack.Navigator>
   );
 }
