@@ -22,7 +22,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { subISOWeekYears } from "date-fns";
+import { set, subISOWeekYears } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -34,7 +34,10 @@ const Documentacion = ({ navigation }) => {
   // Estados y Contexto
   const [CURP, setCURP] = useState("");
   const [situacionFiscal, setSituacionFiscal] = useState("");
+  const [nombreSituacionFiscal, setNombreSituacionFiscal] = useState("");
   const [comprobanteDomicilio, setComprobanteDomicilio] = useState("");
+  const [nombreComprobanteDomicilio, setNombreComprobanteDomicilio] =
+    useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
@@ -73,8 +76,10 @@ const Documentacion = ({ navigation }) => {
       const selectedDocument = result.assets[0];
       if (setType === "fiscal") {
         setSituacionFiscal(selectedDocument.uri);
+        setNombreSituacionFiscal(selectedDocument.name);
       } else if (setType === "domicilio") {
         setComprobanteDomicilio(selectedDocument.uri);
+        setNombreComprobanteDomicilio(selectedDocument.name);
       }
     } else {
       console.log("Operación cancelada o no se seleccionó ningún documento");
@@ -93,8 +98,10 @@ const Documentacion = ({ navigation }) => {
       const selectedImage = result.assets[0];
       if (setType === "fiscal") {
         setSituacionFiscal(selectedImage.uri);
+        setNombreSituacionFiscal("Imagen Seleccionada");
       } else if (setType === "domicilio") {
         setComprobanteDomicilio(selectedImage.uri);
+        setNombreComprobanteDomicilio("Imagen Seleccionada");
       }
     } else {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
@@ -209,9 +216,14 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {situacionFiscal.split("/").pop()}
+                        {nombreSituacionFiscal}
                       </Text>
-                      <TouchableOpacity onPress={() => setSituacionFiscal("")}>
+                      <TouchableOpacity
+                        onPress={() => [
+                          setSituacionFiscal(""),
+                          setNombreSituacionFiscal(""),
+                        ]}
+                      >
                         <FontAwesome
                           name="trash-o"
                           size={25}
@@ -268,10 +280,13 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {comprobanteDomicilio.split("/").pop()}
+                        {nombreComprobanteDomicilio}
                       </Text>
                       <TouchableOpacity
-                        onPress={() => setComprobanteDomicilio("")}
+                        onPress={() => [
+                          setComprobanteDomicilio(""),
+                          setNombreComprobanteDomicilio(""),
+                        ]}
                       >
                         <FontAwesome
                           name="trash-o"
