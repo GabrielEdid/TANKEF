@@ -14,6 +14,7 @@ import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
+import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Hooks
 import { Feather, Ionicons } from "@expo/vector-icons";
 
@@ -26,9 +27,9 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const { flujo } = route.params;
   // Estados y Contexto
   const [nombreInversion, setNombreInversion] = useState("");
-  const [monto, setMonto] = useState("");
-  const [montoNumeric, setMontoNumeric] = useState(0);
-  const [montoShow, setMontoShow] = useState("");
+  const [monto, setMonto] = useState("25000");
+  const [montoNumeric, setMontoNumeric] = useState(25000);
+  const [montoShow, setMontoShow] = useState("25,000.00");
   const [plazo, setPlazo] = useState("");
   const [focusTab, setFocusTab] = useState("");
 
@@ -53,6 +54,20 @@ const DefinirCajaAhorro = ({ navigation }) => {
     // Parse the raw input to a float and update montoNumeric for validation
     const numericValue = parseFloat(newText.replace(/,/g, ""));
     setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
+  };
+
+  // Funcion para manejar el cambio de valor en el slider
+  const handleSliderChange = (value) => {
+    // Actualiza el valor numérico directamente con el valor del slider
+    setMontoNumeric(value);
+
+    // Formatea el valor para mostrarlo adecuadamente en el input
+    const formattedValue = value
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Actualiza el estado del texto del input con el valor formateado
+    setMontoShow(formattedValue);
   };
 
   const isAcceptable = montoNumeric >= 5000 && plazo && nombreInversion;
@@ -112,25 +127,31 @@ const DefinirCajaAhorro = ({ navigation }) => {
           removeClippedSubviews={true}
         >
           <View style={{ flex: 1 }}>
-            <View
-              style={{
-                alignItems: "center",
-                paddingHorizontal: 25,
-                paddingVertical: 15,
-                backgroundColor: "white",
-                marginTop: 3,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "opensansbold",
-                  fontSize: 20,
-                  color: "#060B4D",
-                  textAlign: "center",
-                }}
-              >
-                Ingresa los datos solicitados para iniciar tu inversión.
-              </Text>
+            <View style={[styles.contenedores, { flexDirection: "row" }]}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
+                <Text style={styles.valorConcepto}>$120,000</Text>
+              </View>
+              <Ionicons
+                name="remove-outline"
+                size={30}
+                color="#e1e2ebff"
+                style={styles.line}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
+                <Text style={styles.valorConcepto}>$25,000.00</Text>
+              </View>
+              <Ionicons
+                name="remove-outline"
+                size={30}
+                color="#e1e2ebff"
+                style={styles.line}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
+                <Text style={styles.valorConcepto}>$35,000.00</Text>
+              </View>
             </View>
             <View
               style={{
@@ -140,18 +161,20 @@ const DefinirCajaAhorro = ({ navigation }) => {
                 paddingVertical: 5,
               }}
             >
-              <Text style={styles.texto}>Nombre de la Inversión</Text>
+              <Text style={styles.texto}>Nombre de la caja de ahorro</Text>
               <TextInput
                 style={styles.inputNombre}
                 value={nombreInversion}
                 maxLength={20}
                 placeholderTextColor={"#b3b5c9ff"}
-                placeholder="Introduce el nombre de la inversión"
+                placeholder="Introduce el nombre de la caja de ahorro"
                 onChangeText={(text) => setNombreInversion(text)}
               />
             </View>
             <View style={styles.contenedores}>
-              <Text style={styles.texto}>Monto de inversión</Text>
+              <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
+                Introduce el monto que deseas ahorrar
+              </Text>
               <View style={styles.inputWrapper}>
                 <Text
                   style={[
@@ -181,115 +204,37 @@ const DefinirCajaAhorro = ({ navigation }) => {
                   MXN
                 </Text>
               </View>
-              <Text style={styles.subTexto}>
-                Monto mínimo de inversión $5,000.00
-              </Text>
+              <Slider
+                style={{ width: "90%" }}
+                minimumValue={25000}
+                maximumValue={35000}
+                step={25}
+                value={montoNumeric}
+                onValueChange={handleSliderChange}
+                thumbTintColor="#2FF690"
+                minimumTrackTintColor="#2FF690"
+                maximumTrackTintColor="#F2F2F2"
+              />
             </View>
 
             <View style={styles.contenedores}>
               <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-                Plazo de Inversión
+                Plan mensual de ahorro
               </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginLeft: -5,
-                  alignSelf: "center",
-                }}
+              <TouchableOpacity
+                style={styles.tab}
+                onPress={() => [setFocusTab("6"), setPlazo(6)]}
               >
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("6"), setPlazo(6)]}
-                >
-                  <Text style={styles.textoTab}>6</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "12" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("12"), setPlazo(12)]}
-                >
-                  <Text style={styles.textoTab}>12</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "18" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("18"), setPlazo(18)]}
-                >
-                  <Text style={styles.textoTab}>18</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "24" ? "#2FF690" : "#F3F3F3",
-                      marginRight: 0,
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("24"), setPlazo(24)]}
-                >
-                  <Text style={styles.textoTab}>24</Text>
-                </TouchableOpacity>
-              </View>
-              <Text
-                style={[styles.subTexto, { marginTop: 10, color: "#060B4D" }]}
-              >
+                <Text style={styles.textoTab}>6</Text>
+              </TouchableOpacity>
+              <Text style={styles.subTexto}>
                 Esta es una cotización preliminar, la tasa definitiva dependerá
                 del análisis completo de tu solicitud.
               </Text>
             </View>
             <View style={styles.contenedores}>
-              <Text style={styles.texto}>Retorno de inversión neto</Text>
-              <Text
-                style={{
-                  fontFamily: "opensansbold",
-                  fontSize: 30,
-                  color: "#060B4D",
-                }}
-              >
-                $0.00 MXN
-              </Text>
-            </View>
-            <View style={[styles.contenedores, { flexDirection: "row" }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-                <Text style={styles.valorConcepto}>$0.00</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-                <Text style={styles.valorConcepto}>0%</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-                <Text style={styles.valorConcepto}>$0.00</Text>
-              </View>
+              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+              <Text style={styles.valorConcepto}>44.26%</Text>
             </View>
           </View>
 
@@ -369,7 +314,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   subTexto: {
-    color: "#9E9E9E",
+    color: "#060B4D",
+    marginTop: 10,
     textAlign: "center",
     fontFamily: "opensans",
     fontSize: 14,
@@ -406,7 +352,8 @@ const styles = StyleSheet.create({
   tab: {
     marginTop: 10,
     padding: 10,
-    width: widthFourth,
+    width: "90%",
+    backgroundColor: "#060B4D",
     borderRadius: 5,
     marginRight: 10,
   },
@@ -414,6 +361,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "opensanssemibold",
     fontSize: 18,
+    color: "white",
   },
   botonContinuar: {
     marginTop: 20,
@@ -435,7 +383,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   valorConcepto: {
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensansbold",
     fontSize: 16,
     color: "#060B4D",
     textAlign: "center",
