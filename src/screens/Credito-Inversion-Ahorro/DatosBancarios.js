@@ -35,6 +35,7 @@ const DatosBancarios = ({ navigation }) => {
   const [clabe, setClabe] = useState("");
   const [NCuenta, setNCuenta] = useState("");
   const [comprobanteNCuenta, setComprobanteNCuenta] = useState("");
+  const [nombreComprobante, setNombreComprobante] = useState("");
   const [banco, setBanco] = useState("");
   const [nombre, setNombre] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -88,6 +89,7 @@ const DatosBancarios = ({ navigation }) => {
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
       setComprobanteNCuenta(selectedDocument.uri);
+      setNombreComprobante(selectedDocument.name);
     } else {
       console.log("Operación cancelada o no se seleccionó ningún documento");
     }
@@ -104,6 +106,7 @@ const DatosBancarios = ({ navigation }) => {
     if (!result.canceled) {
       const selectedImage = result.assets[0];
       setComprobanteNCuenta(selectedImage.uri);
+      setNombreComprobante("Imagen Seleccionada");
     } else {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
     }
@@ -260,10 +263,13 @@ const DatosBancarios = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {comprobanteNCuenta.split("/").pop()}
+                        {nombreComprobante}
                       </Text>
                       <TouchableOpacity
-                        onPress={() => setComprobanteNCuenta("")}
+                        onPress={() => [
+                          setComprobanteNCuenta(""),
+                          setNombreComprobante(""),
+                        ]}
                       >
                         <FontAwesome
                           name="trash-o"
