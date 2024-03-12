@@ -64,8 +64,8 @@ const DefinirFirma = ({ navigation }) => {
             style={[
               styles.tituloPantalla,
               {
-                fontSize: flujo === "Caja de ahorro" && 20,
-                marginRight: flujo === "Caja de ahorro" && 35,
+                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
               },
             ]}
           >

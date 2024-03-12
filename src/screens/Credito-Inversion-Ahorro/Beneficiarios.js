@@ -160,8 +160,8 @@ const Inversion2 = ({ navigation }) => {
             style={[
               styles.tituloPantalla,
               {
-                fontSize: flujo === "Caja de ahorro" && 20,
-                marginRight: flujo === "Caja de ahorro" && 35,
+                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
               },
             ]}
           >
@@ -568,7 +568,9 @@ const Inversion2 = ({ navigation }) => {
                     { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
                   ]}
                   onPress={() => {
-                    navigation.navigate("Documentacion", { flujo: flujo });
+                    flujo === "Caja Ahorro"
+                      ? navigation.navigate("Documentacion", { flujo: flujo })
+                      : navigation.navigate("DatosBancarios", { flujo: flujo });
                   }}
                   disabled={disabled}
                 >
