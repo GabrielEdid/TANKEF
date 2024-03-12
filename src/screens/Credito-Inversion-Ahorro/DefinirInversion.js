@@ -110,6 +110,7 @@ const DefinirInversion = ({ navigation }) => {
           style={{ flex: 1 }}
           contentContainerStyle={{ flexGrow: 1 }}
           removeClippedSubviews={true}
+          onStartShouldSetResponder={() => true}
         >
           <View style={{ flex: 1 }}>
             <View

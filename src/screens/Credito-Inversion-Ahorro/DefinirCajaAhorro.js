@@ -29,7 +29,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const [nombreInversion, setNombreInversion] = useState("");
   const [monto, setMonto] = useState("25000");
   const [montoNumeric, setMontoNumeric] = useState(25000);
-  const [montoShow, setMontoShow] = useState("25,000.00");
+  const [montoShow, setMontoShow] = useState("25,000");
   const [plazo, setPlazo] = useState("6");
   const [focusTab, setFocusTab] = useState("");
 
@@ -126,6 +126,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
           style={{ flex: 1 }}
           contentContainerStyle={{ flexGrow: 1 }}
           removeClippedSubviews={true}
+          onStartShouldSetResponder={() => true}
         >
           <View style={{ flex: 1 }}>
             <View style={[styles.contenedores, { flexDirection: "row" }]}>

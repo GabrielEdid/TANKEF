@@ -233,6 +233,7 @@ const Inversion2 = ({ navigation }) => {
               keyboardShouldPersistTaps="handled"
               enableAutomaticScroll={true}
               removeClippedSubviews={true}
+              onStartShouldSetResponder={() => true}
             >
               <View style={styles.seccion}>
                 <Text style={styles.tituloSeccion}>Beneficiarios</Text>

@@ -185,6 +185,7 @@ const FirmaDomicilio = ({ navigation }) => {
           keyboardShouldPersistTaps="handled"
           enableAutomaticScroll={true}
           removeClippedSubviews={true}
+          onStartShouldSetResponder={() => true}
         >
           <View style={styles.seccion}>
             <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
