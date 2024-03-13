@@ -81,241 +81,236 @@ const DefinirInversion = ({ navigation }) => {
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text style={styles.tituloPantalla}>Inversión</Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-          removeClippedSubviews={true}
-          onStartShouldSetResponder={() => true}
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
-          <View style={{ flex: 1 }}>
-            <View
-              style={{
-                alignItems: "center",
-                paddingHorizontal: 25,
-                paddingVertical: 15,
-                backgroundColor: "white",
-                marginTop: 3,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "opensansbold",
-                  fontSize: 20,
-                  color: "#060B4D",
-                  textAlign: "center",
-                }}
-              >
-                Ingresa los datos solicitados para iniciar tu inversión.
-              </Text>
-            </View>
-            <View
-              style={{
-                marginTop: 3,
-                backgroundColor: "white",
-                paddingHorizontal: 15,
-                paddingVertical: 5,
-              }}
-            >
-              <Text style={styles.texto}>Nombre de la Inversión</Text>
-              <TextInput
-                style={styles.inputNombre}
-                value={nombreInversion}
-                maxLength={20}
-                placeholderTextColor={"#b3b5c9ff"}
-                placeholder="Introduce el nombre de la inversión"
-                onChangeText={(text) => setNombreInversion(text)}
-              />
-            </View>
-            <View style={styles.contenedores}>
-              <Text style={styles.texto}>Monto de inversión</Text>
-              <View style={styles.inputWrapper}>
-                <Text
-                  style={[
-                    styles.dollarSign,
-                    { color: monto ? "#060B4D" : "#b3b5c9ff" },
-                  ]}
-                >
-                  $
-                </Text>
-                <TextInput
-                  style={styles.inputMonto}
-                  value={montoShow}
-                  keyboardType="numeric"
-                  maxLength={20}
-                  placeholderTextColor={"#b3b5c9ff"}
-                  placeholder="0.00"
-                  onChangeText={handleChangeText}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                />
-                <Text
-                  style={[
-                    styles.dollarSign,
-                    { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
-                  ]}
-                >
-                  MXN
-                </Text>
-              </View>
-              <Text style={styles.subTexto}>
-                Monto mínimo de inversión $5,000.00
-              </Text>
-            </View>
-
-            <View style={styles.contenedores}>
-              <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-                Plazo de Inversión
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginLeft: -5,
-                  alignSelf: "center",
-                }}
-              >
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("6"), setPlazo(6)]}
-                >
-                  <Text style={styles.textoTab}>6</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "12" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("12"), setPlazo(12)]}
-                >
-                  <Text style={styles.textoTab}>12</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "18" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("18"), setPlazo(18)]}
-                >
-                  <Text style={styles.textoTab}>18</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "24" ? "#2FF690" : "#F3F3F3",
-                      marginRight: 0,
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("24"), setPlazo(24)]}
-                >
-                  <Text style={styles.textoTab}>24</Text>
-                </TouchableOpacity>
-              </View>
-              <Text
-                style={[styles.subTexto, { marginTop: 10, color: "#060B4D" }]}
-              >
-                Esta es una cotización preliminar, la tasa definitiva dependerá
-                del análisis completo de tu solicitud.
-              </Text>
-            </View>
-            <View style={styles.contenedores}>
-              <Text style={styles.texto}>Retorno de inversión neto</Text>
-              <Text
-                style={{
-                  fontFamily: "opensansbold",
-                  fontSize: 30,
-                  color: "#060B4D",
-                }}
-              >
-                $0.00 MXN
-              </Text>
-            </View>
-            <View style={[styles.contenedores, { flexDirection: "row" }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-                <Text style={styles.valorConcepto}>$0.00</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-                <Text style={styles.valorConcepto}>0%</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-                <Text style={styles.valorConcepto}>$0.00</Text>
-              </View>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            style={[
-              styles.botonContinuar,
-              { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
-            ]}
-            onPress={() => {
-              navigation.navigate("Beneficiarios", { flujo: flujo });
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 1, y: 1 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text style={styles.tituloPantalla}>Inversión</Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              alignItems: "center",
+              paddingHorizontal: 25,
+              paddingVertical: 15,
+              backgroundColor: "white",
+              marginTop: 3,
             }}
-            disabled={!isAcceptable}
           >
             <Text
-              style={[
-                styles.textoBotonContinuar,
-                { color: isAcceptable ? "white" : "grey" },
-              ]}
+              style={{
+                fontFamily: "opensansbold",
+                fontSize: 20,
+                color: "#060B4D",
+                textAlign: "center",
+              }}
             >
-              Aceptar
+              Ingresa los datos solicitados para iniciar tu inversión.
             </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </TouchableWithoutFeedback>
+          </View>
+          <View
+            style={{
+              marginTop: 3,
+              backgroundColor: "white",
+              paddingHorizontal: 15,
+              paddingVertical: 5,
+            }}
+          >
+            <Text style={styles.texto}>Nombre de la Inversión</Text>
+            <TextInput
+              style={styles.inputNombre}
+              value={nombreInversion}
+              maxLength={20}
+              placeholderTextColor={"#b3b5c9ff"}
+              placeholder="Introduce el nombre de la inversión"
+              onChangeText={(text) => setNombreInversion(text)}
+            />
+          </View>
+          <View style={styles.contenedores}>
+            <Text style={styles.texto}>Monto de inversión</Text>
+            <View style={styles.inputWrapper}>
+              <Text
+                style={[
+                  styles.dollarSign,
+                  { color: monto ? "#060B4D" : "#b3b5c9ff" },
+                ]}
+              >
+                $
+              </Text>
+              <TextInput
+                style={styles.inputMonto}
+                value={montoShow}
+                keyboardType="numeric"
+                maxLength={20}
+                placeholderTextColor={"#b3b5c9ff"}
+                placeholder="0.00"
+                onChangeText={handleChangeText}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <Text
+                style={[
+                  styles.dollarSign,
+                  { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
+                ]}
+              >
+                MXN
+              </Text>
+            </View>
+            <Text style={styles.subTexto}>
+              Monto mínimo de inversión $5,000.00
+            </Text>
+          </View>
+
+          <View style={styles.contenedores}>
+            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
+              Plazo de Inversión
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginLeft: -5,
+                alignSelf: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3",
+                  },
+                ]}
+                onPress={() => [setFocusTab("6"), setPlazo(6)]}
+              >
+                <Text style={styles.textoTab}>6</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "12" ? "#2FF690" : "#F3F3F3",
+                  },
+                ]}
+                onPress={() => [setFocusTab("12"), setPlazo(12)]}
+              >
+                <Text style={styles.textoTab}>12</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "18" ? "#2FF690" : "#F3F3F3",
+                  },
+                ]}
+                onPress={() => [setFocusTab("18"), setPlazo(18)]}
+              >
+                <Text style={styles.textoTab}>18</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "24" ? "#2FF690" : "#F3F3F3",
+                    marginRight: 0,
+                  },
+                ]}
+                onPress={() => [setFocusTab("24"), setPlazo(24)]}
+              >
+                <Text style={styles.textoTab}>24</Text>
+              </TouchableOpacity>
+            </View>
+            <Text
+              style={[styles.subTexto, { marginTop: 10, color: "#060B4D" }]}
+            >
+              Esta es una cotización preliminar, la tasa definitiva dependerá
+              del análisis completo de tu solicitud.
+            </Text>
+          </View>
+          <View style={styles.contenedores}>
+            <Text style={styles.texto}>Retorno de inversión neto</Text>
+            <Text
+              style={{
+                fontFamily: "opensansbold",
+                fontSize: 30,
+                color: "#060B4D",
+              }}
+            >
+              $0.00 MXN
+            </Text>
+          </View>
+          <View style={[styles.contenedores, { flexDirection: "row" }]}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
+              <Text style={styles.valorConcepto}>$0.00</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+              <Text style={styles.valorConcepto}>0%</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
+              <Text style={styles.valorConcepto}>$0.00</Text>
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.botonContinuar,
+            { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
+          ]}
+          onPress={() => {
+            navigation.navigate("Beneficiarios", { flujo: flujo });
+          }}
+          disabled={!isAcceptable}
+        >
+          <Text
+            style={[
+              styles.textoBotonContinuar,
+              { color: isAcceptable ? "white" : "grey" },
+            ]}
+          >
+            Aceptar
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 

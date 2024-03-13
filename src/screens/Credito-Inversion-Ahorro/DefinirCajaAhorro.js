@@ -97,171 +97,169 @@ const DefinirCajaAhorro = ({ navigation }) => {
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={{ flex: 1 }}
-            />
-          </MaskedView>
-          <Text style={styles.tituloPantalla}>Caja de ahorro</Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-          removeClippedSubviews={true}
-          onStartShouldSetResponder={() => true}
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
-          <View style={{ flex: 1 }}>
-            <View style={[styles.contenedores, { flexDirection: "row" }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
-                <Text style={styles.valorConcepto}>$120,000</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
-                <Text style={styles.valorConcepto}>$25,000.00</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
-                <Text style={styles.valorConcepto}>$35,000.00</Text>
-              </View>
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 1, y: 1 }}
+            end={{ x: 0, y: 0 }}
+            style={{ flex: 1 }}
+          />
+        </MaskedView>
+        <Text style={styles.tituloPantalla}>Caja de ahorro</Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
+        <View style={{ flex: 1 }}>
+          <View style={[styles.contenedores, { flexDirection: "row" }]}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
+              <Text style={styles.valorConcepto}>$120,000</Text>
             </View>
-            <View
-              style={{
-                marginTop: 3,
-                backgroundColor: "white",
-                paddingHorizontal: 15,
-                paddingVertical: 5,
-              }}
-            >
-              <Text style={styles.texto}>Nombre de la caja de ahorro</Text>
-              <TextInput
-                style={styles.inputNombre}
-                value={nombreInversion}
-                maxLength={20}
-                placeholderTextColor={"#b3b5c9ff"}
-                placeholder="Introduce el nombre de la caja de ahorro"
-                onChangeText={(text) => setNombreInversion(text)}
-              />
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
+              <Text style={styles.valorConcepto}>$25,000.00</Text>
             </View>
-            <View style={styles.contenedores}>
-              <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-                Introduce el monto que deseas ahorrar
-              </Text>
-              <View style={styles.inputWrapper}>
-                <Text
-                  style={[
-                    styles.dollarSign,
-                    { color: monto ? "#060B4D" : "#b3b5c9ff" },
-                  ]}
-                >
-                  $
-                </Text>
-                <TextInput
-                  style={styles.inputMonto}
-                  value={montoShow}
-                  keyboardType="numeric"
-                  maxLength={20}
-                  placeholderTextColor={"#b3b5c9ff"}
-                  placeholder="0.00"
-                  onChangeText={handleChangeText}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                />
-                <Text
-                  style={[
-                    styles.dollarSign,
-                    { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
-                  ]}
-                >
-                  MXN
-                </Text>
-              </View>
-              <Slider
-                style={{ width: "90%" }}
-                minimumValue={25000}
-                maximumValue={35000}
-                step={25}
-                value={montoNumeric}
-                onValueChange={handleSliderChange}
-                thumbTintColor="#2FF690"
-                minimumTrackTintColor="#2FF690"
-                maximumTrackTintColor="#F2F2F2"
-              />
-            </View>
-
-            <View style={styles.contenedores}>
-              <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-                Plan mensual de ahorro
-              </Text>
-              <TouchableOpacity
-                style={styles.tab}
-                onPress={() => [setFocusTab("6"), setPlazo(6)]}
-              >
-                <Text style={styles.textoTab}>6</Text>
-              </TouchableOpacity>
-              <Text style={styles.subTexto}>
-                Esta es una cotización preliminar, la tasa definitiva dependerá
-                del análisis completo de tu solicitud.
-              </Text>
-            </View>
-            <View style={styles.contenedores}>
-              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-              <Text style={styles.valorConcepto}>44.26%</Text>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
+              <Text style={styles.valorConcepto}>$35,000.00</Text>
             </View>
           </View>
-
-          <TouchableOpacity
-            style={[
-              styles.botonContinuar,
-              { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
-            ]}
-            onPress={() => {
-              navigation.navigate("Beneficiarios", { flujo: flujo });
+          <View
+            style={{
+              marginTop: 3,
+              backgroundColor: "white",
+              paddingHorizontal: 15,
+              paddingVertical: 5,
             }}
-            disabled={!isAcceptable}
           >
-            <Text
-              style={[
-                styles.textoBotonContinuar,
-                { color: isAcceptable ? "white" : "grey" },
-              ]}
-            >
-              Aceptar
+            <Text style={styles.texto}>Nombre de la caja de ahorro</Text>
+            <TextInput
+              style={styles.inputNombre}
+              value={nombreInversion}
+              maxLength={20}
+              placeholderTextColor={"#b3b5c9ff"}
+              placeholder="Introduce el nombre de la caja de ahorro"
+              onChangeText={(text) => setNombreInversion(text)}
+            />
+          </View>
+          <View style={styles.contenedores}>
+            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
+              Introduce el monto que deseas ahorrar
             </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </TouchableWithoutFeedback>
+            <View style={styles.inputWrapper}>
+              <Text
+                style={[
+                  styles.dollarSign,
+                  { color: monto ? "#060B4D" : "#b3b5c9ff" },
+                ]}
+              >
+                $
+              </Text>
+              <TextInput
+                style={styles.inputMonto}
+                value={montoShow}
+                keyboardType="numeric"
+                maxLength={20}
+                placeholderTextColor={"#b3b5c9ff"}
+                placeholder="0.00"
+                onChangeText={handleChangeText}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <Text
+                style={[
+                  styles.dollarSign,
+                  { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
+                ]}
+              >
+                MXN
+              </Text>
+            </View>
+            <Slider
+              style={{ width: "90%" }}
+              minimumValue={25000}
+              maximumValue={35000}
+              step={25}
+              value={montoNumeric}
+              onValueChange={handleSliderChange}
+              thumbTintColor="#2FF690"
+              minimumTrackTintColor="#2FF690"
+              maximumTrackTintColor="#F2F2F2"
+            />
+          </View>
+
+          <View style={styles.contenedores}>
+            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
+              Plan mensual de ahorro
+            </Text>
+            <TouchableOpacity
+              style={styles.tab}
+              onPress={() => [setFocusTab("6"), setPlazo(6)]}
+            >
+              <Text style={styles.textoTab}>6</Text>
+            </TouchableOpacity>
+            <Text style={styles.subTexto}>
+              Esta es una cotización preliminar, la tasa definitiva dependerá
+              del análisis completo de tu solicitud.
+            </Text>
+          </View>
+          <View style={styles.contenedores}>
+            <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+            <Text style={styles.valorConcepto}>44.26%</Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.botonContinuar,
+            { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
+          ]}
+          onPress={() => {
+            navigation.navigate("Beneficiarios", { flujo: flujo });
+          }}
+          disabled={!isAcceptable}
+        >
+          <Text
+            style={[
+              styles.textoBotonContinuar,
+              { color: isAcceptable ? "white" : "grey" },
+            ]}
+          >
+            Aceptar
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 

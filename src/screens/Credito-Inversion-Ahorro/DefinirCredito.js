@@ -103,60 +103,59 @@ const DefinirCredito = ({ navigation }) => {
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text style={styles.tituloPantalla}>Crédito</Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-          removeClippedSubviews={true}
-          onStartShouldSetResponder={() => true}
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
-          <View style={{ flex: 1 }}>
-            <View
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 1, y: 1 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text style={styles.tituloPantalla}>Crédito</Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              alignItems: "center",
+              paddingHorizontal: 25,
+              paddingVertical: 15,
+              backgroundColor: "white",
+              marginTop: 3,
+            }}
+          >
+            <Text
               style={{
-                alignItems: "center",
-                paddingHorizontal: 25,
-                paddingVertical: 15,
-                backgroundColor: "white",
-                marginTop: 3,
+                fontFamily: "opensansbold",
+                fontSize: 20,
+                color: "#060B4D",
+                textAlign: "center",
               }}
             >
-              <Text
-                style={{
-                  fontFamily: "opensansbold",
-                  fontSize: 20,
-                  color: "#060B4D",
-                  textAlign: "center",
-                }}
-              >
-                Selecciona una de nuestras opciones para solicitar un crédito.
-              </Text>
-            </View>
-            {/* Opcion para añadir nombre al crédito */}
-            {/*<View
+              Selecciona una de nuestras opciones para solicitar un crédito.
+            </Text>
+          </View>
+          {/* Opcion para añadir nombre al crédito */}
+          {/*<View
               style={{
                 marginTop: 3,
                 backgroundColor: "white",
@@ -174,272 +173,264 @@ const DefinirCredito = ({ navigation }) => {
                 onChangeText={(text) => setNombreInversion(text)}
               />
             </View>*/}
-            <View style={styles.tabsContainer}>
-              {/* Boton Tab Balance */}
-              <TouchableOpacity
-                style={styles.tabButton}
-                onPress={() => setFocus("Mi Red")}
+          <View style={styles.tabsContainer}>
+            {/* Boton Tab Balance */}
+            <TouchableOpacity
+              style={styles.tabButton}
+              onPress={() => setFocus("Mi Red")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  {
+                    color: focus === "Mi Red" ? "#060B4D" : "#9596AF",
+                    fontFamily:
+                      focus === "Balance" ? "opensansbold" : "opensanssemibold",
+                  },
+                ]}
               >
-                <Text
-                  style={[
-                    styles.tabText,
-                    {
-                      color: focus === "Mi Red" ? "#060B4D" : "#9596AF",
-                      fontFamily:
-                        focus === "Balance"
-                          ? "opensansbold"
-                          : "opensanssemibold",
-                    },
-                  ]}
-                >
-                  Mi Red
-                </Text>
-                {focus === "Mi Red" ? <View style={styles.focusLine} /> : null}
-              </TouchableOpacity>
+                Mi Red
+              </Text>
+              {focus === "Mi Red" ? <View style={styles.focusLine} /> : null}
+            </TouchableOpacity>
 
-              {/* Boton Tab Movimientos */}
-              <TouchableOpacity
-                style={styles.tabButton}
-                onPress={() => setFocus("Comite")}
+            {/* Boton Tab Movimientos */}
+            <TouchableOpacity
+              style={styles.tabButton}
+              onPress={() => setFocus("Comite")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  {
+                    color: focus === "Comite" ? "#060B4D" : "#9596AF",
+                    fontFamily:
+                      focus === "Comite" ? "opensansbold" : "opensanssemibold",
+                  },
+                ]}
               >
-                <Text
-                  style={[
-                    styles.tabText,
-                    {
-                      color: focus === "Comite" ? "#060B4D" : "#9596AF",
-                      fontFamily:
-                        focus === "Comite"
-                          ? "opensansbold"
-                          : "opensanssemibold",
-                    },
-                  ]}
-                >
-                  Comité
-                </Text>
-                {focus === "Comite" ? <View style={styles.focusLine} /> : null}
-              </TouchableOpacity>
-            </View>
+                Comité
+              </Text>
+              {focus === "Comite" ? <View style={styles.focusLine} /> : null}
+            </TouchableOpacity>
+          </View>
 
-            <View
+          <View
+            style={[
+              styles.contenedores,
+              { flexDirection: "row", justifyContent: "center" },
+            ]}
+          >
+            <Image
+              source={imageMap[`${credit.paso}de5`]}
+              style={{ height: 50, width: 50 }}
+            />
+            <Text
               style={[
-                styles.contenedores,
-                { flexDirection: "row", justifyContent: "center" },
+                styles.texto,
+                { fontFamily: "opensansbold", marginLeft: 10 },
               ]}
             >
-              <Image
-                source={imageMap[`${credit.paso}de5`]}
-                style={{ height: 50, width: 50 }}
+              {focus === "Mi Red"
+                ? "Mi Red con Obligados Solidarios"
+                : "Solicitud de crédito por Comité"}
+            </Text>
+          </View>
+          <View style={[styles.contenedores, { flexDirection: "row" }]}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
+              <Text style={styles.valorConcepto}>$120,000</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
+              <Text style={styles.valorConcepto}>$10,000.00</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
+              <Text style={styles.valorConcepto}>$1,000,000.00</Text>
+            </View>
+          </View>
+          <View style={styles.contenedores}>
+            <Text style={styles.texto}>
+              {focus === "Mi Red"
+                ? "Invita a tus amigos a unirse a tu red financiera. Cuantos más se sumen, más respaldo tendrás al solicitar un crédito. ¡Aprovecha el poder de la comunidad para obtener financiamiento!"
+                : "Al solicitar un crédito a través del comité, tu historial crediticio será revisado en buró de crédito y otros aspectos serán evaluados."}
+            </Text>
+          </View>
+          <View style={styles.contenedores}>
+            <Text style={styles.texto}>Monto de inversión</Text>
+            <View style={styles.inputWrapper}>
+              <Text
+                style={[
+                  styles.dollarSign,
+                  { color: monto ? "#060B4D" : "#b3b5c9ff" },
+                ]}
+              >
+                $
+              </Text>
+              <TextInput
+                style={styles.inputMonto}
+                value={montoShow}
+                keyboardType="numeric"
+                maxLength={20}
+                placeholderTextColor={"#b3b5c9ff"}
+                placeholder="0.00"
+                onChangeText={handleChangeText}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
               />
               <Text
                 style={[
-                  styles.texto,
-                  { fontFamily: "opensansbold", marginLeft: 10 },
+                  styles.dollarSign,
+                  { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
                 ]}
               >
-                {focus === "Mi Red"
-                  ? "Mi Red con Obligados Solidarios"
-                  : "Solicitud de crédito por Comité"}
+                MXN
               </Text>
             </View>
-            <View style={[styles.contenedores, { flexDirection: "row" }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
-                <Text style={styles.valorConcepto}>$120,000</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
-                <Text style={styles.valorConcepto}>$10,000.00</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
-                <Text style={styles.valorConcepto}>$1,000,000.00</Text>
-              </View>
-            </View>
-            <View style={styles.contenedores}>
-              <Text style={styles.texto}>
-                {focus === "Mi Red"
-                  ? "Invita a tus amigos a unirse a tu red financiera. Cuantos más se sumen, más respaldo tendrás al solicitar un crédito. ¡Aprovecha el poder de la comunidad para obtener financiamiento!"
-                  : "Al solicitar un crédito a través del comité, tu historial crediticio será revisado en buró de crédito y otros aspectos serán evaluados."}
-              </Text>
-            </View>
-            <View style={styles.contenedores}>
-              <Text style={styles.texto}>Monto de inversión</Text>
-              <View style={styles.inputWrapper}>
-                <Text
-                  style={[
-                    styles.dollarSign,
-                    { color: monto ? "#060B4D" : "#b3b5c9ff" },
-                  ]}
-                >
-                  $
-                </Text>
-                <TextInput
-                  style={styles.inputMonto}
-                  value={montoShow}
-                  keyboardType="numeric"
-                  maxLength={20}
-                  placeholderTextColor={"#b3b5c9ff"}
-                  placeholder="0.00"
-                  onChangeText={handleChangeText}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                />
-                <Text
-                  style={[
-                    styles.dollarSign,
-                    { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
-                  ]}
-                >
-                  MXN
-                </Text>
-              </View>
-              <Text style={styles.subTexto}>
-                Monto mínimo de inversión $5,000.00
-              </Text>
-            </View>
-
-            <View style={styles.contenedores}>
-              <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-                Plazo de Inversión
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginLeft: -5,
-                  alignSelf: "center",
-                }}
-              >
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("6"), setPlazo(6)]}
-                >
-                  <Text style={styles.textoTab}>6</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "12" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("12"), setPlazo(12)]}
-                >
-                  <Text style={styles.textoTab}>12</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "18" ? "#2FF690" : "#F3F3F3",
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("18"), setPlazo(18)]}
-                >
-                  <Text style={styles.textoTab}>18</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    {
-                      backgroundColor:
-                        focusTab === "24" ? "#2FF690" : "#F3F3F3",
-                      marginRight: 0,
-                    },
-                  ]}
-                  onPress={() => [setFocusTab("24"), setPlazo(24)]}
-                >
-                  <Text style={styles.textoTab}>24</Text>
-                </TouchableOpacity>
-              </View>
-              <Text
-                style={[styles.subTexto, { marginTop: 10, color: "#060B4D" }]}
-              >
-                Esta es una cotización preliminar, la tasa definitiva dependerá
-                del análisis completo de tu solicitud.
-              </Text>
-            </View>
-            <View style={styles.contenedores}>
-              <Text style={styles.texto}>Retorno de inversión neto</Text>
-              <Text
-                style={{
-                  fontFamily: "opensansbold",
-                  fontSize: 30,
-                  color: "#060B4D",
-                }}
-              >
-                $0.00 MXN
-              </Text>
-            </View>
-            <View style={[styles.contenedores, { flexDirection: "row" }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-                <Text style={styles.valorConcepto}>$0.00</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-                <Text style={styles.valorConcepto}>0%</Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-                <Text style={styles.valorConcepto}>$0.00</Text>
-              </View>
-            </View>
+            <Text style={styles.subTexto}>
+              Monto mínimo de inversión $5,000.00
+            </Text>
           </View>
 
-          <TouchableOpacity
-            style={[
-              styles.botonContinuar,
-              { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
-            ]}
-            onPress={() => {
-              handleAccept();
-              //navigation.navigate("Beneficiarios", { flujo: flujo });
-            }}
-            disabled={!isAcceptable}
-          >
-            <Text
-              style={[
-                styles.textoBotonContinuar,
-                { color: isAcceptable ? "white" : "grey" },
-              ]}
-            >
-              Aceptar
+          <View style={styles.contenedores}>
+            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
+              Plazo de Inversión
             </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </TouchableWithoutFeedback>
+            <View
+              style={{
+                flexDirection: "row",
+                marginLeft: -5,
+                alignSelf: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3",
+                  },
+                ]}
+                onPress={() => [setFocusTab("6"), setPlazo(6)]}
+              >
+                <Text style={styles.textoTab}>6</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "12" ? "#2FF690" : "#F3F3F3",
+                  },
+                ]}
+                onPress={() => [setFocusTab("12"), setPlazo(12)]}
+              >
+                <Text style={styles.textoTab}>12</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "18" ? "#2FF690" : "#F3F3F3",
+                  },
+                ]}
+                onPress={() => [setFocusTab("18"), setPlazo(18)]}
+              >
+                <Text style={styles.textoTab}>18</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tab,
+                  {
+                    backgroundColor: focusTab === "24" ? "#2FF690" : "#F3F3F3",
+                    marginRight: 0,
+                  },
+                ]}
+                onPress={() => [setFocusTab("24"), setPlazo(24)]}
+              >
+                <Text style={styles.textoTab}>24</Text>
+              </TouchableOpacity>
+            </View>
+            <Text
+              style={[styles.subTexto, { marginTop: 10, color: "#060B4D" }]}
+            >
+              Esta es una cotización preliminar, la tasa definitiva dependerá
+              del análisis completo de tu solicitud.
+            </Text>
+          </View>
+          <View style={styles.contenedores}>
+            <Text style={styles.texto}>Retorno de inversión neto</Text>
+            <Text
+              style={{
+                fontFamily: "opensansbold",
+                fontSize: 30,
+                color: "#060B4D",
+              }}
+            >
+              $0.00 MXN
+            </Text>
+          </View>
+          <View style={[styles.contenedores, { flexDirection: "row" }]}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
+              <Text style={styles.valorConcepto}>$0.00</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+              <Text style={styles.valorConcepto}>0%</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
+              <Text style={styles.valorConcepto}>$0.00</Text>
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.botonContinuar,
+            { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
+          ]}
+          onPress={() => {
+            handleAccept();
+            //navigation.navigate("Beneficiarios", { flujo: flujo });
+          }}
+          disabled={!isAcceptable}
+        >
+          <Text
+            style={[
+              styles.textoBotonContinuar,
+              { color: isAcceptable ? "white" : "grey" },
+            ]}
+          >
+            Aceptar
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 

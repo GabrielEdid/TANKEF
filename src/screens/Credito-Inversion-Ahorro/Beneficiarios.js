@@ -141,454 +141,443 @@ const Inversion2 = ({ navigation }) => {
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text
-            style={[
-              styles.tituloPantalla,
-              {
-                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
-              },
-            ]}
-          >
-            {flujo}
-          </Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 1, y: 1 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text
+          style={[
+            styles.tituloPantalla,
+            {
+              fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+            },
+          ]}
+        >
+          {flujo}
+        </Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
 
-        {focus === "Documentacion" && (
-          <>
+      {focus === "Documentacion" && (
+        <>
+          <View style={styles.seccion}>
+            <Text style={styles.tituloSeccion}>Documentación</Text>
+            <Text style={styles.bodySeccion}>
+              Para agilizar el proceso te recomendamos tener los siguientes
+              documentos a la mano.
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 5,
+              backgroundColor: "white",
+              paddingBottom: 15,
+              flex: 1,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <BulletPointText
+                titulo="INE"
+                body="Identificación oficial actualizada"
+              />
+              <BulletPointText titulo="CURP" body="Documento actualizado" />
+              <BulletPointText
+                titulo="Constancia de situación fiscal"
+                body="Identificación oficial actualizada"
+              />
+              <BulletPointText
+                titulo="Comprobante de Domicilio"
+                body="Documento actualizado"
+              />
+              <BulletPointText
+                titulo="Carátula de estado de cuenta bancaria"
+                body="Documento actualizado"
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.botonContinuar}
+              onPress={() => setFocus("Beneficiarios")}
+            >
+              <Text style={styles.textoBotonContinuar}>Continuar</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
+
+      {focus === "Beneficiarios" && (
+        <>
+          <KeyboardAwareScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            scrollEnabled={true}
+            enableOnAndroid={true}
+            style={styles.scrollV}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            enableAutomaticScroll={true}
+          >
             <View style={styles.seccion}>
-              <Text style={styles.tituloSeccion}>Documentación</Text>
+              <Text style={styles.tituloSeccion}>Beneficiarios</Text>
               <Text style={styles.bodySeccion}>
-                Para agilizar el proceso te recomendamos tener los siguientes
-                documentos a la mano.
+                En caso de un imprevisto, es importante asegurarse de que tus
+                bienes financieros se transfieran de manera rápida y eficiente a
+                las personas que más te importan.
               </Text>
             </View>
-            <View
-              style={{
-                marginTop: 5,
-                backgroundColor: "white",
-                paddingBottom: 15,
-                flex: 1,
-              }}
-            >
-              <View style={{ flex: 1 }}>
-                <BulletPointText
-                  titulo="INE"
-                  body="Identificación oficial actualizada"
-                />
-                <BulletPointText titulo="CURP" body="Documento actualizado" />
-                <BulletPointText
-                  titulo="Constancia de situación fiscal"
-                  body="Identificación oficial actualizada"
-                />
-                <BulletPointText
-                  titulo="Comprobante de Domicilio"
-                  body="Documento actualizado"
-                />
-                <BulletPointText
-                  titulo="Carátula de estado de cuenta bancaria"
-                  body="Documento actualizado"
-                />
-              </View>
-              <TouchableOpacity
-                style={styles.botonContinuar}
-                onPress={() => setFocus("Beneficiarios")}
+            <View style={{ flex: 1 }}>
+              <View
+                style={{
+                  marginTop: 5,
+                  backgroundColor: "white",
+                  paddingTop: 15,
+                }}
               >
-                <Text style={styles.textoBotonContinuar}>Continuar</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-
-        {focus === "Beneficiarios" && (
-          <>
-            <KeyboardAwareScrollView
-              contentContainerStyle={{ flexGrow: 1 }}
-              scrollEnabled={true}
-              enableOnAndroid={true}
-              style={styles.scrollV}
-              keyboardShouldPersistTaps="handled"
-              enableAutomaticScroll={true}
-              removeClippedSubviews={true}
-              onStartShouldSetResponder={() => true}
-            >
-              <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Beneficiarios</Text>
-                <Text style={styles.bodySeccion}>
-                  En caso de un imprevisto, es importante asegurarse de que tus
-                  bienes financieros se transfieran de manera rápida y eficiente
-                  a las personas que más te importan.
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <View
+                {/* Campos para introducir los datos del primer beneficiario */}
+                <Text
                   style={{
-                    marginTop: 5,
-                    backgroundColor: "white",
-                    paddingTop: 15,
+                    fontSize: 16,
+                    paddingLeft: 15,
+                    marginBottom: 10,
+                    color: "#060B4D",
+                    fontFamily: "opensanssemibold",
                   }}
                 >
-                  {/* Campos para introducir los datos del primer beneficiario */}
+                  Primer Beneficiario
+                </Text>
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Nombre(s)</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setNombre}
+                  value={nombre}
+                  placeholder="Eje. Humberto Arturo"
+                />
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Apellidos</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setApellidos}
+                  value={apellidos}
+                  placeholder="Eje. Flores Guillán"
+                />
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Teléfono</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingHorizontal: 15,
+                    alignItems: "center",
+                    marginTop: -5,
+                    marginBottom: 5,
+                  }}
+                >
+                  <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                    <Entypo
+                      name="chevron-thin-down"
+                      size={15}
+                      color="#060B4D"
+                      style={{ marginRight: 5 }}
+                    />
+                  </TouchableOpacity>
+                  <CountryPicker
+                    withFilter
+                    countryCode={countryCode}
+                    withCallingCode
+                    withCloseButton
+                    onSelect={(country) => {
+                      const { cca2, callingCode } = country;
+                      setCountryCode(cca2);
+                      setCallingCode(callingCode[0]);
+                      setTelefono("");
+                    }}
+                    visible={pickerVisible}
+                    onClose={() => setPickerVisible(false)}
+                  />
+                  <Text style={styles.countryCodeText}>
+                    +{callingCode} {" |"}
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
+                    onChangeText={(text) =>
+                      formatPhoneNumber(text, setTelefono, countryCode)
+                    }
+                    value={telefono}
+                    keyboardType="phone-pad"
+                    placeholder="10 dígitos"
+                  />
+                </View>
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Porcentaje</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <TextInput
+                    style={[styles.input, { flex: 0.08 }]}
+                    onChangeText={handlePorcentajeChange}
+                    value={porcentaje}
+                    keyboardType="numeric"
+                    maxLength={3}
+                    editable={segundoBeneficiaro}
+                  />
                   <Text
                     style={{
-                      fontSize: 16,
-                      paddingLeft: 15,
-                      marginBottom: 10,
+                      fontSize: 17,
+                      marginTop: -7.5,
                       color: "#060B4D",
                       fontFamily: "opensanssemibold",
                     }}
                   >
-                    Primer Beneficiario
+                    %
                   </Text>
-                  <View style={styles.separacion} />
+                </View>
+                <View style={styles.separacion} />
 
-                  <Text style={styles.tituloCampo}>Nombre(s)</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setNombre}
-                    value={nombre}
-                    placeholder="Eje. Humberto Arturo"
-                  />
-                  <View style={styles.separacion} />
+                <Text style={styles.tituloCampo}>Parentesco</Text>
+                <DropDownPicker
+                  open={open}
+                  value={parentesco}
+                  items={dataParentesco}
+                  placeholder="Selecciona una opción"
+                  listMode="MODAL"
+                  modalProps={{
+                    animationType: "slide",
+                  }}
+                  setOpen={setOpen}
+                  setValue={setParentesco}
+                  onChangeValue={(value) => setParentesco(value)}
+                  style={styles.DropDownPicker}
+                  arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                  placeholderStyle={{
+                    color: "#c7c7c9ff",
+                    fontFamily: "opensanssemibold",
+                  }}
+                  dropDownContainerStyle={styles.DropDownContainer}
+                  textStyle={styles.DropDownText}
+                />
+                <View style={styles.separacion} />
+                <View
+                  style={[
+                    styles.separacion,
+                    { backgroundColor: "#f2f2f2ff", height: 5 },
+                  ]}
+                />
 
-                  <Text style={styles.tituloCampo}>Apellidos</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setApellidos}
-                    value={apellidos}
-                    placeholder="Eje. Flores Guillán"
-                  />
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Teléfono</Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      paddingHorizontal: 15,
-                      alignItems: "center",
-                      marginTop: -5,
-                      marginBottom: 5,
-                    }}
-                  >
-                    <TouchableOpacity onPress={() => setPickerVisible(true)}>
-                      <Entypo
-                        name="chevron-thin-down"
-                        size={15}
-                        color="#060B4D"
-                        style={{ marginRight: 5 }}
-                      />
-                    </TouchableOpacity>
-                    <CountryPicker
-                      withFilter
-                      countryCode={countryCode}
-                      withCallingCode
-                      withCloseButton
-                      onSelect={(country) => {
-                        const { cca2, callingCode } = country;
-                        setCountryCode(cca2);
-                        setCallingCode(callingCode[0]);
-                        setTelefono("");
-                      }}
-                      visible={pickerVisible}
-                      onClose={() => setPickerVisible(false)}
-                    />
-                    <Text style={styles.countryCodeText}>
-                      +{callingCode} {" |"}
-                    </Text>
-                    <TextInput
-                      style={[
-                        styles.input,
-                        { paddingLeft: 0, marginBottom: 0 },
-                      ]}
-                      onChangeText={(text) =>
-                        formatPhoneNumber(text, setTelefono, countryCode)
-                      }
-                      value={telefono}
-                      keyboardType="phone-pad"
-                      placeholder="10 dígitos"
-                    />
-                  </View>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Porcentaje</Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <TextInput
-                      style={[styles.input, { flex: 0.08 }]}
-                      onChangeText={handlePorcentajeChange}
-                      value={porcentaje}
-                      keyboardType="numeric"
-                      maxLength={3}
-                      editable={segundoBeneficiaro}
-                    />
+                {/* Opcion de introducir un Segundo Beneficiario */}
+                {segundoBeneficiaro === true && (
+                  <View style={{ marginTop: 15 }}>
                     <Text
                       style={{
-                        fontSize: 17,
-                        marginTop: -7.5,
+                        fontSize: 16,
+                        paddingLeft: 15,
+                        marginBottom: 10,
                         color: "#060B4D",
                         fontFamily: "opensanssemibold",
                       }}
                     >
-                      %
+                      Segundo Beneficiario
                     </Text>
-                  </View>
-                  <View style={styles.separacion} />
+                    <View style={styles.separacion} />
 
-                  <Text style={styles.tituloCampo}>Parentesco</Text>
-                  <DropDownPicker
-                    open={open}
-                    value={parentesco}
-                    items={dataParentesco}
-                    placeholder="Selecciona una opción"
-                    listMode="MODAL"
-                    modalProps={{
-                      animationType: "slide",
-                    }}
-                    setOpen={setOpen}
-                    setValue={setParentesco}
-                    onChangeValue={(value) => setParentesco(value)}
-                    style={styles.DropDownPicker}
-                    arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                    placeholderStyle={{
-                      color: "#c7c7c9ff",
-                      fontFamily: "opensanssemibold",
-                    }}
-                    dropDownContainerStyle={styles.DropDownContainer}
-                    textStyle={styles.DropDownText}
-                  />
-                  <View style={styles.separacion} />
-                  <View
-                    style={[
-                      styles.separacion,
-                      { backgroundColor: "#f2f2f2ff", height: 5 },
-                    ]}
-                  />
+                    <Text style={styles.tituloCampo}>Nombre(s)</Text>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={setNombre2}
+                      value={nombre2}
+                      placeholder="Eje. Humberto Arturo"
+                    />
+                    <View style={styles.separacion} />
 
-                  {/* Opcion de introducir un Segundo Beneficiario */}
-                  {segundoBeneficiaro === true && (
-                    <View style={{ marginTop: 15 }}>
+                    <Text style={styles.tituloCampo}>Apellidos</Text>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={setApellidos2}
+                      value={apellidos2}
+                      placeholder="Eje. Flores Guillán"
+                    />
+                    <View style={styles.separacion} />
+
+                    <Text style={styles.tituloCampo}>Teléfono</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        paddingHorizontal: 15,
+                        alignItems: "center",
+                        marginTop: -5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <TouchableOpacity onPress={() => setPickerVisible2(true)}>
+                        <Entypo
+                          name="chevron-thin-down"
+                          size={15}
+                          color="#060B4D"
+                          style={{ marginRight: 5 }}
+                        />
+                      </TouchableOpacity>
+                      <CountryPicker
+                        withFilter
+                        countryCode={countryCode2}
+                        withCallingCode
+                        withCloseButton
+                        onSelect={(country) => {
+                          const { cca2, callingCode } = country;
+                          setCountryCode2(cca2);
+                          setCallingCode2(callingCode[0]);
+                          setTelefono2("");
+                        }}
+                        visible={pickerVisible2}
+                        onClose={() => setPickerVisible2(false)}
+                      />
+                      <Text style={styles.countryCodeText}>
+                        +{callingCode2} {" |"}
+                      </Text>
+                      <TextInput
+                        style={[
+                          styles.input,
+                          { paddingLeft: 0, marginBottom: 0 },
+                        ]}
+                        onChangeText={(text) =>
+                          formatPhoneNumber(text, setTelefono2, countryCode2)
+                        }
+                        value={telefono2}
+                        keyboardType="phone-pad"
+                        placeholder="10 dígitos"
+                      />
+                    </View>
+                    <View style={styles.separacion} />
+
+                    <Text style={styles.tituloCampo}>Porcentaje</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <TextInput
+                        style={[styles.input, { flex: 0.08 }]}
+                        onChangeText={handlePorcentaje2Change}
+                        value={porcentaje2}
+                        keyboardType="numeric"
+                        maxLength={3}
+                      />
                       <Text
                         style={{
-                          fontSize: 16,
-                          paddingLeft: 15,
-                          marginBottom: 10,
+                          fontSize: 17,
+                          marginTop: -7.5,
                           color: "#060B4D",
                           fontFamily: "opensanssemibold",
                         }}
                       >
-                        Segundo Beneficiario
+                        %
                       </Text>
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Nombre(s)</Text>
-                      <TextInput
-                        style={styles.input}
-                        onChangeText={setNombre2}
-                        value={nombre2}
-                        placeholder="Eje. Humberto Arturo"
-                      />
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Apellidos</Text>
-                      <TextInput
-                        style={styles.input}
-                        onChangeText={setApellidos2}
-                        value={apellidos2}
-                        placeholder="Eje. Flores Guillán"
-                      />
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Teléfono</Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          paddingHorizontal: 15,
-                          alignItems: "center",
-                          marginTop: -5,
-                          marginBottom: 5,
-                        }}
-                      >
-                        <TouchableOpacity
-                          onPress={() => setPickerVisible2(true)}
-                        >
-                          <Entypo
-                            name="chevron-thin-down"
-                            size={15}
-                            color="#060B4D"
-                            style={{ marginRight: 5 }}
-                          />
-                        </TouchableOpacity>
-                        <CountryPicker
-                          withFilter
-                          countryCode={countryCode2}
-                          withCallingCode
-                          withCloseButton
-                          onSelect={(country) => {
-                            const { cca2, callingCode } = country;
-                            setCountryCode2(cca2);
-                            setCallingCode2(callingCode[0]);
-                            setTelefono2("");
-                          }}
-                          visible={pickerVisible2}
-                          onClose={() => setPickerVisible2(false)}
-                        />
-                        <Text style={styles.countryCodeText}>
-                          +{callingCode2} {" |"}
-                        </Text>
-                        <TextInput
-                          style={[
-                            styles.input,
-                            { paddingLeft: 0, marginBottom: 0 },
-                          ]}
-                          onChangeText={(text) =>
-                            formatPhoneNumber(text, setTelefono2, countryCode2)
-                          }
-                          value={telefono2}
-                          keyboardType="phone-pad"
-                          placeholder="10 dígitos"
-                        />
-                      </View>
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Porcentaje</Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <TextInput
-                          style={[styles.input, { flex: 0.08 }]}
-                          onChangeText={handlePorcentaje2Change}
-                          value={porcentaje2}
-                          keyboardType="numeric"
-                          maxLength={3}
-                        />
-                        <Text
-                          style={{
-                            fontSize: 17,
-                            marginTop: -7.5,
-                            color: "#060B4D",
-                            fontFamily: "opensanssemibold",
-                          }}
-                        >
-                          %
-                        </Text>
-                      </View>
-                      <View style={styles.separacion} />
-
-                      <Text style={styles.tituloCampo}>Parentesco</Text>
-                      <DropDownPicker
-                        open={open2}
-                        value={parentesco2}
-                        items={dataParentesco}
-                        listMode="MODAL"
-                        modalProps={{
-                          animationType: "slide",
-                        }}
-                        placeholder="Selecciona una opción"
-                        setOpen={setOpen2}
-                        setValue={setParentesco2}
-                        onChangeValue={(value) => setParentesco2(value)}
-                        style={styles.DropDownPicker}
-                        arrowIconStyle={{
-                          tintColor: "#060B4D",
-                          width: 25,
-                        }}
-                        placeholderStyle={{
-                          color: "#c7c7c9ff",
-                          fontFamily: "opensanssemibold",
-                        }}
-                        dropDownContainerStyle={styles.DropDownContainer}
-                        textStyle={styles.DropDownText}
-                      />
-                      <View style={[styles.separacion]} />
                     </View>
-                  )}
-                </View>
+                    <View style={styles.separacion} />
+
+                    <Text style={styles.tituloCampo}>Parentesco</Text>
+                    <DropDownPicker
+                      open={open2}
+                      value={parentesco2}
+                      items={dataParentesco}
+                      listMode="MODAL"
+                      modalProps={{
+                        animationType: "slide",
+                      }}
+                      placeholder="Selecciona una opción"
+                      setOpen={setOpen2}
+                      setValue={setParentesco2}
+                      onChangeValue={(value) => setParentesco2(value)}
+                      style={styles.DropDownPicker}
+                      arrowIconStyle={{
+                        tintColor: "#060B4D",
+                        width: 25,
+                      }}
+                      placeholderStyle={{
+                        color: "#c7c7c9ff",
+                        fontFamily: "opensanssemibold",
+                      }}
+                      dropDownContainerStyle={styles.DropDownContainer}
+                      textStyle={styles.DropDownText}
+                    />
+                    <View style={[styles.separacion]} />
+                  </View>
+                )}
               </View>
-              {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
-              <View style={{ marginBottom: 20, zIndex: -1 }}>
-                <TouchableOpacity
+            </View>
+            {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
+            <View style={{ marginBottom: 20, zIndex: -1 }}>
+              <TouchableOpacity
+                style={[styles.botonContinuar, { backgroundColor: "#E1E1E1" }]}
+                onPress={() =>
+                  segundoBeneficiaro
+                    ? handleCancelBeneficiario()
+                    : [
+                        setSegundoBeneficiaro(true),
+                        setPorcentaje("50"),
+                        setPorcentaje2("50"),
+                      ]
+                }
+              >
+                <Text
                   style={[
-                    styles.botonContinuar,
-                    { backgroundColor: "#E1E1E1" },
+                    styles.textoBotonContinuar,
+                    { color: segundoBeneficiaro ? "#F95C5C" : "#060B4D" },
                   ]}
-                  onPress={() =>
-                    segundoBeneficiaro
-                      ? handleCancelBeneficiario()
-                      : [
-                          setSegundoBeneficiaro(true),
-                          setPorcentaje("50"),
-                          setPorcentaje2("50"),
-                        ]
-                  }
                 >
-                  <Text
-                    style={[
-                      styles.textoBotonContinuar,
-                      { color: segundoBeneficiaro ? "#F95C5C" : "#060B4D" },
-                    ]}
-                  >
-                    {segundoBeneficiaro
-                      ? "Eliminar Beneficiario"
-                      : "Agregar Beneficiario"}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                  {segundoBeneficiaro
+                    ? "Eliminar Beneficiario"
+                    : "Agregar Beneficiario"}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.botonContinuar,
+                  { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+                ]}
+                onPress={() => {
+                  flujo === "Caja de ahorro"
+                    ? navigation.navigate("Documentacion", { flujo: flujo })
+                    : navigation.navigate("DatosBancarios", { flujo: flujo });
+                }}
+                disabled={disabled}
+              >
+                <Text
                   style={[
-                    styles.botonContinuar,
-                    { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+                    styles.textoBotonContinuar,
+                    { color: disabled ? "grey" : "white" },
                   ]}
-                  onPress={() => {
-                    flujo === "Caja Ahorro"
-                      ? navigation.navigate("Documentacion", { flujo: flujo })
-                      : navigation.navigate("DatosBancarios", { flujo: flujo });
-                  }}
-                  disabled={disabled}
                 >
-                  <Text
-                    style={[
-                      styles.textoBotonContinuar,
-                      { color: disabled ? "grey" : "white" },
-                    ]}
-                  >
-                    Aceptar
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </KeyboardAwareScrollView>
-          </>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+                  Aceptar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAwareScrollView>
+        </>
+      )}
+    </View>
   );
 };
 

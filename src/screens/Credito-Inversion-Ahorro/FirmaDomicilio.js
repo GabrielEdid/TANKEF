@@ -141,161 +141,159 @@ const FirmaDomicilio = ({ navigation }) => {
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text
-            style={[
-              styles.tituloPantalla,
-              {
-                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
-              },
-            ]}
-          >
-            {flujo}
-          </Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <KeyboardAwareScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          scrollEnabled={true}
-          enableOnAndroid={true}
-          style={styles.scrollV}
-          keyboardShouldPersistTaps="handled"
-          enableAutomaticScroll={true}
-          removeClippedSubviews={true}
-          onStartShouldSetResponder={() => true}
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
-          <View style={styles.seccion}>
-            <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
-            <Text style={styles.bodySeccion}>Enviar a Domicilio</Text>
-          </View>
-          <View style={{ flex: 1 }}>
-            <View
-              style={{
-                marginTop: 5,
-                backgroundColor: "white",
-                paddingTop: 15,
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 1, y: 1 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text
+          style={[
+            styles.tituloPantalla,
+            {
+              fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+            },
+          ]}
+        >
+          {flujo}
+        </Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        scrollEnabled={true}
+        enableOnAndroid={true}
+        style={styles.scrollV}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        enableAutomaticScroll={true}
+      >
+        <View style={styles.seccion}>
+          <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
+          <Text style={styles.bodySeccion}>Enviar a Domicilio</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              marginTop: 5,
+              backgroundColor: "white",
+              paddingTop: 15,
+            }}
+          >
+            {/* Campos para introducir de la información general */}
+
+            <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
+              Nombre Completo{" "}
+            </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setNombre}
+              value={nombre}
+              placeholder="Eje. Raúl Guizar Torres"
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Nombre de la Calle</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setCalle}
+              value={calle}
+              placeholder="Eje. Acueducto de las Fuentes"
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Número Exterior</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setNumeroExterior}
+              value={numeroExterior}
+              placeholder="Eje. 22"
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Número Interior</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setNumeroInterior}
+              value={numeroInterior}
+              placeholder="Eje. 4B"
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Código Postal</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setCodigoPostal}
+              value={codigoPostal}
+              keyboardType="numeric"
+              placeholder="Eje. 53290"
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>País</Text>
+            {/* Dropdown estatico en país */}
+            <DropDownPicker
+              items={[{ label: "México", value: "México" }]}
+              placeholder={pais}
+              showArrowIcon={false}
+              style={styles.DropDownPicker}
+              textStyle={styles.DropDownText}
+              disabled={true}
+              //setValue={setPais}
+              //onChangeValue={(value) => setPais(value)}
+              //value={pais}
+              //setOpen={setOpenPais}
+              //arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+              //dropDownContainerStyle={styles.DropDownContainer}
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Estado</Text>
+            <DropDownPicker
+              searchable={true}
+              searchPlaceholder="Busca un Estado"
+              open={openEstado}
+              value={estado}
+              items={estadosData}
+              listMode="MODAL"
+              modalProps={{
+                animationType: "slide",
               }}
-            >
-              {/* Campos para introducir de la información general */}
+              placeholder="Selecciona una opción"
+              setOpen={setOpenEstado}
+              setValue={setEstado}
+              onSelectItem={(selection) => {
+                setEstado(selection.value);
+              }}
+              style={styles.DropDownPicker}
+              arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+              placeholderStyle={{
+                color: "#c7c7c9ff",
+                fontFamily: "opensanssemibold",
+              }}
+              dropDownContainerStyle={styles.DropDownContainer}
+              textStyle={styles.DropDownText}
+            />
+            <View style={styles.separacion} />
 
-              <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
-                Nombre Completo{" "}
-              </Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setNombre}
-                value={nombre}
-                placeholder="Eje. Raúl Guizar Torres"
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Nombre de la Calle</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setCalle}
-                value={calle}
-                placeholder="Eje. Acueducto de las Fuentes"
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Número Exterior</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setNumeroExterior}
-                value={numeroExterior}
-                placeholder="Eje. 22"
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Número Interior</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setNumeroInterior}
-                value={numeroInterior}
-                placeholder="Eje. 4B"
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Código Postal</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setCodigoPostal}
-                value={codigoPostal}
-                keyboardType="numeric"
-                placeholder="Eje. 53290"
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>País</Text>
-              {/* Dropdown estatico en país */}
-              <DropDownPicker
-                items={[{ label: "México", value: "México" }]}
-                placeholder={pais}
-                showArrowIcon={false}
-                style={styles.DropDownPicker}
-                textStyle={styles.DropDownText}
-                disabled={true}
-                //setValue={setPais}
-                //onChangeValue={(value) => setPais(value)}
-                //value={pais}
-                //setOpen={setOpenPais}
-                //arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                //dropDownContainerStyle={styles.DropDownContainer}
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Estado</Text>
-              <DropDownPicker
-                searchable={true}
-                searchPlaceholder="Busca un Estado"
-                open={openEstado}
-                value={estado}
-                items={estadosData}
-                listMode="MODAL"
-                modalProps={{
-                  animationType: "slide",
-                }}
-                placeholder="Selecciona una opción"
-                setOpen={setOpenEstado}
-                setValue={setEstado}
-                onSelectItem={(selection) => {
-                  setEstado(selection.value);
-                }}
-                style={styles.DropDownPicker}
-                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                placeholderStyle={{
-                  color: "#c7c7c9ff",
-                  fontFamily: "opensanssemibold",
-                }}
-                dropDownContainerStyle={styles.DropDownContainer}
-                textStyle={styles.DropDownText}
-              />
-              <View style={styles.separacion} />
-
-              {/*<Text style={styles.tituloCampo}>Ciudad</Text>
+            {/*<Text style={styles.tituloCampo}>Ciudad</Text>
               <DropDownPicker
                 searchable={true}
                 open={openCiudad}
@@ -323,73 +321,72 @@ const FirmaDomicilio = ({ navigation }) => {
               />
               <View style={styles.separacion} /> */}
 
-              <Text style={styles.tituloCampo}>Municipio</Text>
-              <DropDownPicker
-                searchable={true}
-                searchPlaceholder="Busca un Municipio"
-                open={openMunicipio}
-                value={municipio}
-                items={municipiosData}
-                listMode="MODAL"
-                modalProps={{
-                  animationType: "slide",
-                }}
-                placeholder={
-                  estado
-                    ? "Selecciona una opción"
-                    : "Primero selecciona un estado"
-                }
-                setOpen={setOpenMunicipio}
-                setValue={setMunicipio}
-                onChangeValue={(value) => setMunicipio(value)}
-                style={styles.DropDownPicker}
-                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                placeholderStyle={{
-                  color: "#c7c7c9ff",
-                  fontFamily: "opensanssemibold",
-                }}
-                dropDownContainerStyle={[
-                  styles.DropDownContainer,
-                  { marginTop: -9 },
-                ]}
-                textStyle={styles.DropDownText}
-                disabled={estado === undefined || municipiosData.length === 0}
-              />
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>Colonia</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setColonia}
-                value={colonia}
-                placeholder="Eje. Vista del Valle"
-              />
-              <View style={styles.separacion} />
-            </View>
-          </View>
-          {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
-          <View style={{ marginBottom: 20, zIndex: -1 }}>
-            <TouchableOpacity
-              style={[
-                styles.botonContinuar,
-                { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+            <Text style={styles.tituloCampo}>Municipio</Text>
+            <DropDownPicker
+              searchable={true}
+              searchPlaceholder="Busca un Municipio"
+              open={openMunicipio}
+              value={municipio}
+              items={municipiosData}
+              listMode="MODAL"
+              modalProps={{
+                animationType: "slide",
+              }}
+              placeholder={
+                estado
+                  ? "Selecciona una opción"
+                  : "Primero selecciona un estado"
+              }
+              setOpen={setOpenMunicipio}
+              setValue={setMunicipio}
+              onChangeValue={(value) => setMunicipio(value)}
+              style={styles.DropDownPicker}
+              arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+              placeholderStyle={{
+                color: "#c7c7c9ff",
+                fontFamily: "opensanssemibold",
+              }}
+              dropDownContainerStyle={[
+                styles.DropDownContainer,
+                { marginTop: -9 },
               ]}
-              onPress={() => navigation.navigate("MiTankef")}
-              disabled={disabled}
-            >
-              <Text
-                style={[
-                  styles.textoBotonContinuar,
-                  { color: disabled ? "grey" : "white" },
-                ]}
-              >
-                Aceptar
-              </Text>
-            </TouchableOpacity>
+              textStyle={styles.DropDownText}
+              disabled={estado === undefined || municipiosData.length === 0}
+            />
+            <View style={styles.separacion} />
+
+            <Text style={styles.tituloCampo}>Colonia</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setColonia}
+              value={colonia}
+              placeholder="Eje. Vista del Valle"
+            />
+            <View style={styles.separacion} />
           </View>
-        </KeyboardAwareScrollView>
-      </View>
-    </TouchableWithoutFeedback>
+        </View>
+        {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
+        <View style={{ marginBottom: 20, zIndex: -1 }}>
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+            ]}
+            onPress={() => navigation.navigate("MiTankef")}
+            disabled={disabled}
+          >
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: disabled ? "grey" : "white" },
+              ]}
+            >
+              Aceptar
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
+    </View>
   );
 };
 
