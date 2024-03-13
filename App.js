@@ -359,7 +359,7 @@ function LoginFlow() {
   //userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
-  const initialRouteName = "MainFlow";
+  const initialRouteName = "MainFlow"; //Prueba para ir a una pantalla directa, MainFlow para saltar authentication
 
   // Proporcionar el UserProvider para el contexto de usuario
   return (
@@ -370,6 +370,11 @@ function LoginFlow() {
       }}
     >
       {/* Configuración de las pantallas y sus opciones */}
+      <Stack.Screen
+        name="Prueba"
+        component={DefinirCredito}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="InitialScreen"
         component={InitialScreen}

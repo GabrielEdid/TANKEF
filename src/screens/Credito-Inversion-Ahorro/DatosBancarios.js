@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
     fontFamily: "opensanssemibold",
     fontSize: 16,
   },
+  // Estilos del Modal
   centeredView: {
     flex: 1,
     justifyContent: "center",

@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
+  Modal,
   Image,
 } from "react-native";
 import React, { useState, useCallback, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
+import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Hooks
 import { CreditContext } from "../../hooks/CreditContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -27,13 +27,14 @@ const widthFourth = screenWidth / 4 - 15;
 
 const DefinirCredito = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo = "Crédito" } = route.params || {};
   // Estados y Contexto
   const { credit, setCredit } = useContext(CreditContext);
   const [nombreInversion, setNombreInversion] = useState("");
-  const [monto, setMonto] = useState("");
-  const [montoNumeric, setMontoNumeric] = useState(0);
-  const [montoShow, setMontoShow] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [monto, setMonto] = useState("10000");
+  const [montoNumeric, setMontoNumeric] = useState(10000);
+  const [montoShow, setMontoShow] = useState("10,000");
   const [focus, setFocus] = useState("Mi Red");
   const [plazo, setPlazo] = useState("");
   const [focusTab, setFocusTab] = useState("");
@@ -69,6 +70,20 @@ const DefinirCredito = ({ navigation }) => {
     setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
   };
 
+  // Funcion para manejar el cambio de valor en el slider
+  const handleSliderChange = (value) => {
+    // Actualiza el valor numérico directamente con el valor del slider
+    setMontoNumeric(value);
+
+    // Formatea el valor para mostrarlo adecuadamente en el input
+    const formattedValue = value
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Actualiza el estado del texto del input con el valor formateado
+    setMontoShow(formattedValue);
+  };
+
   const isAcceptable = montoNumeric >= 5000 && plazo;
 
   // Funcion para formatear el input de monto
@@ -96,6 +111,8 @@ const DefinirCredito = ({ navigation }) => {
   const handleAccept = () => {
     if (credit.paso === 5) {
       navigation.navigate("MiTankef");
+    } else if (credit.paso === 1) {
+      setModalVisible(true);
     } else {
       setCredit({ ...credit, paso: credit.paso + 1 });
     }
@@ -239,7 +256,7 @@ const DefinirCredito = ({ navigation }) => {
           <View style={[styles.contenedores, { flexDirection: "row" }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
-              <Text style={styles.valorConcepto}>$120,000</Text>
+              <Text style={styles.valorConcepto}>$120K</Text>
             </View>
             <Ionicons
               name="remove-outline"
@@ -249,7 +266,7 @@ const DefinirCredito = ({ navigation }) => {
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
-              <Text style={styles.valorConcepto}>$10,000.00</Text>
+              <Text style={styles.valorConcepto}>$10K</Text>
             </View>
             <Ionicons
               name="remove-outline"
@@ -259,18 +276,13 @@ const DefinirCredito = ({ navigation }) => {
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
-              <Text style={styles.valorConcepto}>$1,000,000.00</Text>
+              <Text style={styles.valorConcepto}>$1M</Text>
             </View>
           </View>
           <View style={styles.contenedores}>
-            <Text style={styles.texto}>
-              {focus === "Mi Red"
-                ? "Invita a tus amigos a unirse a tu red financiera. Cuantos más se sumen, más respaldo tendrás al solicitar un crédito. ¡Aprovecha el poder de la comunidad para obtener financiamiento!"
-                : "Al solicitar un crédito a través del comité, tu historial crediticio será revisado en buró de crédito y otros aspectos serán evaluados."}
+            <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
+              Introduce el monto que deseas solicitar.
             </Text>
-          </View>
-          <View style={styles.contenedores}>
-            <Text style={styles.texto}>Monto de inversión</Text>
             <View style={styles.inputWrapper}>
               <Text
                 style={[
@@ -300,14 +312,22 @@ const DefinirCredito = ({ navigation }) => {
                 MXN
               </Text>
             </View>
-            <Text style={styles.subTexto}>
-              Monto mínimo de inversión $5,000.00
-            </Text>
+            <Slider
+              style={{ width: "90%" }}
+              minimumValue={10000}
+              maximumValue={1000000}
+              step={100}
+              value={montoNumeric}
+              onValueChange={handleSliderChange}
+              thumbTintColor="#2FF690"
+              minimumTrackTintColor="#2FF690"
+              maximumTrackTintColor="#F2F2F2"
+            />
           </View>
 
           <View style={styles.contenedores}>
             <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-              Plazo de Inversión
+              Plazo del Crédito
             </Text>
             <View
               style={{
@@ -362,50 +382,14 @@ const DefinirCredito = ({ navigation }) => {
                 <Text style={styles.textoTab}>24</Text>
               </TouchableOpacity>
             </View>
-            <Text
-              style={[styles.subTexto, { marginTop: 10, color: "#060B4D" }]}
-            >
-              Esta es una cotización preliminar, la tasa definitiva dependerá
-              del análisis completo de tu solicitud.
-            </Text>
           </View>
+
           <View style={styles.contenedores}>
-            <Text style={styles.texto}>Retorno de inversión neto</Text>
-            <Text
-              style={{
-                fontFamily: "opensansbold",
-                fontSize: 30,
-                color: "#060B4D",
-              }}
-            >
-              $0.00 MXN
+            <Text style={styles.texto}>
+              {focus === "Mi Red"
+                ? "Invita a tus amigos a unirse a tu red financiera. Cuantos más se sumen, más respaldo tendrás al solicitar un crédito. ¡Aprovecha el poder de la comunidad para obtener financiamiento!"
+                : "Al solicitar un crédito a través del comité, tu historial crediticio será revisado en buró de crédito y otros aspectos serán evaluados."}
             </Text>
-          </View>
-          <View style={[styles.contenedores, { flexDirection: "row" }]}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-              <Text style={styles.valorConcepto}>$0.00</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-              <Text style={styles.valorConcepto}>0%</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-              <Text style={styles.valorConcepto}>$0.00</Text>
-            </View>
           </View>
         </View>
 
@@ -429,6 +413,112 @@ const DefinirCredito = ({ navigation }) => {
             Aceptar
           </Text>
         </TouchableOpacity>
+
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Image
+                style={{ width: 63, height: 50, marginBottom: 10 }}
+                source={require("../../../assets/images/BillCredito.png")}
+              />
+              <Text style={styles.modalText}>PagoMensual</Text>
+              <Text style={[styles.modalText, { fontSize: 24 }]}>
+                $6,522.59 MXN
+              </Text>
+              <View
+                style={[
+                  styles.contenedores,
+                  {
+                    flexDirection: "row",
+                    marginTop: 5,
+                    paddingHorizontal: 0,
+                    paddingVertical: 0,
+                  },
+                ]}
+              >
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.concepto, { fontSize: 13 }]}>
+                    Comisión por{"\n"}apertura
+                  </Text>
+                  <Text style={styles.valorConcepto}>2.0%</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.concepto, { fontSize: 13 }]}>
+                    Tasa de{"\n"}operación
+                  </Text>
+                  <Text style={styles.valorConcepto}>12.0%</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.concepto, { fontSize: 13 }]}>
+                    Pago{"\n"}total
+                  </Text>
+                  <Text style={styles.valorConcepto}>$38,739.30</Text>
+                </View>
+              </View>
+              <Text style={styles.modalTextBody}>
+                Esta es una cotización preliminar, la tasa definitiva dependerá
+                del análisis completo de tu solicitud.
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={[
+                    styles.botonContinuar,
+                    {
+                      marginBottom: 0,
+                      marginRight: 5,
+                      flex: 1,
+                      backgroundColor: "white",
+                      borderColor: "#060B4D",
+                      borderWidth: 1,
+                    },
+                  ]}
+                  onPress={() => [setModalVisible(false)]}
+                >
+                  <Text
+                    style={[styles.textoBotonContinuar, { color: "#060B4D" }]}
+                  >
+                    Regresar
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.botonContinuar,
+                    {
+                      marginBottom: 0,
+                      flex: 1,
+                      marginLeft: 5,
+                      backgroundColor: "#060B4D",
+                    },
+                  ]}
+                  onPress={() => [
+                    setModalVisible(false),
+                    setCredit({ ...credit, paso: credit.paso + 1 }),
+                    navigation.navigate("MiTankef"),
+                    { flujo: flujo },
+                  ]}
+                >
+                  <Text
+                    style={[styles.textoBotonContinuar, { color: "white" }]}
+                  >
+                    Aceptar
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );
@@ -578,6 +668,42 @@ const styles = StyleSheet.create({
   },
   line: {
     transform: [{ rotate: "90deg" }],
+  },
+  // Estilos del Modal
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo semitransparente
+  },
+  modalView: {
+    width: "80%", // Asegúrate de que el contenedor del modal tenga un ancho definido.
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    fontSize: 30,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "center",
+  },
+  modalTextBody: {
+    marginTop: 10,
+    fontSize: 12,
+    color: "#060B4D",
+    fontFamily: "opensans",
+    textAlign: "center",
   },
 });
 
