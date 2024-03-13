@@ -370,6 +370,7 @@ function LoginFlow() {
       }}
     >
       {/* Configuración de las pantallas y sus opciones */}
+      {/* BORRAR ESTA PANTALLA DE PRUEBA*/}
       <Stack.Screen
         name="Prueba"
         component={DefinirCredito}
