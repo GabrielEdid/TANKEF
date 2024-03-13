@@ -326,7 +326,7 @@ const DefinirCredito = ({ navigation }) => {
           </View>
 
           <View style={styles.contenedores}>
-            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
+            <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
               Plazo del Crédito
             </Text>
             <View
@@ -383,37 +383,116 @@ const DefinirCredito = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-
-          <View style={styles.contenedores}>
-            <Text style={styles.texto}>
-              {focus === "Mi Red"
-                ? "Invita a tus amigos a unirse a tu red financiera. Cuantos más se sumen, más respaldo tendrás al solicitar un crédito. ¡Aprovecha el poder de la comunidad para obtener financiamiento!"
-                : "Al solicitar un crédito a través del comité, tu historial crediticio será revisado en buró de crédito y otros aspectos serán evaluados."}
-            </Text>
-          </View>
+          {credit.paso === 1 && (
+            <View style={styles.contenedores}>
+              <Text style={styles.texto}>
+                {focus === "Mi Red"
+                  ? "Invita a tus amigos a unirse a tu red financiera. Cuantos más se sumen, más respaldo tendrás al solicitar un crédito. ¡Aprovecha el poder de la comunidad para obtener financiamiento!"
+                  : "Al solicitar un crédito a través del comité, tu historial crediticio será revisado en buró de crédito y otros aspectos serán evaluados."}
+              </Text>
+            </View>
+          )}
         </View>
 
-        <TouchableOpacity
-          style={[
-            styles.botonContinuar,
-            { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
-          ]}
-          onPress={() => {
-            handleAccept();
-            //navigation.navigate("Beneficiarios", { flujo: flujo });
+        {credit.paso === 2 && (
+          <>
+            <View style={styles.contenedores}>
+              <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
+                Total a pagar
+              </Text>
+              <Text style={[styles.inputMonto, { marginTop: -10 }]}>
+                {credit.total_a_pagar}
+              </Text>
+            </View>
+            <View style={[styles.contenedores, { flexDirection: "row" }]}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Comisión por{"\n"}apertura</Text>
+                <Text style={styles.valorConcepto}>
+                  {credit.comision_por_apertura}
+                </Text>
+              </View>
+              <Ionicons
+                name="remove-outline"
+                size={30}
+                color="#e1e2ebff"
+                style={styles.line}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Tasa de{"\n"}operación</Text>
+                <Text style={styles.valorConcepto}>
+                  {credit.tasa_de_operacion}
+                </Text>
+              </View>
+              <Ionicons
+                name="remove-outline"
+                size={30}
+                color="#e1e2ebff"
+                style={styles.line}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Pago{"\n"}mensual</Text>
+                <Text style={styles.valorConcepto}>{credit.pago_mensual}</Text>
+              </View>
+            </View>
+          </>
+        )}
+
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 10,
+            marginBottom: 20,
           }}
-          disabled={!isAcceptable}
         >
-          <Text
+          {credit.paso !== 1 && (
+            <TouchableOpacity
+              style={[
+                styles.botonContinuar,
+                {
+                  marginBottom: 0,
+                  marginRight: 5,
+                  flex: 1,
+                  backgroundColor: "white",
+                  borderColor: "#060B4D",
+                  borderWidth: 1,
+                },
+              ]}
+              onPress={() => [setCredit({ ...credit, paso: credit.paso - 1 })]}
+            >
+              <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
+                Atrás
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
             style={[
-              styles.textoBotonContinuar,
-              { color: isAcceptable ? "white" : "grey" },
+              styles.botonContinuar,
+              {
+                marginBottom: 0,
+                flex: 1,
+                marginLeft: 5,
+                backgroundColor: "#060B4D",
+              },
+            ]}
+            onPress={() => [
+              setModalVisible(false),
+              setCredit({
+                ...credit,
+                paso: credit.paso + 1,
+                total_a_pagar: "$38,739.30",
+                pago_mensual: "$6,522.59",
+                comision_por_apertura: "2.0%",
+                tasa_de_operacion: "12.0%",
+              }),
             ]}
           >
-            Aceptar
-          </Text>
-        </TouchableOpacity>
+            <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
+              Continuar
+            </Text>
+          </TouchableOpacity>
+        </View>
 
+        {/* Modal del Cotizador */}
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -504,9 +583,14 @@ const DefinirCredito = ({ navigation }) => {
                   ]}
                   onPress={() => [
                     setModalVisible(false),
-                    setCredit({ ...credit, paso: credit.paso + 1 }),
-                    navigation.navigate("MiTankef"),
-                    { flujo: flujo },
+                    setCredit({
+                      ...credit,
+                      paso: credit.paso + 1,
+                      total_a_pagar: "$38,739.30",
+                      pago_mensual: "$6,522.59",
+                      comision_por_apertura: "2.0%",
+                      tasa_de_operacion: "12.0%",
+                    }),
                   ]}
                 >
                   <Text
