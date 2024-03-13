@@ -575,23 +575,24 @@ const DefinirCredito = ({ navigation }) => {
                   style={[
                     styles.botonContinuar,
                     {
-                      marginBottom: 0,
                       flex: 1,
-                      marginLeft: 5,
+                      marginLeft: credit.paso === 1 ? 0 : 5,
                       backgroundColor: "#060B4D",
                     },
                   ]}
-                  onPress={() => [
-                    setModalVisible(false),
-                    setCredit({
-                      ...credit,
-                      paso: credit.paso + 1,
-                      total_a_pagar: "$38,739.30",
-                      pago_mensual: "$6,522.59",
-                      comision_por_apertura: "2.0%",
-                      tasa_de_operacion: "12.0%",
-                    }),
-                  ]}
+                  onPress={() => {
+                    setModalVisible(false);
+                    if (credit.paso === 1) {
+                      setCredit({
+                        ...credit,
+                        paso: credit.paso + 1,
+                        total_a_pagar: "$38,739.30",
+                        pago_mensual: "$6,522.59",
+                        comision_por_apertura: "2.0%",
+                        tasa_de_operacion: "12.0%",
+                      });
+                    }
+                  }}
                 >
                   <Text
                     style={[styles.textoBotonContinuar, { color: "white" }]}
@@ -652,7 +653,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#060B4D",
   },
   botonContinuar: {
-    marginBottom: 5,
+    marginTop: 15,
+    marginBottom: 20,
     backgroundColor: "#060B4D",
     width: "80%",
     alignSelf: "center",
@@ -724,19 +726,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "opensanssemibold",
     fontSize: 18,
-  },
-  botonContinuar: {
-    marginTop: 20,
-    marginBottom: 20,
-    width: "80%",
-    alignSelf: "center",
-    borderRadius: 5,
-  },
-  textoBotonContinuar: {
-    alignSelf: "center",
-    padding: 10,
-    fontFamily: "opensanssemibold",
-    fontSize: 16,
   },
   concepto: {
     fontFamily: "opensans",
