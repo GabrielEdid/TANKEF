@@ -39,6 +39,10 @@ const DefinirCredito = ({ navigation }) => {
     "3de5": require("../../../assets/images/3de5.png"),
     "4de5": require("../../../assets/images/4de5.png"),
     "5de5": require("../../../assets/images/5de5.png"),
+    "1de4": require("../../../assets/images/1de4.png"),
+    "2de4": require("../../../assets/images/2de4.png"),
+    "3de4": require("../../../assets/images/3de4.png"),
+    "4de4": require("../../../assets/images/4de4.png"),
   };
 
   // Funcion para manejar el cambio de texto en el input de monto
@@ -104,17 +108,19 @@ const DefinirCredito = ({ navigation }) => {
   };
 
   const handleAccept = () => {
-    if (credit.paso === 5) {
-      navigation.navigate("MiTankef");
-    } else if (credit.paso === 1) {
-      setModalVisible(true);
-    } else if (credit.paso === 2) {
-      navigation.navigate("InfoGeneral", { flujo: flujo });
-    } else {
-      setCredit({
-        ...credit,
-        paso: credit.paso + 1,
-      });
+    if (focus === "Comite") {
+      if (credit.paso === 4) {
+        navigation.navigate("MiTankef");
+      } else if (credit.paso === 1) {
+        setModalVisible(true);
+      } else if (credit.paso === 2) {
+        navigation.navigate("InfoGeneral", { flujo: flujo });
+      } else {
+        setCredit({
+          ...credit,
+          paso: credit.paso + 1,
+        });
+      }
     }
   };
 
@@ -239,7 +245,11 @@ const DefinirCredito = ({ navigation }) => {
             ]}
           >
             <Image
-              source={imageMap[`${credit.paso}de5`]}
+              source={
+                focus === "Mi Red"
+                  ? imageMap[`${credit.paso}de5`]
+                  : imageMap[`${credit.paso}de4`]
+              }
               style={{ height: 50, width: 50 }}
             />
             <Text
