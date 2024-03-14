@@ -29,7 +29,7 @@ const InfoGeneral = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const [focus, setFocus] = useState("Documentacion");
+  const [focus, setFocus] = useState("General");
   const [domicilio, setDomicilio] = useState("");
   const [politico, setPolitico] = useState("");
   const [profesion, setProfesion] = useState("");
@@ -114,7 +114,7 @@ const InfoGeneral = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {focus === "Documentacion" && (
+        {/*focus === "Documentacion" && (
           <>
             <View style={styles.seccion}>
               <Text style={styles.tituloSeccion}>Documentación</Text>
@@ -158,7 +158,7 @@ const InfoGeneral = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </>
-        )}
+            )*/}
 
         {focus === "General" && (
           <>

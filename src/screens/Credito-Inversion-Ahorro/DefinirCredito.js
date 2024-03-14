@@ -27,7 +27,7 @@ const widthFourth = screenWidth / 4 - 15;
 
 const DefinirCredito = ({ navigation }) => {
   const route = useRoute();
-  const { flujo = "Crédito" } = route.params || {};
+  const { flujo } = route.params;
   // Estados y Contexto
   const { credit, setCredit } = useContext(CreditContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -108,6 +108,12 @@ const DefinirCredito = ({ navigation }) => {
       navigation.navigate("MiTankef");
     } else if (credit.paso === 1) {
       setModalVisible(true);
+    } else if (credit.paso === 2) {
+      setCredit({
+        ...credit,
+        paso: credit.paso + 1,
+      });
+      navigation.navigate("InfoGeneral", { flujo: flujo });
     } else {
       setCredit({
         ...credit,
