@@ -191,7 +191,13 @@ const InfoGeneral = ({ navigation }) => {
                 <View style={{ paddingHorizontal: 20 }}>
                   <RadioForm
                     radio_props={dataPolitico}
-                    initial={-1}
+                    initial={
+                      credit.politico === "Si"
+                        ? 0
+                        : credit.politico === "No"
+                        ? 1
+                        : -1
+                    }
                     onPress={(value) =>
                       setCredit({ ...credit, politico: value })
                     }
@@ -213,7 +219,13 @@ const InfoGeneral = ({ navigation }) => {
                 <View style={{ paddingHorizontal: 20 }}>
                   <RadioForm
                     radio_props={dataDomicilio}
-                    initial={-1}
+                    initial={
+                      credit.domicilio === "Propio"
+                        ? 0
+                        : credit.domicilio === "Rentado"
+                        ? 1
+                        : -1
+                    }
                     onPress={(value) =>
                       setCredit({ ...credit, domicilio: value })
                     }
