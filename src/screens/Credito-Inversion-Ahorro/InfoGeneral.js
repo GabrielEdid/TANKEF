@@ -61,7 +61,7 @@ const InfoGeneral = ({ navigation }) => {
       credit.cuenta_bancaria !== "" &&
       credit.descripcion !== "";
     //emailValido; // Utiliza la variable local para la validación
-    setDisabled(camposLlenos);
+    setDisabled(!camposLlenos);
   }, [
     credit.domicilio,
     credit.politico,
@@ -215,7 +215,7 @@ const InfoGeneral = ({ navigation }) => {
                     radio_props={dataDomicilio}
                     initial={-1}
                     onPress={(value) =>
-                      setCredit({ ...credit, politico: value })
+                      setCredit({ ...credit, domicilio: value })
                     }
                     buttonColor={"#060B4D"}
                     buttonSize={10}
@@ -351,6 +351,7 @@ const InfoGeneral = ({ navigation }) => {
                     paso: credit.paso + 1,
                   }),
                   navigation.navigate("DefinirCredito", { flujo: flujo }),
+                  console.log(credit),
                 ]}
                 disabled={disabled}
               >
