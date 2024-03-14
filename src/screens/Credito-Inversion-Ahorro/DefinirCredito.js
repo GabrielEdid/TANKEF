@@ -397,7 +397,7 @@ const DefinirCredito = ({ navigation }) => {
           )}
         </View>
 
-        {credit.paso === 2 && (
+        {credit.paso >= 2 && (
           <>
             <View style={styles.contenedores}>
               <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
@@ -437,6 +437,12 @@ const DefinirCredito = ({ navigation }) => {
                 <Text style={styles.valorConcepto}>{credit.pago_mensual}</Text>
               </View>
             </View>
+
+            {credit.paso >= 3 && (
+              <View style={styles.contenedores}>
+                <Text>Hola</Text>
+              </View>
+            )}
           </>
         )}
 
