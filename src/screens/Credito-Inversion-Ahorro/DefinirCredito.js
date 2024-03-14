@@ -30,14 +30,8 @@ const DefinirCredito = ({ navigation }) => {
   const { flujo = "Crédito" } = route.params || {};
   // Estados y Contexto
   const { credit, setCredit } = useContext(CreditContext);
-  const [nombreInversion, setNombreInversion] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [monto, setMonto] = useState("10000");
-  const [montoNumeric, setMontoNumeric] = useState(10000);
-  const [montoShow, setMontoShow] = useState("10,000");
   const [focus, setFocus] = useState("Mi Red");
-  const [plazo, setPlazo] = useState("");
-  const [focusTab, setFocusTab] = useState("");
 
   const imageMap = {
     "1de5": require("../../../assets/images/1de5.png"),
@@ -62,18 +56,19 @@ const DefinirCredito = ({ navigation }) => {
 
     const formattedText =
       decimal !== undefined ? `${integer}.${decimal}` : integer;
-    setMontoShow(formattedText); // Display value with formatting
-    setMonto(newText); // Store raw value for further processing
-
-    // Parse the raw input to a float and update montoNumeric for validation
     const numericValue = parseFloat(newText.replace(/,/g, ""));
-    setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
+    setCredit({
+      ...credit,
+      montoShow: formattedText,
+      monto: newText,
+      montoNumeric: numericValue || 0,
+    });
   };
 
   // Funcion para manejar el cambio de valor en el slider
   const handleSliderChange = (value) => {
     // Actualiza el valor numérico directamente con el valor del slider
-    setMontoNumeric(value);
+    setCredit({ ...credit, montoNumeric: value });
 
     // Formatea el valor para mostrarlo adecuadamente en el input
     const formattedValue = value
@@ -81,10 +76,10 @@ const DefinirCredito = ({ navigation }) => {
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
     // Actualiza el estado del texto del input con el valor formateado
-    setMontoShow(formattedValue);
+    setCredit({ ...credit, montoShow: formattedValue });
   };
 
-  const isAcceptable = montoNumeric >= 5000 && plazo;
+  const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -99,13 +94,13 @@ const DefinirCredito = ({ navigation }) => {
 
   // Funcion para manejar el input de monto al seleccionar
   const handleFocus = () => {
-    const numericValue = monto.replace(/,/g, "");
-    setMonto(numericValue);
+    const numericValue = credit.monto.replace(/,/g, "");
+    setCredit({ ...credit, monto: numericValue });
   };
 
   // Funcion para manejar el input de monto al deseleccionar
   const handleBlur = () => {
-    setMonto(formatInput(monto));
+    setCredit({ ...credit, montoShow: formatInput(credit.monto) });
   };
 
   const handleAccept = () => {
@@ -114,7 +109,10 @@ const DefinirCredito = ({ navigation }) => {
     } else if (credit.paso === 1) {
       setModalVisible(true);
     } else {
-      setCredit({ ...credit, paso: credit.paso + 1 });
+      setCredit({
+        ...credit,
+        paso: credit.paso + 1,
+      });
     }
   };
 
@@ -202,7 +200,7 @@ const DefinirCredito = ({ navigation }) => {
                   {
                     color: focus === "Mi Red" ? "#060B4D" : "#9596AF",
                     fontFamily:
-                      focus === "Balance" ? "opensansbold" : "opensanssemibold",
+                      focus === "Mi Red" ? "opensansbold" : "opensanssemibold",
                   },
                 ]}
               >
@@ -284,29 +282,24 @@ const DefinirCredito = ({ navigation }) => {
               Introduce el monto que deseas solicitar.
             </Text>
             <View style={styles.inputWrapper}>
-              <Text
-                style={[
-                  styles.dollarSign,
-                  { color: monto ? "#060B4D" : "#b3b5c9ff" },
-                ]}
-              >
-                $
-              </Text>
+              <Text style={[styles.dollarSign]}>$</Text>
               <TextInput
                 style={styles.inputMonto}
-                value={montoShow}
+                value={credit.montoShow}
                 keyboardType="numeric"
                 maxLength={20}
                 placeholderTextColor={"#b3b5c9ff"}
-                placeholder="0.00"
                 onChangeText={handleChangeText}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                editable={credit.paso === 1}
               />
               <Text
                 style={[
                   styles.dollarSign,
-                  { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
+                  {
+                    marginLeft: 5,
+                  },
                 ]}
               >
                 MXN
@@ -317,11 +310,12 @@ const DefinirCredito = ({ navigation }) => {
               minimumValue={10000}
               maximumValue={1000000}
               step={100}
-              value={montoNumeric}
+              value={credit.montoNumeric}
               onValueChange={handleSliderChange}
               thumbTintColor="#2FF690"
               minimumTrackTintColor="#2FF690"
               maximumTrackTintColor="#F2F2F2"
+              disabled={credit.paso === 1 ? false : true}
             />
           </View>
 
@@ -340,10 +334,11 @@ const DefinirCredito = ({ navigation }) => {
                 style={[
                   styles.tab,
                   {
-                    backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3",
+                    backgroundColor: credit.plazo === 6 ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFocusTab("6"), setPlazo(6)]}
+                onPress={() => [setCredit({ ...credit, plazo: 6 })]}
+                disabled={credit.paso === 1 ? false : true}
               >
                 <Text style={styles.textoTab}>6</Text>
               </TouchableOpacity>
@@ -351,10 +346,12 @@ const DefinirCredito = ({ navigation }) => {
                 style={[
                   styles.tab,
                   {
-                    backgroundColor: focusTab === "12" ? "#2FF690" : "#F3F3F3",
+                    backgroundColor:
+                      credit.plazo === 12 ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFocusTab("12"), setPlazo(12)]}
+                onPress={() => [setCredit({ ...credit, plazo: 12 })]}
+                disabled={credit.paso === 1 ? false : true}
               >
                 <Text style={styles.textoTab}>12</Text>
               </TouchableOpacity>
@@ -362,10 +359,12 @@ const DefinirCredito = ({ navigation }) => {
                 style={[
                   styles.tab,
                   {
-                    backgroundColor: focusTab === "18" ? "#2FF690" : "#F3F3F3",
+                    backgroundColor:
+                      credit.plazo === 18 ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFocusTab("18"), setPlazo(18)]}
+                onPress={() => [setCredit({ ...credit, plazo: 18 })]}
+                disabled={credit.paso === 1 ? false : true}
               >
                 <Text style={styles.textoTab}>18</Text>
               </TouchableOpacity>
@@ -373,11 +372,13 @@ const DefinirCredito = ({ navigation }) => {
                 style={[
                   styles.tab,
                   {
-                    backgroundColor: focusTab === "24" ? "#2FF690" : "#F3F3F3",
+                    backgroundColor:
+                      credit.plazo === 24 ? "#2FF690" : "#F3F3F3",
                     marginRight: 0,
                   },
                 ]}
-                onPress={() => [setFocusTab("24"), setPlazo(24)]}
+                onPress={() => [setCredit({ ...credit, plazo: 24 })]}
+                disabled={credit.paso === 1 ? false : true}
               >
                 <Text style={styles.textoTab}>24</Text>
               </TouchableOpacity>
@@ -439,9 +440,10 @@ const DefinirCredito = ({ navigation }) => {
 
         <View
           style={{
-            flexDirection: "row",
             paddingHorizontal: 10,
-            marginBottom: 20,
+            flexDirection: credit.paso === 1 ? "column" : "row",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           {credit.paso !== 1 && (
@@ -449,7 +451,6 @@ const DefinirCredito = ({ navigation }) => {
               style={[
                 styles.botonContinuar,
                 {
-                  marginBottom: 0,
                   marginRight: 5,
                   flex: 1,
                   backgroundColor: "white",
@@ -457,7 +458,7 @@ const DefinirCredito = ({ navigation }) => {
                   borderWidth: 1,
                 },
               ]}
-              onPress={() => [setCredit({ ...credit, paso: credit.paso - 1 })]}
+              onPress={() => setCredit({ ...credit, paso: credit.paso - 1 })}
             >
               <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
                 Atrás
@@ -468,25 +469,21 @@ const DefinirCredito = ({ navigation }) => {
             style={[
               styles.botonContinuar,
               {
-                marginBottom: 0,
                 flex: 1,
-                marginLeft: 5,
-                backgroundColor: "#060B4D",
+                marginLeft: credit.paso === 1 ? 0 : 5,
+                width: credit.paso === 1 && "80%", // Ensure width is consistent for the "Continuar" button
+                backgroundColor: !isAcceptable ? "#D5D5D5" : "#060B4D",
               },
             ]}
-            onPress={() => [
-              setModalVisible(false),
-              setCredit({
-                ...credit,
-                paso: credit.paso + 1,
-                total_a_pagar: "$38,739.30",
-                pago_mensual: "$6,522.59",
-                comision_por_apertura: "2.0%",
-                tasa_de_operacion: "12.0%",
-              }),
-            ]}
+            onPress={handleAccept}
+            disabled={!isAcceptable}
           >
-            <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: !isAcceptable ? "grey" : "white" },
+              ]}
+            >
               Continuar
             </Text>
           </TouchableOpacity>
@@ -575,8 +572,9 @@ const DefinirCredito = ({ navigation }) => {
                   style={[
                     styles.botonContinuar,
                     {
+                      marginBottom: 0,
                       flex: 1,
-                      marginLeft: credit.paso === 1 ? 0 : 5,
+                      marginLeft: 5,
                       backgroundColor: "#060B4D",
                     },
                   ]}
@@ -700,6 +698,7 @@ const styles = StyleSheet.create({
     fontFamily: "opensans",
   },
   dollarSign: {
+    color: "#060B4D",
     fontSize: 35,
     fontFamily: "opensanssemibold",
   },
