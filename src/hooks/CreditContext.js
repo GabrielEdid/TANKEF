@@ -19,6 +19,7 @@ const initialState = {
   domicilio: "",
   telCasa: "",
   telTrabajo: "",
+  celularShow: "",
   celular: "",
   cuenta_bancaria: "",
   descripcion: "",

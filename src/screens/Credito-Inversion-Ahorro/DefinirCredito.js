@@ -109,10 +109,6 @@ const DefinirCredito = ({ navigation }) => {
     } else if (credit.paso === 1) {
       setModalVisible(true);
     } else if (credit.paso === 2) {
-      setCredit({
-        ...credit,
-        paso: credit.paso + 1,
-      });
       navigation.navigate("InfoGeneral", { flujo: flujo });
     } else {
       setCredit({

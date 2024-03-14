@@ -9,7 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import CountryPicker from "react-native-country-picker-modal";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -17,8 +17,9 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
+import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
-import BulletPointText from "../../components/BulletPointText";
+import { CreditContext } from "../../hooks/CreditContext";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -29,26 +30,16 @@ const InfoGeneral = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
+  const { credit, setCredit } = useContext(CreditContext);
   const [focus, setFocus] = useState("General");
-  const [domicilio, setDomicilio] = useState("");
-  const [politico, setPolitico] = useState("");
-  const [profesion, setProfesion] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [mail, setMail] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true);
-  const [descripcion, setDescripcion] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
-  const [open, setOpen] = useState(false);
-  const [open2, setOpen2] = useState(false);
 
   const [dataDomicilio] = useState([
-    { label: "Real", value: "Real" },
-    { label: "Convencional", value: "Convencional" },
-    { label: "Legal", value: "Legal" },
-    { label: "Fiscal", value: "Fiscal" },
+    { label: "Propio", value: "Propio" },
+    { label: "Rentado", value: "Rentado" },
   ]);
 
   const [dataPolitico] = useState([
@@ -58,63 +49,71 @@ const InfoGeneral = ({ navigation }) => {
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
-    const emailValido = isValidEmail(mail);
-    setIsEmailValid(emailValido);
+    //const emailValido = isValidEmail(mail);
+    //setIsEmailValid(emailValido);
 
     const camposLlenos =
-      domicilio !== "" &&
-      politico !== "" &&
-      profesion !== "" &&
-      telefono !== "" &&
-      mail !== "" &&
-      descripcion !== "" &&
-      emailValido; // Utiliza la variable local para la validación
-
-    setDisabled(!camposLlenos);
-  }, [domicilio, politico, profesion, telefono, mail, descripcion]);
+      credit.domicilio !== "" &&
+      credit.politico !== "" &&
+      credit.telCasa !== "" &&
+      credit.telTrabajo !== "" &&
+      credit.celular !== "" &&
+      credit.cuenta_bancaria !== "" &&
+      credit.descripcion !== "";
+    //emailValido; // Utiliza la variable local para la validación
+    setDisabled(camposLlenos);
+  }, [
+    credit.domicilio,
+    credit.politico,
+    credit.telCasa,
+    credit.telTrabajo,
+    credit.celular,
+    credit.cuenta_bancaria,
+    credit.descripcion,
+  ]);
 
   // Function to format the phone number as user types
-  const formatPhoneNumber = (text, setFunction, country) => {
+  const formatPhoneNumber = (text, country) => {
     const formatter = new AsYouType(country);
     const formatted = formatter.input(text);
-    setFunction(formatted);
+    setCredit({ ...credit, celular: text, celularShow: formatted });
   };
 
-  const isValidEmail = (email) => {
+  // Function to validate email
+  /*const isValidEmail = (email) => {
     const regex =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(String(email).toLowerCase());
-  };
+  };*/
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 1 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0.8, y: 0.8 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text style={styles.tituloPantalla}>{flujo}</Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 1 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.8, y: 0.8 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text style={styles.tituloPantalla}>{flujo}</Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
 
-        {/*focus === "Documentacion" && (
+      {/*focus === "Documentacion" && (
           <>
             <View style={styles.seccion}>
               <Text style={styles.tituloSeccion}>Documentación</Text>
@@ -160,206 +159,215 @@ const InfoGeneral = ({ navigation }) => {
           </>
             )*/}
 
-        {focus === "General" && (
-          <>
-            <KeyboardAwareScrollView
-              contentContainerStyle={{ flexGrow: 1 }}
-              scrollEnabled={true}
-              enableOnAndroid={true}
-              style={styles.scrollV}
-              keyboardShouldPersistTaps="handled"
-              enableAutomaticScroll={true}
-            >
-              <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Información General</Text>
-                <Text style={styles.bodySeccion}>
-                  Ingresa los datos solicitados para continuar.
+      {focus === "General" && (
+        <>
+          <KeyboardAwareScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            scrollEnabled={true}
+            enableOnAndroid={true}
+            style={styles.scrollV}
+            keyboardShouldPersistTaps="handled"
+            enableAutomaticScroll={true}
+          >
+            <View style={styles.seccion}>
+              <Text style={styles.tituloSeccion}>Información General</Text>
+              <Text style={styles.bodySeccion}>
+                Ingresa los datos solicitados para continuar.
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <View
+                style={{
+                  marginTop: 5,
+                  backgroundColor: "white",
+                  paddingTop: 15,
+                }}
+              >
+                {/* Campos para introducir de la información general */}
+
+                <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
+                  ¿Ha desempeñado algún cargo político?
                 </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <View
-                  style={{
-                    marginTop: 5,
-                    backgroundColor: "white",
-                    paddingTop: 15,
-                  }}
-                >
-                  {/* Campos para introducir de la información general */}
-
-                  <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
-                    Tipo de Domicilio
-                  </Text>
-                  <DropDownPicker
-                    open={open}
-                    value={domicilio}
-                    items={dataDomicilio}
-                    listMode="MODAL"
-                    modalProps={{
-                      animationType: "slide",
-                    }}
-                    placeholder="Selecciona una opción"
-                    setOpen={setOpen}
-                    setValue={setDomicilio}
-                    onChangeValue={(value) => setDomicilio(value)}
-                    style={styles.DropDownPicker}
-                    arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                    placeholderStyle={{
-                      color: "#c7c7c9ff",
+                <View style={{ paddingHorizontal: 20 }}>
+                  <RadioForm
+                    radio_props={dataPolitico}
+                    initial={-1}
+                    onPress={(value) =>
+                      setCredit({ ...credit, politico: value })
+                    }
+                    buttonColor={"#060B4D"}
+                    buttonSize={10}
+                    selectedButtonColor={"#060B4D"}
+                    labelStyle={{
+                      fontSize: 16,
+                      color: "#060B4D",
                       fontFamily: "opensanssemibold",
-                    }}
-                    dropDownContainerStyle={styles.DropDownContainer}
-                    textStyle={styles.DropDownText}
-                  />
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>
-                    ¿Ha desempeñado algún cargo político?
-                  </Text>
-                  <View style={{ zIndex: open ? -1 : 1 }}>
-                    <DropDownPicker
-                      open={open2}
-                      value={politico}
-                      items={dataPolitico}
-                      listMode="MODAL"
-                      modalProps={{
-                        animationType: "slide",
-                      }}
-                      placeholder="Selecciona una opción"
-                      setOpen={setOpen2}
-                      setValue={setPolitico}
-                      onChangeValue={(value) => setPolitico(value)}
-                      style={styles.DropDownPicker}
-                      arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                      placeholderStyle={{
-                        color: "#c7c7c9ff",
-                        fontFamily: "opensanssemibold",
-                      }}
-                      dropDownContainerStyle={[
-                        styles.DropDownContainer,
-                        { marginTop: -9 },
-                      ]}
-                      textStyle={styles.DropDownText}
-                    />
-                  </View>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Profesión</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setProfesion}
-                    value={profesion}
-                    placeholder="Eje. Arquitecto"
-                  />
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Teléfono</Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      paddingHorizontal: 15,
-                      alignItems: "center",
-                      marginTop: -5,
                       marginBottom: 5,
                     }}
-                  >
-                    <TouchableOpacity onPress={() => setPickerVisible(true)}>
-                      <Entypo
-                        name="chevron-thin-down"
-                        size={15}
-                        color="#060B4D"
-                        style={{ marginRight: 5 }}
-                      />
-                    </TouchableOpacity>
-                    <CountryPicker
-                      withFilter
-                      countryCode={countryCode}
-                      withCallingCode
-                      withCloseButton
-                      onSelect={(country) => {
-                        const { cca2, callingCode } = country;
-                        setCountryCode(cca2);
-                        setCallingCode(callingCode[0]);
-                        setTelefono("");
-                      }}
-                      visible={pickerVisible}
-                      onClose={() => setPickerVisible(false)}
-                    />
-                    <Text style={styles.countryCodeText}>
-                      +{callingCode} {" |"}
-                    </Text>
-                    <TextInput
-                      style={[
-                        styles.input,
-                        { paddingLeft: 0, marginBottom: 0 },
-                      ]}
-                      onChangeText={(text) =>
-                        formatPhoneNumber(text, setTelefono, countryCode)
-                      }
-                      value={telefono}
-                      keyboardType="phone-pad"
-                      placeholder="10 dígitos"
-                    />
-                  </View>
-                  <View style={styles.separacion} />
+                    animation={false}
+                  />
+                </View>
+                <View style={styles.separacion} />
 
-                  <Text style={styles.tituloCampo}>Correo Electrónico</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => {
-                      setMail(text);
+                <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
+                <View style={{ paddingHorizontal: 20 }}>
+                  <RadioForm
+                    radio_props={dataDomicilio}
+                    initial={-1}
+                    onPress={(value) =>
+                      setCredit({ ...credit, politico: value })
+                    }
+                    buttonColor={"#060B4D"}
+                    buttonSize={10}
+                    selectedButtonColor={"#060B4D"}
+                    labelStyle={{
+                      fontSize: 16,
+                      color: "#060B4D",
+                      fontFamily: "opensanssemibold",
+                      marginBottom: 5,
                     }}
-                    value={mail}
-                    placeholder="nombre@mail.com"
+                    animation={false}
                   />
-                  <View style={styles.separacion} />
-                  <View
-                    style={[
-                      styles.separacion,
-                      { backgroundColor: "#f2f2f2ff", height: 5 },
-                    ]}
-                  />
-                  <Text style={styles.tituloCampo}>
-                    Describe brevemente la solicitud del crédito
-                  </Text>
-                  <View style={{ paddingHorizontal: 15 }}>
-                    <TextInput
-                      style={styles.inputDescription}
-                      onChangeText={setDescripcion}
-                      value={descripcion}
-                      placeholder="Describe información"
-                      multiline={true}
-                      maxLength={300}
+                </View>
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Teléfono Casa</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(value) =>
+                    setCredit({ ...credit, telCasa: value })
+                  }
+                  value={credit.telCasa}
+                  keyboardType="phone-pad"
+                  placeholder="10 dígitos"
+                />
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(value) =>
+                    setCredit({ ...credit, telTrabajo: value })
+                  }
+                  value={credit.telTrabajo}
+                  keyboardType="phone-pad"
+                  placeholder="10 dígitos"
+                />
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>Celular</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    paddingHorizontal: 15,
+                    alignItems: "center",
+                    marginTop: -5,
+                    marginBottom: 5,
+                  }}
+                >
+                  <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                    <Entypo
+                      name="chevron-thin-down"
+                      size={15}
+                      color="#060B4D"
+                      style={{ marginRight: 5 }}
                     />
-                  </View>
+                  </TouchableOpacity>
+                  <CountryPicker
+                    withFilter
+                    countryCode={countryCode}
+                    withCallingCode
+                    withCloseButton
+                    onSelect={(country) => {
+                      const { cca2, callingCode } = country;
+                      setCountryCode(cca2);
+                      setCallingCode(callingCode[0]);
+                      setCredit({ ...credit, celular: "", celularShow: "" });
+                    }}
+                    visible={pickerVisible}
+                    onClose={() => setPickerVisible(false)}
+                  />
+                  <Text style={styles.countryCodeText}>
+                    +{callingCode} {" |"}
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
+                    onChangeText={(text) =>
+                      formatPhoneNumber(text, countryCode)
+                    }
+                    value={credit.celularShow}
+                    keyboardType="phone-pad"
+                    placeholder="10 dígitos"
+                  />
+                </View>
+                <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>
+                  Cuenta bancaria a depositar fondos
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(value) =>
+                    setCredit({ ...credit, cuenta_bancaria: value })
+                  }
+                  value={credit.cuenta_bancaria}
+                  placeholder="16 dígitos"
+                  maxLength={16}
+                  keyboardType="numeric"
+                />
+                <View style={styles.separacion} />
+
+                <View style={styles.separacion} />
+                <View
+                  style={[
+                    styles.separacion,
+                    { backgroundColor: "#f2f2f2ff", height: 5 },
+                  ]}
+                />
+                <View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
+                  <TextInput
+                    style={styles.inputDescription}
+                    onChangeText={(value) =>
+                      setCredit({ ...credit, descripcion: value })
+                    }
+                    value={credit.descripcion}
+                    placeholder="Breve descripción de las necesidades del crédito"
+                    multiline={true}
+                    maxLength={300}
+                  />
                 </View>
               </View>
-              {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
-              <View style={{ marginBottom: 20, zIndex: -1 }}>
-                <TouchableOpacity
+            </View>
+            {/* Boton de Continuar */}
+            <View style={{ marginBottom: 20, zIndex: -1 }}>
+              <TouchableOpacity
+                style={[
+                  styles.botonContinuar,
+                  { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+                ]}
+                onPress={() => [
+                  setCredit({
+                    ...credit,
+                    paso: credit.paso + 1,
+                  }),
+                  navigation.navigate("DefinirCredito", { flujo: flujo }),
+                ]}
+                disabled={disabled}
+              >
+                <Text
                   style={[
-                    styles.botonContinuar,
-                    { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+                    styles.textoBotonContinuar,
+                    { color: disabled ? "grey" : "white" },
                   ]}
-                  onPress={() =>
-                    navigation.navigate("DatosBancarios", { flujo: flujo })
-                  }
-                  disabled={disabled}
                 >
-                  <Text
-                    style={[
-                      styles.textoBotonContinuar,
-                      { color: disabled ? "grey" : "white" },
-                    ]}
-                  >
-                    Aceptar
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </KeyboardAwareScrollView>
-          </>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+                  Aceptar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAwareScrollView>
+        </>
+      )}
+    </View>
   );
 };
 
@@ -433,7 +441,6 @@ const styles = StyleSheet.create({
     fontFamily: "opensanssemibold",
     paddingHorizontal: 15,
     paddingVertical: 5,
-    marginBottom: 10,
   },
   countryCodeText: {
     fontSize: 17,
