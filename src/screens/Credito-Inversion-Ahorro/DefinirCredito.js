@@ -439,9 +439,83 @@ const DefinirCredito = ({ navigation }) => {
             </View>
 
             {credit.paso >= 3 && (
-              <View style={styles.contenedores}>
-                <Text>Hola</Text>
-              </View>
+              <>
+                <View
+                  style={[
+                    styles.contenedores,
+                    {
+                      paddingHorizontal: 0,
+                      paddingVertical: 10,
+                      alignItems: "baseline",
+                    },
+                  ]}
+                >
+                  <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
+                    ¿Ha desempeñado algún cargo político?
+                  </Text>
+                  <Text style={styles.bodyCampo}>{credit.politico}</Text>
+                  <View style={styles.separacion} />
+
+                  <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
+                  <Text style={styles.bodyCampo}>{credit.domicilio}</Text>
+                  <View style={styles.separacion} />
+
+                  <Text style={styles.tituloCampo}>Teléfono Casa</Text>
+                  <Text style={styles.bodyCampo}>{credit.telCasa}</Text>
+                  <View style={styles.separacion} />
+
+                  <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
+                  <Text style={styles.bodyCampo}>{credit.telTrabajo}</Text>
+                  <View style={styles.separacion} />
+
+                  <Text style={styles.tituloCampo}>Celular</Text>
+                  <Text style={styles.bodyCampo}>{credit.celular}</Text>
+                  <View style={styles.separacion} />
+
+                  <Text style={styles.tituloCampo}>
+                    Cuenta bancaria a depositar fondos
+                  </Text>
+                  <Text style={styles.bodyCampo}>{credit.cuenta_bancaria}</Text>
+                  <View style={styles.separacion} />
+
+                  <View style={styles.Description}>
+                    <Text
+                      style={[
+                        styles.bodyCampo,
+                        {
+                          padding: 10,
+                          marginBottom: 0,
+                          color: "#878787",
+                        },
+                      ]}
+                    >
+                      {credit.descripcion}
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={{
+                      marginTop: 10,
+                      alignSelf: "center",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                    onPress={() => [
+                      setCredit({ ...credit, paso: 2 }),
+                      navigation.navigate("InfoGeneral", { flujo: flujo }),
+                    ]}
+                  >
+                    <Image
+                      style={{ width: 23, height: 22, marginBottom: 10 }}
+                      source={require("../../../assets/images/Sliders.png")}
+                    />
+                    <Text style={[styles.bodyCampo, { paddingLeft: 5 }]}>
+                      Editar información general
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
             )}
           </>
         )}
@@ -748,6 +822,32 @@ const styles = StyleSheet.create({
   },
   line: {
     transform: [{ rotate: "90deg" }],
+  },
+  tituloCampo: {
+    marginTop: 5,
+    paddingLeft: 15,
+    marginBottom: 5,
+    fontSize: 14,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+  },
+  bodyCampo: {
+    fontSize: 16,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    paddingLeft: 15,
+    marginBottom: 10,
+  },
+  Description: {
+    borderRadius: 10,
+    borderColor: "#afb0c4ff",
+    borderWidth: 1,
+    backgroundColor: "#F7F7F7",
+    flex: 1,
+    width: "93%",
+    color: "#060B4D",
+    alignSelf: "center",
+    marginTop: 10,
   },
   // Estilos del Modal
   centeredView: {
