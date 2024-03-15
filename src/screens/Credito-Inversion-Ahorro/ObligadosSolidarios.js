@@ -28,13 +28,10 @@ const ObligadosSolidarios = ({ navigation }) => {
   const { credit, setCredit } = useContext(CreditContext);
   const [disabled, setDisabled] = useState(true);
 
-  // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
+  // Efecto para deshabilitar el botón de continuar si no hay ningun obligado
   useEffect(() => {
-    const camposLlenos =
-      credit.domicilio !== "" &&
-      credit.politico !== "" &&
-      setDisabled(!camposLlenos);
-  }, [credit.domicilio, credit.politico]);
+    setDisabled(credit.obligados_solidarios.length === 0 ? true : false);
+  }, [credit.obligados_solidarios]);
 
   // Function to format the phone number as user types
   const formatPhoneNumber = (text, country) => {
@@ -151,7 +148,7 @@ const ObligadosSolidarios = ({ navigation }) => {
             ]}
             onPress={() => [
               navigation.navigate("DefinirCredito", { flujo: "Crédito" }),
-              setCredit({ ...credit, paso: paso + 1 }),
+              setCredit({ ...credit, paso: credit.paso + 1 }),
             ]}
             disabled={disabled}
           >
