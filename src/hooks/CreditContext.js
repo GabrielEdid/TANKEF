@@ -24,6 +24,8 @@ const initialState = {
   cuenta_bancaria: "",
   descripcion: "",
   paso: 1,
+  // Variables para el modal
+  modalCotizadorVisible: false,
 };
 
 // Componente UserProvider

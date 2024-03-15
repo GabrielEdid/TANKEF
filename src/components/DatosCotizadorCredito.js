@@ -33,7 +33,7 @@ import { CreditContext } from "../hooks/CreditContext";
  * />
  */
 
-const DatosCotizador = () => {
+const DatosCotizadorCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
   const { credit, setCredit } = useContext(CreditContext);
@@ -124,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DatosCotizador;
+export default DatosCotizadorCredito;
