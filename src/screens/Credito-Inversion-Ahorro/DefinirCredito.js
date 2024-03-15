@@ -20,6 +20,7 @@ import { CreditContext } from "../../hooks/CreditContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import MontoyPlazoCredito from "../../components/MontoyPlazoCredito";
 import DatosGeneralesCredito from "../../components/DatosGeneralesCredito";
+import DatosCotizadorCredito from "../../components/DatosCotizadorCredito";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -44,67 +45,7 @@ const DefinirCredito = ({ navigation }) => {
     "3de3": require("../../../assets/images/3de3.png"),
   };
 
-  // Funcion para manejar el cambio de texto en el input de monto
-  const handleChangeText = (inputText) => {
-    let newText = inputText.replace(/[^0-9.]/g, "");
-    if ((newText.match(/\./g) || []).length > 1) {
-      newText = newText.replace(/\.(?=.*\.)/, "");
-    }
-
-    let [integer, decimal] = newText.split(".");
-    integer = integer.replace(/^0+/, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    if (decimal && decimal.length > 2) {
-      decimal = decimal.substring(0, 2);
-    }
-
-    const formattedText =
-      decimal !== undefined ? `${integer}.${decimal}` : integer;
-    const numericValue = parseFloat(newText.replace(/,/g, ""));
-    setCredit({
-      ...credit,
-      montoShow: formattedText,
-      monto: newText,
-      montoNumeric: numericValue || 0,
-    });
-  };
-
-  // Funcion para manejar el cambio de valor en el slider
-  const handleSliderChange = (value) => {
-    // Actualiza el valor numérico directamente con el valor del slider
-    setCredit({ ...credit, montoNumeric: value });
-
-    // Formatea el valor para mostrarlo adecuadamente en el input
-    const formattedValue = value
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Actualiza el estado del texto del input con el valor formateado
-    setCredit({ ...credit, montoShow: formattedValue });
-  };
-
   const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
-
-  // Funcion para formatear el input de monto
-  const formatInput = (text) => {
-    // Elimina comas para el cálculo
-    const numericValue = parseInt(text.replace(/,/g, ""), 10);
-    if (!isNaN(numericValue)) {
-      // Vuelve a formatear con comas
-      return numericValue.toLocaleString();
-    }
-    return "";
-  };
-
-  // Funcion para manejar el input de monto al seleccionar
-  const handleFocus = () => {
-    const numericValue = credit.monto.replace(/,/g, "");
-    setCredit({ ...credit, monto: numericValue });
-  };
-
-  // Funcion para manejar el input de monto al deseleccionar
-  const handleBlur = () => {
-    setCredit({ ...credit, montoShow: formatInput(credit.monto) });
-  };
 
   const handleAccept = () => {
     if (focus === "Comite") {
@@ -196,7 +137,7 @@ const DefinirCredito = ({ navigation }) => {
               />
             </View>*/}
           <View style={styles.tabsContainer}>
-            {/* Boton Tab Balance */}
+            {/* Boton Tab Mi Red */}
             <TouchableOpacity
               style={styles.tabButton}
               onPress={() => setFocus("Mi Red")}
@@ -216,7 +157,7 @@ const DefinirCredito = ({ navigation }) => {
               {focus === "Mi Red" ? <View style={styles.focusLine} /> : null}
             </TouchableOpacity>
 
-            {/* Boton Tab Movimientos */}
+            {/* Boton Tab Comité */}
             <TouchableOpacity
               style={styles.tabButton}
               onPress={() => setFocus("Comite")}
@@ -276,44 +217,7 @@ const DefinirCredito = ({ navigation }) => {
 
         {credit.paso >= 2 && (
           <>
-            <View style={styles.contenedores}>
-              <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-                Total a pagar
-              </Text>
-              <Text style={[styles.inputMonto, { marginTop: -10 }]}>
-                {credit.total_a_pagar}
-              </Text>
-            </View>
-            <View style={[styles.contenedores, { flexDirection: "row" }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Comisión por{"\n"}apertura</Text>
-                <Text style={styles.valorConcepto}>
-                  {credit.comision_por_apertura}
-                </Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Tasa de{"\n"}operación</Text>
-                <Text style={styles.valorConcepto}>
-                  {credit.tasa_de_operacion}
-                </Text>
-              </View>
-              <Ionicons
-                name="remove-outline"
-                size={30}
-                color="#e1e2ebff"
-                style={styles.line}
-              />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.concepto}>Pago{"\n"}mensual</Text>
-                <Text style={styles.valorConcepto}>{credit.pago_mensual}</Text>
-              </View>
-            </View>
+            <DatosCotizadorCredito />
 
             {credit.paso >= 3 && <DatosGeneralesCredito />}
           </>
@@ -327,6 +231,7 @@ const DefinirCredito = ({ navigation }) => {
             alignItems: "center",
           }}
         >
+          {/* Botones de Atrás y Continuar */}
           {credit.paso !== 1 && (
             <TouchableOpacity
               style={[
@@ -559,54 +464,13 @@ const styles = StyleSheet.create({
     fontFamily: "opensans",
     fontSize: 16,
   },
-  subTexto: {
-    color: "#9E9E9E",
-    textAlign: "center",
-    fontFamily: "opensans",
-    fontSize: 14,
-  },
-  inputWrapper: {
-    flexDirection: "row",
-    marginTop: -10,
-    paddingHorizontal: 10,
-    alignItems: "center",
-    alignContent: "center",
-  },
-  inputNombre: {
+  /*inputNombre: {
     marginTop: 5,
     fontSize: 16,
     color: "#060B4D",
     fontFamily: "opensans",
-  },
-  dollarSign: {
-    color: "#060B4D",
-    fontSize: 35,
-    fontFamily: "opensanssemibold",
-  },
-  inputMonto: {
-    paddingTop: 10,
-    fontSize: 35,
-    color: "#060B4D",
-    marginBottom: 10,
-    fontFamily: "opensanssemibold",
-  },
-  separacion: {
-    height: 1,
-    width: "100%",
-    backgroundColor: "#cecfdbff",
-  },
-  tab: {
-    marginTop: 10,
-    padding: 10,
-    width: widthFourth,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  textoTab: {
-    textAlign: "center",
-    fontFamily: "opensanssemibold",
-    fontSize: 18,
-  },
+  },*/
+
   concepto: {
     fontFamily: "opensans",
     fontSize: 14,
@@ -621,32 +485,6 @@ const styles = StyleSheet.create({
   },
   line: {
     transform: [{ rotate: "90deg" }],
-  },
-  tituloCampo: {
-    marginTop: 5,
-    paddingLeft: 15,
-    marginBottom: 5,
-    fontSize: 14,
-    color: "#060B4D",
-    fontFamily: "opensanssemibold",
-  },
-  bodyCampo: {
-    fontSize: 16,
-    color: "#060B4D",
-    fontFamily: "opensanssemibold",
-    paddingLeft: 15,
-    marginBottom: 10,
-  },
-  Description: {
-    borderRadius: 10,
-    borderColor: "#afb0c4ff",
-    borderWidth: 1,
-    backgroundColor: "#F7F7F7",
-    flex: 1,
-    width: "93%",
-    color: "#060B4D",
-    alignSelf: "center",
-    marginTop: 10,
   },
   // Estilos del Modal
   centeredView: {
