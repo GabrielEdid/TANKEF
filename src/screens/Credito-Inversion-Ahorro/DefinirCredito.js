@@ -18,7 +18,7 @@ import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Hooks
 import { CreditContext } from "../../hooks/CreditContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { set } from "date-fns";
+import DatosGeneralesCredito from "../../components/DatosGeneralesCredito";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -304,7 +304,7 @@ const DefinirCredito = ({ navigation }) => {
                 onChangeText={handleChangeText}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                editable={credit.paso === 1}
+                //editable={credit.paso === 1} // Para deshabilitar el input
               />
               <Text
                 style={[
@@ -327,7 +327,7 @@ const DefinirCredito = ({ navigation }) => {
               thumbTintColor="#2FF690"
               minimumTrackTintColor="#2FF690"
               maximumTrackTintColor="#F2F2F2"
-              disabled={credit.paso === 1 ? false : true}
+              //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el slider
             />
           </View>
 
@@ -350,7 +350,7 @@ const DefinirCredito = ({ navigation }) => {
                   },
                 ]}
                 onPress={() => [setCredit({ ...credit, plazo: 6 })]}
-                disabled={credit.paso === 1 ? false : true}
+                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
               >
                 <Text style={styles.textoTab}>6</Text>
               </TouchableOpacity>
@@ -363,7 +363,7 @@ const DefinirCredito = ({ navigation }) => {
                   },
                 ]}
                 onPress={() => [setCredit({ ...credit, plazo: 12 })]}
-                disabled={credit.paso === 1 ? false : true}
+                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
               >
                 <Text style={styles.textoTab}>12</Text>
               </TouchableOpacity>
@@ -376,7 +376,7 @@ const DefinirCredito = ({ navigation }) => {
                   },
                 ]}
                 onPress={() => [setCredit({ ...credit, plazo: 18 })]}
-                disabled={credit.paso === 1 ? false : true}
+                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
               >
                 <Text style={styles.textoTab}>18</Text>
               </TouchableOpacity>
@@ -390,7 +390,7 @@ const DefinirCredito = ({ navigation }) => {
                   },
                 ]}
                 onPress={() => [setCredit({ ...credit, plazo: 24 })]}
-                disabled={credit.paso === 1 ? false : true}
+                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
               >
                 <Text style={styles.textoTab}>24</Text>
               </TouchableOpacity>
@@ -448,85 +448,7 @@ const DefinirCredito = ({ navigation }) => {
               </View>
             </View>
 
-            {credit.paso >= 3 && (
-              <>
-                <View
-                  style={[
-                    styles.contenedores,
-                    {
-                      paddingHorizontal: 0,
-                      paddingVertical: 10,
-                      alignItems: "baseline",
-                    },
-                  ]}
-                >
-                  <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
-                    ¿Ha desempeñado algún cargo político?
-                  </Text>
-                  <Text style={styles.bodyCampo}>{credit.politico}</Text>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
-                  <Text style={styles.bodyCampo}>{credit.domicilio}</Text>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Teléfono Casa</Text>
-                  <Text style={styles.bodyCampo}>{credit.telCasa}</Text>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
-                  <Text style={styles.bodyCampo}>{credit.telTrabajo}</Text>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>Celular</Text>
-                  <Text style={styles.bodyCampo}>{credit.celular}</Text>
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>
-                    Cuenta bancaria a depositar fondos
-                  </Text>
-                  <Text style={styles.bodyCampo}>{credit.cuenta_bancaria}</Text>
-                  <View style={styles.separacion} />
-
-                  <View style={styles.Description}>
-                    <Text
-                      style={[
-                        styles.bodyCampo,
-                        {
-                          padding: 10,
-                          marginBottom: 0,
-                          color: "#878787",
-                        },
-                      ]}
-                    >
-                      {credit.descripcion}
-                    </Text>
-                  </View>
-                </View>
-                <View>
-                  <TouchableOpacity
-                    style={{
-                      marginTop: 10,
-                      alignSelf: "center",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                    onPress={() => [
-                      setCredit({ ...credit, paso: 2 }),
-                      navigation.navigate("InfoGeneral", { flujo: flujo }),
-                    ]}
-                  >
-                    <Image
-                      style={{ width: 23, height: 22, marginBottom: 10 }}
-                      source={require("../../../assets/images/Sliders.png")}
-                    />
-                    <Text style={[styles.bodyCampo, { paddingLeft: 5 }]}>
-                      Editar información general
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
+            {credit.paso >= 3 && <DatosGeneralesCredito />}
           </>
         )}
 
