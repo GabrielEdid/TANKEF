@@ -134,26 +134,28 @@ const DefinirCredito = ({ navigation }) => {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
       >
-        <View
-          style={{
-            alignItems: "center",
-            paddingHorizontal: 25,
-            paddingVertical: 15,
-            backgroundColor: "white",
-            marginTop: 3,
-          }}
-        >
-          <Text
+        {credit.paso === 1 && (
+          <View
             style={{
-              fontFamily: "opensansbold",
-              fontSize: 20,
-              color: "#060B4D",
-              textAlign: "center",
+              alignItems: "center",
+              paddingHorizontal: 25,
+              paddingVertical: 15,
+              backgroundColor: "white",
+              marginTop: 3,
             }}
           >
-            Selecciona una de nuestras opciones para solicitar un crédito.
-          </Text>
-        </View>
+            <Text
+              style={{
+                fontFamily: "opensansbold",
+                fontSize: 20,
+                color: "#060B4D",
+                textAlign: "center",
+              }}
+            >
+              Selecciona una de nuestras opciones para solicitar un crédito.
+            </Text>
+          </View>
+        )}
         {/* Opcion para añadir nombre al crédito */}
         {/*<View
               style={{
