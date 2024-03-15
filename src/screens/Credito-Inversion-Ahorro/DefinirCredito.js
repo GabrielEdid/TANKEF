@@ -245,6 +245,49 @@ const DefinirCredito = ({ navigation }) => {
           </>
         )}
 
+        {focus === "Comite" && (
+          <>
+            <View
+              style={[
+                styles.contenedores,
+                { flexDirection: "row", justifyContent: "center" },
+              ]}
+            >
+              <Image
+                source={imageMap[`${credit.paso}de3`]}
+                style={{ height: 50, width: 50 }}
+              />
+              <Text
+                style={[
+                  styles.texto,
+                  { fontFamily: "opensansbold", marginLeft: 10 },
+                ]}
+              >
+                Solicitud de crédito por Comité
+              </Text>
+            </View>
+
+            <MontoyPlazoCredito />
+
+            {credit.paso === 1 && (
+              <View style={styles.contenedores}>
+                <Text style={styles.texto}>
+                  Al solicitar un crédito a través del comité, tu historial
+                  crediticio será revisado en buró de crédito y otros aspectos
+                  serán evaluados.
+                </Text>
+              </View>
+            )}
+
+            {credit.paso >= 2 && (
+              <>
+                <DatosCotizadorCredito />
+                {credit.paso >= 3 && <DatosGeneralesCredito />}
+              </>
+            )}
+          </>
+        )}
+
         <View
           style={{
             paddingHorizontal: 10,
