@@ -18,6 +18,7 @@ import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Hooks
 import { CreditContext } from "../../hooks/CreditContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import MontoyPlazoCredito from "../../components/MontoyPlazoCredito";
 import DatosGeneralesCredito from "../../components/DatosGeneralesCredito";
 
 // Se mide la pantalla para determinar medidas
@@ -261,139 +262,7 @@ const DefinirCredito = ({ navigation }) => {
                 : "Solicitud de crédito por Comité"}
             </Text>
           </View>
-          <View style={[styles.contenedores, { flexDirection: "row" }]}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
-              <Text style={styles.valorConcepto}>$120K</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
-              <Text style={styles.valorConcepto}>$10K</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
-              <Text style={styles.valorConcepto}>$1M</Text>
-            </View>
-          </View>
-          <View style={styles.contenedores}>
-            <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-              Introduce el monto que deseas solicitar.
-            </Text>
-            <View style={styles.inputWrapper}>
-              <Text style={[styles.dollarSign]}>$</Text>
-              <TextInput
-                style={styles.inputMonto}
-                value={credit.montoShow}
-                keyboardType="numeric"
-                maxLength={20}
-                placeholderTextColor={"#b3b5c9ff"}
-                onChangeText={handleChangeText}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                //editable={credit.paso === 1} // Para deshabilitar el input
-              />
-              <Text
-                style={[
-                  styles.dollarSign,
-                  {
-                    marginLeft: 5,
-                  },
-                ]}
-              >
-                MXN
-              </Text>
-            </View>
-            <Slider
-              style={{ width: "90%" }}
-              minimumValue={10000}
-              maximumValue={1000000}
-              step={100}
-              value={credit.montoNumeric}
-              onValueChange={handleSliderChange}
-              thumbTintColor="#2FF690"
-              minimumTrackTintColor="#2FF690"
-              maximumTrackTintColor="#F2F2F2"
-              //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el slider
-            />
-          </View>
-
-          <View style={styles.contenedores}>
-            <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-              Plazo del Crédito
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                marginLeft: -5,
-                alignSelf: "center",
-              }}
-            >
-              <TouchableOpacity
-                style={[
-                  styles.tab,
-                  {
-                    backgroundColor: credit.plazo === 6 ? "#2FF690" : "#F3F3F3",
-                  },
-                ]}
-                onPress={() => [setCredit({ ...credit, plazo: 6 })]}
-                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
-              >
-                <Text style={styles.textoTab}>6</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.tab,
-                  {
-                    backgroundColor:
-                      credit.plazo === 12 ? "#2FF690" : "#F3F3F3",
-                  },
-                ]}
-                onPress={() => [setCredit({ ...credit, plazo: 12 })]}
-                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
-              >
-                <Text style={styles.textoTab}>12</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.tab,
-                  {
-                    backgroundColor:
-                      credit.plazo === 18 ? "#2FF690" : "#F3F3F3",
-                  },
-                ]}
-                onPress={() => [setCredit({ ...credit, plazo: 18 })]}
-                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
-              >
-                <Text style={styles.textoTab}>18</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.tab,
-                  {
-                    backgroundColor:
-                      credit.plazo === 24 ? "#2FF690" : "#F3F3F3",
-                    marginRight: 0,
-                  },
-                ]}
-                onPress={() => [setCredit({ ...credit, plazo: 24 })]}
-                //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
-              >
-                <Text style={styles.textoTab}>24</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <MontoyPlazoCredito />
           {credit.paso === 1 && (
             <View style={styles.contenedores}>
               <Text style={styles.texto}>

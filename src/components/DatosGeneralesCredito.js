@@ -34,7 +34,7 @@ import { CreditContext } from "../hooks/CreditContext";
 
 const DatosGeneralesCredito = () => {
   const navigation = useNavigation();
-  // Obtener el estado global de credit
+  // Contexto de crédito
   const { credit, setCredit } = useContext(CreditContext);
 
   // Componente visual
