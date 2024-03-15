@@ -107,19 +107,51 @@ const ObligadosSolidarios = ({ navigation }) => {
           />
         </View>
         {/* Boton de Continuar */}
-        <View style={{ marginBottom: 20, zIndex: -1 }}>
+        <View
+          style={{
+            paddingHorizontal: 10,
+            marginBottom: 20,
+            flexDirection: credit.paso === 1 ? "column" : "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {/* Botones de Atrás y Continuar */}
+          {credit.paso !== 1 && (
+            <TouchableOpacity
+              style={[
+                styles.botonContinuar,
+                {
+                  marginRight: 5,
+                  flex: 1,
+                  backgroundColor: "white",
+                  borderColor: "#060B4D",
+                  borderWidth: 1,
+                },
+              ]}
+              onPress={() => [
+                navigation.navigate("DefinirCredito", { flujo: "Crédito" }),
+                setCredit({ ...credit, paso: 2 }),
+              ]}
+            >
+              <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
+                Cancelar
+              </Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={[
               styles.botonContinuar,
-              { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+              {
+                flex: 1,
+                marginLeft: credit.paso === 1 ? 0 : 5,
+                width: credit.paso === 1 && "80%", // Ensure width is consistent for the "Continuar" button
+                backgroundColor: disabled ? "#D5D5D5" : "#060B4D",
+              },
             ]}
             onPress={() => [
-              setCredit({
-                ...credit,
-                paso: credit.paso + 1,
-              }),
-              navigation.navigate("DefinirCredito", { flujo: flujo }),
-              console.log(credit),
+              navigation.navigate("DefinirCredito", { flujo: "Crédito" }),
+              setCredit({ ...credit, paso: paso + 1 }),
             ]}
             disabled={disabled}
           >
@@ -129,7 +161,7 @@ const ObligadosSolidarios = ({ navigation }) => {
                 { color: disabled ? "grey" : "white" },
               ]}
             >
-              Aceptar
+              Continuar
             </Text>
           </TouchableOpacity>
         </View>
