@@ -6,15 +6,13 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  TextInput,
-  Modal,
+  Alert,
   Image,
 } from "react-native";
 import React, { useState, useCallback, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
-import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Hooks
 import { CreditContext } from "../../hooks/CreditContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -32,7 +30,7 @@ const DefinirCredito = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { credit, setCredit } = useContext(CreditContext);
+  const { credit, setCredit, resetCredit } = useContext(CreditContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [focus, setFocus] = useState("Mi Red");
 
@@ -48,8 +46,32 @@ const DefinirCredito = ({ navigation }) => {
 
   const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
 
+  // Función para cambiar el focus de la pantalla
+  const handleFocus = (tab) => {
+    if (tab === focus) return;
+    if (credit.paso === 1) {
+      setFocus(tab);
+    } else {
+      Alert.alert(
+        "¿Deseas cambiar de opción?",
+        "Si cambias de opción de crédito, perderás la información ingresada hasta el momento.",
+        [
+          {
+            text: "Cambiar de opción",
+            onPress: () => [resetCredit(), setFocus(tab)],
+          },
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+        ],
+        { cancelable: true }
+      );
+    }
+  };
+
   const handleAccept = () => {
-    if (focus === "Comite") {
+    if (focus === "Mi Red") {
       if (credit.paso === 4) {
         navigation.navigate("MiTankef");
       } else if (credit.paso === 1) {
@@ -97,29 +119,28 @@ const DefinirCredito = ({ navigation }) => {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
       >
-        <View style={{ flex: 1 }}>
-          <View
+        <View
+          style={{
+            alignItems: "center",
+            paddingHorizontal: 25,
+            paddingVertical: 15,
+            backgroundColor: "white",
+            marginTop: 3,
+          }}
+        >
+          <Text
             style={{
-              alignItems: "center",
-              paddingHorizontal: 25,
-              paddingVertical: 15,
-              backgroundColor: "white",
-              marginTop: 3,
+              fontFamily: "opensansbold",
+              fontSize: 20,
+              color: "#060B4D",
+              textAlign: "center",
             }}
           >
-            <Text
-              style={{
-                fontFamily: "opensansbold",
-                fontSize: 20,
-                color: "#060B4D",
-                textAlign: "center",
-              }}
-            >
-              Selecciona una de nuestras opciones para solicitar un crédito.
-            </Text>
-          </View>
-          {/* Opcion para añadir nombre al crédito */}
-          {/*<View
+            Selecciona una de nuestras opciones para solicitar un crédito.
+          </Text>
+        </View>
+        {/* Opcion para añadir nombre al crédito */}
+        {/*<View
               style={{
                 marginTop: 3,
                 backgroundColor: "white",
@@ -137,90 +158,90 @@ const DefinirCredito = ({ navigation }) => {
                 onChangeText={(text) => setNombreInversion(text)}
               />
             </View>*/}
-          <View style={styles.tabsContainer}>
-            {/* Boton Tab Mi Red */}
-            <TouchableOpacity
-              style={styles.tabButton}
-              onPress={() => setFocus("Mi Red")}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  {
-                    color: focus === "Mi Red" ? "#060B4D" : "#9596AF",
-                    fontFamily:
-                      focus === "Mi Red" ? "opensansbold" : "opensanssemibold",
-                  },
-                ]}
-              >
-                Mi Red
-              </Text>
-              {focus === "Mi Red" ? <View style={styles.focusLine} /> : null}
-            </TouchableOpacity>
-
-            {/* Boton Tab Comité */}
-            <TouchableOpacity
-              style={styles.tabButton}
-              onPress={() => setFocus("Comite")}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  {
-                    color: focus === "Comite" ? "#060B4D" : "#9596AF",
-                    fontFamily:
-                      focus === "Comite" ? "opensansbold" : "opensanssemibold",
-                  },
-                ]}
-              >
-                Comité
-              </Text>
-              {focus === "Comite" ? <View style={styles.focusLine} /> : null}
-            </TouchableOpacity>
-          </View>
-
-          <View
-            style={[
-              styles.contenedores,
-              { flexDirection: "row", justifyContent: "center" },
-            ]}
+        <View style={styles.tabsContainer}>
+          {/* Boton Tab Mi Red */}
+          <TouchableOpacity
+            style={styles.tabButton}
+            onPress={() => handleFocus("Mi Red")}
           >
-            <Image
-              source={
-                focus === "Mi Red"
-                  ? imageMap[`${credit.paso}de4`]
-                  : imageMap[`${credit.paso}de3`]
-              }
-              style={{ height: 50, width: 50 }}
-            />
             <Text
               style={[
-                styles.texto,
-                { fontFamily: "opensansbold", marginLeft: 10 },
+                styles.tabText,
+                {
+                  color: focus === "Mi Red" ? "#060B4D" : "#9596AF",
+                  fontFamily:
+                    focus === "Mi Red" ? "opensansbold" : "opensanssemibold",
+                },
               ]}
             >
-              {focus === "Mi Red"
-                ? "Mi Red con Obligados Solidarios"
-                : "Solicitud de crédito por Comité"}
+              Mi Red
             </Text>
-          </View>
-          <MontoyPlazoCredito />
-          {credit.paso === 1 && (
-            <View style={styles.contenedores}>
-              <Text style={styles.texto}>
-                {focus === "Mi Red"
-                  ? "Invita a tus amigos a unirse a tu red financiera. Cuantos más se sumen, más respaldo tendrás al solicitar un crédito. ¡Aprovecha el poder de la comunidad para obtener financiamiento!"
-                  : "Al solicitar un crédito a través del comité, tu historial crediticio será revisado en buró de crédito y otros aspectos serán evaluados."}
-              </Text>
-            </View>
-          )}
+            {focus === "Mi Red" ? <View style={styles.focusLine} /> : null}
+          </TouchableOpacity>
+
+          {/* Boton Tab Comité */}
+          <TouchableOpacity
+            style={styles.tabButton}
+            onPress={() => handleFocus("Comite")}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                {
+                  color: focus === "Comite" ? "#060B4D" : "#9596AF",
+                  fontFamily:
+                    focus === "Comite" ? "opensansbold" : "opensanssemibold",
+                },
+              ]}
+            >
+              Comité
+            </Text>
+            {focus === "Comite" ? <View style={styles.focusLine} /> : null}
+          </TouchableOpacity>
         </View>
 
-        {credit.paso >= 2 && (
+        {/* Flujo de Mi Red */}
+        {focus === "Mi Red" && (
           <>
-            <DatosCotizadorCredito />
+            <View
+              style={[
+                styles.contenedores,
+                { flexDirection: "row", justifyContent: "center" },
+              ]}
+            >
+              <Image
+                source={imageMap[`${credit.paso}de4`]}
+                style={{ height: 50, width: 50 }}
+              />
+              <Text
+                style={[
+                  styles.texto,
+                  { fontFamily: "opensansbold", marginLeft: 10 },
+                ]}
+              >
+                Mi Red con Obligados Solidarios
+              </Text>
+            </View>
 
-            {credit.paso >= 3 && <DatosGeneralesCredito />}
+            <MontoyPlazoCredito />
+
+            {credit.paso === 1 && (
+              <View style={styles.contenedores}>
+                <Text style={styles.texto}>
+                  Invita a tus amigos a unirse a tu red financiera. Cuantos más
+                  se sumen, más respaldo tendrás al solicitar un crédito.
+                  ¡Aprovecha el poder de la comunidad para obtener
+                  financiamiento!
+                </Text>
+              </View>
+            )}
+
+            {credit.paso >= 2 && (
+              <>
+                <DatosCotizadorCredito />
+                {credit.paso >= 3 && <DatosGeneralesCredito />}
+              </>
+            )}
           </>
         )}
 
