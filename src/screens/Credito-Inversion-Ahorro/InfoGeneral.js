@@ -59,6 +59,7 @@ const InfoGeneral = ({ navigation }) => {
       credit.telTrabajo !== "" &&
       credit.celular !== "" &&
       credit.cuenta_bancaria !== "" &&
+      credit.cuenta_bancaria.length === 16 &&
       credit.descripcion !== "";
     //emailValido; // Utiliza la variable local para la validación
     setDisabled(!camposLlenos);

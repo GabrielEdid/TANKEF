@@ -255,15 +255,16 @@ const DefinirCredito = ({ navigation }) => {
               </View>
             )}
 
-            {credit.paso >= 2 && (
+            {credit.paso >= 2 && <DatosCotizadorCredito />}
+
+            {credit.paso >= 3 && (
               <>
-                <DatosCotizadorCredito />
-                {credit.paso >= 3 && <DatosGeneralesCredito />}
+                <Text>Se muestran los obligados solidarios</Text>
+                {credit.paso >= 4 && <DatosGeneralesCredito />}
               </>
             )}
           </>
         )}
-
         {focus === "Comite" && (
           <>
             <View
