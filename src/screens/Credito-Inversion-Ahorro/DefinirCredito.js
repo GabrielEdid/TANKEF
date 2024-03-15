@@ -84,6 +84,21 @@ const DefinirCredito = ({ navigation }) => {
           paso: credit.paso + 1,
         });
       }
+    } else if (focus === "Comite") {
+      if (credit.paso === 3) {
+        resetCredit();
+        setFocus("Mi Red");
+        navigation.navigate("MiTankef");
+      } else if (credit.paso === 1) {
+        setCredit({ ...credit, modalCotizadorVisible: true });
+      } else if (credit.paso === 2) {
+        navigation.navigate("InfoGeneral", { flujo: flujo });
+      } else {
+        setCredit({
+          ...credit,
+          paso: credit.paso + 1,
+        });
+      }
     }
   };
 
@@ -263,7 +278,11 @@ const DefinirCredito = ({ navigation }) => {
                   { fontFamily: "opensansbold", marginLeft: 10 },
                 ]}
               >
-                Solicitud de crédito por Comité
+                {credit.paso === 1
+                  ? "Solicitud de crédito por Comité"
+                  : credit.paso === 2
+                  ? "Revisión de Cotización"
+                  : "Revisión y Validación de infromación"}
               </Text>
             </View>
 
