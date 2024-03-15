@@ -5,21 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import CountryPicker from "react-native-country-picker-modal";
-import DropDownPicker from "react-native-dropdown-picker";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
-import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
 import { CreditContext } from "../../hooks/CreditContext";
+import ObligadoSolidario from "../../components/ObligadoSolidario";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -31,46 +26,15 @@ const ObligadosSolidarios = ({ navigation }) => {
   const { flujo } = route.params;
   // Estados y Contexto
   const { credit, setCredit } = useContext(CreditContext);
-  const [focus, setFocus] = useState("General");
   const [disabled, setDisabled] = useState(true);
-  const [pickerVisible, setPickerVisible] = useState(false);
-  const [countryCode, setCountryCode] = useState("MX");
-  const [callingCode, setCallingCode] = useState("52");
-
-  const [dataDomicilio] = useState([
-    { label: "Propio", value: "Propio" },
-    { label: "Rentado", value: "Rentado" },
-  ]);
-
-  const [dataPolitico] = useState([
-    { label: "Si", value: "Si" },
-    { label: "No", value: "No" },
-  ]);
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
-    //const emailValido = isValidEmail(mail);
-    //setIsEmailValid(emailValido);
-
     const camposLlenos =
       credit.domicilio !== "" &&
       credit.politico !== "" &&
-      credit.telCasa !== "" &&
-      credit.telTrabajo !== "" &&
-      credit.celular !== "" &&
-      credit.cuenta_bancaria !== "" &&
-      credit.descripcion !== "";
-    //emailValido; // Utiliza la variable local para la validación
-    setDisabled(!camposLlenos);
-  }, [
-    credit.domicilio,
-    credit.politico,
-    credit.telCasa,
-    credit.telTrabajo,
-    credit.celular,
-    credit.cuenta_bancaria,
-    credit.descripcion,
-  ]);
+      setDisabled(!camposLlenos);
+  }, [credit.domicilio, credit.politico]);
 
   // Function to format the phone number as user types
   const formatPhoneNumber = (text, country) => {
@@ -78,13 +42,6 @@ const ObligadosSolidarios = ({ navigation }) => {
     const formatted = formatter.input(text);
     setCredit({ ...credit, celular: text, celularShow: formatted });
   };
-
-  // Function to validate email
-  /*const isValidEmail = (email) => {
-      const regex =
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return regex.test(String(email).toLowerCase());
-    };*/
 
   // Componente Visual
   return (
@@ -113,109 +70,70 @@ const ObligadosSolidarios = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/*focus === "Documentacion" && (
-            <>
-              <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Documentación</Text>
-                <Text style={styles.bodySeccion}>
-                  Para agilizar el proceso te recomendamos tener los siguientes
-                  documentos a la mano.
-                </Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 5,
-                  backgroundColor: "white",
-                  paddingBottom: 15,
-                  flex: 1,
-                }}
-              >
-                <View style={{ flex: 1 }}>
-                  <BulletPointText
-                    titulo="INE"
-                    body="Identificación oficial actualizada"
-                  />
-                  <BulletPointText titulo="CURP" body="Documento actualizado" />
-                  <BulletPointText
-                    titulo="Constancia de situación fiscal"
-                    body="Identificación oficial actualizada"
-                  />
-                  <BulletPointText
-                    titulo="Comprobante de Domicilio"
-                    body="Documento actualizado"
-                  />
-                  <BulletPointText
-                    titulo="Carátula de estado de cuenta bancaria"
-                    body="Documento actualizado"
-                  />
-                </View>
-                <TouchableOpacity
-                  style={styles.botonContinuar}
-                  onPress={() => setFocus("General")}
-                >
-                  <Text style={styles.textoBotonContinuar}>Continuar</Text>
-                </TouchableOpacity>
-              </View>
-            </>
-              )*/}
-
-      {focus === "General" && (
-        <>
-          <KeyboardAwareScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            scrollEnabled={true}
-            enableOnAndroid={true}
-            style={styles.scrollV}
-            keyboardShouldPersistTaps="handled"
-            enableAutomaticScroll={true}
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        scrollEnabled={true}
+        enableOnAndroid={true}
+        style={styles.scrollV}
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={true}
+      >
+        <View style={styles.seccion}>
+          <Text style={styles.tituloSeccion}>Obligados Solidarios</Text>
+          <Text style={styles.bodySeccion}>
+            Puedes seleccionar a un amigo o socio dentro de tu red financiera
+            como tu obligado solidario. Estas personas, amigos o socios fungen
+            como tus “avales” para la solicitud de tu crédito.
+          </Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <ObligadoSolidario
+            nombre={"Gabriel Edid Harari"}
+            userID={10}
+            imagen={require("../../../assets/images/Fotos_Personas/Antonio.png")}
+            select={true}
+          />
+          <ObligadoSolidario
+            nombre={"Natasha Ocasio Romanoff"}
+            userID={11}
+            imagen={require("../../../assets/images/Fotos_Personas/Natahsa.png")}
+            select={true}
+          />
+          <ObligadoSolidario
+            nombre={"Bruce García Banner"}
+            userID={12}
+            imagen={require("../../../assets/images/Fotos_Personas/Bruce.png")}
+            select={false}
+          />
+        </View>
+        {/* Boton de Continuar */}
+        <View style={{ marginBottom: 20, zIndex: -1 }}>
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
+            ]}
+            onPress={() => [
+              setCredit({
+                ...credit,
+                paso: credit.paso + 1,
+              }),
+              navigation.navigate("DefinirCredito", { flujo: flujo }),
+              console.log(credit),
+            ]}
+            disabled={disabled}
           >
-            <View style={styles.seccion}>
-              <Text style={styles.tituloSeccion}>Obligados Solidarios</Text>
-              <Text style={styles.bodySeccion}>
-                Puedes seleccionar a un amigo o socio dentro de tu red
-                financiera como tu obligado solidario. Estas personas, amigos o
-                socios fungen como tus “avales” para la solicitud de tu crédito.
-              </Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <View
-                style={{
-                  marginTop: 5,
-                  backgroundColor: "white",
-                  paddingTop: 15,
-                }}
-              ></View>
-            </View>
-            {/* Boton de Continuar */}
-            <View style={{ marginBottom: 20, zIndex: -1 }}>
-              <TouchableOpacity
-                style={[
-                  styles.botonContinuar,
-                  { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
-                ]}
-                onPress={() => [
-                  setCredit({
-                    ...credit,
-                    paso: credit.paso + 1,
-                  }),
-                  navigation.navigate("DefinirCredito", { flujo: flujo }),
-                  console.log(credit),
-                ]}
-                disabled={disabled}
-              >
-                <Text
-                  style={[
-                    styles.textoBotonContinuar,
-                    { color: disabled ? "grey" : "white" },
-                  ]}
-                >
-                  Aceptar
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </KeyboardAwareScrollView>
-        </>
-      )}
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: disabled ? "grey" : "white" },
+              ]}
+            >
+              Aceptar
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
