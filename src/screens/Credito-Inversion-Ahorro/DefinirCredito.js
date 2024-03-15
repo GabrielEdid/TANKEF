@@ -34,15 +34,13 @@ const DefinirCredito = ({ navigation }) => {
   const [focus, setFocus] = useState("Mi Red");
 
   const imageMap = {
-    "1de5": require("../../../assets/images/1de5.png"),
-    "2de5": require("../../../assets/images/2de5.png"),
-    "3de5": require("../../../assets/images/3de5.png"),
-    "4de5": require("../../../assets/images/4de5.png"),
-    "5de5": require("../../../assets/images/5de5.png"),
     "1de4": require("../../../assets/images/1de4.png"),
     "2de4": require("../../../assets/images/2de4.png"),
     "3de4": require("../../../assets/images/3de4.png"),
     "4de4": require("../../../assets/images/4de4.png"),
+    "1de3": require("../../../assets/images/1de3.png"),
+    "2de3": require("../../../assets/images/2de3.png"),
+    "3de3": require("../../../assets/images/3de3.png"),
   };
 
   // Funcion para manejar el cambio de texto en el input de monto
@@ -247,8 +245,8 @@ const DefinirCredito = ({ navigation }) => {
             <Image
               source={
                 focus === "Mi Red"
-                  ? imageMap[`${credit.paso}de5`]
-                  : imageMap[`${credit.paso}de4`]
+                  ? imageMap[`${credit.paso}de4`]
+                  : imageMap[`${credit.paso}de3`]
               }
               style={{ height: 50, width: 50 }}
             />
