@@ -77,6 +77,8 @@ const DefinirCredito = ({ navigation }) => {
       } else if (credit.paso === 1) {
         setCredit({ ...credit, modalCotizadorVisible: true });
       } else if (credit.paso === 2) {
+        navigation.navigate("ObligadosSolidarios", { flujo: flujo });
+      } else if (credit.paso === 3) {
         navigation.navigate("InfoGeneral", { flujo: flujo });
       } else {
         setCredit({

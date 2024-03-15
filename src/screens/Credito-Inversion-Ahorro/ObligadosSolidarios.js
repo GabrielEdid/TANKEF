@@ -170,9 +170,11 @@ const ObligadosSolidarios = ({ navigation }) => {
             enableAutomaticScroll={true}
           >
             <View style={styles.seccion}>
-              <Text style={styles.tituloSeccion}>Información General</Text>
+              <Text style={styles.tituloSeccion}>Obligados Solidarios</Text>
               <Text style={styles.bodySeccion}>
-                Ingresa los datos solicitados para continuar.
+                Puedes seleccionar a un amigo o socio dentro de tu red
+                financiera como tu obligado solidario. Estas personas, amigos o
+                socios fungen como tus “avales” para la solicitud de tu crédito.
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -182,173 +184,7 @@ const ObligadosSolidarios = ({ navigation }) => {
                   backgroundColor: "white",
                   paddingTop: 15,
                 }}
-              >
-                {/* Campos para introducir de la información general */}
-
-                <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
-                  ¿Ha desempeñado algún cargo político?
-                </Text>
-                <View style={{ paddingHorizontal: 20 }}>
-                  <RadioForm
-                    radio_props={dataPolitico}
-                    initial={
-                      credit.politico === "Si"
-                        ? 0
-                        : credit.politico === "No"
-                        ? 1
-                        : -1
-                    }
-                    onPress={(value) =>
-                      setCredit({ ...credit, politico: value })
-                    }
-                    buttonColor={"#060B4D"}
-                    buttonSize={10}
-                    selectedButtonColor={"#060B4D"}
-                    labelStyle={{
-                      fontSize: 16,
-                      color: "#060B4D",
-                      fontFamily: "opensanssemibold",
-                      marginBottom: 5,
-                    }}
-                    animation={false}
-                  />
-                </View>
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
-                <View style={{ paddingHorizontal: 20 }}>
-                  <RadioForm
-                    radio_props={dataDomicilio}
-                    initial={
-                      credit.domicilio === "Propio"
-                        ? 0
-                        : credit.domicilio === "Rentado"
-                        ? 1
-                        : -1
-                    }
-                    onPress={(value) =>
-                      setCredit({ ...credit, domicilio: value })
-                    }
-                    buttonColor={"#060B4D"}
-                    buttonSize={10}
-                    selectedButtonColor={"#060B4D"}
-                    labelStyle={{
-                      fontSize: 16,
-                      color: "#060B4D",
-                      fontFamily: "opensanssemibold",
-                      marginBottom: 5,
-                    }}
-                    animation={false}
-                  />
-                </View>
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>Teléfono Casa</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(value) =>
-                    setCredit({ ...credit, telCasa: value })
-                  }
-                  value={credit.telCasa}
-                  keyboardType="phone-pad"
-                  placeholder="10 dígitos"
-                />
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(value) =>
-                    setCredit({ ...credit, telTrabajo: value })
-                  }
-                  value={credit.telTrabajo}
-                  keyboardType="phone-pad"
-                  placeholder="10 dígitos"
-                />
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>Celular</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingHorizontal: 15,
-                    alignItems: "center",
-                    marginTop: -5,
-                    marginBottom: 5,
-                  }}
-                >
-                  <TouchableOpacity onPress={() => setPickerVisible(true)}>
-                    <Entypo
-                      name="chevron-thin-down"
-                      size={15}
-                      color="#060B4D"
-                      style={{ marginRight: 5 }}
-                    />
-                  </TouchableOpacity>
-                  <CountryPicker
-                    withFilter
-                    countryCode={countryCode}
-                    withCallingCode
-                    withCloseButton
-                    onSelect={(country) => {
-                      const { cca2, callingCode } = country;
-                      setCountryCode(cca2);
-                      setCallingCode(callingCode[0]);
-                      setCredit({ ...credit, celular: "", celularShow: "" });
-                    }}
-                    visible={pickerVisible}
-                    onClose={() => setPickerVisible(false)}
-                  />
-                  <Text style={styles.countryCodeText}>
-                    +{callingCode} {" |"}
-                  </Text>
-                  <TextInput
-                    style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
-                    onChangeText={(text) =>
-                      formatPhoneNumber(text, countryCode)
-                    }
-                    value={credit.celularShow}
-                    keyboardType="phone-pad"
-                    placeholder="10 dígitos"
-                  />
-                </View>
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>
-                  Cuenta bancaria a depositar fondos
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(value) =>
-                    setCredit({ ...credit, cuenta_bancaria: value })
-                  }
-                  value={credit.cuenta_bancaria}
-                  placeholder="16 dígitos"
-                  maxLength={16}
-                  keyboardType="numeric"
-                />
-                <View style={styles.separacion} />
-
-                <View style={styles.separacion} />
-                <View
-                  style={[
-                    styles.separacion,
-                    { backgroundColor: "#f2f2f2ff", height: 5 },
-                  ]}
-                />
-                <View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
-                  <TextInput
-                    style={styles.inputDescription}
-                    onChangeText={(value) =>
-                      setCredit({ ...credit, descripcion: value })
-                    }
-                    value={credit.descripcion}
-                    placeholder="Breve descripción de las necesidades del crédito"
-                    multiline={true}
-                    maxLength={300}
-                  />
-                </View>
-              </View>
+              ></View>
             </View>
             {/* Boton de Continuar */}
             <View style={{ marginBottom: 20, zIndex: -1 }}>
