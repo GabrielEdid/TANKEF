@@ -10,9 +10,9 @@ import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { APIGet } from "../../API/APIService";
 import { CreditContext } from "../../hooks/CreditContext";
 import ObligadoSolidario from "../../components/ObligadoSolidario";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
@@ -26,18 +26,44 @@ const ObligadosSolidarios = ({ navigation }) => {
   const { flujo } = route.params;
   // Estados y Contexto
   const { credit, setCredit } = useContext(CreditContext);
+  const [network, setNetwork] = useState([]);
   const [disabled, setDisabled] = useState(true);
+
+  // Funcion para convertir la primera letra de cada palabra en mayúscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
 
   // Efecto para deshabilitar el botón de continuar si no hay ningun obligado
   useEffect(() => {
     setDisabled(credit.obligados_solidarios.length === 0 ? true : false);
   }, [credit.obligados_solidarios]);
 
-  // Function to format the phone number as user types
-  const formatPhoneNumber = (text, country) => {
-    const formatter = new AsYouType(country);
-    const formatted = formatter.input(text);
-    setCredit({ ...credit, celular: text, celularShow: formatted });
+  // Llama a fetchNetwork cuando el componente se monta
+  useEffect(() => {
+    fetchNetwork();
+  }, []);
+
+  // Funcion para obtener los miembros de la red del usuario loggeado
+  const fetchNetwork = async () => {
+    const url = `/api/v1/network/members`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener la red del usuario:", result.error);
+    } else {
+      const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
+      console.log("Resultados de la red:", filteredResults);
+      setNetwork(filteredResults);
+      setUser({ ...user, conexiones: filteredResults.length });
+    }
   };
 
   // Componente Visual
@@ -84,24 +110,15 @@ const ObligadosSolidarios = ({ navigation }) => {
           </Text>
         </View>
         <View style={{ flex: 1 }}>
-          <ObligadoSolidario
-            nombre={"Gabriel Edid Harari"}
-            userID={10}
-            imagen={require("../../../assets/images/Fotos_Personas/Antonio.png")}
-            select={true}
-          />
-          <ObligadoSolidario
-            nombre={"Natasha Ocasio Romanoff"}
-            userID={11}
-            imagen={require("../../../assets/images/Fotos_Personas/Natahsa.png")}
-            select={true}
-          />
-          <ObligadoSolidario
-            nombre={"Bruce García Banner"}
-            userID={12}
-            imagen={require("../../../assets/images/Fotos_Personas/Bruce.png")}
-            select={false}
-          />
+          {network.map((network, index) => (
+            <ObligadoSolidario
+              key={index}
+              userID={network.id}
+              nombre={titleCase(network.full_name)}
+              imagen={network.avatar ? network.avatar : imageMap["Blank"]}
+              select={true}
+            />
+          ))}
         </View>
         {/* Boton de Continuar */}
         <View

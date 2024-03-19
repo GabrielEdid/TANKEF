@@ -28,7 +28,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
  *   userID="123"
  *   imagen="https://ruta/a/imagen.jpg"
  *   nombre="John Doe"
- *   select=true // Maneja si es seleccionable o desechable
+ *   select={true} // Maneja si es seleccionable o desechable
  * />
  */
 
