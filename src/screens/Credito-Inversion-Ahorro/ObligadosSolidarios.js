@@ -117,6 +117,7 @@ const ObligadosSolidarios = ({ navigation }) => {
               nombre={titleCase(network.full_name)}
               imagen={network.avatar ? network.avatar : imageMap["Blank"]}
               select={true}
+              button={true}
             />
           ))}
         </View>

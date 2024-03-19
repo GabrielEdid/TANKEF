@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -29,6 +29,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
  *   imagen="https://ruta/a/imagen.jpg"
  *   nombre="John Doe"
  *   select={true} // Maneja si es seleccionable o desechable
+ *   button={true} // Maneja si se muestra el botón de eliminar o seleccionar
  * />
  */
 
@@ -57,35 +58,61 @@ const ObligadoSolidario = (props) => {
   }
 
   const handlePress = () => {
-    if (props.select === true) {
-      // Alternar el estado de seleccionado
-      setSelected(!selected);
+    // Si se trata de seleccionar un obligado solidario
+    if (props.button && props.select) {
+      const isSelected = credit.obligados_solidarios.some(
+        (obligado) => obligado.userID === props.userID
+      );
 
-      // Actualizar el contexto de crédito
-      if (!selected) {
-        // Agregar a la lista de obligados solidarios si aún no está seleccionado
-        setCredit({
-          ...credit,
-          obligados_solidarios: [
-            ...credit.obligados_solidarios,
-            { userID: props.userID, nombre: props.nombre },
-          ],
-        });
-      } else {
-        // Eliminar de la lista de obligados solidarios si ya está seleccionado
-        const filteredObligados = credit.obligados_solidarios.filter(
-          (item) => item.userID !== props.userID
+      // Si ya está seleccionado, lo eliminamos de la lista
+      if (isSelected) {
+        const updatedObligados = credit.obligados_solidarios.filter(
+          (obligado) => obligado.userID !== props.userID
         );
-        setCredit({
-          ...credit,
-          obligados_solidarios: filteredObligados,
-        });
+        setCredit((prevState) => ({
+          ...prevState,
+          obligados_solidarios: updatedObligados,
+        }));
+      } else {
+        // Si no está seleccionado, lo agregamos a la lista
+        const newObligado = {
+          userID: props.userID,
+          nombre: props.nombre,
+          imagen: props.imagen,
+        };
+        setCredit((prevState) => ({
+          ...prevState,
+          obligados_solidarios: [
+            ...prevState.obligados_solidarios,
+            newObligado,
+          ],
+        }));
       }
-    } else {
-      // Si no es seleccionable, manejar otro caso, por ejemplo, mostrar un modal
-      setModalVisible(true);
+      // Alternar el estado de seleccionado
+      setSelected(!isSelected);
+    }
+
+    // Si se trata de eliminar un obligado solidario
+    else if (props.button && !props.select) {
+      // Directamente eliminamos el obligado solidario sin alterar el estado de `selected`
+      const updatedObligados = credit.obligados_solidarios.filter(
+        (obligado) => obligado.userID !== props.userID
+      );
+      setCredit((prevState) => ({
+        ...prevState,
+        obligados_solidarios: updatedObligados,
+      }));
+      // Opcional: manejar si se debe ocultar el componente tras eliminar
+      setIsVisible(false);
     }
   };
+  // Establece el estado inicial de `selected` basado en si el userID ya está en la lista
+  useEffect(() => {
+    const isSelected = credit.obligados_solidarios.some(
+      (obligado) => obligado.userID === props.userID
+    );
+    setSelected(isSelected);
+  }, [credit.obligados_solidarios, props.userID]);
 
   // Componente visual
   return (
@@ -95,29 +122,31 @@ const ObligadoSolidario = (props) => {
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
       </View>
-      {/* Para Mostrar Boton de Eliminar */}
-      <TouchableOpacity
-        style={{ alignSelf: "center" }}
-        onPress={() => handlePress()}
-      >
-        {props.select ? (
-          <Ionicons
-            name="checkmark-circle"
-            size={30}
-            color={selected ? "#2FF690" : "#E9E9E9"}
-          />
-        ) : (
-          <FontAwesome
-            name="trash-o"
-            size={25}
-            color="#F95C5C"
-            style={{ marginRight: 5 }}
-          />
-        )}
-      </TouchableOpacity>
+      {/* Para Mostrar Boton de Eliminar o Seleccionar */}
+      {props.button && (
+        <TouchableOpacity
+          style={{ alignSelf: "center" }}
+          onPress={() => handlePress()}
+        >
+          {props.select ? (
+            <Ionicons
+              name="checkmark-circle"
+              size={30}
+              color={selected ? "#2FF690" : "#E9E9E9"}
+            />
+          ) : (
+            <FontAwesome
+              name="trash-o"
+              size={25}
+              color="#F95C5C"
+              style={{ marginRight: 5 }}
+            />
+          )}
+        </TouchableOpacity>
+      )}
 
       {/* Modal para mostrar si se presióna el boton de eliminar */}
-      <Modal
+      {/*<Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -146,7 +175,7 @@ const ObligadoSolidario = (props) => {
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
-      </Modal>
+        </Modal>*/}
       {/* Overlay para mostrar un indicator al eliminar */}
       {isLoading && (
         <View style={styles.overlay}>

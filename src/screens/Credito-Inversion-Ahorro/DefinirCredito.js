@@ -20,6 +20,7 @@ import MontoyPlazoCredito from "../../components/MontoyPlazoCredito";
 import DatosGeneralesCredito from "../../components/DatosGeneralesCredito";
 import DatosCotizadorCredito from "../../components/DatosCotizadorCredito";
 import ModalCotizadorCredito from "../../components/ModalCotizadorCredito";
+import ObligadoSolidario from "../../components/ObligadoSolidario";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -42,6 +43,8 @@ const DefinirCredito = ({ navigation }) => {
     "1de3": require("../../../assets/images/1de3.png"),
     "2de3": require("../../../assets/images/2de3.png"),
     "3de3": require("../../../assets/images/3de3.png"),
+    Blank: require("../../../assets/images/blankAvatar.jpg"),
+    AddSign: require("../../../assets/images/AddSign.png"),
   };
 
   const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
@@ -259,7 +262,34 @@ const DefinirCredito = ({ navigation }) => {
 
             {credit.paso >= 3 && (
               <>
-                <Text>Se muestran los obligados solidarios</Text>
+                {credit.obligados_solidarios.map((obligado, index) => (
+                  <>
+                    <ObligadoSolidario
+                      key={index}
+                      userID={obligado.userID}
+                      nombre={obligado.nombre}
+                      imagen={
+                        obligado.imagen ? obligado.imagen : imageMap["Blank"]
+                      }
+                      select={false}
+                      button={true}
+                    />
+                  </>
+                ))}
+                <TouchableOpacity
+                  onPress={() => [
+                    navigation.navigate("ObligadosSolidarios", {
+                      flujo: flujo,
+                    }),
+                    setCredit({ ...credit, paso: 2 }),
+                  ]}
+                >
+                  <ObligadoSolidario
+                    nombre={"Agregar obligado solidario"}
+                    imagen={imageMap["AddSign"]}
+                    button={false}
+                  />
+                </TouchableOpacity>
                 {credit.paso >= 4 && <DatosGeneralesCredito />}
               </>
             )}
@@ -333,7 +363,15 @@ const DefinirCredito = ({ navigation }) => {
                   borderWidth: 1,
                 },
               ]}
-              onPress={() => setCredit({ ...credit, paso: credit.paso - 1 })}
+              onPress={() => {
+                credit.paso === 3
+                  ? setCredit({
+                      ...credit,
+                      paso: credit.paso - 1,
+                      obligados_solidarios: [],
+                    })
+                  : setCredit({ ...credit, paso: credit.paso - 1 });
+              }}
             >
               <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
                 Atrás
