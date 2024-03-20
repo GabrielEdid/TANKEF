@@ -92,28 +92,27 @@ const DatosGeneralesCredito = () => {
             {credit.descripcion}
           </Text>
         </View>
-      </View>
-      <View>
-        <TouchableOpacity
-          style={{
-            marginTop: 10,
-            alignSelf: "center",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-          onPress={() => [
-            setCredit({ ...credit, paso: 2 }),
-            navigation.navigate("InfoGeneral", { flujo: "Crédito" }),
-          ]}
-        >
-          <Image
-            style={{ width: 23, height: 22, marginBottom: 10 }}
-            source={require("../../assets/images/Sliders.png")}
-          />
-          <Text style={[styles.bodyCampo, { paddingLeft: 5 }]}>
-            Editar información general
-          </Text>
-        </TouchableOpacity>
+        <View style={{ alignSelf: "center", marginTop: 15, marginBottom: -5 }}>
+          <TouchableOpacity
+            style={{
+              alignSelf: "center",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+            onPress={() => [
+              setCredit({ ...credit, paso: 2 }),
+              navigation.navigate("InfoGeneral", { flujo: "Crédito" }),
+            ]}
+          >
+            <Image
+              style={{ width: 23, height: 22, marginBottom: 10 }}
+              source={require("../../assets/images/Sliders.png")}
+            />
+            <Text style={[styles.bodyCampo, { paddingLeft: 5 }]}>
+              Editar información general
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   );

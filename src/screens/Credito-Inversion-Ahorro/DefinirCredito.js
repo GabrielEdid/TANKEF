@@ -9,9 +9,10 @@ import {
   Alert,
   Image,
 } from "react-native";
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import RadioForm from "react-native-simple-radio-button";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { CreditContext } from "../../hooks/CreditContext";
@@ -106,6 +107,30 @@ const DefinirCredito = ({ navigation }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (credit.obligados_solidarios.length === 0 && credit.paso >= 3) {
+      Alert.alert(
+        "¡Atención!",
+        "Debes tener al menos un obligado solidario para solicitar un crédito por tu red."
+      );
+      setCredit({ ...credit, paso: 2 });
+      navigation.navigate("ObligadosSolidarios", { flujo: flujo });
+    }
+  }, [credit.obligados_solidarios]);
+
+  const [dataAceptar] = useState([{ label: "Si acepto", value: "Si" }]);
+
+  const [dataActuo] = useState([
+    {
+      label: "Actúo a nombre y por cuenta propia.",
+      value: "Actúo a nombre y por cuenta propia.",
+    },
+    {
+      label: "Actúo a nombre y por cuenta de un tercero(*).",
+      value: "Actúo a nombre y por cuenta de un tercero.",
+    },
+  ]);
 
   // Componente Visual
   return (
@@ -276,6 +301,7 @@ const DefinirCredito = ({ navigation }) => {
                     />
                   </>
                 ))}
+
                 <TouchableOpacity
                   onPress={() => [
                     navigation.navigate("ObligadosSolidarios", {
@@ -290,7 +316,74 @@ const DefinirCredito = ({ navigation }) => {
                     button={false}
                   />
                 </TouchableOpacity>
-                {credit.paso >= 4 && <DatosGeneralesCredito />}
+                {credit.paso >= 4 && (
+                  <>
+                    <DatosGeneralesCredito />
+                    <View style={styles.contenedores}>
+                      <Text style={styles.subTexto}>
+                        Acepto se me investigue en la Sociedad de Información
+                        Crediticia (SIC)
+                      </Text>
+                      <RadioForm
+                        radio_props={dataAceptar}
+                        initial={-1}
+                        onPress={(value) =>
+                          setCredit({ ...credit, aceptarSIC: value })
+                        }
+                        buttonColor={"#060B4D"}
+                        buttonSize={10}
+                        selectedButtonColor={"#060B4D"}
+                        labelStyle={{
+                          fontSize: 16,
+                          color: "#060B4D",
+                          fontFamily: "opensanssemibold",
+                        }}
+                        animation={false}
+                        style={{ alignSelf: "baseline", marginTop: 10 }}
+                      />
+                      <View
+                        style={[styles.separacion, { marginVertical: 10 }]}
+                      />
+                      <Text style={styles.subTexto}>
+                        Declaro que soy el propietario real de los recursos y/o
+                        beneficiario del crédito, por lo que el origen
+                        procedencia de los recursos que Tu Kapital en Evolución,
+                        SAPI de CV, SOFOM, ENR, recibirá respecto de los
+                        servicios que solicitep proceden de fuentes lícitas y
+                        son de mi propiedad. Por lo que declaro que:
+                      </Text>
+                      <RadioForm
+                        radio_props={dataActuo}
+                        initial={-1}
+                        onPress={(value) =>
+                          setCredit({ ...credit, actuoComo: value })
+                        }
+                        buttonColor={"#060B4D"}
+                        buttonSize={10}
+                        selectedButtonColor={"#060B4D"}
+                        labelStyle={{
+                          fontSize: 16,
+                          color: "#060B4D",
+                          fontFamily: "opensanssemibold",
+                          marginBottom: 10,
+                        }}
+                        animation={false}
+                        style={{ alignSelf: "baseline", marginTop: 10 }}
+                      />
+                      <Text
+                        style={[
+                          styles.subTexto,
+                          { fontSize: 12, marginTop: 10 },
+                        ]}
+                      >
+                        (*) En caso de actuar a nombre de un tercero, es
+                        necesario la siguiente información: Identificación
+                        oficial vigente, datos generales y comprobante de
+                        domicilio recientes.
+                      </Text>
+                    </View>
+                  </>
+                )}
               </>
             )}
           </>
@@ -450,6 +543,11 @@ const styles = StyleSheet.create({
     marginTop: 12,
     backgroundColor: "#060B4D",
   },
+  separacion: {
+    height: 1,
+    width: "100%",
+    backgroundColor: "#cecfdbff",
+  },
   botonContinuar: {
     marginTop: 15,
     marginBottom: 20,
@@ -477,6 +575,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "opensans",
     fontSize: 16,
+  },
+  subTexto: {
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    alignSelf: "baseline",
+    fontSize: 14,
   },
   /*inputNombre: {
     marginTop: 5,

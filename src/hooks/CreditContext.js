@@ -23,6 +23,8 @@ const initialState = {
   celular: "",
   cuenta_bancaria: "",
   descripcion: "",
+  aceptarSIC: "",
+  actuoComo: "",
   paso: 1,
   // Variables para el modal
   modalCotizadorVisible: false,
