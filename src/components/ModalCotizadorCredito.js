@@ -146,10 +146,6 @@ const ModalCotizadorCredito = () => {
                     setCredit({
                       ...credit,
                       paso: credit.paso + 1,
-                      total_a_pagar: "$38,739.30",
-                      pago_mensual: "$6,522.59",
-                      comision_por_apertura: "2.0%",
-                      tasa_de_operacion: "12.0%",
                       modalCotizadorVisible: false,
                     });
                   }
