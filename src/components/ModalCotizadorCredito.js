@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
-import { Ionicons } from "@expo/vector-icons";
 import { CreditContext } from "../hooks/CreditContext";
+import { Ionicons } from "@expo/vector-icons";
 
 /**
  * `Conexion` es un componente que muestra información de una conexión específica,
@@ -52,9 +52,9 @@ const ModalCotizadorCredito = () => {
               style={{ width: 63, height: 50, marginBottom: 10 }}
               source={require("../../assets/images/BillCredito.png")}
             />
-            <Text style={styles.modalText}>PagoMensual</Text>
+            <Text style={styles.modalText}>Pago Mensual</Text>
             <Text style={[styles.modalText, { fontSize: 24 }]}>
-              $6,522.59 MXN
+              {credit.pago_mensual}
             </Text>
             <View
               style={[
@@ -71,7 +71,9 @@ const ModalCotizadorCredito = () => {
                 <Text style={[styles.concepto, { fontSize: 13 }]}>
                   Comisión por{"\n"}apertura
                 </Text>
-                <Text style={styles.valorConcepto}>2.0%</Text>
+                <Text style={styles.valorConcepto}>
+                  {credit.comision_por_apertura}
+                </Text>
               </View>
               <Ionicons
                 name="remove-outline"
@@ -83,7 +85,9 @@ const ModalCotizadorCredito = () => {
                 <Text style={[styles.concepto, { fontSize: 13 }]}>
                   Tasa de{"\n"}operación
                 </Text>
-                <Text style={styles.valorConcepto}>12.0%</Text>
+                <Text style={styles.valorConcepto}>
+                  {credit.tasa_de_operacion}
+                </Text>
               </View>
               <Ionicons
                 name="remove-outline"
@@ -95,7 +99,9 @@ const ModalCotizadorCredito = () => {
                 <Text style={[styles.concepto, { fontSize: 13 }]}>
                   Pago{"\n"}total
                 </Text>
-                <Text style={styles.valorConcepto}>$38,739.30</Text>
+                <Text style={[styles.valorConcepto, { fontSize: 14 }]}>
+                  {credit.total_a_pagar} MXN
+                </Text>
               </View>
             </View>
             <Text style={styles.modalTextBody}>

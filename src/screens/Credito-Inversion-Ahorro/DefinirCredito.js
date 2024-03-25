@@ -15,6 +15,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import RadioForm from "react-native-simple-radio-button";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { APIGet } from "../../API/APIService";
 import { CreditContext } from "../../hooks/CreditContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import MontoyPlazoCredito from "../../components/MontoyPlazoCredito";
@@ -50,6 +51,32 @@ const DefinirCredito = ({ navigation }) => {
 
   const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
 
+  // Función para hacer la cotizacion al API
+  const cotizar = async () => {
+    console.log(credit.plazo, credit.montoNumeric);
+    const url = `/api/v1/simulator?term=${credit.plazo}&type=credit&amount=${credit.montoNumeric}`;
+
+    const response = await APIGet(url);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al cotizar:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudo hacer la cotización. Intente nuevamente."
+      );
+    } else {
+      console.log("Cotización exitosa:", response);
+      setCredit({
+        ...credit,
+        modalCotizadorVisible: true,
+        comision_por_apertura: response.data.commision,
+        tasa_de_operacion: response.data.rate,
+        pago_mensual: response.data.amount,
+        total_a_pagar: response.data.total,
+      });
+    }
+  };
+
   // Función para cambiar el focus de la pantalla
   const handleFocus = (tab) => {
     if (tab === focus) return;
@@ -79,7 +106,7 @@ const DefinirCredito = ({ navigation }) => {
       if (credit.paso === 4) {
         navigation.navigate("MiTankef");
       } else if (credit.paso === 1) {
-        setCredit({ ...credit, modalCotizadorVisible: true });
+        cotizar();
       } else if (credit.paso === 2) {
         navigation.navigate("ObligadosSolidarios", { flujo: flujo });
       } else if (credit.paso === 3) {

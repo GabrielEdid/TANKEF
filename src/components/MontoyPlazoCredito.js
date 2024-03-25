@@ -70,16 +70,17 @@ const MontoyPlazoCredito = () => {
 
   // Funcion para manejar el cambio de valor en el slider
   const handleSliderChange = (value) => {
-    // Actualiza el valor numérico directamente con el valor del slider
-    setCredit({ ...credit, montoNumeric: value });
-
-    // Formatea el valor para mostrarlo adecuadamente en el input
-    const formattedValue = value
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Actualiza el estado del texto del input con el valor formateado
-    setCredit({ ...credit, montoShow: formattedValue });
+    // Use functional update form to ensure we're working with the most current state
+    setCredit((currentCredit) => {
+      const formattedValue = value
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return {
+        ...currentCredit,
+        montoNumeric: value,
+        montoShow: formattedValue,
+      };
+    });
   };
 
   // Funcion para formatear el input de monto
