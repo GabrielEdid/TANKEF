@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,11 @@ import {
   Image,
 } from "react-native";
 // Importaciones de Componentes y Hooks
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, Entypo, AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import Movimiento from "./Movimiento";
 
 const screenWidth = Dimensions.get("window").width;
+const widthThird = screenWidth / 3;
 const widthHalf = screenWidth / 2;
 
 /**
@@ -29,6 +31,8 @@ const widthHalf = screenWidth / 2;
  */
 
 const MiTankefCaja = (props) => {
+  // Estados y Contexto
+  const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
   // Mapa de imágenes
   const imageMap = {
     Bill: require("../../assets/images/BillInvest.png"),
@@ -38,48 +42,44 @@ const MiTankefCaja = (props) => {
   // Componente visual
   return (
     <View>
-      {/* Vista de las distintas cajas de ahorro */}
+      {/* Vista de las distintas inversiones */}
       <View style={{ flexDirection: "row", marginBottom: 5 }}>
         <TouchableOpacity
           style={{
             justifyContent: "center",
             alignItems: "center",
             marginLeft: 10,
-            borderColor: "#bcbeccff",
-            borderWidth: 2,
+            backgroundColor: "white",
             paddingHorizontal: 17.5,
-            paddingVertical: 20,
+            paddingVertical: 5,
+            width: 120,
             borderRadius: 10,
-            maxWidth: 95,
           }}
         >
-          <FontAwesome5
-            name="piggy-bank"
-            size={24}
-            color="#bcbeccff"
-            style={{ marginBottom: 5 }}
-          />
+          <Entypo name="plus" size={30} color="black" />
           <Text
             style={{
-              color: "#bcbeccff",
+              color: "#060B4D",
               fontFamily: "opensansbold",
               textAlign: "center",
+              fontSize: 12,
+              marginTop: -5,
             }}
           >
-            Caja de ahorro
+            Nueva caja{"\n"}de ahorro
           </Text>
         </TouchableOpacity>
 
-        {/* Componente repetible con nombre y valor de la caja */}
+        {/* Componente repetible */}
         <TouchableOpacity
           style={{
             alignItems: "center",
             marginLeft: 10,
-            paddingVertical: 20,
-            paddingHorizontal: 5,
+            paddingVertical: 10,
+            paddingHorizontal: 10,
             borderRadius: 10,
-            maxWidth: 100,
-            backgroundColor: "white",
+            width: 120,
+            backgroundColor: "#2FF690",
           }}
         >
           <FontAwesome5
@@ -91,48 +91,120 @@ const MiTankefCaja = (props) => {
           <Text
             style={{
               color: "#060B4D",
-              fontFamily: "opensans",
+              fontFamily: "opensanssemibold",
               textAlign: "center",
+              fontSize: 12,
             }}
           >
-            Caja Roberto Hijo
-          </Text>
-          <Text style={{ color: "#060B4D", fontFamily: "opensansbold" }}>
-            $50K
+            Caja Ruiz
           </Text>
         </TouchableOpacity>
       </View>
-
-      {/* Valores relevantes generales de la caja de ahorro */}
-      <View
-        style={{
-          justifyContent: "space-between",
-          backgroundColor: "white",
-        }}
-      >
-        <View
-          style={{
-            paddingVertical: 10,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
+      <View style={styles.tabsContainer}>
+        {/* Boton Tab Balance */}
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setFocus("Balance")}
         >
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Total acumulado (x3)</Text>
-            <Text style={styles.monto}>$200,000.00</Text>
-          </View>
-          <Ionicons
-            name="remove-outline"
-            size={30}
-            color="#e1e2ebff"
-            style={styles.line}
-          />
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <Text style={styles.tituloMonto}>Total rendimiento neto (x3)</Text>
-            <Text style={styles.monto}>$1,894.55</Text>
-          </View>
-        </View>
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: focus === "Balance" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  focus === "Balance" ? "opensansbold" : "opensanssemibold",
+              },
+            ]}
+          >
+            Balance General
+          </Text>
+          {focus === "Balance" ? <View style={styles.focusLine} /> : null}
+        </TouchableOpacity>
+
+        {/* Boton Tab Movimientos */}
+        <TouchableOpacity
+          style={styles.tabButton}
+          onPress={() => setFocus("Movimientos")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              {
+                color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
+                fontFamily:
+                  focus === "Movimientos" ? "opensansbold" : "opensanssemibold",
+              },
+            ]}
+          >
+            Movimientos
+          </Text>
+          {focus === "Movimientos" ? <View style={styles.focusLine} /> : null}
+        </TouchableOpacity>
       </View>
+      {/* Vista de la información total de las inversiónes */}
+      {focus === "Balance" && (
+        <>
+          <View
+            style={{
+              justifyContent: "space-between",
+              backgroundColor: "white",
+              paddingHorizontal: 20,
+              paddingVertical: 15,
+              alignItems: "center",
+              marginTop: 3,
+            }}
+          >
+            <Text style={styles.tituloMonto}>Monto acumulado</Text>
+            <Text style={styles.monto}>$25,000.00 MXN</Text>
+          </View>
+
+          <View style={styles.container}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Folio</Text>
+              <Text style={styles.valorConcepto}>4225fd6f64</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Plazo de ahorro</Text>
+              <Text style={styles.valorConcepto}>12 meses</Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Tasa de interés</Text>
+              <Text style={styles.valorConcepto}>$91.67</Text>
+            </View>
+          </View>
+        </>
+      )}
+
+      {focus === "Movimientos" && (
+        <>
+          <View>
+            <Movimiento
+              movimiento={"Inicio Caja"}
+              fecha={"10.ENE.2024"}
+              monto={"$10,000.00 MXN"}
+              positive={true}
+            />
+            <Movimiento
+              movimiento={"Abono"}
+              fecha={"10.FEB.2024"}
+              monto={"$5,000.00 MXN"}
+              positive={true}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -146,25 +218,59 @@ const styles = StyleSheet.create({
   },
   monto: {
     fontFamily: "opensansbold",
-    fontSize: 18,
+    fontSize: 22,
     color: "#060B4D",
   },
   line: {
     transform: [{ rotate: "90deg" }],
-    position: "absolute",
-    left: widthHalf - 10,
-    alignSelf: "center",
+    right: 10,
+  },
+  bill: {
+    height: 20,
+    width: 20,
+    marginBottom: 5,
+    tintColor: "#060B4D",
+  },
+  //Estilos para la segunda barra de Tabs
+  tabsContainer: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    paddingTop: 16,
+    justifyContent: "space-between",
+  },
+  tabButton: {
+    alignItems: "center",
+    flex: 1,
+  },
+  tabText: {
+    fontFamily: "opensansbold",
+    fontSize: 16,
+  },
+  focusLine: {
+    height: 4,
+    width: widthHalf,
+    marginTop: 12,
+    backgroundColor: "#060B4D",
+  },
+  container: {
+    backgroundColor: "white",
+    marginTop: 3,
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   concepto: {
-    fontFamily: "opensansbold",
-    fontSize: 15,
+    fontFamily: "opensans",
+    fontSize: 14,
     color: "#060B4D",
-    flex: 1,
+    textAlign: "center",
+    marginBottom: 5,
   },
   valorConcepto: {
     fontFamily: "opensanssemibold",
-    fontSize: 15,
+    fontSize: 16,
     color: "#060B4D",
+    textAlign: "center",
   },
   seperacion: {
     width: "100%",

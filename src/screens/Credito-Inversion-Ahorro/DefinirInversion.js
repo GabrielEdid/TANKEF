@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
+  Alert,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { APIGet, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -30,7 +30,71 @@ const DefinirInversion = ({ navigation }) => {
   const [montoNumeric, setMontoNumeric] = useState(0);
   const [montoShow, setMontoShow] = useState("");
   const [plazo, setPlazo] = useState("");
+  const [retornoNeto, setRetornoNeto] = useState("");
+  const [inversionInicial, setInversionInicial] = useState("");
+  const [tasa, setTasa] = useState("");
+  const [impuesto, setImpuesto] = useState("");
   const [focusTab, setFocusTab] = useState("");
+
+  // Función para hacer la cotizacion al API
+  useEffect(() => {
+    const fetchCotizacion = async () => {
+      console.log(plazo, montoNumeric);
+      const url = `/api/v1/simulator?term=${plazo}&type=investment&amount=${montoNumeric}`;
+
+      try {
+        const response = await APIGet(url);
+        if (response.error) {
+          // Manejar el error
+          console.error("Error al cotizar:", response.error);
+          Alert.alert(
+            "Error",
+            "No se pudo hacer la cotización. Intente nuevamente."
+          );
+        } else {
+          console.log("Cotización exitosa:", response);
+          /*setCredit((currentCredit) => ({
+            ...currentCredit,
+            modalCotizadorVisible: true,
+            comision_por_apertura: response.data.commision,
+            tasa_de_operacion: response.data.rate,
+            pago_mensual: response.data.amount,
+            total_a_pagar: response.data.total,
+          }));*/
+        }
+      } catch (error) {
+        console.error("Error en la petición de cotización:", error);
+        Alert.alert("Error", "Ha ocurrido un error al realizar la cotización.");
+      }
+    };
+    if (montoNumeric >= 5000 && plazo) fetchCotizacion();
+  }, [montoNumeric, plazo]);
+
+  const handlePress = async () => {
+    const url = "/api/v1/investments";
+    console.log(nombreInversion, montoNumeric, plazo);
+    const data = {
+      investment: {
+        name: nombreInversion,
+        amount: montoNumeric,
+        term: plazo,
+        condition: true,
+      },
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al crear la inversión:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudo crear la Inversión. Intente nuevamente."
+      );
+    } else {
+      // Continuar en caso de éxito
+      navigation.navigate("Beneficiarios", { flujo: flujo });
+    }
+  };
 
   // Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
@@ -296,7 +360,7 @@ const DefinirInversion = ({ navigation }) => {
             { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
           ]}
           onPress={() => {
-            navigation.navigate("Beneficiarios", { flujo: flujo });
+            handlePress();
           }}
           disabled={!isAcceptable}
         >
