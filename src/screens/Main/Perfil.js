@@ -20,7 +20,7 @@ import { UserContext } from "../../hooks/UserContext";
 import ProgressBar from "../../components/ProgressBar";
 import { Feather } from "@expo/vector-icons";
 import Post from "../../components/Post";
-import ModalAtencion from "../../components/ModalAtencion";
+import ModalEstatus from "../../components/ModalEstatus";
 
 const Perfil = () => {
   // Estados y contexto
@@ -285,12 +285,14 @@ const Perfil = () => {
           </View>
         )}
       </ScrollView>
-      <ModalAtencion
+      {/* VISUALIZACION DE MODAL DE ATENCIÓN
+      <ModalEstatus
+        titulo={"¡Atención!"}
         texto={
           "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
         }
         imagen={"Alert"}
-      />
+      />*/}
     </>
   );
 };

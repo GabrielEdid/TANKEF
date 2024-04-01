@@ -19,11 +19,13 @@ import { Ionicons } from "@expo/vector-icons";
  * Depenediendo de sus props sera el texto y la imagen mostrada.
  *
  * Props:
+ * - `titulo`: titulo del modal. Puede ser "Atención!" o "Felicidades!".
  * - `texto`: texto que tendra el modal.
  * - `imagen`: imagen que tendra el modal. Puede ser "Alert", "RedAlert", "Mail" o "Ready".
  *
  * Ejemplo (o ver en ):
  *  <ModalAtencion
+ *     titulo={"Atencion!"}
  *      texto={
  *        "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
  *      }
@@ -53,7 +55,7 @@ const ModalAtencion = (props) => {
               style={{ width: 60, height: 60, marginBottom: 10 }}
               source={imageMap[props.imagen]}
             />
-            <Text style={styles.modalText}>¡Atención!</Text>
+            <Text style={styles.modalText}>{props.titulo}</Text>
             <Text style={styles.texto}>{props.texto}</Text>
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
