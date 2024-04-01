@@ -16,25 +16,18 @@ import { Ionicons } from "@expo/vector-icons";
 /**
  * `ModalAtencion` es un componente que muestra información de un credito específico,
  * como una tarjeta interactuable. Da el estatus de un credito y ayuda con los flujos.
+ * Depenediendo de sus props sera el texto y la imagen mostrada.
  *
  * Props:
  * - `texto`: texto que tendra el modal.
+ * - `imagen`: imagen que tendra el modal. Puede ser "Alert", "RedAlert", "Mail" o "Ready".
  *
- * Tres casos unicos de uso (o ver en ):
+ * Ejemplo (o ver en ):
  *  <ModalAtencion
  *      texto={
  *        "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
  *      }
- *    />
- *  <ModalAtencion
- *      texto={
- *        "El dinero ha sido transferido a la cuenta ****8950 Bancomer."
- *      }
- *    />
- *  <ModalAtencion
- *      texto={
- *        "¡La firma del contrato se realizó con éxito! ¡Gracias por tu confianza en nosotros!"
- *      }
+ *      imagen={"Alert"}
  *    />
  */
 
@@ -42,6 +35,13 @@ const ModalAtencion = (props) => {
   const navigation = useNavigation();
   // Contexto de crédito
   const { credit, setCredit } = useContext(CreditContext);
+
+  const imageMap = {
+    Alert: require("../../assets/images/Alert.png"),
+    RedAlert: require("../../assets/images/RedAlert.png"),
+    Mail: require("../../assets/images/Mail.png"),
+    Ready: require("../../assets/images/Ready.png"),
+  };
 
   // Componente visual
   return (
@@ -51,7 +51,7 @@ const ModalAtencion = (props) => {
           <View style={styles.modalView}>
             <Image
               style={{ width: 60, height: 60, marginBottom: 10 }}
-              source={require("../../assets/images/Atencion.png")}
+              source={imageMap[props.imagen]}
             />
             <Text style={styles.modalText}>¡Atención!</Text>
             <Text style={styles.texto}>{props.texto}</Text>

@@ -285,12 +285,12 @@ const Perfil = () => {
           </View>
         )}
       </ScrollView>
-      {/* MODALS PARA VISUALIZAR
       <ModalAtencion
         texto={
           "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
         }
-      />*/}
+        imagen={"Alert"}
+      />
     </>
   );
 };
