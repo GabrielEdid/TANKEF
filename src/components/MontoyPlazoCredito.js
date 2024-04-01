@@ -134,7 +134,7 @@ const MontoyPlazoCredito = () => {
           <Text style={styles.valorConcepto}>$1M</Text>
         </View>
       </View>
-      <View style={styles.contenedores}>
+      <View style={[styles.contenedores, { paddingBottom: 0 }]}>
         <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
           Introduce el monto que deseas solicitar.
         </Text>
@@ -162,7 +162,7 @@ const MontoyPlazoCredito = () => {
             MXN
           </Text>
         </View>
-        <Slider
+        {/*<Slider
           style={{ width: "90%" }}
           minimumValue={10000}
           maximumValue={1000000}
@@ -173,7 +173,7 @@ const MontoyPlazoCredito = () => {
           minimumTrackTintColor="#2FF690"
           maximumTrackTintColor="#F2F2F2"
           //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el slider
-        />
+          />*/}
       </View>
 
       <View style={styles.contenedores}>
