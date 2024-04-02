@@ -7,8 +7,7 @@ import {
   Dimensions,
   ScrollView,
   TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -19,6 +18,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { APIPut } from "../../API/APIService";
 import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
@@ -28,7 +28,7 @@ const widthHalf = screenWidth / 2;
 
 const Inversion2 = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
   const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
@@ -53,10 +53,51 @@ const Inversion2 = ({ navigation }) => {
   const [open2, setOpen2] = useState(false);
 
   const [dataParentesco, setDataParentesco] = useState([
-    { label: "Familiar", value: "Familiar" },
-    { label: "Conocido", value: "Conocido" },
-    { label: "Amistad", value: "Amistad" },
+    { label: "Madre", value: "mother_primary" },
+    { label: "Padre", value: "father_primary" },
+    { label: "Hijo/a", value: "son_daughter_primary" },
+    { label: "Hermano/a", value: "brother_sister_primary" },
+    { label: "Cónyuge", value: "spouse_primary" },
+    { label: "Tío/a", value: "uncle_aunt_primary" },
+    { label: "Primo/a", value: "cousin_primary" },
+    { label: "Abuelo/a", value: "grandfather_grandmother_primary" },
+    { label: "Otro", value: "other_primary" },
   ]);
+
+  const handlePress = async () => {
+    if (flujo === "Caja de ahorro") {
+      navigation.navigate("Documentacion", { flujo: flujo });
+    } else {
+      const url = `/api/v1/investments/${idInversion}/beneficiaries`;
+      const data = {
+        investment: {
+          primary_beneficiary_first_name: nombre,
+          primary_beneficiary_percentage: parseInt(porcentaje, 10),
+          primary_beneficiary_kinship: parentesco,
+          primary_beneficiary_last_name: apellidos,
+        },
+      };
+      try {
+        const response = await APIPut(url, data);
+        if (response.error) {
+          console.error("Error al crear la inversión:", response.error);
+          Alert.alert(
+            "Error",
+            "No se pudo crear la Inversión. Intente nuevamente."
+          );
+        } else {
+          console.log("Inversión creada exitosamente:", response);
+          navigation.navigate("Beneficiarios", {
+            flujo: flujo,
+            idInversion: response.data.data.id,
+          });
+        }
+      } catch (error) {
+        console.error("Error en la petición:", error);
+        Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+      }
+    }
+  };
 
   // Función para manejar la cancelación del segundo beneficiario
   const handleCancelBeneficiario = () => {

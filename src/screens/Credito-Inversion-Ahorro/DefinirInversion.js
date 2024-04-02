@@ -39,7 +39,6 @@ const DefinirInversion = ({ navigation }) => {
   // Función para hacer la cotizacion al API
   useEffect(() => {
     const fetchCotizacion = async () => {
-      console.log(plazo, montoNumeric);
       const url = `/api/v1/simulator?term=${plazo}&type=investment&amount=${montoNumeric}`;
 
       try {
@@ -52,15 +51,10 @@ const DefinirInversion = ({ navigation }) => {
             "No se pudo hacer la cotización. Intente nuevamente."
           );
         } else {
-          console.log("Cotización exitosa:", response);
-          /*setCredit((currentCredit) => ({
-            ...currentCredit,
-            modalCotizadorVisible: true,
-            comision_por_apertura: response.data.commision,
-            tasa_de_operacion: response.data.rate,
-            pago_mensual: response.data.amount,
-            total_a_pagar: response.data.total,
-          }));*/
+          setInversionInicial(montoShow);
+          setRetornoNeto(response.data.total);
+          setImpuesto("16%");
+          setTasa(response.data.rate);
         }
       } catch (error) {
         console.error("Error en la petición de cotización:", error);
@@ -91,8 +85,11 @@ const DefinirInversion = ({ navigation }) => {
         "No se pudo crear la Inversión. Intente nuevamente."
       );
     } else {
-      // Continuar en caso de éxito
-      navigation.navigate("Beneficiarios", { flujo: flujo });
+      console.log("Inversión creada exitosamente:", response);
+      navigation.navigate("Beneficiarios", {
+        flujo: flujo,
+        idInversion: response.data.data.id,
+      });
     }
   };
 
@@ -323,13 +320,13 @@ const DefinirInversion = ({ navigation }) => {
                 color: "#060B4D",
               }}
             >
-              $0.00 MXN
+              {retornoNeto} MXN
             </Text>
           </View>
           <View style={[styles.contenedores, { flexDirection: "row" }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-              <Text style={styles.valorConcepto}>$0.00</Text>
+              <Text style={styles.valorConcepto}>${inversionInicial} MXN</Text>
             </View>
             <Ionicons
               name="remove-outline"
@@ -339,7 +336,7 @@ const DefinirInversion = ({ navigation }) => {
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-              <Text style={styles.valorConcepto}>0%</Text>
+              <Text style={styles.valorConcepto}>{tasa}</Text>
             </View>
             <Ionicons
               name="remove-outline"
@@ -349,7 +346,7 @@ const DefinirInversion = ({ navigation }) => {
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-              <Text style={styles.valorConcepto}>$0.00</Text>
+              <Text style={styles.valorConcepto}>{impuesto}</Text>
             </View>
           </View>
         </View>
