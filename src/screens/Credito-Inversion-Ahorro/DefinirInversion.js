@@ -62,6 +62,12 @@ const DefinirInversion = ({ navigation }) => {
       }
     };
     if (montoNumeric >= 5000 && plazo) fetchCotizacion();
+    else if (montoNumeric < 5000) {
+      setInversionInicial("");
+      setRetornoNeto("");
+      setImpuesto("");
+      setTasa("");
+    }
   }, [montoNumeric, plazo]);
 
   const handlePress = async () => {
@@ -320,13 +326,15 @@ const DefinirInversion = ({ navigation }) => {
                 color: "#060B4D",
               }}
             >
-              {retornoNeto} MXN
+              {retornoNeto ? `${retornoNeto} MXN` : "$ 0 MXN"}
             </Text>
           </View>
           <View style={[styles.contenedores, { flexDirection: "row" }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-              <Text style={styles.valorConcepto}>${inversionInicial} MXN</Text>
+              <Text style={styles.valorConcepto}>
+                {inversionInicial ? `${inversionInicial} MXN` : "$ 0 MXN"}
+              </Text>
             </View>
             <Ionicons
               name="remove-outline"
@@ -336,7 +344,9 @@ const DefinirInversion = ({ navigation }) => {
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-              <Text style={styles.valorConcepto}>{tasa}</Text>
+              <Text style={styles.valorConcepto}>
+                {tasa ? `${tasa}` : "0%"}
+              </Text>
             </View>
             <Ionicons
               name="remove-outline"
@@ -346,7 +356,9 @@ const DefinirInversion = ({ navigation }) => {
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-              <Text style={styles.valorConcepto}>{impuesto}</Text>
+              <Text style={styles.valorConcepto}>
+                {impuesto ? `${impuesto}` : "0%"}
+              </Text>
             </View>
           </View>
         </View>

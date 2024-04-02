@@ -43,16 +43,16 @@ const Inversion2 = ({ navigation }) => {
   const [telefono2, setTelefono2] = useState("");
   const [porcentaje2, setPorcentaje2] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const [pickerVisible, setPickerVisible] = useState(false);
+  /*const [pickerVisible, setPickerVisible] = useState(false);
   const [pickerVisible2, setPickerVisible2] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
   const [countryCode2, setCountryCode2] = useState("MX");
-  const [callingCode2, setCallingCode2] = useState("52");
+  const [callingCode2, setCallingCode2] = useState("52");*/
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
-  const [dataParentesco, setDataParentesco] = useState([
+  const [dataParentesco] = useState([
     { label: "Madre", value: "mother_primary" },
     { label: "Padre", value: "father_primary" },
     { label: "Hijo/a", value: "son_daughter_primary" },
@@ -64,37 +64,61 @@ const Inversion2 = ({ navigation }) => {
     { label: "Otro", value: "other_primary" },
   ]);
 
+  const [dataParentesco2] = useState([
+    { label: "Madre", value: "mother_secondary" },
+    { label: "Padre", value: "father_secondary" },
+    { label: "Hijo/a", value: "son_daughter_secondary" },
+    { label: "Hermano/a", value: "brother_sister_secondary" },
+    { label: "Cónyuge", value: "spouse_secondary" },
+    { label: "Tío/a", value: "uncle_aunt_secondary" },
+    { label: "Primo/a", value: "cousin_secondary" },
+    { label: "Abuelo/a", value: "grandfather_grandmother_secondary" },
+    { label: "Otro", value: "other_secondary" },
+  ]);
+
   const handlePress = async () => {
     if (flujo === "Caja de ahorro") {
       navigation.navigate("Documentacion", { flujo: flujo });
     } else {
-      const url = `/api/v1/investments/${idInversion}/beneficiaries`;
+      setDisabled(true);
+      console.log("Agregando beneficiarios a la inversión...");
+      const url = `/api/v1/investments/${155}/beneficiaries`;
       const data = {
         investment: {
           primary_beneficiary_first_name: nombre,
           primary_beneficiary_percentage: parseInt(porcentaje, 10),
           primary_beneficiary_kinship: parentesco,
           primary_beneficiary_last_name: apellidos,
+          secondary_beneficiary_first_name: nombre2,
+          secondary_beneficiary_percentage: parseInt(porcentaje2, 10),
+          secondary_beneficiary_kinship: parentesco2,
+          secondary_beneficiary_last_name: apellidos2,
         },
       };
       try {
         const response = await APIPut(url, data);
         if (response.error) {
-          console.error("Error al crear la inversión:", response.error);
+          console.error(
+            "Error al agregar los beneficiarios a la inversión:",
+            response.error
+          );
           Alert.alert(
             "Error",
-            "No se pudo crear la Inversión. Intente nuevamente."
+            "No se pudieron agregar los beneficiarios a la Inversión. Intente nuevamente."
           );
+          setDisabled(false);
         } else {
-          console.log("Inversión creada exitosamente:", response);
-          navigation.navigate("Beneficiarios", {
+          console.log("Beneficiarios agregados exitosamente:", response);
+          navigation.navigate("Documentacion", {
             flujo: flujo,
-            idInversion: response.data.data.id,
+            idInversion: idInversion,
           });
+          setDisabled(false);
         }
       } catch (error) {
         console.error("Error en la petición:", error);
         Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+        setDisabled(false);
       }
     }
   };
@@ -106,10 +130,10 @@ const Inversion2 = ({ navigation }) => {
     setNombre2("");
     setApellidos2("");
     setParentesco2("");
-    setTelefono2("");
+    //setTelefono2("");
     setPorcentaje2("");
-    setCallingCode2("52");
-    setCountryCode2("MX");
+    //setCallingCode2("52");
+    //setCountryCode2("MX");
   };
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
@@ -118,14 +142,14 @@ const Inversion2 = ({ navigation }) => {
       nombre !== "" &&
       apellidos !== "" &&
       parentesco !== "" &&
-      telefono !== "" &&
+      //telefono !== "" &&
       porcentaje !== "";
 
     const camposSegundoBeneficiarioLlenos =
       nombre2 !== "" &&
       apellidos2 !== "" &&
       parentesco2 !== "" &&
-      telefono2 !== "" &&
+      //telefono2 !== "" &&
       porcentaje2 !== "";
 
     const todosCamposLlenos = segundoBeneficiaro
@@ -137,12 +161,12 @@ const Inversion2 = ({ navigation }) => {
     nombre,
     apellidos,
     parentesco,
-    telefono,
+    //telefono,
     porcentaje,
     nombre2,
     apellidos2,
     parentesco2,
-    telefono2,
+    //telefono2,
     porcentaje2,
     segundoBeneficiaro,
   ]);
@@ -322,7 +346,7 @@ const Inversion2 = ({ navigation }) => {
                 />
                 <View style={styles.separacion} />
 
-                <Text style={styles.tituloCampo}>Teléfono</Text>
+                {/*<Text style={styles.tituloCampo}>Teléfono</Text>
                 <View
                   style={{
                     flexDirection: "row",
@@ -367,7 +391,7 @@ const Inversion2 = ({ navigation }) => {
                     placeholder="10 dígitos"
                   />
                 </View>
-                <View style={styles.separacion} />
+                  <View style={styles.separacion} />*/}
 
                 <Text style={styles.tituloCampo}>Porcentaje</Text>
                 <View
@@ -461,7 +485,7 @@ const Inversion2 = ({ navigation }) => {
                     />
                     <View style={styles.separacion} />
 
-                    <Text style={styles.tituloCampo}>Teléfono</Text>
+                    {/*<Text style={styles.tituloCampo}>Teléfono</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -509,7 +533,7 @@ const Inversion2 = ({ navigation }) => {
                         placeholder="10 dígitos"
                       />
                     </View>
-                    <View style={styles.separacion} />
+                    <View style={styles.separacion} />*/}
 
                     <Text style={styles.tituloCampo}>Porcentaje</Text>
                     <View
@@ -542,7 +566,7 @@ const Inversion2 = ({ navigation }) => {
                     <DropDownPicker
                       open={open2}
                       value={parentesco2}
-                      items={dataParentesco}
+                      items={dataParentesco2}
                       listMode="MODAL"
                       modalProps={{
                         animationType: "slide",
@@ -598,11 +622,7 @@ const Inversion2 = ({ navigation }) => {
                   styles.botonContinuar,
                   { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
                 ]}
-                onPress={() => {
-                  flujo === "Caja de ahorro"
-                    ? navigation.navigate("Documentacion", { flujo: flujo })
-                    : navigation.navigate("DatosBancarios", { flujo: flujo });
-                }}
+                onPress={() => handlePress()}
                 disabled={disabled}
               >
                 <Text

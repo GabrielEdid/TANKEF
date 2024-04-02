@@ -33,11 +33,14 @@ const Documentacion = ({ navigation }) => {
   const { flujo } = route.params;
   // Estados y Contexto
   const [CURP, setCURP] = useState("");
+  const [nombreCURP, setNombreCURP] = useState("");
   const [situacionFiscal, setSituacionFiscal] = useState("");
   const [nombreSituacionFiscal, setNombreSituacionFiscal] = useState("");
   const [comprobanteDomicilio, setComprobanteDomicilio] = useState("");
   const [nombreComprobanteDomicilio, setNombreComprobanteDomicilio] =
     useState("");
+  const [identificacion, setIdentificacion] = useState("");
+  const [nombreIdentificacion, setNombreIdentificacion] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
@@ -80,6 +83,12 @@ const Documentacion = ({ navigation }) => {
       } else if (setType === "domicilio") {
         setComprobanteDomicilio(selectedDocument.uri);
         setNombreComprobanteDomicilio(selectedDocument.name);
+      } else if (setType === "identificacion") {
+        setIdentificacion(selectedDocument.uri);
+        setNombreIdentificacion(selectedDocument.name);
+      } else if (setType === "curp") {
+        setCURP(selectedDocument.uri);
+        setNombreCURP(selectedDocument.name);
       }
     } else {
       console.log("Operación cancelada o no se seleccionó ningún documento");
@@ -102,6 +111,12 @@ const Documentacion = ({ navigation }) => {
       } else if (setType === "domicilio") {
         setComprobanteDomicilio(selectedImage.uri);
         setNombreComprobanteDomicilio("Imagen Seleccionada");
+      } else if (setType === "identificacion") {
+        setIdentificacion(selectedImage.uri);
+        setNombreIdentificacion("Imagen Seleccionada");
+      } else if (setType === "curp") {
+        setCURP(selectedImage.uri);
+        setNombreCURP("Imagen Seleccionada");
       }
     } else {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
@@ -125,7 +140,17 @@ const Documentacion = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView>
-          <Text style={styles.tituloPantalla}>{flujo}</Text>
+          <Text
+            style={[
+              styles.tituloPantalla,
+              {
+                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+              },
+            ]}
+          >
+            {flujo}
+          </Text>
           <TouchableOpacity>
             <Feather
               name="bell"
@@ -158,18 +183,113 @@ const Documentacion = ({ navigation }) => {
                   backgroundColor: "white",
                 }}
               >
-                {/* Campos para introducir los datos bancarios */}
-
-                <View>
-                  <Text style={styles.tituloCampo}>CURP</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setCURP}
-                    value={CURP}
-                    placeholder="Nombre Cuentahabiente"
-                  />
-                </View>
+                <Text style={styles.tituloCampo}>CURP</Text>
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("curp")}
+                >
+                  <Text style={styles.input}>Selecciona documento</Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+                {CURP && (
+                  <>
+                    <View style={styles.separacion} />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        paddingVertical: 10,
+                      }}
+                    >
+                      <FontAwesome
+                        name="image"
+                        size={20}
+                        color="#060B4D"
+                        style={{ marginLeft: 15 }}
+                      />
+                      <Text
+                        style={{
+                          flex: 1,
+                          paddingHorizontal: 15,
+                          fontSize: 16,
+                          color: "#060B4D",
+                          fontFamily: "opensans",
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {nombreCURP}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => [setCURP(""), setNombreCURP("")]}
+                      >
+                        <FontAwesome
+                          name="trash-o"
+                          size={25}
+                          color="#F95C5C"
+                          style={{ marginRight: 15 }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )}
                 <View style={styles.separacion} />
+
+                <Text style={styles.tituloCampo}>
+                  Documento de identificación (INE o Pasaporte)
+                </Text>
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("identificacion")}
+                >
+                  <Text style={styles.input}>Selecciona documento</Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+                {identificacion && (
+                  <>
+                    <View style={styles.separacion} />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        paddingVertical: 10,
+                      }}
+                    >
+                      <FontAwesome
+                        name="image"
+                        size={20}
+                        color="#060B4D"
+                        style={{ marginLeft: 15 }}
+                      />
+                      <Text
+                        style={{
+                          flex: 1,
+                          paddingHorizontal: 15,
+                          fontSize: 16,
+                          color: "#060B4D",
+                          fontFamily: "opensans",
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {nombreIdentificacion}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => [
+                          setIdentificacion(""),
+                          setNombreIdentificacion(""),
+                        ]}
+                      >
+                        <FontAwesome
+                          name="trash-o"
+                          size={25}
+                          color="#F95C5C"
+                          style={{ marginRight: 15 }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )}
+                <View style={styles.separacion} />
+
                 <Text style={styles.tituloCampo}>
                   Constancia de situación fiscal
                 </Text>
@@ -177,17 +297,7 @@ const Documentacion = ({ navigation }) => {
                   style={{ flexDirection: "row" }}
                   onPress={() => showUploadOptions("fiscal")}
                 >
-                  <Text
-                    style={[
-                      styles.input,
-                      {
-                        width: "92%",
-                        color: "#c7c7c9ff",
-                      },
-                    ]}
-                  >
-                    Selecciona documento
-                  </Text>
+                  <Text style={styles.input}>Selecciona documento</Text>
                   <Feather name="upload" size={20} color="#060B4D" />
                 </TouchableOpacity>
                 {situacionFiscal && (
@@ -241,17 +351,7 @@ const Documentacion = ({ navigation }) => {
                   style={{ flexDirection: "row" }}
                   onPress={() => showUploadOptions("domicilio")}
                 >
-                  <Text
-                    style={[
-                      styles.input,
-                      {
-                        width: "92%",
-                        color: "#c7c7c9ff",
-                      },
-                    ]}
-                  >
-                    Selecciona documento
-                  </Text>
+                  <Text style={styles.input}>Selecciona documento</Text>
                   <Feather name="upload" size={20} color="#060B4D" />
                 </TouchableOpacity>
                 {comprobanteDomicilio && (
@@ -372,8 +472,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 35,
-    fontSize: 20,
+    fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
@@ -408,10 +507,10 @@ const styles = StyleSheet.create({
   input: {
     paddingLeft: 15,
     fontSize: 16,
-    width: "100%",
-    color: "#060B4D",
     marginBottom: 10,
     fontFamily: "opensanssemibold",
+    width: "92%",
+    color: "#c7c7c9ff",
   },
   separacion: {
     height: 1,
