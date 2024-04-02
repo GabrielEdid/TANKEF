@@ -107,16 +107,16 @@ const Documentacion = ({ navigation }) => {
       const selectedImage = result.assets[0];
       if (setType === "fiscal") {
         setSituacionFiscal(selectedImage.uri);
-        setNombreSituacionFiscal("Imagen Seleccionada");
+        setNombreSituacionFiscal("Constancia Seleccionada");
       } else if (setType === "domicilio") {
         setComprobanteDomicilio(selectedImage.uri);
-        setNombreComprobanteDomicilio("Imagen Seleccionada");
+        setNombreComprobanteDomicilio("Comprobante Seleccionado");
       } else if (setType === "identificacion") {
         setIdentificacion(selectedImage.uri);
-        setNombreIdentificacion("Imagen Seleccionada");
+        setNombreIdentificacion("Identificación Seleccionada");
       } else if (setType === "curp") {
         setCURP(selectedImage.uri);
-        setNombreCURP("Imagen Seleccionada");
+        setNombreCURP("CURP Seleccionado");
       }
     } else {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
