@@ -8,10 +8,7 @@ import {
   Dimensions,
   Modal,
   Alert,
-  TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,9 +17,9 @@ import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRoute } from "@react-navigation/native";
+import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { set, subISOWeekYears } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -41,14 +38,29 @@ const Documentacion = ({ navigation }) => {
     useState("");
   const [identificacion, setIdentificacion] = useState("");
   const [nombreIdentificacion, setNombreIdentificacion] = useState("");
+  const [aceptarSIC, setAceptarSIC] = useState("");
+  const [actuoComo, setActuoComo] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
-    const camposLlenos = CURP && situacionFiscal && comprobanteDomicilio;
+    const camposLlenos =
+      CURP &&
+      situacionFiscal &&
+      comprobanteDomicilio &&
+      identificacion &&
+      aceptarSIC &&
+      actuoComo;
     setDisabled(!camposLlenos);
-  }, [CURP, situacionFiscal, comprobanteDomicilio]);
+  }, [
+    CURP,
+    situacionFiscal,
+    comprobanteDomicilio,
+    identificacion,
+    aceptarSIC,
+    actuoComo,
+  ]);
 
   const showUploadOptions = (setType) => {
     Alert.alert(
@@ -123,285 +135,348 @@ const Documentacion = ({ navigation }) => {
     }
   };
 
+  const [dataAceptar] = useState([{ label: "Si acepto", value: "Si" }]);
+
+  const [dataActuo] = useState([
+    {
+      label: "Actúo a nombre y por cuenta propia.",
+      value: "Actúo a nombre y por cuenta propia.",
+    },
+    {
+      label: "Actúo a nombre y por cuenta de un tercero(*).",
+      value: "Actúo a nombre y por cuenta de un tercero.",
+    },
+  ]);
+
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 1, y: 1 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text
+          style={[
+            styles.tituloPantalla,
+            {
+              fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+            },
+          ]}
+        >
+          {flujo}
+        </Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
+
       <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 1, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text
-            style={[
-              styles.tituloPantalla,
-              {
-                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
-              },
-            ]}
-          >
-            {flujo}
-          </Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ flex: 1 }}>
-          <KeyboardAwareScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            scrollEnabled={false}
-            enableOnAndroid={true}
-            style={styles.scrollV}
-            keyboardShouldPersistTaps="handled"
-            extraScrollHeight={100}
-          >
-            <View style={{ flex: 1 }}>
-              <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Documentación</Text>
-                <Text style={styles.bodySeccion}>
-                  Ingresa los datos solicitados para continuar.
-                </Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 5,
-                  backgroundColor: "white",
-                }}
-              >
-                <Text style={styles.tituloCampo}>CURP</Text>
-                <TouchableOpacity
-                  style={{ flexDirection: "row" }}
-                  onPress={() => showUploadOptions("curp")}
-                >
-                  <Text style={styles.input}>Selecciona documento</Text>
-                  <Feather name="upload" size={20} color="#060B4D" />
-                </TouchableOpacity>
-                {CURP && (
-                  <>
-                    <View style={styles.separacion} />
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingVertical: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="image"
-                        size={20}
-                        color="#060B4D"
-                        style={{ marginLeft: 15 }}
-                      />
-                      <Text
-                        style={{
-                          flex: 1,
-                          paddingHorizontal: 15,
-                          fontSize: 16,
-                          color: "#060B4D",
-                          fontFamily: "opensans",
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {nombreCURP}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => [setCURP(""), setNombreCURP("")]}
-                      >
-                        <FontAwesome
-                          name="trash-o"
-                          size={25}
-                          color="#F95C5C"
-                          style={{ marginRight: 15 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>
-                  Documento de identificación (INE o Pasaporte)
-                </Text>
-                <TouchableOpacity
-                  style={{ flexDirection: "row" }}
-                  onPress={() => showUploadOptions("identificacion")}
-                >
-                  <Text style={styles.input}>Selecciona documento</Text>
-                  <Feather name="upload" size={20} color="#060B4D" />
-                </TouchableOpacity>
-                {identificacion && (
-                  <>
-                    <View style={styles.separacion} />
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingVertical: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="image"
-                        size={20}
-                        color="#060B4D"
-                        style={{ marginLeft: 15 }}
-                      />
-                      <Text
-                        style={{
-                          flex: 1,
-                          paddingHorizontal: 15,
-                          fontSize: 16,
-                          color: "#060B4D",
-                          fontFamily: "opensans",
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {nombreIdentificacion}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => [
-                          setIdentificacion(""),
-                          setNombreIdentificacion(""),
-                        ]}
-                      >
-                        <FontAwesome
-                          name="trash-o"
-                          size={25}
-                          color="#F95C5C"
-                          style={{ marginRight: 15 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>
-                  Constancia de situación fiscal
-                </Text>
-                <TouchableOpacity
-                  style={{ flexDirection: "row" }}
-                  onPress={() => showUploadOptions("fiscal")}
-                >
-                  <Text style={styles.input}>Selecciona documento</Text>
-                  <Feather name="upload" size={20} color="#060B4D" />
-                </TouchableOpacity>
-                {situacionFiscal && (
-                  <>
-                    <View style={styles.separacion} />
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingVertical: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="image"
-                        size={20}
-                        color="#060B4D"
-                        style={{ marginLeft: 15 }}
-                      />
-                      <Text
-                        style={{
-                          flex: 1,
-                          paddingHorizontal: 15,
-                          fontSize: 16,
-                          color: "#060B4D",
-                          fontFamily: "opensans",
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {nombreSituacionFiscal}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => [
-                          setSituacionFiscal(""),
-                          setNombreSituacionFiscal(""),
-                        ]}
-                      >
-                        <FontAwesome
-                          name="trash-o"
-                          size={25}
-                          color="#F95C5C"
-                          style={{ marginRight: 15 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>Comprobante de domicilio</Text>
-                <TouchableOpacity
-                  style={{ flexDirection: "row" }}
-                  onPress={() => showUploadOptions("domicilio")}
-                >
-                  <Text style={styles.input}>Selecciona documento</Text>
-                  <Feather name="upload" size={20} color="#060B4D" />
-                </TouchableOpacity>
-                {comprobanteDomicilio && (
-                  <>
-                    <View style={styles.separacion} />
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingVertical: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="image"
-                        size={20}
-                        color="#060B4D"
-                        style={{ marginLeft: 15 }}
-                      />
-                      <Text
-                        style={{
-                          flex: 1,
-                          paddingHorizontal: 15,
-                          fontSize: 16,
-                          color: "#060B4D",
-                          fontFamily: "opensans",
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {nombreComprobanteDomicilio}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => [
-                          setComprobanteDomicilio(""),
-                          setNombreComprobanteDomicilio(""),
-                        ]}
-                      >
-                        <FontAwesome
-                          name="trash-o"
-                          size={25}
-                          color="#F95C5C"
-                          style={{ marginRight: 15 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-                <View style={styles.separacion} />
-              </View>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+        >
+          <View style={{ flex: 1 }}>
+            <View style={styles.seccion}>
+              <Text style={styles.tituloSeccion}>Documentación</Text>
+              <Text style={styles.bodySeccion}>
+                Ingresa los datos solicitados para continuar.
+              </Text>
             </View>
-          </KeyboardAwareScrollView>
+            <View
+              style={{
+                marginTop: 5,
+                backgroundColor: "white",
+              }}
+            >
+              <Text style={styles.tituloCampo}>CURP</Text>
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={() => showUploadOptions("curp")}
+              >
+                <Text style={styles.input}>Selecciona documento</Text>
+                <Feather name="upload" size={20} color="#060B4D" />
+              </TouchableOpacity>
+              {CURP && (
+                <>
+                  <View style={styles.separacion} />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      paddingVertical: 10,
+                    }}
+                  >
+                    <FontAwesome
+                      name="image"
+                      size={20}
+                      color="#060B4D"
+                      style={{ marginLeft: 15 }}
+                    />
+                    <Text
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensans",
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {nombreCURP}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => [setCURP(""), setNombreCURP("")]}
+                    >
+                      <FontAwesome
+                        name="trash-o"
+                        size={25}
+                        color="#F95C5C"
+                        style={{ marginRight: 15 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>
+                Documento de identificación (INE o Pasaporte)
+              </Text>
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={() => showUploadOptions("identificacion")}
+              >
+                <Text style={styles.input}>Selecciona documento</Text>
+                <Feather name="upload" size={20} color="#060B4D" />
+              </TouchableOpacity>
+              {identificacion && (
+                <>
+                  <View style={styles.separacion} />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      paddingVertical: 10,
+                    }}
+                  >
+                    <FontAwesome
+                      name="image"
+                      size={20}
+                      color="#060B4D"
+                      style={{ marginLeft: 15 }}
+                    />
+                    <Text
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensans",
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {nombreIdentificacion}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => [
+                        setIdentificacion(""),
+                        setNombreIdentificacion(""),
+                      ]}
+                    >
+                      <FontAwesome
+                        name="trash-o"
+                        size={25}
+                        color="#F95C5C"
+                        style={{ marginRight: 15 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>
+                Constancia de situación fiscal
+              </Text>
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={() => showUploadOptions("fiscal")}
+              >
+                <Text style={styles.input}>Selecciona documento</Text>
+                <Feather name="upload" size={20} color="#060B4D" />
+              </TouchableOpacity>
+              {situacionFiscal && (
+                <>
+                  <View style={styles.separacion} />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      paddingVertical: 10,
+                    }}
+                  >
+                    <FontAwesome
+                      name="image"
+                      size={20}
+                      color="#060B4D"
+                      style={{ marginLeft: 15 }}
+                    />
+                    <Text
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensans",
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {nombreSituacionFiscal}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => [
+                        setSituacionFiscal(""),
+                        setNombreSituacionFiscal(""),
+                      ]}
+                    >
+                      <FontAwesome
+                        name="trash-o"
+                        size={25}
+                        color="#F95C5C"
+                        style={{ marginRight: 15 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Comprobante de domicilio</Text>
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={() => showUploadOptions("domicilio")}
+              >
+                <Text style={styles.input}>Selecciona documento</Text>
+                <Feather name="upload" size={20} color="#060B4D" />
+              </TouchableOpacity>
+              {comprobanteDomicilio && (
+                <>
+                  <View style={styles.separacion} />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      paddingVertical: 10,
+                    }}
+                  >
+                    <FontAwesome
+                      name="image"
+                      size={20}
+                      color="#060B4D"
+                      style={{ marginLeft: 15 }}
+                    />
+                    <Text
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensans",
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {nombreComprobanteDomicilio}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => [
+                        setComprobanteDomicilio(""),
+                        setNombreComprobanteDomicilio(""),
+                      ]}
+                    >
+                      <FontAwesome
+                        name="trash-o"
+                        size={25}
+                        color="#F95C5C"
+                        style={{ marginRight: 15 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+              <View style={styles.separacion} />
+            </View>
+            <View style={styles.contenedores}>
+              <Text style={styles.subTexto}>
+                Acepto se me investigue en la Sociedad de Información Crediticia
+                (SIC)
+              </Text>
+              <RadioForm
+                key={aceptarSIC}
+                radio_props={dataAceptar}
+                initial={aceptarSIC === "" ? -1 : 0}
+                onPress={(value) =>
+                  setAceptarSIC(aceptarSIC === value ? "" : value)
+                }
+                buttonColor={"#060B4D"}
+                buttonSize={10}
+                selectedButtonColor={"#060B4D"}
+                labelStyle={{
+                  fontSize: 16,
+                  color: "#060B4D",
+                  fontFamily: "opensanssemibold",
+                }}
+                animation={false}
+                style={{ alignSelf: "baseline", marginTop: 10 }}
+              />
+              <View style={[styles.separacion, { marginVertical: 10 }]} />
+              <Text style={styles.subTexto}>
+                Declaro que soy el propietario real de los recursos y/o
+                beneficiario del crédito, por lo que el origen procedencia de
+                los recursos que Tu Kapital en Evolución, SAPI de CV, SOFOM,
+                ENR, recibirá respecto de los servicios que solicitep proceden
+                de fuentes lícitas y son de mi propiedad. Por lo que declaro
+                que:
+              </Text>
+              <RadioForm
+                radio_props={dataActuo}
+                initial={-1}
+                onPress={(value) => setActuoComo(value)}
+                buttonColor={"#060B4D"}
+                buttonSize={10}
+                selectedButtonColor={"#060B4D"}
+                labelStyle={{
+                  fontSize: 16,
+                  color: "#060B4D",
+                  fontFamily: "opensanssemibold",
+                  marginBottom: 10,
+                }}
+                animation={false}
+                style={{ alignSelf: "baseline", marginTop: 10 }}
+              />
+              <Text style={[styles.subTexto, { fontSize: 12, marginTop: 10 }]}>
+                (*) En caso de actuar a nombre de un tercero, es necesario la
+                siguiente información: Identificación oficial vigente, datos
+                generales y comprobante de domicilio recientes.
+              </Text>
+            </View>
+          </View>
           {/* Boton de Aceptar */}
           <TouchableOpacity
             style={[
@@ -420,38 +495,38 @@ const Documentacion = ({ navigation }) => {
               Aceptar
             </Text>
           </TouchableOpacity>
-        </View>
-
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Image
-                style={{ width: 150, height: 150, marginBottom: 10 }}
-                source={require("../../../assets/images/Validacion.png")}
-              />
-              <Text style={styles.modalText}>Validación</Text>
-              <Text style={styles.modalTextBody}>
-                Estamos validando tu información. {"\n"}Te notificaremos pronto.
-              </Text>
-              <TouchableOpacity
-                style={[
-                  styles.botonContinuar,
-                  { marginBottom: 0, width: "100%" },
-                ]}
-                onPress={() => [
-                  setModalVisible(false),
-                  navigation.navigate("DefinirFirma", { flujo: flujo }),
-                ]}
-              >
-                <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
-                  Aceptar
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        </ScrollView>
       </View>
-    </TouchableWithoutFeedback>
+
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Image
+              style={{ width: 150, height: 150, marginBottom: 10 }}
+              source={require("../../../assets/images/Validacion.png")}
+            />
+            <Text style={styles.modalText}>Validación</Text>
+            <Text style={styles.modalTextBody}>
+              Estamos validando tu información. {"\n"}Te notificaremos pronto.
+            </Text>
+            <TouchableOpacity
+              style={[
+                styles.botonContinuar,
+                { marginBottom: 0, width: "100%" },
+              ]}
+              onPress={() => [
+                setModalVisible(false),
+                navigation.navigate("DefinirFirma", { flujo: flujo }),
+              ]}
+            >
+              <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
+                Aceptar
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
@@ -503,6 +578,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
+  },
+  contenedores: {
+    backgroundColor: "white",
+    paddingHorizontal: 12,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 3,
+  },
+  texto: {
+    color: "#060B4D",
+    textAlign: "center",
+    fontFamily: "opensans",
+    fontSize: 16,
+  },
+  subTexto: {
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    alignSelf: "baseline",
+    fontSize: 14,
   },
   input: {
     paddingLeft: 15,

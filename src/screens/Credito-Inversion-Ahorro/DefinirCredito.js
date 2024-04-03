@@ -352,10 +352,15 @@ const DefinirCredito = ({ navigation }) => {
                         Crediticia (SIC)
                       </Text>
                       <RadioForm
+                        key={credit.aceptarSIC}
                         radio_props={dataAceptar}
-                        initial={-1}
+                        initial={credit.aceptarSIC === "" ? -1 : 0}
                         onPress={(value) =>
-                          setCredit({ ...credit, aceptarSIC: value })
+                          setCredit({
+                            ...credit,
+                            aceptarSIC:
+                              value === credit.aceptarSIC ? "" : value,
+                          })
                         }
                         buttonColor={"#060B4D"}
                         buttonSize={10}
