@@ -15,11 +15,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRoute } from "@react-navigation/native";
 import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { APIPut } from "../../API/APIService";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -41,6 +41,50 @@ const Documentacion = ({ navigation }) => {
   const [actuoComo, setActuoComo] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
+
+  // Función para subir la documentación
+  const handlePress = async () => {
+    setDisabled(true);
+    console.log("Agregando beneficiarios a la inversión...");
+    const url = `/api/v1/investments/${155}`;
+    console.log(identificacion, CURP, situacionFiscal, comprobanteDomicilio);
+    const data = {
+      investment: {
+        official_identification: identificacion,
+        curp: CURP,
+        proof_sat: situacionFiscal,
+        proof_address: comprobanteDomicilio,
+        accept_documentation_1:
+          actuoComo === "Actúo a nombre y por cuenta propia." ? true : false,
+        accept_documentation_2:
+          actuoComo === "Actúo a nombre y por cuenta de un tercero."
+            ? true
+            : false,
+      },
+    };
+    try {
+      const response = await APIPut(url, data);
+      if (response.error) {
+        console.error(
+          "Error al agregar los documentos a la inversión:",
+          response.error
+        );
+        Alert.alert(
+          "Error",
+          "No se pudieron agregar los documentos a la Inversión. Intente nuevamente."
+        );
+        setDisabled(false);
+      } else {
+        console.log("Documentos agregados exitosamente:", response);
+        setModalVisible(true);
+        setDisabled(false);
+      }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+      Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+      setDisabled(false);
+    }
+  };
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
@@ -449,7 +493,7 @@ const Documentacion = ({ navigation }) => {
               styles.botonContinuar,
               { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
             ]}
-            onPress={() => setModalVisible(true)}
+            onPress={() => handlePress()}
             disabled={disabled}
           >
             <Text
@@ -482,7 +526,7 @@ const Documentacion = ({ navigation }) => {
               ]}
               onPress={() => [
                 setModalVisible(false),
-                navigation.navigate("DefinirFirma", { flujo: flujo }),
+                navigation.navigate("MiTankef"),
               ]}
             >
               <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
