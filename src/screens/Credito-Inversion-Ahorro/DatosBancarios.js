@@ -21,6 +21,7 @@ import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { APIPost } from "../../API/APIService";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -40,6 +41,36 @@ const DatosBancarios = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
+
+  // Funcion para guardar los datos de la cuenta bancaria
+  const handlePress = async () => {
+    setDisabled(true);
+    const url = `/api/v1/investments/${155}/bank_accounts`;
+    const data = {
+      investment: {
+        bank_account_attributes: {
+          short_name: alias,
+          clabe: clabe,
+          bank: banco,
+          owner_name: nombre,
+          proof_clabe: comprobanteNCuenta,
+          account: NCuenta,
+        },
+      },
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      console.error("Error al guardar la cuenta bancaria:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudieron gurdar los datos de la cuenta bancaria. Intente nuevamente."
+      );
+    } else {
+      setModalVisible(true);
+    }
+    setDisabled(false);
+  };
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
@@ -106,7 +137,7 @@ const DatosBancarios = ({ navigation }) => {
     if (!result.canceled) {
       const selectedImage = result.assets[0];
       setComprobanteNCuenta(selectedImage.uri);
-      setNombreComprobante("Imagen Seleccionada");
+      setNombreComprobante("Carátula Seleccionada");
     } else {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
     }
@@ -291,7 +322,7 @@ const DatosBancarios = ({ navigation }) => {
               styles.botonContinuar,
               { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
             ]}
-            onPress={() => setModalVisible(true)}
+            onPress={() => handlePress()}
             disabled={disabled}
           >
             <Text
@@ -323,7 +354,7 @@ const DatosBancarios = ({ navigation }) => {
                 ]}
                 onPress={() => [
                   setModalVisible(false),
-                  navigation.navigate("DefinirFirma", { flujo: flujo }),
+                  navigation.navigate("MiTankef"),
                 ]}
               >
                 <Text style={[styles.textoBotonContinuar, { color: "white" }]}>

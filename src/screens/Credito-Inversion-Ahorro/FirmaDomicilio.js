@@ -19,6 +19,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 // Importaciones de Componentes y Hooks
+import { APIPost } from "../../API/APIService";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -27,46 +28,56 @@ const widthHalf = screenWidth / 2;
 
 const FirmaDomicilio = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const [focus, setFocus] = useState("Documentacion");
   const [nombre, setNombre] = useState("");
   const [calle, setCalle] = useState("");
   const [numeroExterior, setNumeroExterior] = useState("");
   const [numeroInterior, setNumeroInterior] = useState("");
   const [codigoPostal, setCodigoPostal] = useState("");
   const [pais, setPais] = useState("México");
+  const [ciudad, setCiudad] = useState("");
   const [estado, setEstado] = useState();
   const [estadosData, setEstadosData] = useState([]);
-  //const [ciudad, setCiudad] = useState("");
   const [municipio, setMunicipio] = useState("");
   const [municipiosData, setMunicipiosData] = useState([]);
   const [colonia, setColonia] = useState("");
-  const [domicilio, setDomicilio] = useState("");
-  const [politico, setPolitico] = useState("");
-  const [profesion, setProfesion] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [mail, setMail] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  //const [openPais, setOpenPais] = useState(false);
   const [openEstado, setOpenEstado] = useState(false);
-  //const [openCiudad, setOpenCiudad] = useState(false);
   const [openMunicipio, setOpenMunicipio] = useState(false);
-  const [openColonia, setOpenColonia] = useState(false);
 
-  const [dataDomicilio] = useState([
-    { label: "Real", value: "Real" },
-    { label: "Convencional", value: "Convencional" },
-    { label: "Legal", value: "Legal" },
-    { label: "Fiscal", value: "Fiscal" },
-  ]);
+  // Función para guardar los datos del domicilio
+  const handlePress = async () => {
+    setDisabled(true);
+    const url = `/api/v1/investments/${155}/mailaddress`;
+    const data = {
+      mailaddress: {
+        fullname: nombre,
+        country: pais,
+        street: calle,
+        ext_number: numeroExterior,
+        int_number: numeroInterior,
+        city: ciudad,
+        municipality: municipio,
+        neighborhood: colonia,
+        state: estado,
+        zip_code: codigoPostal,
+        delivery_method: "home",
+      },
+    };
 
-  const [dataPolitico] = useState([
-    { label: "Si", value: "Si" },
-    { label: "No", value: "No" },
-  ]);
+    const response = await APIPost(url, data);
+    if (response.error) {
+      console.error("Error al guardar los datos:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudieron gurdar los datos del domicilio. Intente nuevamente."
+      );
+    } else {
+      navigation.navigate("MiTankef");
+    }
+    setDisabled(false);
+  };
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
@@ -187,7 +198,7 @@ const FirmaDomicilio = ({ navigation }) => {
       >
         <View style={styles.seccion}>
           <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
-          <Text style={styles.bodySeccion}>Enviar a Domicilio</Text>
+          <Text style={styles.bodySeccion}>Enviar el contrato a Domicilio</Text>
         </View>
         <View style={{ flex: 1 }}>
           <View
@@ -293,6 +304,15 @@ const FirmaDomicilio = ({ navigation }) => {
             />
             <View style={styles.separacion} />
 
+            <Text style={styles.tituloCampo}>Ciudad</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setCiudad}
+              value={ciudad}
+              placeholder="Villahermosa"
+            />
+            <View style={styles.separacion} />
+
             {/*<Text style={styles.tituloCampo}>Ciudad</Text>
               <DropDownPicker
                 searchable={true}
@@ -372,7 +392,7 @@ const FirmaDomicilio = ({ navigation }) => {
               styles.botonContinuar,
               { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
             ]}
-            onPress={() => navigation.navigate("MiTankef")}
+            onPress={() => handlePress()}
             disabled={disabled}
           >
             <Text
