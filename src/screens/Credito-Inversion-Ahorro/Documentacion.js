@@ -38,7 +38,6 @@ const Documentacion = ({ navigation }) => {
     useState("");
   const [identificacion, setIdentificacion] = useState("");
   const [nombreIdentificacion, setNombreIdentificacion] = useState("");
-  const [aceptarSIC, setAceptarSIC] = useState("");
   const [actuoComo, setActuoComo] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -50,17 +49,9 @@ const Documentacion = ({ navigation }) => {
       situacionFiscal &&
       comprobanteDomicilio &&
       identificacion &&
-      aceptarSIC &&
       actuoComo;
     setDisabled(!camposLlenos);
-  }, [
-    CURP,
-    situacionFiscal,
-    comprobanteDomicilio,
-    identificacion,
-    aceptarSIC,
-    actuoComo,
-  ]);
+  }, [CURP, situacionFiscal, comprobanteDomicilio, identificacion, actuoComo]);
 
   const showUploadOptions = (setType) => {
     Alert.alert(
@@ -134,8 +125,6 @@ const Documentacion = ({ navigation }) => {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
     }
   };
-
-  const [dataAceptar] = useState([{ label: "Si acepto", value: "Si" }]);
 
   const [dataActuo] = useState([
     {
