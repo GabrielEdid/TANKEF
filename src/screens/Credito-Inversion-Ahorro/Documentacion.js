@@ -196,7 +196,7 @@ const Documentacion = ({ navigation }) => {
             <View style={styles.seccion}>
               <Text style={styles.tituloSeccion}>Documentación</Text>
               <Text style={styles.bodySeccion}>
-                Ingresa los datos solicitados para continuar.
+                Proporciona la documentación solicitadada para continuar.
               </Text>
             </View>
             <View
@@ -424,29 +424,6 @@ const Documentacion = ({ navigation }) => {
             </View>
             <View style={styles.contenedores}>
               <Text style={styles.subTexto}>
-                Acepto se me investigue en la Sociedad de Información Crediticia
-                (SIC)
-              </Text>
-              <RadioForm
-                key={aceptarSIC}
-                radio_props={dataAceptar}
-                initial={aceptarSIC === "" ? -1 : 0}
-                onPress={(value) =>
-                  setAceptarSIC(aceptarSIC === value ? "" : value)
-                }
-                buttonColor={"#060B4D"}
-                buttonSize={10}
-                selectedButtonColor={"#060B4D"}
-                labelStyle={{
-                  fontSize: 16,
-                  color: "#060B4D",
-                  fontFamily: "opensanssemibold",
-                }}
-                animation={false}
-                style={{ alignSelf: "baseline", marginTop: 10 }}
-              />
-              <View style={[styles.separacion, { marginVertical: 10 }]} />
-              <Text style={styles.subTexto}>
                 Declaro que soy el propietario real de los recursos y/o
                 beneficiario del crédito, por lo que el origen procedencia de
                 los recursos que Tu Kapital en Evolución, SAPI de CV, SOFOM,
@@ -582,7 +559,7 @@ const styles = StyleSheet.create({
   contenedores: {
     backgroundColor: "white",
     paddingHorizontal: 12,
-    paddingVertical: 15,
+    paddingVertical: 10,
     alignItems: "center",
     marginTop: 3,
   },

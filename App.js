@@ -120,7 +120,10 @@ function PerfilMain() {
 
 function PerfilLoginProgresivo() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      options={{ gestureEnabled: false }}
+    >
       <Stack.Screen name="PerfilMain" component={PerfilMain} />
       <Stack.Screen name="LoginProgresivo" component={LoginProgresivo} />
       <Stack.Screen name="LoginProgresivo2" component={LoginProgresivo2} />
@@ -132,7 +135,10 @@ function PerfilLoginProgresivo() {
 
 function MiRedStackScreen() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      options={{ gestureEnabled: false }}
+    >
       <Stack.Screen name="MiRedMain" component={MiRed} />
       <Stack.Screen
         name="SolicitudesConexion"
@@ -146,7 +152,10 @@ function MiRedStackScreen() {
 
 function InicioStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      options={{ gestureEnabled: false }}
+    >
       <Stack.Screen name="Incio" component={Inicio} />
       <Stack.Screen name="VerPosts" component={VerPosts} />
     </Stack.Navigator>
@@ -155,7 +164,10 @@ function InicioStack() {
 
 function CrearStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      options={{ gestureEnabled: false }}
+    >
       <Stack.Screen name="Placeholder" component={Placeholder} />
       <Stack.Screen name="DefinirInversion" component={DefinirInversion} />
       <Stack.Screen name="Beneficiarios" component={Beneficiarios} />

@@ -52,30 +52,34 @@ const DefinirCredito = ({ navigation }) => {
   const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
 
   // Función para hacer la cotizacion al API
-  const cotizar = async () => {
-    console.log(credit.plazo, credit.montoNumeric);
-    const url = `/api/v1/simulator?term=${credit.plazo}&type=credit&amount=${credit.montoNumeric}`;
+  useEffect(() => {
+    const cotizar = async () => {
+      console.log(credit.plazo, credit.montoNumeric);
+      const url = `/api/v1/simulator?term=${credit.plazo}&type=credit&amount=${credit.montoNumeric}`;
 
-    const response = await APIGet(url);
-    if (response.error) {
-      // Manejar el error
-      console.error("Error al cotizar:", response.error);
-      Alert.alert(
-        "Error",
-        "No se pudo hacer la cotización. Intente nuevamente."
-      );
-    } else {
-      console.log("Cotización exitosa:", response);
-      setCredit({
-        ...credit,
-        modalCotizadorVisible: true,
-        comision_por_apertura: response.data.commision,
-        tasa_de_operacion: response.data.rate,
-        pago_mensual: response.data.amount,
-        total_a_pagar: response.data.total,
-      });
+      const response = await APIGet(url);
+      if (response.error) {
+        // Manejar el error
+        console.error("Error al cotizar:", response.error);
+        Alert.alert(
+          "Error",
+          "No se pudo hacer la cotización. Intente nuevamente."
+        );
+      } else {
+        console.log("Cotización exitosa:", response);
+        setCredit({
+          ...credit,
+          comision_por_apertura: response.data.commision,
+          tasa_de_operacion: response.data.rate,
+          pago_mensual: response.data.amount,
+          total_a_pagar: response.data.total,
+        });
+      }
+    };
+    if (credit.plazo && credit.montoNumeric >= 10000) {
+      cotizar();
     }
-  };
+  }, [credit.plazo, credit.montoNumeric]);
 
   // Función para cambiar el focus de la pantalla
   const handleFocus = (tab) => {
@@ -106,7 +110,10 @@ const DefinirCredito = ({ navigation }) => {
       if (credit.paso === 4) {
         navigation.navigate("MiTankef");
       } else if (credit.paso === 1) {
-        cotizar();
+        setCredit({
+          ...credit,
+          modalCotizadorVisible: true,
+        });
       } else if (credit.paso === 2) {
         navigation.navigate("ObligadosSolidarios", { flujo: flujo });
       } else if (credit.paso === 3) {

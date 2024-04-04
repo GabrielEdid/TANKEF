@@ -82,7 +82,7 @@ const Inversion2 = ({ navigation }) => {
     } else {
       setDisabled(true);
       console.log("Agregando beneficiarios a la inversión...");
-      const url = `/api/v1/investments/${155}/beneficiaries`;
+      const url = `/api/v1/investments/${idInversion}`;
       const data = {
         investment: {
           primary_beneficiary_first_name: nombre,
