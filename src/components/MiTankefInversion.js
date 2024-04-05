@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,10 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { APIGet } from "../API/APIService";
+import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 
@@ -34,13 +37,54 @@ const widthHalf = screenWidth / 2;
 const MiTankefInversion = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
-  const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
+  const { user, setUser } = useContext(UserContext);
+  const [focus, setFocus] = useState("Balance");
+  const [investments, setInvestments] = useState([]);
 
   // Mapa de imágenes
   const imageMap = {
     Bill: require("../../assets/images/BillInvest.png"),
     // ... más imágenes
   };
+
+  // Funcion para obtener las inversiones del usuario
+  const fetchUserInvestments = async () => {
+    const url = `/api/v1/users/${user.userID}/investments`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener las inversiones del usuario:",
+        result.error
+      );
+    } else {
+      const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
+      console.log("Resultados de las inversiones:", filteredResults);
+      setInvestments(filteredResults);
+    }
+  };
+
+  // Funcion para obtener una inversion en especifico
+  const fetchInvestment = async (id) => {
+    const url = `/api/v1/investments/${id}`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener la inversion:", result.error);
+    } else {
+      console.log("Resultados de la inversion:", result.data.data);
+      setInvestments(result.data.data);
+    }
+  };
+
+  // Efecto para cargar los posts del feed al cargar la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserInvestments();
+    }, [])
+  );
 
   // Componente visual
   return (
@@ -80,29 +124,20 @@ const MiTankefInversion = (props) => {
         </TouchableOpacity>
 
         {/* Componente repetible */}
-        <TouchableOpacity
-          style={{
-            alignItems: "center",
-            marginLeft: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            borderRadius: 10,
-            width: 120,
-            backgroundColor: "#2FF690",
-          }}
-        >
-          <Image source={imageMap["Bill"]} style={styles.bill} />
-          <Text
-            style={{
-              color: "#060B4D",
-              fontFamily: "opensanssemibold",
-              textAlign: "center",
-              fontSize: 12,
-            }}
-          >
-            Inversión Roberto Hijo
-          </Text>
-        </TouchableOpacity>
+        {investments && investments.length > 0 ? (
+          investments.map((investment, index) => (
+            <TouchableOpacity
+              key={investment.id || index}
+              style={styles.investmentNameContainer}
+              onPress={() => fetchInvestment(investment.id)}
+            >
+              <Image source={imageMap["Bill"]} style={styles.bill} />
+              <Text style={styles.investmentName}>{investment.name}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
+        )}
       </View>
       <View style={styles.tabsContainer}>
         {/* Boton Tab Balance */}
@@ -255,6 +290,30 @@ const styles = StyleSheet.create({
   line: {
     transform: [{ rotate: "90deg" }],
     right: 10,
+  },
+  investmentNameContainer: {
+    alignItems: "center",
+    marginLeft: 10,
+    paddingVertical: 7.5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    width: 120,
+    backgroundColor: "#2FF690",
+  },
+  investmentName: {
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "center",
+    fontSize: 12,
+    marginTop: 2.5,
+  },
+  noInvestment: {
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "center",
+    alignSelf: "center",
+    fontSize: 16,
+    marginLeft: 10,
   },
   bill: {
     height: 20,
