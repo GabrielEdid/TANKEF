@@ -68,14 +68,13 @@ const CrearModal = ({ isVisible, onClose }) => {
           }}
           activeOpacity={1}
         />
-
         {/* Boton Invertir */}
         <TouchableOpacity
           style={styles.buttonModal}
           onPress={() => {
             handleClose();
             navigation.navigate("Crear", {
-              screen: "DefinirInversion",
+              screen: "DatosBancarios",
               params: { flujo: "Inversión" },
             });
           }}

@@ -49,7 +49,6 @@ const DatosBancarios = ({ navigation }) => {
     const url = `/api/v1/investments/${155}/bank_accounts`;
     const formData = new FormData();
 
-    // Añadir los campos al FormData
     formData.append("investment[bank_account_attributes][short_name]", alias);
     formData.append("investment[bank_account_attributes][clabe]", clabe);
     formData.append("investment[bank_account_attributes][bank]", banco);
@@ -83,6 +82,49 @@ const DatosBancarios = ({ navigation }) => {
       setDisabled(false);
     }
   };
+
+  // Efecto para encontrar el banco asociado a la clabe
+  useEffect(() => {
+    const verificarClabe = async () => {
+      if (clabe.length < 18) {
+        setNCuenta("");
+        setBanco("");
+      } else if (clabe.length === 18) {
+        const url = `/api/v1/clabe_validation`;
+        const formData = new FormData();
+
+        formData.append("clabe", clabe);
+
+        try {
+          const response = await APIPost(url, formData);
+
+          if (response.error) {
+            console.error(
+              "Error al encontrar la cuenta bancaria:",
+              response.error
+            );
+            Alert.alert(
+              "Error",
+              "La clabe introducida no está asociada a ningun banco"
+            );
+            setNCuenta("");
+            setBanco("");
+          } else {
+            setNCuenta(response.data.data.account);
+            setBanco(response.data.data.bank_tag);
+          }
+        } catch (error) {
+          console.error("Error al encontrar la cuenta de banco:", error);
+          Alert.alert(
+            "Error",
+            "Hubo un problema al encontrar la cuenta de banco. Por favor, intenta de nuevo."
+          );
+        }
+      }
+    };
+
+    verificarClabe();
+  }, [clabe]);
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
@@ -233,7 +275,9 @@ const DatosBancarios = ({ navigation }) => {
                   keyboardType="numeric"
                 />
                 <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>No. Cuenta</Text>
+                <Text style={[styles.tituloCampo, { color: "grey" }]}>
+                  No. Cuenta
+                </Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={setNCuenta}
@@ -241,14 +285,18 @@ const DatosBancarios = ({ navigation }) => {
                   placeholder="10 dígitos"
                   maxLength={10}
                   keyboardType="numeric"
+                  editable={false}
                 />
                 <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>Banco</Text>
+                <Text style={[styles.tituloCampo, { color: "grey" }]}>
+                  Banco
+                </Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={setBanco}
                   value={banco}
                   placeholder="Nombre Banco"
+                  editable={false}
                 />
                 <View style={styles.separacion} />
                 <View>
