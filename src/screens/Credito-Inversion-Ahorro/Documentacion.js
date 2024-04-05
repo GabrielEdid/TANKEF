@@ -47,23 +47,43 @@ const Documentacion = ({ navigation }) => {
     setDisabled(true);
     console.log("Agregando beneficiarios a la inversión...");
     const url = `/api/v1/investments/${155}`;
-    console.log(identificacion, CURP, situacionFiscal, comprobanteDomicilio);
-    const data = {
-      investment: {
-        official_identification: identificacion,
-        curp: CURP,
-        proof_sat: situacionFiscal,
-        proof_address: comprobanteDomicilio,
-        accept_documentation_1:
-          actuoComo === "Actúo a nombre y por cuenta propia." ? true : false,
-        accept_documentation_2:
-          actuoComo === "Actúo a nombre y por cuenta de un tercero."
-            ? true
-            : false,
-      },
-    };
+
+    const formData = new FormData();
+
+    formData.append("investment[official_identification]", {
+      uri: identificacion,
+      type: "application/jpeg", // Ajusta el tipo MIME según sea necesario
+      name: "identificacion.jpeg", // Ajusta el nombre del archivo
+    });
+    formData.append("investment[curp]", {
+      uri: CURP,
+      type: "application/jpeg", // Ajusta el tipo MIME según sea necesario
+      name: "CURP.jpeg", // Ajusta el nombre del archivo
+    });
+    formData.append("investment[proof_sat]", {
+      uri: situacionFiscal,
+      type: "application/jpeg", // Ajusta el tipo MIME
+      name: "situacionFiscal.jpeg", // Ajusta el nombre del archivo
+    });
+    formData.append("investment[proof_address]", {
+      uri: comprobanteDomicilio,
+      type: "application/jpeg", // Ajusta el tipo MIME
+      name: "comprobanteDomicilio.jpeg", // Ajusta el nombre del archivo
+    });
+    formData.append(
+      "investment[accept_documentation_1]",
+      actuoComo === "Actúo a nombre y por cuenta propia." ? "true" : "false"
+    );
+    formData.append(
+      "investment[accept_documentation_2]",
+      actuoComo === "Actúo a nombre y por cuenta de un tercero."
+        ? "true"
+        : "false"
+    );
+
     try {
-      const response = await APIPut(url, data);
+      const response = await APIPut(url, formData);
+
       if (response.error) {
         console.error(
           "Error al agregar los documentos a la inversión:",
@@ -73,15 +93,14 @@ const Documentacion = ({ navigation }) => {
           "Error",
           "No se pudieron agregar los documentos a la Inversión. Intente nuevamente."
         );
-        setDisabled(false);
       } else {
         console.log("Documentos agregados exitosamente:", response);
         setModalVisible(true);
-        setDisabled(false);
       }
     } catch (error) {
       console.error("Error en la petición:", error);
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+    } finally {
       setDisabled(false);
     }
   };

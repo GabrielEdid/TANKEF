@@ -46,30 +46,41 @@ const DatosBancarios = ({ navigation }) => {
   const handlePress = async () => {
     setDisabled(true);
     const url = `/api/v1/investments/${155}/bank_accounts`;
-    const data = {
-      investment: {
-        bank_account_attributes: {
-          short_name: alias,
-          clabe: clabe,
-          bank: banco,
-          owner_name: nombre,
-          proof_clabe: comprobanteNCuenta,
-          account: NCuenta,
-        },
-      },
-    };
+    const formData = new FormData();
 
-    const response = await APIPost(url, data);
-    if (response.error) {
-      console.error("Error al guardar la cuenta bancaria:", response.error);
+    // Añadir los campos al FormData
+    formData.append("investment[bank_account_attributes][short_name]", alias);
+    formData.append("investment[bank_account_attributes][clabe]", clabe);
+    formData.append("investment[bank_account_attributes][bank]", banco);
+    formData.append("investment[bank_account_attributes][owner_name]", nombre);
+    formData.append("investment[bank_account_attributes][account]", NCuenta);
+    formData.append("investment[bank_account_attributes][proof_clabe]", {
+      uri: comprobanteNCuenta,
+      type: "image/jpeg",
+      name: "comprobanteNCuenta.jpg",
+    });
+
+    try {
+      const response = await APIPost(url, formData);
+
+      if (response.error) {
+        console.error("Error al guardar la cuenta bancaria:", response.error);
+        Alert.alert(
+          "Error",
+          "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
+        );
+      } else {
+        setModalVisible(true);
+      }
+    } catch (error) {
+      console.error("Error al enviar datos:", error);
       Alert.alert(
         "Error",
-        "No se pudieron gurdar los datos de la cuenta bancaria. Intente nuevamente."
+        "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
       );
-    } else {
-      setModalVisible(true);
+    } finally {
+      setDisabled(false);
     }
-    setDisabled(false);
   };
 
   // Efecto para deshabilitar el botón si algún campo está vacío
@@ -133,9 +144,10 @@ const DatosBancarios = ({ navigation }) => {
       aspect: [4, 3],
       quality: 0.2,
     });
-
     if (!result.canceled) {
       const selectedImage = result.assets[0];
+      console.log(selectedImage.uri);
+
       setComprobanteNCuenta(selectedImage.uri);
       setNombreComprobante("Carátula Seleccionada");
     } else {
