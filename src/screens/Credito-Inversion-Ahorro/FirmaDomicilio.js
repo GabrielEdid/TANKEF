@@ -20,6 +20,7 @@ import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 // Importaciones de Componentes y Hooks
 import { APIPost } from "../../API/APIService";
+import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -45,6 +46,7 @@ const FirmaDomicilio = ({ navigation }) => {
   const [disabled, setDisabled] = useState(true);
   const [openEstado, setOpenEstado] = useState(false);
   const [openMunicipio, setOpenMunicipio] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Función para guardar los datos del domicilio
   const handlePress = async () => {
@@ -60,7 +62,7 @@ const FirmaDomicilio = ({ navigation }) => {
         city: ciudad,
         municipality: municipio,
         neighborhood: colonia,
-        state: estado,
+        state: estado[0],
         zip_code: codigoPostal,
         delivery_method: "home",
       },
@@ -74,7 +76,7 @@ const FirmaDomicilio = ({ navigation }) => {
         "No se pudieron gurdar los datos del domicilio. Intente nuevamente."
       );
     } else {
-      navigation.navigate("MiTankef");
+      setModalVisible(true);
     }
     setDisabled(false);
   };
@@ -88,6 +90,7 @@ const FirmaDomicilio = ({ navigation }) => {
       numeroInterior !== "" &&
       codigoPostal !== "" &&
       pais !== "" &&
+      ciudad !== "" &&
       estado !== "" &&
       municipio !== "" &&
       colonia !== "";
@@ -99,6 +102,7 @@ const FirmaDomicilio = ({ navigation }) => {
     numeroInterior,
     codigoPostal,
     pais,
+    ciudad,
     estado,
     municipio,
     colonia,
@@ -128,7 +132,7 @@ const FirmaDomicilio = ({ navigation }) => {
   useEffect(() => {
     // Verifica que estado tenga contenido y sea un arreglo con al menos dos elementos
     if (Array.isArray(estado)) {
-      const isoCode = estado[1]; // Asumiendo que el segundo elemento contiene el código ISO necesario para la API
+      const isoCode = estado[1];
       const config = {
         method: "get",
         url: `https://api.countrystatecity.in/v1/countries/MX/states/${isoCode}/cities`,
@@ -405,6 +409,16 @@ const FirmaDomicilio = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <ModalEstatus
+          titulo={"¡Atención!"}
+          texto={
+            "Pronto recibirás los documentos para firmar con instrucciones.\n¡Gracias por tu preferencia!"
+          }
+          imagen={"Alert"}
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          navigation={"MiTankef"}
+        />
       </KeyboardAwareScrollView>
     </View>
   );

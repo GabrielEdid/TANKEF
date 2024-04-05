@@ -22,6 +22,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIPost } from "../../API/APIService";
+import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -348,34 +349,16 @@ const DatosBancarios = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Image
-                style={{ width: 150, height: 150, marginBottom: 10 }}
-                source={require("../../../assets/images/Validacion.png")}
-              />
-              <Text style={styles.modalText}>Validación</Text>
-              <Text style={styles.modalTextBody}>
-                Estamos validando tu información. {"\n"}Te notificaremos pronto.
-              </Text>
-              <TouchableOpacity
-                style={[
-                  styles.botonContinuar,
-                  { marginBottom: 0, width: "100%" },
-                ]}
-                onPress={() => [
-                  setModalVisible(false),
-                  navigation.navigate("MiTankef"),
-                ]}
-              >
-                <Text style={[styles.textoBotonContinuar, { color: "white" }]}>
-                  Aceptar
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        <ModalEstatus
+          titulo={"¡Atención!"}
+          texto={
+            "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+          }
+          imagen={"Alert"}
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          navigation={"MiTankef"}
+        />
       </View>
     </TouchableWithoutFeedback>
   );

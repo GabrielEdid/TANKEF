@@ -10,11 +10,9 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
-import { CreditContext } from "../hooks/CreditContext";
-import { Ionicons } from "@expo/vector-icons";
 
 /**
- * `ModalAtencion` es un componente que muestra información de un credito específico,
+ * `ModalEstatus` es un componente que muestra información de un credito específico,
  * como una tarjeta interactuable. Da el estatus de un credito y ayuda con los flujos.
  * Depenediendo de sus props sera el texto y la imagen mostrada.
  *
@@ -22,22 +20,26 @@ import { Ionicons } from "@expo/vector-icons";
  * - `titulo`: titulo del modal. Puede ser "Atención!" o "Felicidades!".
  * - `texto`: texto que tendra el modal.
  * - `imagen`: imagen que tendra el modal. Puede ser "Alert", "RedAlert", "Mail" o "Ready".
+ * - `visible`: booleano que indica si el modal esta visible o no.
+ * - `onClose`: función que se ejecuta para cerrar el modal.
+ * - `navigation`: direccion a navegar.
  *
- * Ejemplo (o ver en ):
- *  <ModalAtencion
- *     titulo={"Atencion!"}
- *      texto={
+ * Ejemplo (o ver en DatosBancarios.js):
+ *    <ModalEstatus
+ *        titulo={"¡Atención!"}
+ *        texto={
  *        "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
- *      }
- *      imagen={"Alert"}
- *    />
+ *        }
+ *        imagen={"Alert"}
+ *        visible={modalVisible}
+ *        onClose={() => setModalVisible(false)}
+ *        navigation={"MiTankef"}
+ *      />
  */
 
-const ModalAtencion = (props) => {
+const ModalEstatus = (props) => {
   const navigation = useNavigation();
   // Contexto de crédito
-  const { credit, setCredit } = useContext(CreditContext);
-
   const imageMap = {
     Alert: require("../../assets/images/Alert.png"),
     RedAlert: require("../../assets/images/RedAlert.png"),
@@ -48,7 +50,7 @@ const ModalAtencion = (props) => {
   // Componente visual
   return (
     <>
-      <Modal animationType="slide" transparent={true} visible={true}>
+      <Modal animationType="slide" transparent={true} visible={props.visible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Image
@@ -60,7 +62,9 @@ const ModalAtencion = (props) => {
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 style={styles.botonContinuar}
-                onPress={() => {}}
+                onPress={() => {
+                  props.onClose(), navigation.navigate(props.navigation);
+                }}
               >
                 <Text style={styles.textoBotonContinuar}>Continuar</Text>
               </TouchableOpacity>
@@ -169,4 +173,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalAtencion;
+export default ModalEstatus;
