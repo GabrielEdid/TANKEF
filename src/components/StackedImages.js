@@ -63,7 +63,7 @@ const StackedImages = () => {
   return (
     <View style={styles.container}>
       {/* Si hay miembros en la red se muestran sus imagenes */}
-      {images.length > 0 ? (
+      {!images.length > 0 ? (
         images.map((imgUrl, index) => (
           <View key={index} style={styles.imageWrapper}>
             <View style={styles.borderWrapper}>
@@ -76,7 +76,7 @@ const StackedImages = () => {
         <View style={styles.addButtonContainer}>
           <TouchableOpacity
             style={styles.addButton}
-            onPress={() => navigation.navigate("MiRed")}
+            onPress={() => navigation.navigate("MiRedMain")}
           >
             <MaterialCommunityIcons
               name="account-plus"

@@ -33,6 +33,7 @@ const widthHalf = screenWidth / 2;
 const MiTankefCredito = (props) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
+
   // Mapa de imágenes
   const imageMap = {
     Bill: require("../../assets/images/BillInvest.png"),

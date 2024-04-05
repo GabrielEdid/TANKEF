@@ -8,6 +8,7 @@ import {
   Dimensions,
   Image,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
@@ -31,8 +32,10 @@ const widthHalf = screenWidth / 2;
  */
 
 const MiTankefInversion = (props) => {
+  const navigation = useNavigation();
   // Estados y Contexto
   const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
+
   // Mapa de imágenes
   const imageMap = {
     Bill: require("../../assets/images/BillInvest.png"),
@@ -45,6 +48,12 @@ const MiTankefInversion = (props) => {
       {/* Vista de las distintas inversiones */}
       <View style={{ flexDirection: "row", marginBottom: 5 }}>
         <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Crear", {
+              screen: "DefinirInversion",
+              params: { flujo: "Inversión" },
+            })
+          }
           style={{
             justifyContent: "center",
             alignItems: "center",
