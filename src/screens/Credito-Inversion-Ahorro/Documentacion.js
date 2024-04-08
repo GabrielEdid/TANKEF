@@ -258,20 +258,20 @@ const Documentacion = ({ navigation }) => {
               }}
             >
               <Text style={styles.tituloCampo}>CURP</Text>
-              <TouchableOpacity
-                style={{ flexDirection: "row" }}
-                onPress={() => showUploadOptions("curp")}
-              >
-                <Text style={styles.input}>Selecciona documento</Text>
-                <Feather name="upload" size={20} color="#060B4D" />
-              </TouchableOpacity>
-              {CURP && (
+              {!CURP ? (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("curp")}
+                >
+                  <Text style={styles.input}>Selecciona documento</Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+              ) : (
                 <>
-                  <View style={styles.separacion} />
                   <View
                     style={{
                       flexDirection: "row",
-                      paddingVertical: 10,
+                      paddingBottom: 7.5,
                     }}
                   >
                     <FontAwesome
@@ -311,20 +311,20 @@ const Documentacion = ({ navigation }) => {
               <Text style={styles.tituloCampo}>
                 Documento de identificación (INE o Pasaporte)
               </Text>
-              <TouchableOpacity
-                style={{ flexDirection: "row" }}
-                onPress={() => showUploadOptions("identificacion")}
-              >
-                <Text style={styles.input}>Selecciona documento</Text>
-                <Feather name="upload" size={20} color="#060B4D" />
-              </TouchableOpacity>
-              {identificacion && (
+              {!identificacion ? (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("identificacion")}
+                >
+                  <Text style={styles.input}>Selecciona documento</Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+              ) : (
                 <>
-                  <View style={styles.separacion} />
                   <View
                     style={{
                       flexDirection: "row",
-                      paddingVertical: 10,
+                      paddingBottom: 7.5,
                     }}
                   >
                     <FontAwesome
@@ -367,20 +367,20 @@ const Documentacion = ({ navigation }) => {
               <Text style={styles.tituloCampo}>
                 Constancia de situación fiscal
               </Text>
-              <TouchableOpacity
-                style={{ flexDirection: "row" }}
-                onPress={() => showUploadOptions("fiscal")}
-              >
-                <Text style={styles.input}>Selecciona documento</Text>
-                <Feather name="upload" size={20} color="#060B4D" />
-              </TouchableOpacity>
-              {situacionFiscal && (
+              {!situacionFiscal ? (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("fiscal")}
+                >
+                  <Text style={styles.input}>Selecciona documento</Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+              ) : (
                 <>
-                  <View style={styles.separacion} />
                   <View
                     style={{
                       flexDirection: "row",
-                      paddingVertical: 10,
+                      paddingBottom: 7.5,
                     }}
                   >
                     <FontAwesome
@@ -421,20 +421,20 @@ const Documentacion = ({ navigation }) => {
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Comprobante de domicilio</Text>
-              <TouchableOpacity
-                style={{ flexDirection: "row" }}
-                onPress={() => showUploadOptions("domicilio")}
-              >
-                <Text style={styles.input}>Selecciona documento</Text>
-                <Feather name="upload" size={20} color="#060B4D" />
-              </TouchableOpacity>
-              {comprobanteDomicilio && (
+              {!comprobanteDomicilio ? (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("domicilio")}
+                >
+                  <Text style={styles.input}>Selecciona documento</Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+              ) : (
                 <>
-                  <View style={styles.separacion} />
                   <View
                     style={{
                       flexDirection: "row",
-                      paddingVertical: 10,
+                      paddingBottom: 7.5,
                     }}
                   >
                     <FontAwesome
