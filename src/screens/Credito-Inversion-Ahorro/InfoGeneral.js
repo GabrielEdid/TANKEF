@@ -34,8 +34,14 @@ const InfoGeneral = ({ navigation }) => {
   const [focus, setFocus] = useState("General");
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
+  const [pickerVisible2, setPickerVisible2] = useState(false);
+  const [pickerVisible3, setPickerVisible3] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
+  const [countryCode2, setCountryCode2] = useState("MX");
+  const [countryCode3, setCountryCode3] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
+  const [callingCode2, setCallingCode2] = useState("52");
+  const [callingCode3, setCallingCode3] = useState("52");
 
   const [dataDomicilio] = useState([
     { label: "Propio", value: "Propio" },
@@ -74,10 +80,16 @@ const InfoGeneral = ({ navigation }) => {
   ]);
 
   // Function to format the phone number as user types
-  const formatPhoneNumber = (text, country) => {
+  const formatPhoneNumber = (text, country, setter) => {
     const formatter = new AsYouType(country);
     const formatted = formatter.input(text);
-    setCredit({ ...credit, celular: text, celularShow: formatted });
+    if (setter === "Casa") {
+      setCredit({ ...credit, telCasa: text, telCasaShow: formatted });
+    } else if (setter === "Trabajo") {
+      setCredit({ ...credit, telTrabajo: text, telTrabajoShow: formatted });
+    } else if (setter === "Celular") {
+      setCredit({ ...credit, celular: text, celularShow: formatted });
+    }
   };
 
   // Function to validate email
@@ -245,39 +257,89 @@ const InfoGeneral = ({ navigation }) => {
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Teléfono Casa</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(value) =>
-                    setCredit({ ...credit, telCasa: value })
-                  }
-                  value={credit.telCasa}
-                  keyboardType="phone-pad"
-                  placeholder="10 dígitos"
-                />
+                <View style={styles.vistaTelefonos}>
+                  <TouchableOpacity onPress={() => setPickerVisible3(true)}>
+                    <Entypo
+                      name="chevron-thin-down"
+                      size={15}
+                      color="#060B4D"
+                      style={{ marginRight: 5 }}
+                    />
+                  </TouchableOpacity>
+                  <CountryPicker
+                    withFilter
+                    countryCode={countryCode3}
+                    withCallingCode
+                    withCloseButton
+                    onSelect={(country) => {
+                      const { cca2, callingCode } = country;
+                      setCountryCode3(cca2);
+                      setCallingCode3(callingCode[0]);
+                      setCredit({ ...credit, telCasa: "", telCasaShow: "" });
+                    }}
+                    visible={pickerVisible3}
+                    onClose={() => setPickerVisible3(false)}
+                  />
+                  <Text style={styles.countryCodeText}>
+                    +{callingCode3} {" |"}
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
+                    onChangeText={(text) =>
+                      formatPhoneNumber(text, countryCode3, "Casa")
+                    }
+                    value={credit.telCasaShow}
+                    keyboardType="phone-pad"
+                    placeholder="10 dígitos"
+                  />
+                </View>
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(value) =>
-                    setCredit({ ...credit, telTrabajo: value })
-                  }
-                  value={credit.telTrabajo}
-                  keyboardType="phone-pad"
-                  placeholder="10 dígitos"
-                />
+                <View style={styles.vistaTelefonos}>
+                  <TouchableOpacity onPress={() => setPickerVisible2(true)}>
+                    <Entypo
+                      name="chevron-thin-down"
+                      size={15}
+                      color="#060B4D"
+                      style={{ marginRight: 5 }}
+                    />
+                  </TouchableOpacity>
+                  <CountryPicker
+                    withFilter
+                    countryCode={countryCode2}
+                    withCallingCode
+                    withCloseButton
+                    onSelect={(country) => {
+                      const { cca2, callingCode } = country;
+                      setCountryCode2(cca2);
+                      setCallingCode2(callingCode[0]);
+                      setCredit({
+                        ...credit,
+                        telTrabajo: "",
+                        telTrabajoShow: "",
+                      });
+                    }}
+                    visible={pickerVisible2}
+                    onClose={() => setPickerVisible2(false)}
+                  />
+                  <Text style={styles.countryCodeText}>
+                    +{callingCode2} {" |"}
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
+                    onChangeText={(text) =>
+                      formatPhoneNumber(text, countryCode2, "Trabajo")
+                    }
+                    value={credit.telTrabajoShow}
+                    keyboardType="phone-pad"
+                    placeholder="10 dígitos"
+                  />
+                </View>
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Celular</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingHorizontal: 15,
-                    alignItems: "center",
-                    marginTop: -5,
-                    marginBottom: 5,
-                  }}
-                >
+                <View style={styles.vistaTelefonos}>
                   <TouchableOpacity onPress={() => setPickerVisible(true)}>
                     <Entypo
                       name="chevron-thin-down"
@@ -306,7 +368,7 @@ const InfoGeneral = ({ navigation }) => {
                   <TextInput
                     style={[styles.input, { paddingLeft: 0, marginBottom: 0 }]}
                     onChangeText={(text) =>
-                      formatPhoneNumber(text, countryCode)
+                      formatPhoneNumber(text, countryCode, "Celular")
                     }
                     value={credit.celularShow}
                     keyboardType="phone-pad"
@@ -461,6 +523,13 @@ const styles = StyleSheet.create({
     color: "grey",
     fontFamily: "opensanssemibold",
     marginRight: 10,
+  },
+  vistaTelefonos: {
+    flexDirection: "row",
+    paddingHorizontal: 15,
+    alignItems: "center",
+    marginTop: -5,
+    marginBottom: 5,
   },
   DropDownPicker: {
     borderColor: "transparent",

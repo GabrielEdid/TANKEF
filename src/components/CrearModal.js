@@ -74,7 +74,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           onPress={() => {
             handleClose();
             navigation.navigate("Crear", {
-              screen: "Documentacion",
+              screen: "DefinirInversion",
               params: { flujo: "Inversión" },
             });
           }}
@@ -89,7 +89,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           onPress={() => {
             handleClose();
             navigation.navigate("Crear", {
-              screen: "DefinirCredito",
+              screen: "InfoGeneral",
               params: { flujo: "Crédito" },
             });
           }}
