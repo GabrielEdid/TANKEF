@@ -27,7 +27,7 @@ const widthHalf = screenWidth / 2;
 
 const Documentacion = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
   const [CURP, setCURP] = useState("");
   const [nombreCURP, setNombreCURP] = useState("");
@@ -46,7 +46,7 @@ const Documentacion = ({ navigation }) => {
   const handlePress = async () => {
     setDisabled(true);
     console.log("Agregando beneficiarios a la inversión...");
-    const url = `/api/v1/investments/${155}`;
+    const url = `/api/v1/investments/${idInversion}`;
 
     const formData = new FormData();
 
@@ -84,7 +84,16 @@ const Documentacion = ({ navigation }) => {
     try {
       const response = await APIPut(url, formData);
 
-      if (response.error) {
+      if (
+        !(
+          response.error &&
+          response.error.errors &&
+          response.error.errors.bank_account_id &&
+          response.error.errors.bank_account_id.includes(
+            "La cuenta bancaria es requerida"
+          )
+        )
+      ) {
         console.error(
           "Error al agregar los documentos a la inversión:",
           response.error

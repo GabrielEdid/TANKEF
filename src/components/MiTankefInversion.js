@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -15,6 +16,7 @@ import { APIGet } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
+import ModalEstatus from "./ModalEstatus";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -40,6 +42,15 @@ const MiTankefInversion = (props) => {
   const { user, setUser } = useContext(UserContext);
   const [focus, setFocus] = useState("Balance");
   const [investments, setInvestments] = useState([]);
+  const [folio, setFolio] = useState("");
+  const [plazo, setPlazo] = useState("");
+  const [rendimientoMensual, setRendimientoMensual] = useState("");
+  const [inversionInicial, setInversionInicial] = useState("");
+  const [tasaInteres, setTasaInteres] = useState("");
+  const [impuestoMensual, setImpuestoMensual] = useState("");
+  const [retornoNeto, setRetornoNeto] = useState("");
+  const [investmentState, setInvestmentState] = useState("");
+  const [currentID, setCurrentID] = useState(0);
 
   // Mapa de imágenes
   const imageMap = {
@@ -62,6 +73,8 @@ const MiTankefInversion = (props) => {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de las inversiones:", filteredResults);
       setInvestments(filteredResults);
+      setCurrentID(filteredResults[0].id);
+      fetchInvestment(filteredResults[0].id);
     }
   };
 
@@ -75,7 +88,14 @@ const MiTankefInversion = (props) => {
       console.error("Error al obtener la inversion:", result.error);
     } else {
       console.log("Resultados de la inversion:", result.data.data);
-      setInvestments(result.data.data);
+      setInvestmentState(result.data.data.aasm_state);
+      setPlazo(result.data.data.term);
+      setFolio(result.data.data.invoice_number);
+      setInversionInicial(formatAmount(result.data.data.amount));
+      setRendimientoMensual("Falta");
+      setTasaInteres("Falta");
+      setImpuestoMensual("Falta");
+      setRetornoNeto("Falta");
     }
   };
 
@@ -86,11 +106,26 @@ const MiTankefInversion = (props) => {
     }, [])
   );
 
+  // Formatea un monto a pesos mexicanos
+  const formatAmount = (amount) => {
+    const number = parseFloat(amount);
+    return `${number.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    })}`;
+  };
+
   // Componente visual
   return (
     <View>
       {/* Vista de las distintas inversiones */}
-      <View style={{ flexDirection: "row", marginBottom: 5 }}>
+      <ScrollView
+        style={{
+          marginBottom: 5,
+        }}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      >
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("Crear", {
@@ -98,16 +133,7 @@ const MiTankefInversion = (props) => {
               params: { flujo: "Inversión" },
             })
           }
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginLeft: 10,
-            backgroundColor: "white",
-            paddingHorizontal: 17.5,
-            paddingVertical: 5,
-            width: 120,
-            borderRadius: 10,
-          }}
+          style={styles.botonNuevaInversion}
         >
           <Entypo name="plus" size={30} color="black" />
           <Text
@@ -124,153 +150,175 @@ const MiTankefInversion = (props) => {
         </TouchableOpacity>
 
         {/* Componente repetible */}
-        {investments && investments.length > 0 ? (
+        {investments &&
+          investments.length > 0 &&
           investments.map((investment, index) => (
             <TouchableOpacity
               key={investment.id || index}
-              style={styles.investmentNameContainer}
-              onPress={() => fetchInvestment(investment.id)}
+              style={[
+                styles.investmentNameContainer,
+                {
+                  backgroundColor:
+                    currentID === investment.id ? "#2FF690" : "white",
+                },
+              ]}
+              onPress={() => [
+                fetchInvestment(investment.id),
+                setCurrentID(investment.id),
+              ]}
             >
               <Image source={imageMap["Bill"]} style={styles.bill} />
               <Text style={styles.investmentName}>{investment.name}</Text>
             </TouchableOpacity>
-          ))
-        ) : (
-          <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
-        )}
-      </View>
-      <View style={styles.tabsContainer}>
-        {/* Boton Tab Balance */}
-        <TouchableOpacity
-          style={styles.tabButton}
-          onPress={() => setFocus("Balance")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              {
-                color: focus === "Balance" ? "#060B4D" : "#9596AF",
-                fontFamily:
-                  focus === "Balance" ? "opensansbold" : "opensanssemibold",
-              },
-            ]}
-          >
-            Balance General
-          </Text>
-          {focus === "Balance" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
+          ))}
+      </ScrollView>
 
-        {/* Boton Tab Movimientos */}
-        <TouchableOpacity
-          style={styles.tabButton}
-          onPress={() => setFocus("Movimientos")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              {
-                color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
-                fontFamily:
-                  focus === "Movimientos" ? "opensansbold" : "opensanssemibold",
-              },
-            ]}
-          >
-            Movimientos
-          </Text>
-          {focus === "Movimientos" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
-      </View>
-      {/* Vista de la información total de las inversiónes */}
-      {focus === "Balance" && (
+      {investments && investments.length > 0 ? (
         <>
-          <View
-            style={{
-              justifyContent: "space-between",
-              backgroundColor: "white",
-              paddingHorizontal: 20,
-              paddingVertical: 15,
-              alignItems: "center",
-              marginTop: 3,
-            }}
-          >
-            <Text style={styles.tituloMonto}>Retorno de inversión neto</Text>
-            <Text style={styles.monto}>$11,106.11 MXN</Text>
-          </View>
+          <View style={styles.tabsContainer}>
+            {/* Boton Tab Balance */}
+            <TouchableOpacity
+              style={styles.tabButton}
+              onPress={() => setFocus("Balance")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  {
+                    color: focus === "Balance" ? "#060B4D" : "#9596AF",
+                    fontFamily:
+                      focus === "Balance" ? "opensansbold" : "opensanssemibold",
+                  },
+                ]}
+              >
+                Balance General
+              </Text>
+              {focus === "Balance" ? <View style={styles.focusLine} /> : null}
+            </TouchableOpacity>
 
-          <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Folio de{"\n"}inversión</Text>
-              <Text style={styles.valorConcepto}>4225fd6f64</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Plazo de{"\n"}inversión</Text>
-              <Text style={styles.valorConcepto}>12 meses</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Rendimiento{"\n"}neto mensual</Text>
-              <Text style={styles.valorConcepto}>$91.67</Text>
-            </View>
+            {/* Boton Tab Movimientos */}
+            <TouchableOpacity
+              style={styles.tabButton}
+              onPress={() => setFocus("Movimientos")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  {
+                    color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
+                    fontFamily:
+                      focus === "Movimientos"
+                        ? "opensansbold"
+                        : "opensanssemibold",
+                  },
+                ]}
+              >
+                Movimientos
+              </Text>
+              {focus === "Movimientos" ? (
+                <View style={styles.focusLine} />
+              ) : null}
+            </TouchableOpacity>
           </View>
+          {/* Vista de la información total de las inversiónes */}
+          {focus === "Balance" && (
+            <>
+              <View
+                style={{
+                  justifyContent: "space-between",
+                  backgroundColor: "white",
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                  alignItems: "center",
+                  marginTop: 3,
+                }}
+              >
+                <Text style={styles.tituloMonto}>
+                  Retorno de inversión neto
+                </Text>
+                <Text style={styles.monto}>{retornoNeto}</Text>
+              </View>
 
-          <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-              <Text style={styles.valorConcepto}>$10,000.00</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-              <Text style={styles.valorConcepto}>11.50%</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-              <Text style={styles.valorConcepto}>$2.75</Text>
-            </View>
-          </View>
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Folio de{"\n"}inversión</Text>
+                  <Text style={styles.valorConcepto}>{folio}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Plazo de{"\n"}inversión</Text>
+                  <Text style={styles.valorConcepto}>{plazo} meses</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>
+                    Rendimiento{"\n"}neto mensual
+                  </Text>
+                  <Text style={styles.valorConcepto}>{rendimientoMensual}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
+                  <Text style={styles.valorConcepto}>{inversionInicial}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+                  <Text style={styles.valorConcepto}>{tasaInteres}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
+                  <Text style={styles.valorConcepto}>{impuestoMensual}</Text>
+                </View>
+              </View>
+            </>
+          )}
+          {focus === "Movimientos" && (
+            <>
+              <View>
+                <Movimiento
+                  movimiento={"Inicio Inversión"}
+                  fecha={"10.ENE.2024"}
+                  monto={"$10,000.00 MXN"}
+                  positive={true}
+                />
+                <Movimiento
+                  movimiento={"Abono"}
+                  fecha={"10.FEB.2024"}
+                  monto={"$5,000.00 MXN"}
+                  positive={true}
+                />
+              </View>
+            </>
+          )}
         </>
+      ) : (
+        <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
       )}
-
-      {focus === "Movimientos" && (
-        <>
-          <View>
-            <Movimiento
-              movimiento={"Inicio Inversión"}
-              fecha={"10.ENE.2024"}
-              monto={"$10,000.00 MXN"}
-              positive={true}
-            />
-            <Movimiento
-              movimiento={"Abono"}
-              fecha={"10.FEB.2024"}
-              monto={"$5,000.00 MXN"}
-              positive={true}
-            />
-          </View>
-        </>
-      )}
+      {<>{!investmentState === "request_documentation" && <ModalEstatus />}</>}
     </View>
   );
 };
@@ -293,7 +341,7 @@ const styles = StyleSheet.create({
   },
   investmentNameContainer: {
     alignItems: "center",
-    marginLeft: 10,
+    marginRight: 10,
     paddingVertical: 7.5,
     paddingHorizontal: 10,
     borderRadius: 10,
@@ -320,6 +368,16 @@ const styles = StyleSheet.create({
     width: 20,
     marginBottom: 5,
     tintColor: "#060B4D",
+  },
+  botonNuevaInversion: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    paddingHorizontal: 17.5,
+    paddingVertical: 5,
+    width: 120,
+    borderRadius: 10,
+    marginHorizontal: 10,
   },
   //Estilos para la segunda barra de Tabs
   tabsContainer: {

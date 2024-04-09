@@ -31,7 +31,7 @@ const widthHalf = screenWidth / 2;
 
 const DatosBancarios = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
   const [alias, setAlias] = useState("");
   const [clabe, setClabe] = useState("");
@@ -46,7 +46,7 @@ const DatosBancarios = ({ navigation }) => {
   // Funcion para guardar los datos de la cuenta bancaria
   const handlePress = async () => {
     setDisabled(true);
-    const url = `/api/v1/investments/${155}/bank_accounts`;
+    const url = `/api/v1/investments/${idInversion}/bank_accounts`;
     const formData = new FormData();
 
     formData.append("investment[bank_account_attributes][short_name]", alias);
@@ -134,7 +134,6 @@ const DatosBancarios = ({ navigation }) => {
       clabe &&
       clabe.length === 18 &&
       NCuenta &&
-      NCuenta.length === 10 &&
       comprobanteNCuenta &&
       banco;
     setDisabled(!camposLlenos);
@@ -312,30 +311,30 @@ const DatosBancarios = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>
                   Carátula de Estado de Cuenta
                 </Text>
-                <TouchableOpacity
-                  style={{ flexDirection: "row" }}
-                  onPress={showUploadOptions}
-                >
-                  <Text
-                    style={[
-                      styles.input,
-                      {
-                        width: "92%",
-                        color: "#c7c7c9ff",
-                      },
-                    ]}
+                {!comprobanteNCuenta ? (
+                  <TouchableOpacity
+                    style={{ flexDirection: "row" }}
+                    onPress={showUploadOptions}
                   >
-                    Selecciona documento
-                  </Text>
-                  <Feather name="upload" size={20} color="#060B4D" />
-                </TouchableOpacity>
-                {comprobanteNCuenta && (
+                    <Text
+                      style={[
+                        styles.input,
+                        {
+                          width: "92%",
+                          color: "#c7c7c9ff",
+                        },
+                      ]}
+                    >
+                      Selecciona documento
+                    </Text>
+                    <Feather name="upload" size={20} color="#060B4D" />
+                  </TouchableOpacity>
+                ) : (
                   <>
-                    <View style={styles.separacion} />
                     <View
                       style={{
                         flexDirection: "row",
-                        paddingVertical: 10,
+                        paddingBottom: 7.5,
                       }}
                     >
                       <FontAwesome
