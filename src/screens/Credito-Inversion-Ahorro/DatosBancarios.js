@@ -403,8 +403,10 @@ const DatosBancarios = ({ navigation }) => {
           }
           imagen={"Alert"}
           visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          navigation={"MiTankef"}
+          onClose={() => [
+            setModalVisible(false),
+            navigation.navigate("MiTankef"),
+          ]}
         />
       </View>
     </TouchableWithoutFeedback>

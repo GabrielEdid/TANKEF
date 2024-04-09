@@ -21,8 +21,7 @@ import { useNavigation } from "@react-navigation/native";
  * - `texto`: texto que tendra el modal.
  * - `imagen`: imagen que tendra el modal. Puede ser "Alert", "RedAlert", "Mail" o "Ready".
  * - `visible`: booleano que indica si el modal esta visible o no.
- * - `onClose`: función que se ejecuta para cerrar el modal.
- * - `navigation`: direccion a navegar.
+ * - `onClose`: función que se ejecuta para cerrar el modal, se le puede dar la navegación a otra pantalla al cerrar.
  *
  * Ejemplo (o ver en DatosBancarios.js):
  *    <ModalEstatus
@@ -32,8 +31,7 @@ import { useNavigation } from "@react-navigation/native";
  *        }
  *        imagen={"Alert"}
  *        visible={modalVisible}
- *        onClose={() => setModalVisible(false)}
- *        navigation={"MiTankef"}
+ *        onClose={() => [setModalVisible(false), navigation.navigate("MiTankef")]}
  *      />
  */
 
@@ -63,7 +61,7 @@ const ModalEstatus = (props) => {
               <TouchableOpacity
                 style={styles.botonContinuar}
                 onPress={() => {
-                  props.onClose(), navigation.navigate(props.navigation);
+                  props.onClose();
                 }}
               >
                 <Text style={styles.textoBotonContinuar}>Continuar</Text>

@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -51,6 +51,7 @@ const MiTankefInversion = (props) => {
   const [retornoNeto, setRetornoNeto] = useState("");
   const [investmentState, setInvestmentState] = useState("");
   const [currentID, setCurrentID] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Mapa de imágenes
   const imageMap = {
@@ -88,7 +89,9 @@ const MiTankefInversion = (props) => {
       console.error("Error al obtener la inversion:", result.error);
     } else {
       console.log("Resultados de la inversion:", result.data.data);
-      setInvestmentState(result.data.data.aasm_state);
+      setInvestmentState(
+        /*result.data.data.aasm_state*/ "rejected_documentation"
+      );
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setInversionInicial(formatAmount(result.data.data.amount));
@@ -114,6 +117,18 @@ const MiTankefInversion = (props) => {
       currency: "MXN",
     })}`;
   };
+
+  useEffect(() => {
+    if (
+      investmentState === "request_documentation" ||
+      investmentState === "reviewing_documentation" ||
+      investmentState === "rejected_documentation" ||
+      investmentState === "sign_contract" ||
+      investmentState === "request_payment"
+    ) {
+      setModalVisible(true);
+    }
+  }, [investmentState]);
 
   // Componente visual
   return (
@@ -318,7 +333,39 @@ const MiTankefInversion = (props) => {
       ) : (
         <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
       )}
-      {<>{!investmentState === "request_documentation" && <ModalEstatus />}</>}
+      {
+        <>
+          {investmentState === "request_documentation" && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "Tu documentación ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+              }
+              imagen={"Alert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+            />
+          )}
+
+          {investmentState === "rejected_documentation" && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "Tu documentación ha sido rechazada, por favor revisa que coincidan con lo que se solicita y que sean vigentes antes de volver a enviarlos.\n¡Gracias por tu preferencia!"
+              }
+              imagen={"RedAlert"}
+              visible={modalVisible}
+              onClose={() => [
+                setModalVisible(false),
+                navigation.navigate("Crear", {
+                  screen: "DatosBancarios",
+                  params: { flujo: "Inversión" },
+                }),
+              ]}
+            />
+          )}
+        </>
+      }
     </View>
   );
 };
