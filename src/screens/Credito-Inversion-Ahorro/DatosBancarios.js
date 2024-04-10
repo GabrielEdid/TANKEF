@@ -275,42 +275,8 @@ const DatosBancarios = ({ navigation }) => {
                   keyboardType="numeric"
                 />
                 <View style={styles.separacion} />
-                <Text style={[styles.tituloCampo, { color: "grey" }]}>
-                  No. Cuenta
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setNCuenta}
-                  value={NCuenta}
-                  placeholder="10 dígitos"
-                  maxLength={10}
-                  keyboardType="numeric"
-                  editable={false}
-                />
-                <View style={styles.separacion} />
-                <Text style={[styles.tituloCampo, { color: "grey" }]}>
-                  Banco
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setBanco}
-                  value={banco}
-                  placeholder="Nombre Banco"
-                  editable={false}
-                />
-                <View style={styles.separacion} />
-                <View>
-                  <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setNombre}
-                    value={nombre}
-                    placeholder="Nombre Cuentahabiente"
-                  />
-                </View>
-                <View style={styles.separacion} />
                 <Text style={styles.tituloCampo}>
-                  Carátula de Estado de Cuenta
+                  Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
                 </Text>
                 {!comprobanteNCuenta ? (
                   <TouchableOpacity
@@ -373,6 +339,41 @@ const DatosBancarios = ({ navigation }) => {
                     </View>
                   </>
                 )}
+                <View style={styles.separacion} />
+
+                <Text style={[styles.tituloCampo, { color: "grey" }]}>
+                  No. Cuenta
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setNCuenta}
+                  value={NCuenta}
+                  placeholder="Autorrelleno"
+                  maxLength={10}
+                  keyboardType="numeric"
+                  editable={false}
+                />
+                <View style={styles.separacion} />
+                <Text style={[styles.tituloCampo, { color: "grey" }]}>
+                  Banco
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setBanco}
+                  value={banco}
+                  placeholder="Autorrelleno"
+                  editable={false}
+                />
+                <View style={styles.separacion} />
+                <View>
+                  <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setNombre}
+                    value={nombre}
+                    placeholder="Nombre Cuentahabiente"
+                  />
+                </View>
                 <View style={styles.separacion} />
               </View>
             </View>

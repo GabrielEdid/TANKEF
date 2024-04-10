@@ -74,7 +74,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           onPress={() => {
             handleClose();
             navigation.navigate("Crear", {
-              screen: "DefinirInversion",
+              screen: "Beneficiarios",
               params: { flujo: "Inversión" },
             });
           }}

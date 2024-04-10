@@ -30,7 +30,7 @@ const Inversion2 = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const [focus, setFocus] = useState("Documentacion");
+  const [focus, setFocus] = useState("Beneficiarios");
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [parentesco, setParentesco] = useState("");
@@ -241,7 +241,7 @@ const Inversion2 = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {focus === "Documentacion" && (
+      {/*{focus === "Documentacion" && (
         <>
           <View style={styles.seccion}>
             <Text style={styles.tituloSeccion}>Documentación</Text>
@@ -285,7 +285,7 @@ const Inversion2 = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </>
-      )}
+          )}*/}
 
       {focus === "Beneficiarios" && (
         <>
