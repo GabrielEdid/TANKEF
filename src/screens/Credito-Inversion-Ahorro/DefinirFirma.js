@@ -8,6 +8,7 @@ import {
   Image,
   Keyboard,
   Modal,
+  Alert,
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useCallback } from "react";
@@ -20,6 +21,7 @@ import {
   MaterialCommunityIcons,
   FontAwesome,
 } from "@expo/vector-icons";
+import { APIPost } from "../../API/APIService";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -27,17 +29,51 @@ const widthHalf = screenWidth / 2;
 
 const DefinirFirma = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
   const [focus, setFocus] = useState("Firma");
   const [modalPresencial, setModalPresencial] = useState(false);
+
+  const handlePresencial = async () => {
+    setModalPresencial(false);
+    const url = `/api/v1/investments/${idInversion}/mailaddress`;
+    const data = {
+      mailaddress: {
+        fullname: "",
+        country: "",
+        street: "",
+        ext_number: "",
+        int_number: "",
+        city: "",
+        municipality: "",
+        neighborhood: "",
+        state: "",
+        zip_code: "",
+        delivery_method: "branch_office",
+      },
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      console.error("Error al gurdar como presencial:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudo establecer la firma del contrato presencial. Intente nuevamente."
+      );
+    } else {
+      navigation.navigate("MiTankef");
+    }
+  };
 
   // Función para manejar el botón de Aceptar
   const handleSiguiente = () => {
     if (focus === "Presencial") {
       setModalPresencial(true);
     } else if (focus === "Enviar") {
-      navigation.navigate("FirmaDomicilio", { flujo: flujo });
+      navigation.navigate("FirmaDomicilio", {
+        flujo: flujo,
+        idInversion: idInversion,
+      });
     } else if (focus === "Firma") {
       navigation.navigate("MiTankef");
     }
@@ -171,7 +207,7 @@ const DefinirFirma = ({ navigation }) => {
         </View>
 
         {/* Boton de Aceptar */}
-        <View style={{}}>
+        <View>
           <TouchableOpacity
             style={styles.botonContinuar}
             onPress={() => handleSiguiente()}
@@ -221,11 +257,7 @@ const DefinirFirma = ({ navigation }) => {
                     styles.botonContinuar,
                     { marginBottom: 0, flex: 1, marginLeft: 5 },
                   ]}
-                  onPress={() => [
-                    setModalPresencial(false),
-                    navigation.navigate("MiTankef"),
-                    { flujo: flujo },
-                  ]}
+                  onPress={() => handlePresencial()}
                 >
                   <Text style={[styles.textoBotonContinuar]}>Aceptar</Text>
                 </TouchableOpacity>

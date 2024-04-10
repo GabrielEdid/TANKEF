@@ -404,7 +404,8 @@ const DatosBancarios = ({ navigation }) => {
           }
           imagen={"Alert"}
           visible={modalVisible}
-          onClose={() => [
+          onClose={() => setModalVisible(false)}
+          onAccept={() => [
             setModalVisible(false),
             navigation.navigate("MiTankef"),
           ]}

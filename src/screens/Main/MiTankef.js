@@ -83,13 +83,14 @@ const MiTankef = () => {
 
       {/* Cuadro con Valor de la Red y las imagenes de los usuarios en la red */}
       <View style={{ marginTop: 3, backgroundColor: "white" }}>
-        <Text style={styles.textoValorRed}>Valor de tu Red (MXN)</Text>
+        <Text style={styles.textoValorRed}>Valor general de tu red</Text>
         <Text style={styles.valorRed}>
           {dashboard.data &&
             dashboard.data.value_network.toLocaleString("es-MX", {
               style: "currency",
               currency: "MXN",
             })}
+          MXN
         </Text>
         {/* Componente de Imagenes de los usuarios en la red */}
         <StackedImages />

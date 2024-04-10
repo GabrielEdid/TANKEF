@@ -44,10 +44,8 @@ const MiTankefInversion = (props) => {
   const [investments, setInvestments] = useState([]);
   const [folio, setFolio] = useState("");
   const [plazo, setPlazo] = useState("");
-  const [rendimientoMensual, setRendimientoMensual] = useState("");
   const [inversionInicial, setInversionInicial] = useState("");
   const [tasaInteres, setTasaInteres] = useState("");
-  const [impuestoMensual, setImpuestoMensual] = useState("");
   const [retornoNeto, setRetornoNeto] = useState("");
   const [investmentState, setInvestmentState] = useState("");
   const [currentID, setCurrentID] = useState(0);
@@ -93,9 +91,7 @@ const MiTankefInversion = (props) => {
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setInversionInicial(formatAmount(result.data.data.amount));
-      setRendimientoMensual("Falta");
       setTasaInteres("Falta");
-      setImpuestoMensual("Falta");
       setRetornoNeto("Falta");
     }
   };
@@ -118,11 +114,10 @@ const MiTankefInversion = (props) => {
 
   useEffect(() => {
     if (
-      investmentState === "request_documentation" ||
       investmentState === "reviewing_documentation" ||
       investmentState === "rejected_documentation" ||
-      investmentState === "sign_contract" ||
-      investmentState === "request_payment"
+      investmentState === "signing_contract" ||
+      investmentState === "sign_contract"
     ) {
       setModalVisible(true);
     }
@@ -267,18 +262,6 @@ const MiTankefInversion = (props) => {
                   <Text style={styles.concepto}>Plazo de{"\n"}inversión</Text>
                   <Text style={styles.valorConcepto}>{plazo} meses</Text>
                 </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>
-                    Rendimiento{"\n"}neto mensual
-                  </Text>
-                  <Text style={styles.valorConcepto}>{rendimientoMensual}</Text>
-                </View>
               </View>
 
               <View style={styles.container}>
@@ -295,16 +278,6 @@ const MiTankefInversion = (props) => {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
                   <Text style={styles.valorConcepto}>{tasaInteres}</Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-                  <Text style={styles.valorConcepto}>{impuestoMensual}</Text>
                 </View>
               </View>
             </>
@@ -342,6 +315,7 @@ const MiTankefInversion = (props) => {
               imagen={"Alert"}
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
+              onAccept={() => setModalVisible(false)}
             />
           )}
 
@@ -353,11 +327,12 @@ const MiTankefInversion = (props) => {
               }
               imagen={"RedAlert"}
               visible={modalVisible}
-              onClose={() => [
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
                 setModalVisible(false),
                 navigation.navigate("Crear", {
                   screen: "Documentacion",
-                  params: { flujo: "Inversión" },
+                  params: { flujo: "Inversión", idInversion: currentID },
                 }),
               ]}
             />
@@ -371,11 +346,12 @@ const MiTankefInversion = (props) => {
               }
               imagen={"Ready"}
               visible={modalVisible}
-              onClose={() => [
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
                 setModalVisible(false),
                 navigation.navigate("Crear", {
                   screen: "DefinirFirma",
-                  params: { flujo: "Inversión" },
+                  params: { flujo: "Inversión", idInversion: currentID },
                 }),
               ]}
             />
@@ -383,18 +359,19 @@ const MiTankefInversion = (props) => {
 
           {investmentState === "signing_contract" && (
             <ModalEstatus
-              titulo={"¡Felicidades!"}
+              titulo={"¡Atención!"}
               texto={
-                "Tu información ha sido validada, por favor continua a la firma de contrato."
+                "La firma del contrato está pendiente. Por favor completa ese paso para continuar.\n¡Gracias!"
               }
-              imagen={"Ready"}
+              imagen={"RedAlert"}
               visible={modalVisible}
-              onClose={() => [
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
                 setModalVisible(false),
-                navigation.navigate("Crear", {
+                /*navigation.navigate("Crear", {
                   screen: "DefinirFirma",
                   params: { flujo: "Inversión" },
-                }),
+                }),*/
               ]}
             />
           )}

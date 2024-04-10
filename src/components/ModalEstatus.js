@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
+import { AntDesign } from "@expo/vector-icons";
 
 /**
  * `ModalEstatus` es un componente que muestra información de un credito específico,
@@ -21,7 +22,8 @@ import { useNavigation } from "@react-navigation/native";
  * - `texto`: texto que tendra el modal.
  * - `imagen`: imagen que tendra el modal. Puede ser "Alert", "RedAlert", "Mail" o "Ready".
  * - `visible`: booleano que indica si el modal esta visible o no.
- * - `onClose`: función que se ejecuta para cerrar el modal, se le puede dar la navegación a otra pantalla al cerrar.
+ * - `onAccept`: función que se ejecuta al presionar el aceptar del modal, se le puede dar la navegación a otra pantalla al cerrar.
+ * - `onClose`: función que se ejecuta para cerrar el modal.
  *
  * Ejemplo (o ver en DatosBancarios.js):
  *    <ModalEstatus
@@ -31,7 +33,8 @@ import { useNavigation } from "@react-navigation/native";
  *        }
  *        imagen={"Alert"}
  *        visible={modalVisible}
- *        onClose={() => [setModalVisible(false), navigation.navigate("MiTankef")]}
+ *        onClose={() => setModalVisible(false)}
+ *        onAccept={() => [setModalVisible(false), navigation.navigate("MiTankef")]}
  *      />
  */
 
@@ -50,6 +53,12 @@ const ModalEstatus = (props) => {
     <>
       <Modal animationType="slide" transparent={true} visible={props.visible}>
         <View style={styles.centeredView}>
+          <TouchableOpacity
+            style={{ position: "absolute", top: 50, right: 20 }}
+            onPress={() => props.onClose()}
+          >
+            <AntDesign name="closecircleo" size={30} color="white" />
+          </TouchableOpacity>
           <View style={styles.modalView}>
             <Image
               style={{ width: 60, height: 60, marginBottom: 10 }}
@@ -61,7 +70,7 @@ const ModalEstatus = (props) => {
               <TouchableOpacity
                 style={styles.botonContinuar}
                 onPress={() => {
-                  props.onClose();
+                  props.onAccept();
                 }}
               >
                 <Text style={styles.textoBotonContinuar}>Continuar</Text>
