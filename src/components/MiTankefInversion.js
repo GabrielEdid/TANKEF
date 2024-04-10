@@ -89,9 +89,7 @@ const MiTankefInversion = (props) => {
       console.error("Error al obtener la inversion:", result.error);
     } else {
       console.log("Resultados de la inversion:", result.data.data);
-      setInvestmentState(
-        /*result.data.data.aasm_state*/ "rejected_documentation"
-      );
+      setInvestmentState(result.data.data.aasm_state);
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setInversionInicial(formatAmount(result.data.data.amount));
@@ -335,7 +333,7 @@ const MiTankefInversion = (props) => {
       )}
       {
         <>
-          {investmentState === "request_documentation" && (
+          {investmentState === "reviewing_documentation" && (
             <ModalEstatus
               titulo={"¡Atención!"}
               texto={
@@ -358,7 +356,43 @@ const MiTankefInversion = (props) => {
               onClose={() => [
                 setModalVisible(false),
                 navigation.navigate("Crear", {
-                  screen: "DatosBancarios",
+                  screen: "Documentacion",
+                  params: { flujo: "Inversión" },
+                }),
+              ]}
+            />
+          )}
+
+          {investmentState === "sign_contract" && (
+            <ModalEstatus
+              titulo={"¡Felicidades!"}
+              texto={
+                "Tu información ha sido validada, por favor continua a la firma de contrato."
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => [
+                setModalVisible(false),
+                navigation.navigate("Crear", {
+                  screen: "DefinirFirma",
+                  params: { flujo: "Inversión" },
+                }),
+              ]}
+            />
+          )}
+
+          {investmentState === "signing_contract" && (
+            <ModalEstatus
+              titulo={"¡Felicidades!"}
+              texto={
+                "Tu información ha sido validada, por favor continua a la firma de contrato."
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => [
+                setModalVisible(false),
+                navigation.navigate("Crear", {
+                  screen: "DefinirFirma",
                   params: { flujo: "Inversión" },
                 }),
               ]}

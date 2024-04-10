@@ -70,6 +70,7 @@ const DatosBancarios = ({ navigation }) => {
           "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
         );
       } else {
+        console.log("Datos de cuenta bancaria guardados con éxito");
         setModalVisible(true);
       }
     } catch (error) {

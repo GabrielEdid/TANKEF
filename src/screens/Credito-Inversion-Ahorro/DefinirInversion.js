@@ -33,7 +33,6 @@ const DefinirInversion = ({ navigation }) => {
   const [retornoNeto, setRetornoNeto] = useState("");
   const [inversionInicial, setInversionInicial] = useState("");
   const [tasa, setTasa] = useState("");
-  const [impuesto, setImpuesto] = useState("");
   const [focusTab, setFocusTab] = useState("");
 
   // Función para hacer la cotizacion al API
@@ -53,7 +52,6 @@ const DefinirInversion = ({ navigation }) => {
         } else {
           setInversionInicial(montoShow);
           setRetornoNeto(response.data.total);
-          setImpuesto("16%");
           setTasa(response.data.rate);
         }
       } catch (error) {
@@ -65,7 +63,6 @@ const DefinirInversion = ({ navigation }) => {
     else if (montoNumeric < 5000) {
       setInversionInicial("");
       setRetornoNeto("");
-      setImpuesto("");
       setTasa("");
     }
   }, [montoNumeric, plazo]);
@@ -346,18 +343,6 @@ const DefinirInversion = ({ navigation }) => {
               <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
               <Text style={styles.valorConcepto}>
                 {tasa ? `${tasa}` : "0%"}
-              </Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Impuesto{"\n"}mensual</Text>
-              <Text style={styles.valorConcepto}>
-                {impuesto ? `${impuesto}` : "0%"}
               </Text>
             </View>
           </View>

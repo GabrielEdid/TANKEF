@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo semitransparente
   },
   modalView: {
-    width: "80%", // Asegúrate de que el contenedor del modal tenga un ancho definido.
+    width: "80%",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,

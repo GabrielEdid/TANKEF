@@ -39,7 +39,7 @@ const Documentacion = ({ navigation }) => {
   const [identificacion, setIdentificacion] = useState("");
   const [nombreIdentificacion, setNombreIdentificacion] = useState("");
   const [actuoComo, setActuoComo] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
+  //const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
   // Función para subir la documentación
@@ -84,16 +84,7 @@ const Documentacion = ({ navigation }) => {
     try {
       const response = await APIPut(url, formData);
 
-      if (
-        !(
-          response.error &&
-          response.error.errors &&
-          response.error.errors.bank_account_id &&
-          response.error.errors.bank_account_id.includes(
-            "La cuenta bancaria es requerida"
-          )
-        )
-      ) {
+      if (response.error) {
         console.error(
           "Error al agregar los documentos a la inversión:",
           response.error
@@ -104,7 +95,10 @@ const Documentacion = ({ navigation }) => {
         );
       } else {
         console.log("Documentos agregados exitosamente:", response);
-        setModalVisible(true);
+        navigation.navigate("DatosBancarios", {
+          flujo: flujo,
+          idInversion: idInversion,
+        });
       }
     } catch (error) {
       console.error("Error en la petición:", error);
@@ -257,7 +251,9 @@ const Documentacion = ({ navigation }) => {
             <View style={styles.seccion}>
               <Text style={styles.tituloSeccion}>Documentación</Text>
               <Text style={styles.bodySeccion}>
-                Proporciona la documentación solicitadada para continuar.
+                Proporciona la documentación solicitadada en cualquiera de los
+                siguientes formatos para continuar: {"\n"}PDF, JPG, JPEG, PNG,
+                BMP.
               </Text>
             </View>
             <View
@@ -266,60 +262,7 @@ const Documentacion = ({ navigation }) => {
                 backgroundColor: "white",
               }}
             >
-              <Text style={styles.tituloCampo}>CURP</Text>
-              {!CURP ? (
-                <TouchableOpacity
-                  style={{ flexDirection: "row" }}
-                  onPress={() => showUploadOptions("curp")}
-                >
-                  <Text style={styles.input}>Selecciona documento</Text>
-                  <Feather name="upload" size={20} color="#060B4D" />
-                </TouchableOpacity>
-              ) : (
-                <>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      paddingBottom: 7.5,
-                    }}
-                  >
-                    <FontAwesome
-                      name="image"
-                      size={20}
-                      color="#060B4D"
-                      style={{ marginLeft: 15 }}
-                    />
-                    <Text
-                      style={{
-                        flex: 1,
-                        paddingHorizontal: 15,
-                        fontSize: 16,
-                        color: "#060B4D",
-                        fontFamily: "opensans",
-                      }}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {nombreCURP}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => [setCURP(""), setNombreCURP("")]}
-                    >
-                      <FontAwesome
-                        name="trash-o"
-                        size={25}
-                        color="#F95C5C"
-                        style={{ marginRight: 15 }}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </>
-              )}
-              <View style={styles.separacion} />
-
-              <Text style={styles.tituloCampo}>
-                Documento de identificación (INE o Pasaporte)
-              </Text>
+              <Text style={styles.tituloCampo}>Identificación vigente</Text>
               {!identificacion ? (
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
@@ -373,8 +316,59 @@ const Documentacion = ({ navigation }) => {
               )}
               <View style={styles.separacion} />
 
+              <Text style={styles.tituloCampo}>CURP</Text>
+              {!CURP ? (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => showUploadOptions("curp")}
+                >
+                  <Text style={styles.input}>Selecciona documento</Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      paddingBottom: 7.5,
+                    }}
+                  >
+                    <FontAwesome
+                      name="image"
+                      size={20}
+                      color="#060B4D"
+                      style={{ marginLeft: 15 }}
+                    />
+                    <Text
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensans",
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {nombreCURP}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => [setCURP(""), setNombreCURP("")]}
+                    >
+                      <FontAwesome
+                        name="trash-o"
+                        size={25}
+                        color="#F95C5C"
+                        style={{ marginRight: 15 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+              <View style={styles.separacion} />
+
               <Text style={styles.tituloCampo}>
-                Constancia de situación fiscal
+                Constancia de Situación Fiscal (SAT)
               </Text>
               {!situacionFiscal ? (
                 <TouchableOpacity
@@ -429,7 +423,9 @@ const Documentacion = ({ navigation }) => {
               )}
               <View style={styles.separacion} />
 
-              <Text style={styles.tituloCampo}>Comprobante de domicilio</Text>
+              <Text style={styles.tituloCampo}>
+                Comprobante de domicilio (no más de tres meses)
+              </Text>
               {!comprobanteDomicilio ? (
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
@@ -506,7 +502,7 @@ const Documentacion = ({ navigation }) => {
                   marginBottom: 10,
                 }}
                 animation={false}
-                style={{ alignSelf: "baseline", marginTop: 10 }}
+                style={{ alignSelf: "baseline", marginTop: 20 }}
               />
               <Text style={[styles.subTexto, { fontSize: 12, marginTop: 10 }]}>
                 (*) En caso de actuar a nombre de un tercero, es necesario la
@@ -536,7 +532,7 @@ const Documentacion = ({ navigation }) => {
         </ScrollView>
       </View>
 
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+      {/*<Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Image
@@ -563,7 +559,7 @@ const Documentacion = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Modal>*/}
     </View>
   );
 };
@@ -634,7 +630,8 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     alignSelf: "baseline",
-    fontSize: 14,
+    fontSize: 12,
+    paddingHorizontal: 15,
   },
   input: {
     paddingLeft: 15,
