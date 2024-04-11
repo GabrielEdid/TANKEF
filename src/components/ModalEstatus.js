@@ -73,7 +73,7 @@ const ModalEstatus = (props) => {
                   props.onAccept();
                 }}
               >
-                <Text style={styles.textoBotonContinuar}>Continuar</Text>
+                <Text style={styles.textoBotonContinuar}>Aceptar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo semitransparente
   },
   modalView: {
-    width: "80%",
+    width: "85%",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,

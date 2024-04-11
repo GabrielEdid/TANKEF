@@ -117,7 +117,9 @@ const MiTankefInversion = (props) => {
       investmentState === "reviewing_documentation" ||
       investmentState === "rejected_documentation" ||
       investmentState === "signing_contract" ||
-      investmentState === "sign_contract"
+      investmentState === "sign_contract" ||
+      investmentState === "request_payment" ||
+      investmentState === "reviewing_payment"
     ) {
       setModalVisible(true);
     }
@@ -364,6 +366,44 @@ const MiTankefInversion = (props) => {
                 "La firma del contrato está pendiente. Por favor completa ese paso para continuar.\n¡Gracias!"
               }
               imagen={"RedAlert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                /*navigation.navigate("Crear", {
+                  screen: "DefinirFirma",
+                  params: { flujo: "Inversión" },
+                }),*/
+              ]}
+            />
+          )}
+
+          {investmentState === "request_payment" && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "¡Se ha enviado un correo electrónico con los datos bancarios para realizar el depósito! Por favor, revisa tu bandeja de entrada.\n¡Gracias!"
+              }
+              imagen={"Mail"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                /*navigation.navigate("Crear", {
+                  screen: "DefinirFirma",
+                  params: { flujo: "Inversión" },
+                }),*/
+              ]}
+            />
+          )}
+
+          {investmentState === "reviewing_payment" && (
+            <ModalEstatus
+              titulo={"¡Depósito exitoso!"}
+              texto={
+                "¡Hemos recibido el comprobante de depósito, gracias por tu transacción!. Pronto recibirás un correo con la confirmación de tu inversión."
+              }
+              imagen={"Ready"}
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
               onAccept={() => [
