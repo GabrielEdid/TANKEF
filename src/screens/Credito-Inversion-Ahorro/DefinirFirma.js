@@ -36,7 +36,9 @@ const DefinirFirma = ({ navigation }) => {
 
   const handlePresencial = async () => {
     setModalPresencial(false);
-    const url = `/api/v1/investments/${idInversion}/mailaddress`;
+    const url = `/api/v1/${
+      flujo === "Inversión" ? "investments" : "box_savings"
+    }/${idInversion}/mailaddress`;
     const data = {
       mailaddress: {
         fullname: "",

@@ -51,7 +51,9 @@ const FirmaDomicilio = ({ navigation }) => {
   // Función para guardar los datos del domicilio
   const handlePress = async () => {
     setDisabled(true);
-    const url = `/api/v1/investments/${idInversion}/mailaddress`;
+    const url = `/api/v1/${
+      flujo === "Inversión" ? "investments" : "box_savings"
+    }/${idInversion}/mailaddress`;
     const data = {
       mailaddress: {
         fullname: nombre,
