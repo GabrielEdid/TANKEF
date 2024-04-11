@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,11 +7,16 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { APIGet } from "../API/APIService";
+import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
+import ModalEstatus from "./ModalEstatus";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -34,30 +39,84 @@ const widthHalf = screenWidth / 2;
 const MiTankefCaja = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
-  const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
+  const { user, setUser } = useContext(UserContext);
+  const [focus, setFocus] = useState("Balance");
+  const [boxes, setBoxes] = useState([]);
+  const [currentID, setCurrentID] = useState(null);
+  const [boxState, setBoxState] = useState(null);
+  const [investmentState, setInvestmentState] = useState(null);
+  const [plazo, setPlazo] = useState(null);
+  const [folio, setFolio] = useState(null);
+  const [montoAcumulado, setMontoAcumulado] = useState(null);
+  const [tasaInteres, setTasaInteres] = useState(null);
 
-  // Mapa de imágenes
-  const imageMap = {
-    Bill: require("../../assets/images/BillInvest.png"),
-    // ... más imágenes
+  // Funcion para obtener las cajas de ahorro del usuario
+  const fetchUserBoxes = async () => {
+    const url = `/api/v1/users/${user.userID}/box_savings`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener las cajas de ahorro del usuario:",
+        result.error
+      );
+    } else {
+      const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
+      console.log("Resultados de las cajas de ahorro:", filteredResults);
+      setBoxes(filteredResults);
+      setCurrentID(filteredResults[0].id);
+      fetchBox(filteredResults[0].id);
+    }
+  };
+
+  // Funcion para obtener una caja de ahorro en especifico
+  const fetchBox = async (id) => {
+    const url = `/api/v1/box_savings/${id}`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error("Error al obtener la caja de ahorro:", result.error);
+    } else {
+      console.log("Resultados de la caja de ahorro:", result.data.data);
+      //setBoxState(result.data.data.aasm_state);
+      setPlazo(result.data.data.term);
+      setFolio("Falta" /*result.data.data.invoice_number*/);
+      setMontoAcumulado(formatAmount(result.data.data.amount));
+      setTasaInteres("Falta");
+    }
+  };
+
+  // Efecto para cargar los posts del feed al cargar la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserBoxes();
+    }, [])
+  );
+
+  // Formatea un monto a pesos mexicanos
+  const formatAmount = (amount) => {
+    const number = parseFloat(amount);
+    return `${number.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    })}`;
   };
 
   // Componente visual
   return (
     <View>
       {/* Vista de las distintas inversiones */}
-      <View style={{ flexDirection: "row", marginBottom: 5 }}>
+      <ScrollView
+        style={{
+          marginBottom: 5,
+        }}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      >
         <TouchableOpacity
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginLeft: 10,
-            backgroundColor: "white",
-            paddingHorizontal: 17.5,
-            paddingVertical: 5,
-            width: 120,
-            borderRadius: 10,
-          }}
+          style={styles.botonNuevaCaja}
           onPress={() =>
             navigation.navigate("Crear", {
               screen: "DefinirCajaAhorro",
@@ -78,141 +137,142 @@ const MiTankefCaja = (props) => {
             Nueva caja{"\n"}de ahorro
           </Text>
         </TouchableOpacity>
-
         {/* Componente repetible */}
-        <TouchableOpacity
-          style={{
-            alignItems: "center",
-            marginLeft: 10,
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-            borderRadius: 10,
-            width: 120,
-            backgroundColor: "#2FF690",
-          }}
-        >
-          <FontAwesome5
-            name="piggy-bank"
-            size={24}
-            color="#060B4D"
-            style={{ marginBottom: 5 }}
-          />
-          <Text
-            style={{
-              color: "#060B4D",
-              fontFamily: "opensanssemibold",
-              textAlign: "center",
-              fontSize: 12,
-            }}
-          >
-            Caja Ruiz
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.tabsContainer}>
-        {/* Boton Tab Balance */}
-        <TouchableOpacity
-          style={styles.tabButton}
-          onPress={() => setFocus("Balance")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              {
-                color: focus === "Balance" ? "#060B4D" : "#9596AF",
-                fontFamily:
-                  focus === "Balance" ? "opensansbold" : "opensanssemibold",
-              },
-            ]}
-          >
-            Balance General
-          </Text>
-          {focus === "Balance" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
+        {boxes &&
+          boxes.length > 0 &&
+          boxes.map((box, index) => (
+            <TouchableOpacity
+              key={box.id || index}
+              style={[
+                styles.boxNameContainer,
+                {
+                  backgroundColor: currentID === box.id ? "#2FF690" : "white",
+                },
+              ]}
+              onPress={() => [fetchBox(box.id), setCurrentID(box.id)]}
+            >
+              <FontAwesome5
+                name="piggy-bank"
+                size={24}
+                color="#060B4D"
+                style={{ marginBottom: 5 }}
+              />
+              <Text
+                style={styles.boxName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {box.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+      </ScrollView>
 
-        {/* Boton Tab Movimientos */}
-        <TouchableOpacity
-          style={styles.tabButton}
-          onPress={() => setFocus("Movimientos")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              {
-                color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
-                fontFamily:
-                  focus === "Movimientos" ? "opensansbold" : "opensanssemibold",
-              },
-            ]}
-          >
-            Movimientos
-          </Text>
-          {focus === "Movimientos" ? <View style={styles.focusLine} /> : null}
-        </TouchableOpacity>
-      </View>
-      {/* Vista de la información total de las inversiónes */}
-      {focus === "Balance" && (
+      {boxes && boxes.length > 0 ? (
         <>
-          <View
-            style={{
-              justifyContent: "space-between",
-              backgroundColor: "white",
-              paddingHorizontal: 20,
-              paddingVertical: 15,
-              alignItems: "center",
-              marginTop: 3,
-            }}
-          >
-            <Text style={styles.tituloMonto}>Monto acumulado</Text>
-            <Text style={styles.monto}>$25,000.00 MXN</Text>
-          </View>
+          <View style={styles.tabsContainer}>
+            {/* Boton Tab Balance */}
+            <TouchableOpacity
+              style={styles.tabButton}
+              onPress={() => setFocus("Balance")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  {
+                    color: focus === "Balance" ? "#060B4D" : "#9596AF",
+                    fontFamily:
+                      focus === "Balance" ? "opensansbold" : "opensanssemibold",
+                  },
+                ]}
+              >
+                Balance General
+              </Text>
+              {focus === "Balance" ? <View style={styles.focusLine} /> : null}
+            </TouchableOpacity>
 
-          <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Folio</Text>
-              <Text style={styles.valorConcepto}>4225fd6f64</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Plazo de ahorro</Text>
-              <Text style={styles.valorConcepto}>12 meses</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Tasa de interés</Text>
-              <Text style={styles.valorConcepto}>$91.67</Text>
-            </View>
+            {/* Boton Tab Movimientos */}
+            <TouchableOpacity
+              style={styles.tabButton}
+              onPress={() => setFocus("Movimientos")}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  {
+                    color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
+                    fontFamily:
+                      focus === "Movimientos"
+                        ? "opensansbold"
+                        : "opensanssemibold",
+                  },
+                ]}
+              >
+                Movimientos
+              </Text>
+              {focus === "Movimientos" ? (
+                <View style={styles.focusLine} />
+              ) : null}
+            </TouchableOpacity>
           </View>
-        </>
-      )}
+          {/* Vista de la información total de las inversiónes */}
+          {focus === "Balance" && (
+            <>
+              <View style={styles.containerBalance}>
+                <Text style={styles.tituloMonto}>Monto acumulado</Text>
+                <Text style={styles.monto}>{montoAcumulado} MXN</Text>
+              </View>
 
-      {focus === "Movimientos" && (
-        <>
-          <View>
-            <Movimiento
-              movimiento={"Inicio Caja"}
-              fecha={"10.ENE.2024"}
-              monto={"$10,000.00 MXN"}
-              positive={true}
-            />
-            <Movimiento
-              movimiento={"Abono"}
-              fecha={"10.FEB.2024"}
-              monto={"$5,000.00 MXN"}
-              positive={true}
-            />
-          </View>
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Folio</Text>
+                  <Text style={styles.valorConcepto}>{folio}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Plazo de ahorro</Text>
+                  <Text style={styles.valorConcepto}>{plazo} meses</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Tasa de interés</Text>
+                  <Text style={styles.valorConcepto}>{tasaInteres}</Text>
+                </View>
+              </View>
+            </>
+          )}
+
+          {focus === "Movimientos" && (
+            <>
+              <View>
+                <Movimiento
+                  movimiento={"Inicio Caja"}
+                  fecha={"10.ENE.2024"}
+                  monto={"$10,000.00 MXN"}
+                  positive={true}
+                />
+                <Movimiento
+                  movimiento={"Abono"}
+                  fecha={"10.FEB.2024"}
+                  monto={"$5,000.00 MXN"}
+                  positive={true}
+                />
+              </View>
+            </>
+          )}
         </>
+      ) : (
+        <Text style={styles.noBoxes}>No tienes Cajas de Ahorro activas</Text>
       )}
     </View>
   );
@@ -234,11 +294,14 @@ const styles = StyleSheet.create({
     transform: [{ rotate: "90deg" }],
     right: 10,
   },
-  bill: {
-    height: 20,
-    width: 20,
-    marginBottom: 5,
-    tintColor: "#060B4D",
+  botonNuevaCaja: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    paddingHorizontal: 17.5,
+    width: 120,
+    borderRadius: 10,
+    marginHorizontal: 10,
   },
   //Estilos para la segunda barra de Tabs
   tabsContainer: {
@@ -267,6 +330,38 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 10,
+  },
+  boxNameContainer: {
+    alignItems: "center",
+    marginRight: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    width: 120,
+  },
+  boxName: {
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "center",
+    fontSize: 12,
+    marginTop: 2.5,
+  },
+  containerBalance: {
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 3,
+  },
+  noBoxes: {
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    textAlign: "center",
+    alignSelf: "center",
+    fontSize: 16,
+    marginLeft: 10,
+    marginTop: 75,
   },
   concepto: {
     fontFamily: "opensans",

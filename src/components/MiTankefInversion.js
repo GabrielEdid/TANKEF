@@ -178,7 +178,13 @@ const MiTankefInversion = (props) => {
               ]}
             >
               <Image source={imageMap["Bill"]} style={styles.bill} />
-              <Text style={styles.investmentName}>{investment.name}</Text>
+              <Text
+                style={styles.investmentName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {investment.name}
+              </Text>
             </TouchableOpacity>
           ))}
       </ScrollView>
@@ -233,16 +239,7 @@ const MiTankefInversion = (props) => {
           {/* Vista de la información total de las inversiónes */}
           {focus === "Balance" && (
             <>
-              <View
-                style={{
-                  justifyContent: "space-between",
-                  backgroundColor: "white",
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                  alignItems: "center",
-                  marginTop: 3,
-                }}
-              >
+              <View style={styles.containerBalance}>
                 <Text style={styles.tituloMonto}>
                   Retorno de inversión neto
                 </Text>
@@ -306,6 +303,7 @@ const MiTankefInversion = (props) => {
       ) : (
         <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
       )}
+
       {
         <>
           {investmentState === "reviewing_documentation" && (
@@ -440,11 +438,10 @@ const styles = StyleSheet.create({
   investmentNameContainer: {
     alignItems: "center",
     marginRight: 10,
-    paddingVertical: 7.5,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 10,
     width: 120,
-    backgroundColor: "#2FF690",
   },
   investmentName: {
     color: "#060B4D",
@@ -460,6 +457,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 16,
     marginLeft: 10,
+    marginTop: 75,
   },
   bill: {
     height: 20,
@@ -472,7 +470,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     paddingHorizontal: 17.5,
-    paddingVertical: 5,
     width: 120,
     borderRadius: 10,
     marginHorizontal: 10,
@@ -504,6 +501,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 10,
+  },
+  containerBalance: {
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 3,
   },
   concepto: {
     fontFamily: "opensans",
