@@ -77,49 +77,49 @@ const Inversion2 = ({ navigation }) => {
   ]);
 
   const handlePress = async () => {
-    if (flujo === "Caja de ahorro") {
-      navigation.navigate("Documentacion", { flujo: flujo });
-    } else {
-      setDisabled(true);
-      console.log("Agregando beneficiarios a la inversión...");
-      const url = `/api/v1/investments/${idInversion}`;
-      const data = {
-        investment: {
-          primary_beneficiary_first_name: nombre,
-          primary_beneficiary_percentage: parseInt(porcentaje, 10),
-          primary_beneficiary_kinship: parentesco,
-          primary_beneficiary_last_name: apellidos,
-          secondary_beneficiary_first_name: nombre2,
-          secondary_beneficiary_percentage: parseInt(porcentaje2, 10),
-          secondary_beneficiary_kinship: parentesco2,
-          secondary_beneficiary_last_name: apellidos2,
-        },
-      };
-      try {
-        const response = await APIPut(url, data);
-        if (response.error) {
-          console.error(
-            "Error al agregar los beneficiarios a la inversión:",
-            response.error
-          );
-          Alert.alert(
-            "Error",
-            "No se pudieron agregar los beneficiarios a la Inversión. Intente nuevamente."
-          );
-          setDisabled(false);
-        } else {
-          console.log("Beneficiarios agregados exitosamente:", response);
-          navigation.navigate("Documentacion", {
-            flujo: flujo,
-            idInversion: idInversion,
-          });
-          setDisabled(false);
-        }
-      } catch (error) {
-        console.error("Error en la petición:", error);
-        Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+    setDisabled(true);
+    console.log("Agregando beneficiarios a la inversión...");
+    const url = `/api/v1/${
+      flujo === "Inversión" ? "investments" : "box_savings"
+    }/${idInversion}`;
+    const data = {
+      investment: {
+        primary_beneficiary_first_name: nombre,
+        primary_beneficiary_percentage: parseInt(porcentaje, 10),
+        primary_beneficiary_kinship: parentesco,
+        primary_beneficiary_last_name: apellidos,
+        secondary_beneficiary_first_name: nombre2,
+        secondary_beneficiary_percentage: parseInt(porcentaje2, 10),
+        secondary_beneficiary_kinship: parentesco2,
+        secondary_beneficiary_last_name: apellidos2,
+      },
+    };
+    try {
+      const response = await APIPut(url, data);
+      if (response.error) {
+        console.error(
+          "Error al agregar los beneficiarios a la inversión o caja de ahorro:",
+          response.error
+        );
+        Alert.alert(
+          "Error",
+          `No se pudieron agregar los beneficiarios a la ${
+            flujo === "Inversión" ? "Inversión" : "Caja de Ahorro"
+          }. Intente nuevamente.`
+        );
+        setDisabled(false);
+      } else {
+        console.log("Beneficiarios agregados exitosamente:", response);
+        navigation.navigate("Documentacion", {
+          flujo: flujo,
+          idInversion: idInversion,
+        });
         setDisabled(false);
       }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+      Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+      setDisabled(false);
     }
   };
 
