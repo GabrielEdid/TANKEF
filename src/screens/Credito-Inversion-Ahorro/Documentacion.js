@@ -46,7 +46,9 @@ const Documentacion = ({ navigation }) => {
   const handlePress = async () => {
     setDisabled(true);
     console.log("Agregando beneficiarios a la inversión...");
-    const url = `/api/v1/investments/${idInversion}`;
+    const url = `/api/v1/${
+      flujo === "Inversión" ? "investments" : "box_savings"
+    }/${idInversion}`;
 
     const formData = new FormData();
 
@@ -86,12 +88,14 @@ const Documentacion = ({ navigation }) => {
 
       if (response.error) {
         console.error(
-          "Error al agregar los documentos a la inversión:",
+          "Error al agregar los documentos a la inversión o caja de ahorro:",
           response.error
         );
         Alert.alert(
           "Error",
-          "No se pudieron agregar los documentos a la Inversión. Intente nuevamente."
+          `No se pudieron agregar los documentos a la ${
+            flujo === "Inversión" ? "Inversión" : "Caja de Ahorro"
+          }. Intente nuevamente.`
         );
       } else {
         console.log("Documentos agregados exitosamente:", response);

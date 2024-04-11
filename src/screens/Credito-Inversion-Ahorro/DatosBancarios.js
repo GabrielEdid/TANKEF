@@ -46,7 +46,9 @@ const DatosBancarios = ({ navigation }) => {
   // Funcion para guardar los datos de la cuenta bancaria
   const handlePress = async () => {
     setDisabled(true);
-    const url = `/api/v1/investments/${idInversion}/bank_accounts`;
+    const url = `/api/v1/${
+      flujo === "Inversión" ? "investments" : "box_savings"
+    }/${idInversion}/bank_accounts`;
     const formData = new FormData();
 
     formData.append("investment[bank_account_attributes][short_name]", alias);
