@@ -10,12 +10,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
+import DropDownPicker from "react-native-dropdown-picker";
 import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Hooks
+import { APIGet, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -26,12 +28,15 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const [nombreInversion, setNombreInversion] = useState("");
-  const [monto, setMonto] = useState("25000");
+  const [nombreCaja, setNombreCaja] = useState("");
+  const [monto, setMonto] = useState("");
   const [montoNumeric, setMontoNumeric] = useState(25000);
+  const [open, setOpen] = useState(false);
   const [montoShow, setMontoShow] = useState("25,000");
-  const [plazo, setPlazo] = useState("6");
-  const [focusTab, setFocusTab] = useState("");
+  const [plazo, setPlazo] = useState("36");
+  const [retornoNeto, setRetornoNeto] = useState("");
+  const [ahorroInicial, setAhorroInicial] = useState("");
+  const [tasa, setTasa] = useState("");
 
   // Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
@@ -56,7 +61,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
     setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
   };
 
-  // Funcion para manejar el cambio de valor en el slider
+  /* Funcion para manejar el cambio de valor en el slider
   const handleSliderChange = (value) => {
     // Actualiza el valor numérico directamente con el valor del slider
     setMontoNumeric(value);
@@ -68,10 +73,10 @@ const DefinirCajaAhorro = ({ navigation }) => {
 
     // Actualiza el estado del texto del input con el valor formateado
     setMontoShow(formattedValue);
-  };
+  };*/
 
   const isAcceptable =
-    montoNumeric >= 25000 && montoNumeric <= 35000 && plazo && nombreInversion;
+    montoNumeric >= 25000 && montoNumeric <= 35000 && plazo && nombreCaja;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -83,6 +88,71 @@ const DefinirCajaAhorro = ({ navigation }) => {
     }
     return "";
   };
+
+  // Función para hacer la cotizacion al API
+  useEffect(() => {
+    const fetchCotizacion = async () => {
+      const url = `/api/v1/simulator?term=${plazo}&type=box_saving&amount=${monto}`;
+
+      try {
+        const response = await APIGet(url);
+        if (response.error) {
+          // Manejar el error
+          console.error("Error al cotizar:", response.error);
+          Alert.alert(
+            "Error",
+            "No se pudo hacer la cotización. Intente nuevamente."
+          );
+        } else {
+          setAhorroInicial(monto === 25000 ? "$25,000" : "$50,000");
+          setRetornoNeto(response.data.total);
+          setTasa(response.data.rate);
+        }
+      } catch (error) {
+        console.error("Error en la petición de cotización:", error);
+        Alert.alert("Error", "Ha ocurrido un error al realizar la cotización.");
+      }
+    };
+    if (monto && plazo) fetchCotizacion();
+    else if (!monto) {
+      setAhorroInicial("");
+      setRetornoNeto("");
+      setTasa("");
+    }
+  }, [monto]);
+
+  const handlePress = async () => {
+    const url = "/api/v1/box_savings";
+    const data = {
+      box_saving: {
+        name: nombreCaja,
+        amount: monto,
+        term: plazo,
+        condition: true,
+      },
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      // Manejar el error
+      console.error("Error al crear la caja de ahorro:", response.error);
+      Alert.alert(
+        "Error",
+        "No se pudo crear la Caja de Ahorro. Intente nuevamente."
+      );
+    } else {
+      console.log("Caja de ahorro creada exitosamente:", response);
+      navigation.navigate("Beneficiarios", {
+        flujo: flujo,
+        idInversion: response.data.data.id,
+      });
+    }
+  };
+
+  const [dataMonto] = useState([
+    { label: "$25,000.00 MXN", value: 25000 },
+    { label: "$50,000.00 MXN", value: 50000 },
+  ]);
 
   // Funcion para manejar el input de monto al seleccionar
   const handleFocus = () => {
@@ -151,7 +221,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
             />
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
-              <Text style={styles.valorConcepto}>$35,000.00</Text>
+              <Text style={styles.valorConcepto}>$50,000.00</Text>
             </View>
           </View>
           <View
@@ -165,19 +235,19 @@ const DefinirCajaAhorro = ({ navigation }) => {
             <Text style={styles.texto}>Nombre de la caja de ahorro</Text>
             <TextInput
               style={styles.inputNombre}
-              value={nombreInversion}
+              value={nombreCaja}
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
               placeholder="Introduce el nombre de la caja de ahorro"
-              onChangeText={(text) => setNombreInversion(text)}
+              onChangeText={(text) => setNombreCaja(text)}
             />
           </View>
           <View style={styles.contenedores}>
             <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-              Introduce el monto que deseas ahorrar
+              Selecciona el monto que deseas ahorrar
             </Text>
             <View style={styles.inputWrapper}>
-              <Text
+              {/*<Text
                 style={[
                   styles.dollarSign,
                   { color: monto ? "#060B4D" : "#b3b5c9ff" },
@@ -203,9 +273,31 @@ const DefinirCajaAhorro = ({ navigation }) => {
                 ]}
               >
                 MXN
-              </Text>
+              </Text>*/}
+              <DropDownPicker
+                open={open}
+                value={monto}
+                items={dataMonto}
+                placeholder="Elige una opción"
+                setOpen={setOpen}
+                setValue={setMonto}
+                listMode="MODAL"
+                modalProps={{
+                  animationType: "slide",
+                }}
+                onChangeValue={(value) => setMonto(value)}
+                style={styles.DropDownPicker}
+                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
+                placeholderStyle={{
+                  color: "#c7c7c9ff",
+                  fontFamily: "opensanssemibold",
+                }}
+                dropDownContainerStyle={styles.DropDownContainer}
+                labelStyle={styles.selectionStyle}
+                textStyle={styles.DropDownText}
+              />
             </View>
-            <Slider
+            {/*<Slider
               style={{ width: "90%" }}
               minimumValue={25000}
               maximumValue={35000}
@@ -215,19 +307,16 @@ const DefinirCajaAhorro = ({ navigation }) => {
               thumbTintColor="#2FF690"
               minimumTrackTintColor="#2FF690"
               maximumTrackTintColor="#F2F2F2"
-            />
+              />*/}
           </View>
 
           <View style={styles.contenedores}>
             <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
               Plan mensual de ahorro
             </Text>
-            <TouchableOpacity
-              style={styles.tab}
-              onPress={() => [setFocusTab("6"), setPlazo(6)]}
-            >
-              <Text style={styles.textoTab}>6</Text>
-            </TouchableOpacity>
+            <View style={styles.tab}>
+              <Text style={styles.textoTab}>36</Text>
+            </View>
             <Text style={styles.subTexto}>
               Esta es una cotización preliminar, la tasa definitiva dependerá
               del análisis completo de tu solicitud.
@@ -238,6 +327,36 @@ const DefinirCajaAhorro = ({ navigation }) => {
             <Text style={styles.valorConcepto}>44.26%</Text>
           </View>
         </View>
+        <View style={styles.contenedores}>
+          <Text style={styles.texto}>Retorno de ahorro neto</Text>
+          <Text
+            style={{
+              fontFamily: "opensansbold",
+              fontSize: 30,
+              color: "#060B4D",
+            }}
+          >
+            {retornoNeto ? `${retornoNeto} MXN` : "$ 0 MXN"}
+          </Text>
+        </View>
+        <View style={[styles.contenedores, { flexDirection: "row" }]}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.concepto}>Ahorro{"\n"}inicial</Text>
+            <Text style={styles.valorConcepto}>
+              {ahorroInicial ? `${ahorroInicial} MXN` : "$ 0 MXN"}
+            </Text>
+          </View>
+          <Ionicons
+            name="remove-outline"
+            size={30}
+            color="#e1e2ebff"
+            style={styles.line}
+          />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
+            <Text style={styles.valorConcepto}>{tasa ? `${tasa}` : "0%"}</Text>
+          </View>
+        </View>
 
         <TouchableOpacity
           style={[
@@ -245,7 +364,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
             { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
           ]}
           onPress={() => {
-            navigation.navigate("Beneficiarios", { flujo: flujo });
+            handlePress();
           }}
           disabled={!isAcceptable}
         >
@@ -312,6 +431,32 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "opensans",
     fontSize: 16,
+  },
+  DropDownPicker: {
+    borderColor: "transparent",
+    marginTop: 20,
+    backgroundColor: "transparent",
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  DropDownText: {
+    fontSize: 20,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
+    alignSelf: "center",
+    textAlign: "left",
+  },
+  DropDownContainer: {
+    marginTop: 10,
+    borderColor: "transparent",
+  },
+  selectionStyle: {
+    fontSize: 35,
+    textAlign: "center",
+    alignSelf: "center",
+    paddingLeft: 15,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
   },
   subTexto: {
     color: "#060B4D",
