@@ -50,34 +50,35 @@ const Documentacion = ({ navigation }) => {
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
 
+    const key = flujo === "Inversión" ? "investment" : "box_saving";
     const formData = new FormData();
 
-    formData.append("investment[official_identification]", {
+    formData.append(`${key}[official_identification]`, {
       uri: identificacion,
-      type: "application/jpeg", // Ajusta el tipo MIME según sea necesario
-      name: "identificacion.jpeg", // Ajusta el nombre del archivo
+      type: "application/jpeg",
+      name: "identificacion.jpeg",
     });
-    formData.append("investment[curp]", {
+    formData.append(`${key}[curp]`, {
       uri: CURP,
-      type: "application/jpeg", // Ajusta el tipo MIME según sea necesario
-      name: "CURP.jpeg", // Ajusta el nombre del archivo
+      type: "application/jpeg",
+      name: "CURP.jpeg",
     });
-    formData.append("investment[proof_sat]", {
+    formData.append(`${key}[proof_sat]`, {
       uri: situacionFiscal,
-      type: "application/jpeg", // Ajusta el tipo MIME
-      name: "situacionFiscal.jpeg", // Ajusta el nombre del archivo
+      type: "application/jpeg",
+      name: "situacionFiscal.jpeg",
     });
-    formData.append("investment[proof_address]", {
+    formData.append(`${key}[proof_address]`, {
       uri: comprobanteDomicilio,
-      type: "application/jpeg", // Ajusta el tipo MIME
-      name: "comprobanteDomicilio.jpeg", // Ajusta el nombre del archivo
+      type: "application/jpeg",
+      name: "comprobanteDomicilio.jpeg",
     });
     formData.append(
-      "investment[accept_documentation_1]",
+      `${key}[accept_documentation_1]`,
       actuoComo === "Actúo a nombre y por cuenta propia." ? "true" : "false"
     );
     formData.append(
-      "investment[accept_documentation_2]",
+      `${key}[accept_documentation_2]`,
       actuoComo === "Actúo a nombre y por cuenta de un tercero."
         ? "true"
         : "false"

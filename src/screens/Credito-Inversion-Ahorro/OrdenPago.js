@@ -8,10 +8,6 @@ import {
   Dimensions,
   Modal,
   Alert,
-  TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -33,114 +29,8 @@ const OrdenPago = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const [alias, setAlias] = useState("");
-  const [clabe, setClabe] = useState("");
-  const [NCuenta, setNCuenta] = useState("");
-  const [comprobanteNCuenta, setComprobanteNCuenta] = useState("");
-  const [nombreComprobante, setNombreComprobante] = useState("");
-  const [banco, setBanco] = useState("");
-  const [nombre, setNombre] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
-
-  // Funcion para guardar los datos de la cuenta bancaria
-  const handlePress = async () => {
-    setDisabled(true);
-    const url = `/api/v1/${
-      flujo === "Inversión" ? "investments" : "box_savings"
-    }/${idInversion}/bank_accounts`;
-    const formData = new FormData();
-
-    formData.append("investment[bank_account_attributes][short_name]", alias);
-    formData.append("investment[bank_account_attributes][clabe]", clabe);
-    formData.append("investment[bank_account_attributes][bank]", banco);
-    formData.append("investment[bank_account_attributes][owner_name]", nombre);
-    formData.append("investment[bank_account_attributes][account]", NCuenta);
-    formData.append("investment[bank_account_attributes][proof_clabe]", {
-      uri: comprobanteNCuenta,
-      type: "image/jpeg",
-      name: "comprobanteNCuenta.jpg",
-    });
-
-    try {
-      const response = await APIPost(url, formData);
-
-      if (response.error) {
-        console.error("Error al guardar la cuenta bancaria:", response.error);
-        Alert.alert(
-          "Error",
-          "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
-        );
-      } else {
-        console.log("Datos de cuenta bancaria guardados con éxito");
-        setModalVisible(true);
-      }
-    } catch (error) {
-      console.error("Error al enviar datos:", error);
-      Alert.alert(
-        "Error",
-        "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
-      );
-    } finally {
-      setDisabled(false);
-    }
-  };
-
-  // Efecto para encontrar el banco asociado a la clabe
-  useEffect(() => {
-    const verificarClabe = async () => {
-      if (clabe.length < 18) {
-        setNCuenta("");
-        setBanco("");
-      } else if (clabe.length === 18) {
-        const url = `/api/v1/clabe_validation`;
-        const formData = new FormData();
-
-        formData.append("clabe", clabe);
-
-        try {
-          const response = await APIPost(url, formData);
-
-          if (response.error) {
-            console.error(
-              "Error al encontrar la cuenta bancaria:",
-              response.error
-            );
-            Alert.alert(
-              "Error",
-              "La clabe introducida no está asociada a ningun banco"
-            );
-            setNCuenta("");
-            setBanco("");
-          } else {
-            setNCuenta(response.data.data.account);
-            setBanco(response.data.data.bank_tag);
-          }
-        } catch (error) {
-          console.error("Error al encontrar la cuenta de banco:", error);
-          Alert.alert(
-            "Error",
-            "Hubo un problema al encontrar la cuenta de banco. Por favor, intenta de nuevo."
-          );
-        }
-      }
-    };
-
-    verificarClabe();
-  }, [clabe]);
-
-  // Efecto para deshabilitar el botón si algún campo está vacío
-  useEffect(() => {
-    const camposLlenos =
-      nombre &&
-      alias &&
-      clabe &&
-      clabe.length === 18 &&
-      NCuenta &&
-      comprobanteNCuenta &&
-      banco;
-    setDisabled(!camposLlenos);
-  }, [nombre, alias, clabe, NCuenta, comprobanteNCuenta, banco]);
 
   const showUploadOptions = () => {
     Alert.alert(
@@ -202,222 +92,97 @@ const OrdenPago = ({ navigation }) => {
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0.8, y: 0.8 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text
-            style={[
-              styles.tituloPantalla,
-              {
-                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
-              },
-            ]}
-          >
-            {flujo}
-          </Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ flex: 1 }}>
-          <KeyboardAwareScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            scrollEnabled={false}
-            enableOnAndroid={true}
-            style={styles.scrollV}
-            keyboardShouldPersistTaps="handled"
-            extraScrollHeight={100}
-          >
-            <View style={{ flex: 1 }}>
-              <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Orden de pago</Text>
-                <Text style={styles.bodySeccion}>
-                  Ingresa los datos solicitados para continuar.
-                </Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 5,
-                  backgroundColor: "white",
-                  paddingTop: 15,
-                }}
-              >
-                {/* Campos para introducir los datos bancarios */}
-                <Text style={styles.tituloCampo}>Alias Cuenta</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setAlias}
-                  value={alias}
-                  placeholder="Eje. Raúl G. Torres"
-                />
-                <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setClabe}
-                  value={clabe}
-                  placeholder="18 dígitos"
-                  maxLength={18}
-                  keyboardType="numeric"
-                />
-                <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>
-                  Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
-                </Text>
-                {!comprobanteNCuenta ? (
-                  <TouchableOpacity
-                    style={{ flexDirection: "row" }}
-                    onPress={showUploadOptions}
-                  >
-                    <Text
-                      style={[
-                        styles.input,
-                        {
-                          width: "92%",
-                          color: "#c7c7c9ff",
-                        },
-                      ]}
-                    >
-                      Selecciona documento
-                    </Text>
-                    <Feather name="upload" size={20} color="#060B4D" />
-                  </TouchableOpacity>
-                ) : (
-                  <>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingBottom: 7.5,
-                      }}
-                    >
-                      <FontAwesome
-                        name="image"
-                        size={20}
-                        color="#060B4D"
-                        style={{ marginLeft: 15 }}
-                      />
-                      <Text
-                        style={{
-                          flex: 1,
-                          paddingHorizontal: 15,
-                          fontSize: 16,
-                          color: "#060B4D",
-                          fontFamily: "opensans",
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {nombreComprobante}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => [
-                          setComprobanteNCuenta(""),
-                          setNombreComprobante(""),
-                        ]}
-                      >
-                        <FontAwesome
-                          name="trash-o"
-                          size={25}
-                          color="#F95C5C"
-                          style={{ marginRight: 15 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-                <View style={styles.separacion} />
-
-                <Text style={[styles.tituloCampo, { color: "grey" }]}>
-                  No. Cuenta
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setNCuenta}
-                  value={NCuenta}
-                  placeholder="Autorrelleno"
-                  maxLength={10}
-                  keyboardType="numeric"
-                  editable={false}
-                />
-                <View style={styles.separacion} />
-                <Text style={[styles.tituloCampo, { color: "grey" }]}>
-                  Banco
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setBanco}
-                  value={banco}
-                  placeholder="Autorrelleno"
-                  editable={false}
-                />
-                <View style={styles.separacion} />
-                <View>
-                  <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setNombre}
-                    value={nombre}
-                    placeholder="Nombre Cuentahabiente"
-                  />
-                </View>
-                <View style={styles.separacion} />
-              </View>
-            </View>
-          </KeyboardAwareScrollView>
-          {/* Boton de Aceptar */}
-          <TouchableOpacity
-            style={[
-              styles.botonContinuar,
-              { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
-            ]}
-            onPress={() => handlePress()}
-            disabled={disabled}
-          >
-            <Text
-              style={[
-                styles.textoBotonContinuar,
-                { color: disabled ? "grey" : "white" },
-              ]}
-            >
-              Aceptar
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <ModalEstatus
-          titulo={"¡Atención!"}
-          texto={
-            "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
-          }
-          imagen={"Alert"}
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onAccept={() => [
-            setModalVisible(false),
-            navigation.navigate("MiTankef"),
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.8, y: 0.8 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text
+          style={[
+            styles.tituloPantalla,
+            {
+              fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+            },
           ]}
-        />
+        >
+          {flujo}
+        </Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
       </View>
-    </TouchableWithoutFeedback>
+
+      <View style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          scrollEnabled={false}
+          enableOnAndroid={true}
+          style={styles.scrollV}
+          keyboardShouldPersistTaps="handled"
+          extraScrollHeight={100}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={styles.seccion}>
+              <Text style={styles.tituloSeccion}>Orden de pago</Text>
+              <Text style={styles.bodySeccion}>
+                Se recibieron los contratos firmados, ahora debes realizar el
+                depósito de tu inversión
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 5,
+                backgroundColor: "white",
+                paddingTop: 15,
+              }}
+            >
+              {/* Campos para introducir los datos bancarios */}
+              <Text style={styles.tituloCampo}>Nombre del Beneficiario</Text>
+              <Text style={styles.input}>a.rivera@tankef.com</Text>
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Institución</Text>
+              <Text style={styles.input}>STP</Text>
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Cuenta clabe</Text>
+              <Text style={styles.input}>646180518134213704</Text>
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Referencia</Text>
+              <Text style={styles.input}>5991786</Text>
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>Monto a depositar</Text>
+              <Text style={styles.input}>$10,000.00 MXN</Text>
+              <View style={styles.separacion} />
+            </View>
+          </View>
+        </KeyboardAwareScrollView>
+        {/* Boton de Aceptar */}
+        <TouchableOpacity
+          style={styles.botonContinuar}
+          onPress={() => navigation.navigate("MiTankef")}
+        >
+          <Text style={styles.textoBotonContinuar}>Aceptar</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -467,7 +232,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     marginBottom: 10,
     fontSize: 14,
-    color: "#060B4D",
+    color: "#9c9db8",
     fontFamily: "opensanssemibold",
   },
   input: {

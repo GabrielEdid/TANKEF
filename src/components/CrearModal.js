@@ -104,7 +104,7 @@ const CrearModal = ({ isVisible, onClose }) => {
           onPress={() => {
             handleClose();
             navigation.navigate("Crear", {
-              screen: "DefinirCajaAhorro",
+              screen: "OrdenPago",
               params: { flujo: "Caja de ahorro" },
             });
           }}

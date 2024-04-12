@@ -9,9 +9,6 @@ import {
   Modal,
   Alert,
   TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -49,14 +46,16 @@ const DatosBancarios = ({ navigation }) => {
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}/bank_accounts`;
+
+    const key = flujo === "Inversión" ? "investment" : "box_saving";
     const formData = new FormData();
 
-    formData.append("investment[bank_account_attributes][short_name]", alias);
-    formData.append("investment[bank_account_attributes][clabe]", clabe);
-    formData.append("investment[bank_account_attributes][bank]", banco);
-    formData.append("investment[bank_account_attributes][owner_name]", nombre);
-    formData.append("investment[bank_account_attributes][account]", NCuenta);
-    formData.append("investment[bank_account_attributes][proof_clabe]", {
+    formData.append(`${key}[bank_account_attributes][short_name]`, alias);
+    formData.append(`${key}[bank_account_attributes][clabe]`, clabe);
+    formData.append(`${key}[bank_account_attributes][bank]`, banco);
+    formData.append(`${key}[bank_account_attributes][owner_name]`, nombre);
+    formData.append(`${key}[bank_account_attributes][account]`, NCuenta);
+    formData.append(`${key}[bank_account_attributes][proof_clabe]`, {
       uri: comprobanteNCuenta,
       type: "image/jpeg",
       name: "comprobanteNCuenta.jpg",
@@ -200,219 +199,217 @@ const DatosBancarios = ({ navigation }) => {
 
   // Componente Visual
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        {/* Titulo, Nombre de Pantalla y Campana */}
-        <View style={styles.tituloContainer}>
-          <MaskedView
-            style={{ flex: 0.6 }}
-            maskElement={<Text style={styles.titulo}>tankef</Text>}
-          >
-            <LinearGradient
-              colors={["#2FF690", "#21B6D5"]}
-              start={{ x: 0.8, y: 0.8 }}
-              end={{ x: 0, y: 0 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-          <Text
-            style={[
-              styles.tituloPantalla,
-              {
-                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
-              },
-            ]}
-          >
-            {flujo}
-          </Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
-        </View>
+    <View style={{ flex: 1 }}>
+      {/* Titulo, Nombre de Pantalla y Campana */}
+      <View style={styles.tituloContainer}>
+        <MaskedView
+          style={{ flex: 0.6 }}
+          maskElement={<Text style={styles.titulo}>tankef</Text>}
+        >
+          <LinearGradient
+            colors={["#2FF690", "#21B6D5"]}
+            start={{ x: 0.8, y: 0.8 }}
+            end={{ x: 0, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </MaskedView>
+        <Text
+          style={[
+            styles.tituloPantalla,
+            {
+              fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+            },
+          ]}
+        >
+          {flujo}
+        </Text>
+        <TouchableOpacity>
+          <Feather
+            name="bell"
+            size={25}
+            color="#060B4D"
+            style={{ marginTop: 50 }}
+          />
+        </TouchableOpacity>
+      </View>
 
-        <View style={{ flex: 1 }}>
-          <KeyboardAwareScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            scrollEnabled={false}
-            enableOnAndroid={true}
-            style={styles.scrollV}
-            keyboardShouldPersistTaps="handled"
-            extraScrollHeight={100}
-          >
-            <View style={{ flex: 1 }}>
-              <View style={styles.seccion}>
-                <Text style={styles.tituloSeccion}>Datos Bancarios</Text>
-                <Text style={styles.bodySeccion}>
-                  Ingresa los datos solicitados para continuar.
-                </Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 5,
-                  backgroundColor: "white",
-                  paddingTop: 15,
-                }}
-              >
-                {/* Campos para introducir los datos bancarios */}
-                <Text style={styles.tituloCampo}>Alias Cuenta</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setAlias}
-                  value={alias}
-                  placeholder="Eje. Raúl G. Torres"
-                />
-                <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setClabe}
-                  value={clabe}
-                  placeholder="18 dígitos"
-                  maxLength={18}
-                  keyboardType="numeric"
-                />
-                <View style={styles.separacion} />
-                <Text style={styles.tituloCampo}>
-                  Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
-                </Text>
-                {!comprobanteNCuenta ? (
-                  <TouchableOpacity
-                    style={{ flexDirection: "row" }}
-                    onPress={showUploadOptions}
+      <View style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          scrollEnabled={false}
+          enableOnAndroid={true}
+          style={styles.scrollV}
+          keyboardShouldPersistTaps="handled"
+          extraScrollHeight={100}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={styles.seccion}>
+              <Text style={styles.tituloSeccion}>Datos Bancarios</Text>
+              <Text style={styles.bodySeccion}>
+                Ingresa los datos solicitados para continuar.
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 5,
+                backgroundColor: "white",
+                paddingTop: 15,
+              }}
+            >
+              {/* Campos para introducir los datos bancarios */}
+              <Text style={styles.tituloCampo}>Alias Cuenta</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setAlias}
+                value={alias}
+                placeholder="Eje. Raúl G. Torres"
+              />
+              <View style={styles.separacion} />
+              <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setClabe}
+                value={clabe}
+                placeholder="18 dígitos"
+                maxLength={18}
+                keyboardType="numeric"
+              />
+              <View style={styles.separacion} />
+              <Text style={styles.tituloCampo}>
+                Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
+              </Text>
+              {!comprobanteNCuenta ? (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={showUploadOptions}
+                >
+                  <Text
+                    style={[
+                      styles.input,
+                      {
+                        width: "92%",
+                        color: "#c7c7c9ff",
+                      },
+                    ]}
                   >
+                    Selecciona documento
+                  </Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      paddingBottom: 7.5,
+                    }}
+                  >
+                    <FontAwesome
+                      name="image"
+                      size={20}
+                      color="#060B4D"
+                      style={{ marginLeft: 15 }}
+                    />
                     <Text
-                      style={[
-                        styles.input,
-                        {
-                          width: "92%",
-                          color: "#c7c7c9ff",
-                        },
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensans",
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {nombreComprobante}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => [
+                        setComprobanteNCuenta(""),
+                        setNombreComprobante(""),
                       ]}
                     >
-                      Selecciona documento
-                    </Text>
-                    <Feather name="upload" size={20} color="#060B4D" />
-                  </TouchableOpacity>
-                ) : (
-                  <>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingBottom: 7.5,
-                      }}
-                    >
                       <FontAwesome
-                        name="image"
-                        size={20}
-                        color="#060B4D"
-                        style={{ marginLeft: 15 }}
+                        name="trash-o"
+                        size={25}
+                        color="#F95C5C"
+                        style={{ marginRight: 15 }}
                       />
-                      <Text
-                        style={{
-                          flex: 1,
-                          paddingHorizontal: 15,
-                          fontSize: 16,
-                          color: "#060B4D",
-                          fontFamily: "opensans",
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {nombreComprobante}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => [
-                          setComprobanteNCuenta(""),
-                          setNombreComprobante(""),
-                        ]}
-                      >
-                        <FontAwesome
-                          name="trash-o"
-                          size={25}
-                          color="#F95C5C"
-                          style={{ marginRight: 15 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-                <View style={styles.separacion} />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+              <View style={styles.separacion} />
 
-                <Text style={styles.tituloCampo}>No. Cuenta</Text>
+              <Text style={styles.tituloCampo}>No. Cuenta</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setNCuenta}
+                value={NCuenta}
+                placeholder="8-11 dígitos"
+                maxLength={11}
+                keyboardType="numeric"
+              />
+              <View style={styles.separacion} />
+              <Text style={[styles.tituloCampo, { color: "#9c9db8" }]}>
+                Banco
+              </Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setBanco}
+                value={banco}
+                placeholder="Autorrelleno"
+                editable={false}
+              />
+              <View style={styles.separacion} />
+              <View>
+                <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={setNCuenta}
-                  value={NCuenta}
-                  placeholder="8-11 dígitos"
-                  maxLength={11}
-                  keyboardType="numeric"
+                  onChangeText={setNombre}
+                  value={nombre}
+                  placeholder="Nombre Cuentahabiente"
                 />
-                <View style={styles.separacion} />
-                <Text style={[styles.tituloCampo, { color: "grey" }]}>
-                  Banco
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setBanco}
-                  value={banco}
-                  placeholder="Autorrelleno"
-                  editable={false}
-                />
-                <View style={styles.separacion} />
-                <View>
-                  <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={setNombre}
-                    value={nombre}
-                    placeholder="Nombre Cuentahabiente"
-                  />
-                </View>
-                <View style={styles.separacion} />
               </View>
+              <View style={styles.separacion} />
             </View>
-          </KeyboardAwareScrollView>
-          {/* Boton de Aceptar */}
-          <TouchableOpacity
-            style={[
-              styles.botonContinuar,
-              { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
-            ]}
-            onPress={() => handlePress()}
-            disabled={disabled}
-          >
-            <Text
-              style={[
-                styles.textoBotonContinuar,
-                { color: disabled ? "grey" : "white" },
-              ]}
-            >
-              Aceptar
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <ModalEstatus
-          titulo={"¡Atención!"}
-          texto={
-            "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
-          }
-          imagen={"Alert"}
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onAccept={() => [
-            setModalVisible(false),
-            navigation.navigate("MiTankef"),
+          </View>
+        </KeyboardAwareScrollView>
+        {/* Boton de Aceptar */}
+        <TouchableOpacity
+          style={[
+            styles.botonContinuar,
+            { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
           ]}
-        />
+          onPress={() => handlePress()}
+          disabled={disabled}
+        >
+          <Text
+            style={[
+              styles.textoBotonContinuar,
+              { color: disabled ? "grey" : "white" },
+            ]}
+          >
+            Aceptar
+          </Text>
+        </TouchableOpacity>
       </View>
-    </TouchableWithoutFeedback>
+
+      <ModalEstatus
+        titulo={"¡Atención!"}
+        texto={
+          "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+        }
+        imagen={"Alert"}
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onAccept={() => [
+          setModalVisible(false),
+          navigation.navigate("MiTankef"),
+        ]}
+      />
+    </View>
   );
 };
 

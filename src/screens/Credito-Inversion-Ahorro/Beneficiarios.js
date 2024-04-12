@@ -82,8 +82,10 @@ const Inversion2 = ({ navigation }) => {
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
+
+    const key = flujo === "Inversión" ? "investment" : "box_saving";
     const data = {
-      investment: {
+      [key]: {
         primary_beneficiary_first_name: nombre,
         primary_beneficiary_percentage: parseInt(porcentaje, 10),
         primary_beneficiary_kinship: parentesco,
