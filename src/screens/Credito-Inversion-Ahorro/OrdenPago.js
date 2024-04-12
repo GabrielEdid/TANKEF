@@ -207,7 +207,7 @@ const OrdenPago = ({ navigation }) => {
         {/* Titulo, Nombre de Pantalla y Campana */}
         <View style={styles.tituloContainer}>
           <MaskedView
-            style={{ flex: 1 }}
+            style={{ flex: 0.6 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
           >
             <LinearGradient
@@ -220,7 +220,10 @@ const OrdenPago = ({ navigation }) => {
           <Text
             style={[
               styles.tituloPantalla,
-              { marginLeft: flujo === "Inversión" ? 0 : 15 },
+              {
+                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+              },
             ]}
           >
             {flujo}
@@ -435,7 +438,6 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

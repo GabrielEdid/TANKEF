@@ -110,10 +110,8 @@ const DatosBancarios = ({ navigation }) => {
               "Error",
               "La clabe introducida no está asociada a ningun banco"
             );
-            setNCuenta("");
             setBanco("");
           } else {
-            setNCuenta(response.data.data.account);
             setBanco(response.data.data.bank_tag);
           }
         } catch (error) {
@@ -207,7 +205,7 @@ const DatosBancarios = ({ navigation }) => {
         {/* Titulo, Nombre de Pantalla y Campana */}
         <View style={styles.tituloContainer}>
           <MaskedView
-            style={{ flex: 1 }}
+            style={{ flex: 0.6 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
           >
             <LinearGradient
@@ -220,7 +218,10 @@ const DatosBancarios = ({ navigation }) => {
           <Text
             style={[
               styles.tituloPantalla,
-              { marginLeft: flujo === "Inversión" ? 0 : 15 },
+              {
+                fontSize: flujo === "Caja de ahorro" ? 20 : 24,
+                marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+              },
             ]}
           >
             {flujo}
@@ -343,17 +344,14 @@ const DatosBancarios = ({ navigation }) => {
                 )}
                 <View style={styles.separacion} />
 
-                <Text style={[styles.tituloCampo, { color: "grey" }]}>
-                  No. Cuenta
-                </Text>
+                <Text style={styles.tituloCampo}>No. Cuenta</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={setNCuenta}
                   value={NCuenta}
-                  placeholder="Autorrelleno"
-                  maxLength={10}
+                  placeholder="8-11 dígitos"
+                  maxLength={11}
                   keyboardType="numeric"
-                  editable={false}
                 />
                 <View style={styles.separacion} />
                 <Text style={[styles.tituloCampo, { color: "grey" }]}>
@@ -435,7 +433,6 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
