@@ -380,17 +380,17 @@ const MiTankefInversion = (props) => {
             <ModalEstatus
               titulo={"¡Atención!"}
               texto={
-                "¡Se ha enviado un correo electrónico con los datos bancarios para realizar el depósito! Por favor, revisa tu bandeja de entrada.\n¡Gracias!"
+                "Tu pago está pendiente. Por favor, completa la transacción para continuar."
               }
-              imagen={"Mail"}
+              imagen={"RedAlert"}
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
               onAccept={() => [
                 setModalVisible(false),
-                /*navigation.navigate("Crear", {
-                  screen: "DefinirFirma",
+                navigation.navigate("Crear", {
+                  screen: "OrdenPago",
                   params: { flujo: "Inversión" },
-                }),*/
+                }),
               ]}
             />
           )}

@@ -37,6 +37,7 @@ import EditarPerfil from "./src/screens/Main/EditarPerfil";
 import DefinirInversion from "./src/screens/Credito-Inversion-Ahorro/DefinirInversion";
 import Beneficiarios from "./src/screens/Credito-Inversion-Ahorro/Beneficiarios";
 import DatosBancarios from "./src/screens/Credito-Inversion-Ahorro/DatosBancarios";
+import OrdenPago from "./src/screens/Credito-Inversion-Ahorro/OrdenPago";
 import DefinirFirma from "./src/screens/Credito-Inversion-Ahorro/DefinirFirma";
 import FirmaDomicilio from "./src/screens/Credito-Inversion-Ahorro/FirmaDomicilio";
 import DefinirCredito from "./src/screens/Credito-Inversion-Ahorro/DefinirCredito";
@@ -172,6 +173,7 @@ function CrearStack() {
       <Stack.Screen name="DefinirInversion" component={DefinirInversion} />
       <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
       <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
+      <Stack.Screen name="OrdenPago" component={OrdenPago} />
       <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
       <Stack.Screen name="FirmaDomicilio" component={FirmaDomicilio} />
       <Stack.Screen name="DefinirCredito" component={DefinirCredito} />

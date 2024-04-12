@@ -30,8 +30,8 @@ const DefinirInversion = ({ navigation }) => {
   const [montoNumeric, setMontoNumeric] = useState(0);
   const [montoShow, setMontoShow] = useState("");
   const [plazo, setPlazo] = useState("");
-  const [retornoNeto, setRetornoNeto] = useState("");
-  const [inversionInicial, setInversionInicial] = useState("");
+  const [totalInversion, setTotalInversion] = useState("");
+  const [rendimiento, setRendimiento] = useState("");
   const [tasa, setTasa] = useState("");
   const [focusTab, setFocusTab] = useState("");
 
@@ -50,8 +50,8 @@ const DefinirInversion = ({ navigation }) => {
             "No se pudo hacer la cotización. Intente nuevamente."
           );
         } else {
-          setInversionInicial(montoShow);
-          setRetornoNeto(response.data.total);
+          setTotalInversion(response.data.total);
+          setRendimiento(response.data.amount);
           setTasa(response.data.rate);
         }
       } catch (error) {
@@ -61,8 +61,8 @@ const DefinirInversion = ({ navigation }) => {
     };
     if (montoNumeric >= 5000 && plazo) fetchCotizacion();
     else if (montoNumeric < 5000) {
-      setInversionInicial("");
-      setRetornoNeto("");
+      setTotalInversion("");
+      setRendimiento("");
       setTasa("");
     }
   }, [montoNumeric, plazo]);
@@ -307,30 +307,28 @@ const DefinirInversion = ({ navigation }) => {
                 <Text style={styles.textoTab}>24</Text>
               </TouchableOpacity>
             </View>
-            <Text
-              style={[styles.subTexto, { marginTop: 10, color: "#060B4D" }]}
-            >
+            <Text style={[styles.subTexto, { marginTop: 10 }]}>
               Esta es una cotización preliminar, la tasa definitiva dependerá
               del análisis completo de tu solicitud.
             </Text>
           </View>
-          <View style={styles.contenedores}>
-            <Text style={styles.texto}>Retorno de inversión neto</Text>
-            <Text
-              style={{
-                fontFamily: "opensansbold",
-                fontSize: 30,
-                color: "#060B4D",
-              }}
-            >
-              {retornoNeto ? `${retornoNeto} MXN` : "$ 0 MXN"}
-            </Text>
-          </View>
           <View style={[styles.contenedores, { flexDirection: "row" }]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
+              <Text style={styles.concepto}>Rendimiento</Text>
               <Text style={styles.valorConcepto}>
-                {inversionInicial ? `${inversionInicial} MXN` : "$ 0 MXN"}
+                {rendimiento ? `${rendimiento} MXN` : "$ 0 MXN"}
+              </Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Total de{"\n"}inversión</Text>
+              <Text style={styles.valorConcepto}>
+                {totalInversion ? `${totalInversion} MXN` : "$ 0 MXN"}
               </Text>
             </View>
             <Ionicons
@@ -422,23 +420,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   subTexto: {
-    color: "#9E9E9E",
+    color: "#060B4D",
     textAlign: "center",
     fontFamily: "opensans",
     fontSize: 14,
   },
   inputWrapper: {
     flexDirection: "row",
-    marginTop: -10,
-    paddingHorizontal: 10,
+    marginVertical: 5,
+    paddingHorizontal: 70,
     alignItems: "center",
     alignContent: "center",
+    borderWidth: 1,
+    borderColor: "#cecfdb",
+    borderRadius: 10,
   },
   inputNombre: {
     marginTop: 5,
     fontSize: 16,
     color: "#060B4D",
     fontFamily: "opensans",
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#cecfdb",
   },
   dollarSign: {
     fontSize: 35,
