@@ -49,6 +49,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-svg": "13.9.0",
+    "react-native-table-component": "^1.2.2",
     "react-native-ui-lib": "^7.10.0",
     "react-native-webview": "^13.2.2",
     "react-navigation": "^5.0.0",
