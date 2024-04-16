@@ -31,9 +31,9 @@ const DefinirInversion = ({ navigation }) => {
   const [montoShow, setMontoShow] = useState("");
   const [plazo, setPlazo] = useState("");
   const [totalInversion, setTotalInversion] = useState("");
-  const [rendimiento, setRendimiento] = useState("");
   const [tasa, setTasa] = useState("");
   const [focusTab, setFocusTab] = useState("");
+  const [condiciones, setCondiciones] = useState(false);
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
@@ -51,7 +51,6 @@ const DefinirInversion = ({ navigation }) => {
           );
         } else {
           setTotalInversion(response.data.total);
-          setRendimiento(response.data.amount);
           setTasa(response.data.rate);
         }
       } catch (error) {
@@ -62,7 +61,6 @@ const DefinirInversion = ({ navigation }) => {
     if (montoNumeric >= 5000 && plazo) fetchCotizacion();
     else if (montoNumeric < 5000) {
       setTotalInversion("");
-      setRendimiento("");
       setTasa("");
     }
   }, [montoNumeric, plazo]);
@@ -75,13 +73,12 @@ const DefinirInversion = ({ navigation }) => {
         name: nombreInversion,
         amount: montoNumeric,
         term: plazo,
-        condition: true,
+        condition: condiciones,
       },
     };
 
     const response = await APIPost(url, data);
     if (response.error) {
-      // Manejar el error
       console.error("Error al crear la inversión:", response.error);
       Alert.alert(
         "Error",
@@ -119,7 +116,8 @@ const DefinirInversion = ({ navigation }) => {
     setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
   };
 
-  const isAcceptable = montoNumeric >= 5000 && plazo && nombreInversion;
+  const isAcceptable =
+    montoNumeric >= 5000 && plazo && nombreInversion && condiciones;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -176,46 +174,33 @@ const DefinirInversion = ({ navigation }) => {
         keyboardDismissMode="on-drag"
       >
         <View style={{ flex: 1 }}>
-          <View
-            style={{
-              alignItems: "center",
-              paddingHorizontal: 25,
-              paddingVertical: 15,
-              backgroundColor: "white",
-              marginTop: 3,
-            }}
-          >
+          <View style={[styles.contenedores, { marginTop: 3 }]}>
             <Text
               style={{
                 fontFamily: "opensansbold",
-                fontSize: 20,
+                fontSize: 24,
                 color: "#060B4D",
                 textAlign: "center",
               }}
             >
-              Ingresa los datos solicitados para iniciar tu inversión.
+              Simula tu inversión
             </Text>
           </View>
-          <View
-            style={{
-              marginTop: 3,
-              backgroundColor: "white",
-              paddingHorizontal: 15,
-              paddingVertical: 5,
-            }}
-          >
+          <View style={[styles.contenedores, { marginTop: -10 }]}>
             <Text style={styles.texto}>Nombre de la Inversión</Text>
             <TextInput
               style={styles.inputNombre}
               value={nombreInversion}
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
-              placeholder="Introduce el nombre de la inversión"
+              placeholder="Mi inversión"
               onChangeText={(text) => setNombreInversion(text)}
             />
+            <View style={styles.separacion} />
           </View>
-          <View style={styles.contenedores}>
-            <Text style={styles.texto}>Monto de inversión</Text>
+
+          <View style={[styles.contenedores, { marginTop: -10 }]}>
+            <Text style={styles.texto}>Monto de la inversión</Text>
             <View style={styles.inputWrapper}>
               <Text
                 style={[
@@ -245,15 +230,12 @@ const DefinirInversion = ({ navigation }) => {
                 MXN
               </Text>
             </View>
-            <Text style={styles.subTexto}>
-              Monto mínimo de inversión $5,000.00
-            </Text>
+            <View style={[styles.separacion, { marginTop: 0 }]} />
+            <Text style={styles.montoMinimo}>Monto mínimo $5,000.00</Text>
           </View>
 
-          <View style={styles.contenedores}>
-            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-              Plazo de Inversión
-            </Text>
+          <View style={[styles.contenedores, { marginTop: -10 }]}>
+            <Text style={styles.texto}>Elige el plazo</Text>
             <View
               style={{
                 flexDirection: "row",
@@ -308,63 +290,127 @@ const DefinirInversion = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             <Text style={[styles.subTexto, { marginTop: 10 }]}>
-              Esta es una cotización preliminar, la tasa definitiva dependerá
-              del análisis completo de tu solicitud.
+              La tasa de interés es variable y se ajusta según el mercado.
+              Referencia la TIIE a 28 días, reportada en el DOF antes de la
+              fecha de cálculo. La tasa de impuestos aplicada es la actual y
+              puede cambiar.
             </Text>
           </View>
-          <View style={[styles.contenedores, { flexDirection: "row" }]}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Rendimiento</Text>
-              <Text style={styles.valorConcepto}>
-                {rendimiento ? `${rendimiento} MXN` : "$ 0 MXN"}
-              </Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Total de{"\n"}inversión</Text>
-              <Text style={styles.valorConcepto}>
-                {totalInversion ? `${totalInversion} MXN` : "$ 0 MXN"}
-              </Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-              <Text style={styles.valorConcepto}>
-                {tasa ? `${tasa}` : "0%"}
-              </Text>
+          <View
+            style={[styles.contenedores, { marginTop: 3, paddingVertical: 10 }]}
+          >
+            <Text style={styles.texto}>Resultados</Text>
+            <View
+              style={[
+                styles.contenedores,
+                { flexDirection: "row", marginTop: 3, paddingVertical: 5 },
+              ]}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Total de inversión</Text>
+                <Text style={styles.valorConcepto}>
+                  {totalInversion ? `${totalInversion} MXN` : "$ 0 MXN"}
+                </Text>
+              </View>
+              <Ionicons
+                name="remove-outline"
+                size={30}
+                color="#e1e2ebff"
+                style={styles.line}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Tasa de interés</Text>
+                <Text style={styles.valorConcepto}>
+                  {tasa ? `${tasa}` : "0%"}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
 
-        <TouchableOpacity
-          style={[
-            styles.botonContinuar,
-            { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
-          ]}
-          onPress={() => {
-            handlePress();
+        <View
+          style={{
+            alignItems: "center",
           }}
-          disabled={!isAcceptable}
         >
-          <Text
+          <TouchableOpacity
             style={[
-              styles.textoBotonContinuar,
-              { color: isAcceptable ? "white" : "grey" },
+              styles.botonContinuar,
+              { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
             ]}
+            onPress={() => {
+              handlePress();
+            }}
+            disabled={!isAcceptable}
           >
-            Aceptar
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: isAcceptable ? "white" : "grey" },
+              ]}
+            >
+              Aceptar
+            </Text>
+          </TouchableOpacity>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={{ marginTop: 10, marginRight: 7.5 }}
+              onPress={() => setCondiciones(!condiciones)}
+            >
+              <Feather
+                name={condiciones ? "check-square" : "square"}
+                size={24}
+                color="#060B4D"
+              />
+            </TouchableOpacity>
+            <Text style={styles.subTexto}>
+              Al continuar usted está aceptando{" "}
+              <Text style={{ fontFamily: "opensansbold" }}>
+                Términos y Condiciones
+              </Text>
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              { backgroundColor: isAcceptable ? "white" : "#D5D5D5" },
+            ]}
+            onPress={() => {}}
+            disabled={!isAcceptable}
+          >
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: isAcceptable ? "#060B4D" : "grey" },
+              ]}
+            >
+              Tabla de amortización
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor: "white",
+                marginBottom: 20,
+              },
+            ]}
+            onPress={() => {}}
+          >
+            <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
+              Cancelar Inversión
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -392,20 +438,6 @@ const styles = StyleSheet.create({
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
-  botonContinuar: {
-    marginBottom: 5,
-    backgroundColor: "#060B4D",
-    width: "80%",
-    alignSelf: "center",
-    borderRadius: 5,
-  },
-  textoBotonContinuar: {
-    color: "white",
-    alignSelf: "center",
-    padding: 10,
-    fontFamily: "opensanssemibold",
-    fontSize: 16,
-  },
   contenedores: {
     backgroundColor: "white",
     paddingHorizontal: 12,
@@ -416,48 +448,52 @@ const styles = StyleSheet.create({
   texto: {
     color: "#060B4D",
     textAlign: "center",
-    fontFamily: "opensans",
+    fontFamily: "opensansbold",
     fontSize: 16,
   },
-  subTexto: {
-    color: "#060B4D",
+  montoMinimo: {
+    color: "#cecfdb",
     textAlign: "center",
     fontFamily: "opensans",
     fontSize: 14,
+    marginTop: 5,
+  },
+  subTexto: {
+    color: "#060B4D",
+    fontFamily: "opensans",
+    fontSize: 12,
+    marginTop: 10,
   },
   inputWrapper: {
     flexDirection: "row",
-    marginVertical: 5,
+    marginTop: -10,
     paddingHorizontal: 70,
     alignItems: "center",
     alignContent: "center",
-    borderWidth: 1,
-    borderColor: "#cecfdb",
-    borderRadius: 10,
   },
   inputNombre: {
     marginTop: 5,
-    fontSize: 16,
+    fontSize: 30,
     color: "#060B4D",
     fontFamily: "opensans",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#cecfdb",
-  },
-  dollarSign: {
-    fontSize: 35,
-    fontFamily: "opensanssemibold",
   },
   inputMonto: {
     paddingTop: 10,
-    fontSize: 35,
+    fontSize: 30,
     color: "#060B4D",
     marginBottom: 10,
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensans",
+  },
+  dollarSign: {
+    fontSize: 30,
+    fontFamily: "opensans",
   },
   separacion: {
     height: 1,
+    marginTop: 10,
     width: "100%",
-    backgroundColor: "#cecfdbff",
+    alignSelf: "center",
+    backgroundColor: "#cecfdb",
   },
   tab: {
     marginTop: 10,
@@ -472,8 +508,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   botonContinuar: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginVertical: 5,
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,

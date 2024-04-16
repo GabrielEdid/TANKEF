@@ -636,6 +636,27 @@ const Inversion2 = ({ navigation }) => {
                   Aceptar
                 </Text>
               </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.botonContinuar,
+                  {
+                    backgroundColor: "white",
+                  },
+                ]}
+                onPress={() => {
+                  navigation.navigate("Documentacion", {
+                    flujo: flujo,
+                    idInversion: idInversion,
+                  });
+                }}
+              >
+                <Text
+                  style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}
+                >
+                  Cancelar {flujo}
+                </Text>
+              </TouchableOpacity>
             </View>
           </KeyboardAwareScrollView>
         </>

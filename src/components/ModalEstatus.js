@@ -53,12 +53,14 @@ const ModalEstatus = (props) => {
     <>
       <Modal animationType="slide" transparent={true} visible={props.visible}>
         <View style={styles.centeredView}>
-          <TouchableOpacity
-            style={{ position: "absolute", top: 50, right: 20 }}
-            onPress={() => props.onClose()}
-          >
-            <AntDesign name="closecircleo" size={30} color="white" />
-          </TouchableOpacity>
+          {props.onClose && (
+            <TouchableOpacity
+              style={{ position: "absolute", top: 50, right: 20 }}
+              onPress={() => props.onClose()}
+            >
+              <AntDesign name="closecircleo" size={30} color="white" />
+            </TouchableOpacity>
+          )}
           <View style={styles.modalView}>
             <Image
               style={{ width: 60, height: 60, marginBottom: 10 }}

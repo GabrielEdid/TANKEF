@@ -380,7 +380,10 @@ const DatosBancarios = ({ navigation }) => {
         <TouchableOpacity
           style={[
             styles.botonContinuar,
-            { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
+            {
+              backgroundColor: disabled ? "#D5D5D5" : "#060B4D",
+              marginBottom: 0,
+            },
           ]}
           onPress={() => handlePress()}
           disabled={disabled}
@@ -394,6 +397,22 @@ const DatosBancarios = ({ navigation }) => {
             Aceptar
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.botonContinuar,
+            {
+              backgroundColor: "white",
+            },
+          ]}
+          onPress={() => {
+            console.log(idInversion);
+          }}
+        >
+          <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
+            Cancelar {flujo}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <ModalEstatus
@@ -403,7 +422,6 @@ const DatosBancarios = ({ navigation }) => {
         }
         imagen={"Alert"}
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
         onAccept={() => [
           setModalVisible(false),
           navigation.navigate("MiTankef"),

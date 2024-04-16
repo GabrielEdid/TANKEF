@@ -45,7 +45,7 @@ const Documentacion = ({ navigation }) => {
   // Función para subir la documentación
   const handlePress = async () => {
     setDisabled(true);
-    console.log("Agregando beneficiarios a la inversión...");
+    console.log("Agregando los documentos a la inversión o caja de ahorro...");
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
@@ -520,7 +520,10 @@ const Documentacion = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.botonContinuar,
-              { backgroundColor: disabled ? "#D5D5D5" : "#060B4D" },
+              {
+                backgroundColor: disabled ? "#D5D5D5" : "#060B4D",
+                marginBottom: 0,
+              },
             ]}
             onPress={() => handlePress()}
             disabled={disabled}
@@ -532,6 +535,22 @@ const Documentacion = ({ navigation }) => {
               ]}
             >
               Aceptar
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor: "white",
+              },
+            ]}
+            onPress={() => {
+              console.log(idInversion);
+            }}
+          >
+            <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
+              Cancelar {flujo}
             </Text>
           </TouchableOpacity>
         </ScrollView>
