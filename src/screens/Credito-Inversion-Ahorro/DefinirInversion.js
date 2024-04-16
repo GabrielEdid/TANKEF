@@ -15,6 +15,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet, APIPost } from "../../API/APIService";
+import ModalAmortizacion from "../../components/ModalAmortizacion";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -34,6 +35,8 @@ const DefinirInversion = ({ navigation }) => {
   const [tasa, setTasa] = useState("");
   const [focusTab, setFocusTab] = useState("");
   const [condiciones, setCondiciones] = useState(false);
+  const [modalAmortizacionVisible, setModalAmortizacionVisible] =
+    useState(false);
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
@@ -118,6 +121,8 @@ const DefinirInversion = ({ navigation }) => {
 
   const isAcceptable =
     montoNumeric >= 5000 && plazo && nombreInversion && condiciones;
+
+  const isTable = montoNumeric >= 5000 && plazo;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -381,15 +386,17 @@ const DefinirInversion = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.botonContinuar,
-              { backgroundColor: isAcceptable ? "white" : "#D5D5D5" },
+              { backgroundColor: isTable ? "white" : "#D5D5D5" },
             ]}
-            onPress={() => {}}
-            disabled={!isAcceptable}
+            onPress={() => {
+              setModalAmortizacionVisible(true);
+            }}
+            disabled={!isTable}
           >
             <Text
               style={[
                 styles.textoBotonContinuar,
-                { color: isAcceptable ? "#060B4D" : "grey" },
+                { color: isTable ? "#060B4D" : "grey" },
               ]}
             >
               Tabla de amortización
@@ -411,6 +418,12 @@ const DefinirInversion = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <ModalAmortizacion
+          visible={modalAmortizacionVisible}
+          onClose={() => {
+            setModalAmortizacionVisible(false);
+          }}
+        />
       </ScrollView>
     </View>
   );
