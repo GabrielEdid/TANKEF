@@ -16,6 +16,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
 import Slider from "@react-native-community/slider";
+import ModalAmortizacion from "../../components/ModalAmortizacion";
 // Importaciones de Componentes y Hooks
 import { APIGet, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -33,12 +34,13 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const [montoNumeric, setMontoNumeric] = useState(25000);
   const [open, setOpen] = useState(false);
   const [montoShow, setMontoShow] = useState("25,000");
-  const [plazo, setPlazo] = useState("36");
   const [retornoNeto, setRetornoNeto] = useState("");
-  const [ahorroInicial, setAhorroInicial] = useState("");
   const [tasa, setTasa] = useState("");
+  const [condiciones, setCondiciones] = useState(false);
+  const [modalAmortizacionVisible, setModalAmortizacionVisible] =
+    useState(false);
 
-  // Funcion para manejar el cambio de texto en el input de monto
+  /* Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
     let newText = inputText.replace(/[^0-9.]/g, "");
     if ((newText.match(/\./g) || []).length > 1) {
@@ -59,7 +61,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
     // Parse the raw input to a float and update montoNumeric for validation
     const numericValue = parseFloat(newText.replace(/,/g, ""));
     setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
-  };
+  };*/
 
   /* Funcion para manejar el cambio de valor en el slider
   const handleSliderChange = (value) => {
@@ -75,8 +77,9 @@ const DefinirCajaAhorro = ({ navigation }) => {
     setMontoShow(formattedValue);
   };*/
 
-  const isAcceptable =
-    montoNumeric >= 25000 && montoNumeric <= 35000 && plazo && nombreCaja;
+  const isAcceptable = montoNumeric >= 25000 && nombreCaja && condiciones;
+
+  const isTable = montoNumeric >= 25000;
 
   // Funcion para formatear el input de monto
   const formatInput = (text) => {
@@ -92,7 +95,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   // Función para hacer la cotizacion al API
   useEffect(() => {
     const fetchCotizacion = async () => {
-      const url = `/api/v1/simulator?term=${plazo}&type=box_saving&amount=${monto}`;
+      const url = `/api/v1/simulator?term=36&type=box_saving&amount=${monto}`;
 
       try {
         const response = await APIGet(url);
@@ -104,7 +107,6 @@ const DefinirCajaAhorro = ({ navigation }) => {
             "No se pudo hacer la cotización. Intente nuevamente."
           );
         } else {
-          setAhorroInicial(monto === 25000 ? "$25,000" : "$50,000");
           setRetornoNeto(response.data.total);
           setTasa(response.data.rate);
         }
@@ -113,9 +115,8 @@ const DefinirCajaAhorro = ({ navigation }) => {
         Alert.alert("Error", "Ha ocurrido un error al realizar la cotización.");
       }
     };
-    if (monto && plazo) fetchCotizacion();
+    if (monto) fetchCotizacion();
     else if (!monto) {
-      setAhorroInicial("");
       setRetornoNeto("");
       setTasa("");
     }
@@ -127,7 +128,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
       box_saving: {
         name: nombreCaja,
         amount: monto,
-        term: plazo,
+        term: 36,
         condition: true,
       },
     };
@@ -198,82 +199,39 @@ const DefinirCajaAhorro = ({ navigation }) => {
         keyboardDismissMode="on-drag"
       >
         <View style={{ flex: 1 }}>
-          <View style={[styles.contenedores, { flexDirection: "row" }]}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
-              <Text style={styles.valorConcepto}>$120,000</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
-              <Text style={styles.valorConcepto}>$25,000.00</Text>
-            </View>
-            <Ionicons
-              name="remove-outline"
-              size={30}
-              color="#e1e2ebff"
-              style={styles.line}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
-              <Text style={styles.valorConcepto}>$50,000.00</Text>
-            </View>
-          </View>
           <View
-            style={{
-              marginTop: 3,
-              backgroundColor: "white",
-              paddingHorizontal: 15,
-              paddingVertical: 5,
-            }}
+            style={[
+              styles.contenedores,
+              { marginTop: 3, paddingHorizontal: 20 },
+            ]}
           >
-            <Text style={styles.texto}>Nombre de la caja de ahorro</Text>
+            <Text
+              style={{
+                fontFamily: "opensansbold",
+                fontSize: 24,
+                color: "#060B4D",
+                textAlign: "center",
+              }}
+            >
+              Ingresa los datos solicitados para iniciar tu caja de ahorro.
+            </Text>
+          </View>
+          <View style={[styles.contenedores, { marginTop: -10 }]}>
+            <Text style={styles.texto}>Nombre de la Caja de Ahorro</Text>
             <TextInput
               style={styles.inputNombre}
               value={nombreCaja}
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
-              placeholder="Introduce el nombre de la caja de ahorro"
+              placeholder="Mi Caja de Ahorro"
               onChangeText={(text) => setNombreCaja(text)}
             />
+            <View style={styles.separacion} />
           </View>
-          <View style={styles.contenedores}>
-            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-              Selecciona el monto que deseas ahorrar
-            </Text>
+
+          <View style={[styles.contenedores, { marginTop: -10 }]}>
+            <Text style={styles.texto}>Selecciona el monto a ahorrar</Text>
             <View style={styles.inputWrapper}>
-              {/*<Text
-                style={[
-                  styles.dollarSign,
-                  { color: monto ? "#060B4D" : "#b3b5c9ff" },
-                ]}
-              >
-                $
-              </Text>
-              <TextInput
-                style={styles.inputMonto}
-                value={montoShow}
-                keyboardType="numeric"
-                maxLength={20}
-                placeholderTextColor={"#b3b5c9ff"}
-                placeholder="0.00"
-                onChangeText={handleChangeText}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-              <Text
-                style={[
-                  styles.dollarSign,
-                  { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
-                ]}
-              >
-                MXN
-              </Text>*/}
               <DropDownPicker
                 open={open}
                 value={monto}
@@ -291,92 +249,151 @@ const DefinirCajaAhorro = ({ navigation }) => {
                 placeholderStyle={{
                   color: "#c7c7c9ff",
                   fontFamily: "opensanssemibold",
+                  textAlign: "center",
                 }}
                 dropDownContainerStyle={styles.DropDownContainer}
                 labelStyle={styles.selectionStyle}
                 textStyle={styles.DropDownText}
               />
             </View>
-            {/*<Slider
-              style={{ width: "90%" }}
-              minimumValue={25000}
-              maximumValue={35000}
-              step={25}
-              value={montoNumeric}
-              onValueChange={handleSliderChange}
-              thumbTintColor="#2FF690"
-              minimumTrackTintColor="#2FF690"
-              maximumTrackTintColor="#F2F2F2"
-              />*/}
+            <View
+              style={{
+                backgroundColor: "#2FF690",
+                marginTop: 10,
+                flex: 1,
+                borderRadius: 5,
+                padding: 10,
+                width: "95%",
+              }}
+            >
+              <Text style={[styles.texto, { fontSize: 14 }]}>
+                Por este momento solo contamos con una caja de ahorro de
+                $25,000.00 y $50,000.00 a 36 meses.
+              </Text>
+            </View>
           </View>
 
-          <View style={styles.contenedores}>
-            <Text style={[styles.texto, { fontFamily: "opensanssemibold" }]}>
-              Plan mensual de ahorro
-            </Text>
-            <View style={styles.tab}>
-              <Text style={styles.textoTab}>36</Text>
+          <View
+            style={[styles.contenedores, { marginTop: 3, paddingVertical: 10 }]}
+          >
+            <Text style={styles.texto}>Resultados</Text>
+            <View
+              style={[
+                styles.contenedores,
+                { flexDirection: "row", marginTop: 3, paddingVertical: 5 },
+              ]}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Tasa de operación</Text>
+                <Text style={styles.valorConcepto}>{tasa ? tasa : "0%"}</Text>
+              </View>
+              <Ionicons
+                name="remove-outline"
+                size={30}
+                color="#e1e2ebff"
+                style={styles.line}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.concepto}>Retorno de inversión</Text>
+                <Text style={styles.valorConcepto}>
+                  {retornoNeto ? `${retornoNeto}` : "$0 MXN"}
+                </Text>
+              </View>
             </View>
-            <Text style={styles.subTexto}>
-              Esta es una cotización preliminar, la tasa definitiva dependerá
-              del análisis completo de tu solicitud.
-            </Text>
-          </View>
-          <View style={styles.contenedores}>
-            <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-            <Text style={styles.valorConcepto}>44.26%</Text>
           </View>
         </View>
-        <View style={styles.contenedores}>
-          <Text style={styles.texto}>Retorno de ahorro neto</Text>
-          <Text
+
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
+            ]}
+            onPress={() => {
+              handlePress();
+            }}
+            disabled={!isAcceptable}
+          >
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: isAcceptable ? "white" : "grey" },
+              ]}
+            >
+              Aceptar
+            </Text>
+          </TouchableOpacity>
+
+          <View
             style={{
-              fontFamily: "opensansbold",
-              fontSize: 30,
-              color: "#060B4D",
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 10,
             }}
           >
-            {retornoNeto ? `${retornoNeto} MXN` : "$ 0 MXN"}
-          </Text>
-        </View>
-        <View style={[styles.contenedores, { flexDirection: "row" }]}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.concepto}>Ahorro{"\n"}inicial</Text>
-            <Text style={styles.valorConcepto}>
-              {ahorroInicial ? `${ahorroInicial} MXN` : "$ 0 MXN"}
+            <TouchableOpacity
+              style={{ marginTop: 10, marginRight: 7.5 }}
+              onPress={() => setCondiciones(!condiciones)}
+            >
+              <Feather
+                name={condiciones ? "check-square" : "square"}
+                size={24}
+                color="#060B4D"
+              />
+            </TouchableOpacity>
+            <Text style={styles.subTexto}>
+              Al continuar usted está aceptando{" "}
+              <Text style={{ fontFamily: "opensansbold" }}>
+                Términos y Condiciones
+              </Text>
             </Text>
           </View>
-          <Ionicons
-            name="remove-outline"
-            size={30}
-            color="#e1e2ebff"
-            style={styles.line}
-          />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-            <Text style={styles.valorConcepto}>{tasa ? `${tasa}` : "0%"}</Text>
-          </View>
-        </View>
 
-        <TouchableOpacity
-          style={[
-            styles.botonContinuar,
-            { backgroundColor: isAcceptable ? "#060B4D" : "#D5D5D5" },
-          ]}
-          onPress={() => {
-            handlePress();
-          }}
-          disabled={!isAcceptable}
-        >
-          <Text
+          <TouchableOpacity
             style={[
-              styles.textoBotonContinuar,
-              { color: isAcceptable ? "white" : "grey" },
+              styles.botonContinuar,
+              { backgroundColor: isTable ? "white" : "#D5D5D5" },
             ]}
+            onPress={() => {
+              setModalAmortizacionVisible(true);
+            }}
+            disabled={!isTable}
           >
-            Aceptar
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                styles.textoBotonContinuar,
+                { color: isTable ? "#060B4D" : "grey" },
+              ]}
+            >
+              Tabla de amortización
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor: "white",
+                marginBottom: 20,
+              },
+            ]}
+            onPress={() => {}}
+          >
+            <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
+              Cancelar Caja de Ahorro
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <ModalAmortizacion
+          visible={modalAmortizacionVisible}
+          onClose={() => {
+            setModalAmortizacionVisible(false);
+          }}
+        />
       </ScrollView>
     </View>
   );
@@ -405,20 +422,6 @@ const styles = StyleSheet.create({
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
-  botonContinuar: {
-    marginBottom: 5,
-    backgroundColor: "#060B4D",
-    width: "80%",
-    alignSelf: "center",
-    borderRadius: 5,
-  },
-  textoBotonContinuar: {
-    color: "white",
-    alignSelf: "center",
-    padding: 10,
-    fontFamily: "opensanssemibold",
-    fontSize: 16,
-  },
   contenedores: {
     backgroundColor: "white",
     paddingHorizontal: 12,
@@ -429,41 +432,21 @@ const styles = StyleSheet.create({
   texto: {
     color: "#060B4D",
     textAlign: "center",
-    fontFamily: "opensans",
+    fontFamily: "opensansbold",
     fontSize: 16,
   },
-  DropDownPicker: {
-    borderColor: "transparent",
-    marginTop: 20,
-    backgroundColor: "transparent",
-    alignSelf: "center",
-    alignItems: "center",
-  },
-  DropDownText: {
-    fontSize: 20,
-    fontFamily: "opensanssemibold",
-    color: "#060B4D",
-    alignSelf: "center",
-    textAlign: "left",
-  },
-  DropDownContainer: {
-    marginTop: 10,
-    borderColor: "transparent",
-  },
-  selectionStyle: {
-    fontSize: 35,
-    textAlign: "center",
-    alignSelf: "center",
-    paddingLeft: 15,
-    color: "#060B4D",
-    fontFamily: "opensanssemibold",
-  },
-  subTexto: {
-    color: "#060B4D",
-    marginTop: 10,
+  montoMinimo: {
+    color: "#cecfdb",
     textAlign: "center",
     fontFamily: "opensans",
     fontSize: 14,
+    marginTop: 5,
+  },
+  subTexto: {
+    color: "#060B4D",
+    fontFamily: "opensans",
+    fontSize: 12,
+    marginTop: 10,
   },
   inputWrapper: {
     flexDirection: "row",
@@ -474,31 +457,32 @@ const styles = StyleSheet.create({
   },
   inputNombre: {
     marginTop: 5,
-    fontSize: 16,
+    fontSize: 30,
     color: "#060B4D",
     fontFamily: "opensans",
   },
-  dollarSign: {
-    fontSize: 35,
-    fontFamily: "opensanssemibold",
-  },
   inputMonto: {
     paddingTop: 10,
-    fontSize: 35,
+    fontSize: 30,
     color: "#060B4D",
     marginBottom: 10,
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensans",
+  },
+  dollarSign: {
+    fontSize: 30,
+    fontFamily: "opensans",
   },
   separacion: {
     height: 1,
+    marginTop: 10,
     width: "100%",
-    backgroundColor: "#cecfdbff",
+    alignSelf: "center",
+    backgroundColor: "#cecfdb",
   },
   tab: {
     marginTop: 10,
     padding: 10,
-    width: "90%",
-    backgroundColor: "#060B4D",
+    width: widthFourth,
     borderRadius: 5,
     marginRight: 10,
   },
@@ -506,11 +490,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "opensanssemibold",
     fontSize: 18,
-    color: "white",
   },
   botonContinuar: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginVertical: 5,
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,
@@ -528,13 +510,42 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   valorConcepto: {
-    fontFamily: "opensansbold",
+    fontFamily: "opensanssemibold",
     fontSize: 16,
     color: "#060B4D",
     textAlign: "center",
   },
   line: {
     transform: [{ rotate: "90deg" }],
+  },
+  DropDownPicker: {
+    borderColor: "transparent",
+    marginTop: 20,
+    backgroundColor: "transparent",
+    alignSelf: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#d3d4de",
+  },
+  DropDownText: {
+    fontSize: 20,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
+    alignSelf: "center",
+    textAlign: "left",
+    padding: 5,
+  },
+  DropDownContainer: {
+    marginTop: 10,
+    borderColor: "transparent",
+  },
+  selectionStyle: {
+    fontSize: 35,
+    textAlign: "center",
+    alignSelf: "center",
+    paddingLeft: 15,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
   },
 });
 
