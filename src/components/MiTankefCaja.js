@@ -80,9 +80,9 @@ const MiTankefCaja = (props) => {
       console.error("Error al obtener la caja de ahorro:", result.error);
     } else {
       console.log("Resultados de la caja de ahorro:", result.data.data);
-      //setBoxState(result.data.data.aasm_state);
+      setBoxState(result.data.data.aasm_state);
       setPlazo(result.data.data.term);
-      setFolio("Falta" /*result.data.data.invoice_number*/);
+      setFolio(result.data.data.invoice_number);
       setMontoAcumulado(formatAmount(result.data.data.amount));
       setTasaInteres("Falta");
     }

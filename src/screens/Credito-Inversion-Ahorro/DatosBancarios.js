@@ -89,7 +89,6 @@ const DatosBancarios = ({ navigation }) => {
   useEffect(() => {
     const verificarClabe = async () => {
       if (clabe.length < 18) {
-        setNCuenta("");
         setBanco("");
       } else if (clabe.length === 18) {
         const url = `/api/v1/clabe_validation`;

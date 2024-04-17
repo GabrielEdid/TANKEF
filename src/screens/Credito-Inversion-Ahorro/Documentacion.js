@@ -26,7 +26,6 @@ import {
   AntDesign,
 } from "@expo/vector-icons";
 import { APIPut, APIGet } from "../../API/APIService";
-import { is } from "date-fns/locale";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
