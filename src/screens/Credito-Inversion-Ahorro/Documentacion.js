@@ -156,17 +156,21 @@ const Documentacion = ({ navigation }) => {
   const fetchElement = async () => {
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
-    }/${176}`;
+    }/${177}`;
 
     const result = await APIGet(url);
 
     if (result.error) {
-      console.error("Error al obtener la inversion:", result.error);
+      console.error(
+        "Error al obtener la inversion o caja de ahorro:",
+        result.error
+      );
     } else {
       console.log(
         "Resultado de documentos",
         result.data.data.attached_documents_user
       );
+      if (result.data.data.attached_documents_user === undefined) return;
       setDocuments(result.data.data.attached_documents_user);
     }
   };
