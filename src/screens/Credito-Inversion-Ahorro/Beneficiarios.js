@@ -18,7 +18,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
-import { APIPut } from "../../API/APIService";
+import { APIPut, APIPost } from "../../API/APIService";
 import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
@@ -123,6 +123,51 @@ const Inversion2 = ({ navigation }) => {
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
       setDisabled(false);
     }
+  };
+
+  // Funcion para manejar el boton de cancelar
+  const handleCancelar = () => {
+    Alert.alert(
+      `¿Deseas cancelar la ${flujo}`,
+      `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
+      [
+        {
+          text: `Cancelar ${flujo}`,
+          onPress: () => [cancelar()],
+          style: "cancel",
+        },
+        {
+          text: `Continuar ${flujo}`,
+        },
+      ],
+      { cancelable: true }
+    );
+
+    const cancelar = async () => {
+      const url = `/api/v1/${
+        flujo === "Inversión" ? "investments" : "box_savings"
+      }/${idInversion}/cancel`;
+      const data = "";
+
+      const response = await APIPost(url, data);
+      if (response.error) {
+        // Manejar el error
+        console.error(
+          "Error al eliminar la caja de ahorro o inversion:",
+          response.error
+        );
+        Alert.alert(
+          "Error",
+          `No se pudo eliminar la ${flujo}. Intente nuevamente.`
+        );
+      } else {
+        console.log(
+          "Caja de ahorro o Inversión eliminada exitosamente:",
+          response
+        );
+        navigation.navigate("Inicio");
+      }
+    };
   };
 
   // Función para manejar la cancelación del segundo beneficiario
@@ -645,10 +690,7 @@ const Inversion2 = ({ navigation }) => {
                   },
                 ]}
                 onPress={() => {
-                  navigation.navigate("Documentacion", {
-                    flujo: flujo,
-                    idInversion: idInversion,
-                  });
+                  handleCancelar();
                 }}
               >
                 <Text

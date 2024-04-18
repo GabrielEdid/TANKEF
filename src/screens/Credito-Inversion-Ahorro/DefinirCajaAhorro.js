@@ -149,6 +149,24 @@ const DefinirCajaAhorro = ({ navigation }) => {
     }
   };
 
+  const handleCancelar = () => {
+    Alert.alert(
+      "¿Deseas cancelar la Caja de Ahorro?",
+      "Si cancelas la Caja de Ahorro, perderás la información ingresada hasta el momento.",
+      [
+        {
+          text: "Cancelar Caja de Ahorro",
+          onPress: () => [navigation.navigate("Inicio")],
+          style: "cancel",
+        },
+        {
+          text: "Continuar Caja de Ahorro",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   const [dataMonto] = useState([
     { label: "$25,000.00 MXN", value: 25000 },
     { label: "$50,000.00 MXN", value: 50000 },
@@ -380,7 +398,9 @@ const DefinirCajaAhorro = ({ navigation }) => {
                 marginBottom: 20,
               },
             ]}
-            onPress={() => {}}
+            onPress={() => {
+              handleCancelar();
+            }}
           >
             <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
               Cancelar Caja de Ahorro

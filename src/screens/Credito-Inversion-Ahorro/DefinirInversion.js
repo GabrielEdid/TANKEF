@@ -96,6 +96,25 @@ const DefinirInversion = ({ navigation }) => {
     }
   };
 
+  // Funcion para manejar el boton de cancelar
+  const handleCancelar = () => {
+    Alert.alert(
+      "¿Deseas cancelar la Inversión?",
+      "Si cancelas la Inversión, perderás la información ingresada hasta el momento.",
+      [
+        {
+          text: "Cancelar Inversión",
+          onPress: () => [navigation.navigate("Inicio")],
+          style: "cancel",
+        },
+        {
+          text: "Continuar Inversión",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   // Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
     let newText = inputText.replace(/[^0-9.]/g, "");
@@ -411,7 +430,9 @@ const DefinirInversion = ({ navigation }) => {
                 marginBottom: 20,
               },
             ]}
-            onPress={() => {}}
+            onPress={() => {
+              handleCancelar();
+            }}
           >
             <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
               Cancelar Inversión

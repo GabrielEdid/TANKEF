@@ -85,6 +85,51 @@ const DatosBancarios = ({ navigation }) => {
     }
   };
 
+  // Funcion para manejar el boton de cancelar
+  const handleCancelar = () => {
+    Alert.alert(
+      `¿Deseas cancelar la ${flujo}`,
+      `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
+      [
+        {
+          text: `Cancelar ${flujo}`,
+          onPress: () => [cancelar()],
+          style: "cancel",
+        },
+        {
+          text: `Continuar ${flujo}`,
+        },
+      ],
+      { cancelable: true }
+    );
+
+    const cancelar = async () => {
+      const url = `/api/v1/${
+        flujo === "Inversión" ? "investments" : "box_savings"
+      }/${idInversion}/cancel`;
+      const data = "";
+
+      const response = await APIPost(url, data);
+      if (response.error) {
+        // Manejar el error
+        console.error(
+          "Error al eliminar la caja de ahorro o inversion:",
+          response.error
+        );
+        Alert.alert(
+          "Error",
+          `No se pudo eliminar la ${flujo}. Intente nuevamente.`
+        );
+      } else {
+        console.log(
+          "Caja de ahorro o Inversión eliminada exitosamente:",
+          response
+        );
+        navigation.navigate("Inicio");
+      }
+    };
+  };
+
   // Efecto para encontrar el banco asociado a la clabe
   useEffect(() => {
     const verificarClabe = async () => {
@@ -405,7 +450,7 @@ const DatosBancarios = ({ navigation }) => {
             },
           ]}
           onPress={() => {
-            console.log(idInversion);
+            handleCancelar();
           }}
         >
           <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
