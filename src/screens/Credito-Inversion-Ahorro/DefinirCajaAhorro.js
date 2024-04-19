@@ -15,8 +15,9 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
 import Slider from "@react-native-community/slider";
-import ModalAmortizacion from "../../components/ModalAmortizacion";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
+import ModalAmortizacion from "../../components/ModalAmortizacion";
 import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { APIGet, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -35,6 +36,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const [tasa, setTasa] = useState("");
   const [modalAmortizacionVisible, setModalAmortizacionVisible] =
     useState(false);
+  const [loading, setLoading] = useState(false);
 
   /* Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
@@ -120,6 +122,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   }, [invBox.monto]);
 
   const handlePress = async () => {
+    setLoading(true);
     const url = "/api/v1/box_savings";
     const data = {
       box_saving: {
@@ -133,12 +136,14 @@ const DefinirCajaAhorro = ({ navigation }) => {
     const response = await APIPost(url, data);
     if (response.error) {
       // Manejar el error
+      setLoading(false);
       console.error("Error al crear la caja de ahorro:", response.error);
       Alert.alert(
         "Error",
         "No se pudo crear la Caja de Ahorro. Intente nuevamente."
       );
     } else {
+      setLoading(false);
       console.log("Caja de ahorro creada exitosamente:", response);
       navigation.navigate("Beneficiarios", {
         flujo: flujo,
@@ -426,6 +431,11 @@ const DefinirCajaAhorro = ({ navigation }) => {
           }}
         />
       </ScrollView>
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -577,6 +587,12 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

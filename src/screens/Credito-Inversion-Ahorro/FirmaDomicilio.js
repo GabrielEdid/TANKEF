@@ -16,12 +16,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 // Importaciones de Componentes y Hooks
 import { APIPost } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -47,9 +49,11 @@ const FirmaDomicilio = ({ navigation }) => {
   const [openEstado, setOpenEstado] = useState(false);
   const [openMunicipio, setOpenMunicipio] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Función para guardar los datos del domicilio
   const handlePress = async () => {
+    setLoading(true);
     setDisabled(true);
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
@@ -72,14 +76,17 @@ const FirmaDomicilio = ({ navigation }) => {
 
     const response = await APIPost(url, data);
     if (response.error) {
+      setLoading(false);
       console.error("Error al guardar los datos:", response.error);
       Alert.alert(
         "Error",
         "No se pudieron gurdar los datos del domicilio. Intente nuevamente."
       );
     } else {
+      setLoading(false);
       setModalVisible(true);
     }
+    setLoading(false);
     setDisabled(false);
   };
 
@@ -425,6 +432,11 @@ const FirmaDomicilio = ({ navigation }) => {
           ]}
         />
       </KeyboardAwareScrollView>
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -547,6 +559,12 @@ const styles = StyleSheet.create({
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

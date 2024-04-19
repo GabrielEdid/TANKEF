@@ -17,12 +17,12 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import MaskedView from "@react-native-masked-view/masked-view";
 import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { APIPut, APIPost } from "../../API/APIService";
 import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
-import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -38,6 +38,7 @@ const Beneficiarios = ({ navigation }) => {
   const [disabled, setDisabled] = useState(true);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [loading, setLoading] = useState(false);
   //const [telefono, setTelefono] = useState("");
   //const [telefono2, setTelefono2] = useState("");
   /*const [pickerVisible, setPickerVisible] = useState(false);
@@ -72,6 +73,7 @@ const Beneficiarios = ({ navigation }) => {
   ]);
 
   const handlePress = async () => {
+    setLoading(true);
     setDisabled(true);
     console.log("Agregando beneficiarios a la inversión...");
     const url = `/api/v1/${
@@ -94,6 +96,7 @@ const Beneficiarios = ({ navigation }) => {
     try {
       const response = await APIPut(url, data);
       if (response.error) {
+        setLoading(false);
         console.error(
           "Error al agregar los beneficiarios a la inversión o caja de ahorro:",
           response.error
@@ -106,6 +109,7 @@ const Beneficiarios = ({ navigation }) => {
         );
         setDisabled(false);
       } else {
+        setLoading(false);
         console.log("Beneficiarios agregados exitosamente:", response);
         navigation.navigate("Documentacion", {
           flujo: flujo,
@@ -114,6 +118,7 @@ const Beneficiarios = ({ navigation }) => {
         setDisabled(false);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error en la petición:", error);
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
       setDisabled(false);
@@ -139,6 +144,7 @@ const Beneficiarios = ({ navigation }) => {
     );
 
     const cancelar = async () => {
+      setLoading(true);
       const url = `/api/v1/${
         flujo === "Inversión" ? "investments" : "box_savings"
       }/${idInversion}/cancel`;
@@ -147,6 +153,7 @@ const Beneficiarios = ({ navigation }) => {
       const response = await APIPost(url, data);
       if (response.error) {
         // Manejar el error
+        setLoading(false);
         console.error(
           "Error al eliminar la caja de ahorro o inversion:",
           response.error
@@ -156,6 +163,7 @@ const Beneficiarios = ({ navigation }) => {
           `No se pudo eliminar la ${flujo}. Intente nuevamente.`
         );
       } else {
+        setLoading(false);
         console.log(
           "Caja de ahorro o Inversión eliminada exitosamente:",
           response
@@ -733,6 +741,11 @@ const Beneficiarios = ({ navigation }) => {
           </KeyboardAwareScrollView>
         </>
       )}
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -840,6 +853,12 @@ const styles = StyleSheet.create({
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

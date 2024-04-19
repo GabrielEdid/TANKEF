@@ -18,12 +18,14 @@ import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import RadioForm from "react-native-simple-radio-button";
+import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { APIPost, APIGet } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -38,9 +40,11 @@ const DatosBancarios = ({ navigation }) => {
   const [disabled, setDisabled] = useState(true);
   const [initial, setInitial] = useState(-1);
   const [addAccount, setAddAccount] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Funcion para guardar los datos de la cuenta bancaria
   const handlePress = async () => {
+    setLoading(true);
     setDisabled(true);
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
@@ -78,22 +82,26 @@ const DatosBancarios = ({ navigation }) => {
       const response = await APIPost(url, addAccount ? formData : data);
 
       if (response.error) {
+        setLoading(false);
         console.error("Error al guardar la cuenta bancaria:", response.error);
         Alert.alert(
           "Error",
           "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
         );
       } else {
+        setLoading(false);
         console.log("Datos de cuenta bancaria guardados con éxito");
         setModalVisible(true);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error al enviar datos:", error);
       Alert.alert(
         "Error",
         "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
       );
     } finally {
+      setLoading(false);
       setDisabled(false);
     }
   };
@@ -117,6 +125,7 @@ const DatosBancarios = ({ navigation }) => {
     );
 
     const cancelar = async () => {
+      setLoading(true);
       const url = `/api/v1/${
         flujo === "Inversión" ? "investments" : "box_savings"
       }/${idInversion}/cancel`;
@@ -124,7 +133,7 @@ const DatosBancarios = ({ navigation }) => {
 
       const response = await APIPost(url, data);
       if (response.error) {
-        // Manejar el error
+        setLoading(false);
         console.error(
           "Error al eliminar la caja de ahorro o inversion:",
           response.error
@@ -134,6 +143,7 @@ const DatosBancarios = ({ navigation }) => {
           `No se pudo eliminar la ${flujo}. Intente nuevamente.`
         );
       } else {
+        setLoading(false);
         console.log(
           "Caja de ahorro o Inversión eliminada exitosamente:",
           response
@@ -638,6 +648,11 @@ const DatosBancarios = ({ navigation }) => {
           navigation.navigate("MiTankef"),
         ]}
       />
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -724,10 +739,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo semitransparente
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
   modalView: {
-    width: "80%", // Asegúrate de que el contenedor del modal tenga un ancho definido.
+    width: "80%",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -755,6 +770,12 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensans",
     textAlign: "center",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

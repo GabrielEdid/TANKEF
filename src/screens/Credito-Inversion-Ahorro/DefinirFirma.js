@@ -15,6 +15,7 @@ import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import {
   Feather,
@@ -33,8 +34,10 @@ const DefinirFirma = ({ navigation }) => {
   // Estados y Contexto
   const [focus, setFocus] = useState("Firma");
   const [modalPresencial, setModalPresencial] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handlePresencial = async () => {
+    setLoading(true);
     setModalPresencial(false);
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
@@ -57,12 +60,14 @@ const DefinirFirma = ({ navigation }) => {
 
     const response = await APIPost(url, data);
     if (response.error) {
+      setLoading(false);
       console.error("Error al gurdar como presencial:", response.error);
       Alert.alert(
         "Error",
         "No se pudo establecer la firma del contrato presencial. Intente nuevamente."
       );
     } else {
+      setLoading(false);
       navigation.navigate("MiTankef");
     }
   };
@@ -267,6 +272,11 @@ const DefinirFirma = ({ navigation }) => {
             </View>
           </View>
         </Modal>
+        {loading && (
+          <View style={styles.overlay}>
+            <ActivityIndicator size={75} color="#060B4D" />
+          </View>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -390,6 +400,12 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensans",
     textAlign: "center",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

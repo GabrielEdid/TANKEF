@@ -12,6 +12,7 @@ import {
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { InvBoxContext } from "../../hooks/InvBoxContext";
@@ -33,6 +34,7 @@ const DefinirInversion = ({ navigation }) => {
   const [focusTab, setFocusTab] = useState("");
   const [modalAmortizacionVisible, setModalAmortizacionVisible] =
     useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
@@ -65,6 +67,7 @@ const DefinirInversion = ({ navigation }) => {
   }, [invBox.montoNumeric, invBox.plazo]);
 
   const handlePress = async () => {
+    setLoading(true);
     const url = "/api/v1/investments";
     console.log(invBox.nombreInvBox, invBox.montoNumeric, invBox.plazo);
     const data = {
@@ -78,12 +81,14 @@ const DefinirInversion = ({ navigation }) => {
 
     const response = await APIPost(url, data);
     if (response.error) {
+      setLoading(false);
       console.error("Error al crear la inversión:", response.error);
       Alert.alert(
         "Error",
         "No se pudo crear la Inversión. Intente nuevamente."
       );
     } else {
+      setLoading(false);
       console.log("Inversión creada exitosamente:", response);
       navigation.navigate("Beneficiarios", {
         flujo: flujo,
@@ -99,12 +104,12 @@ const DefinirInversion = ({ navigation }) => {
       "Si cancelas la Inversión, perderás la información ingresada hasta el momento.",
       [
         {
-          text: "Cancelar Inversión",
+          text: "Si",
           onPress: () => [navigation.navigate("Inicio")],
           style: "cancel",
         },
         {
-          text: "Continuar Inversión",
+          text: "No",
         },
       ],
       { cancelable: true }
@@ -471,6 +476,11 @@ const DefinirInversion = ({ navigation }) => {
           }}
         />
       </ScrollView>
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -592,6 +602,12 @@ const styles = StyleSheet.create({
   },
   line: {
     transform: [{ rotate: "90deg" }],
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

@@ -18,6 +18,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { useRoute } from "@react-navigation/native";
 import RadioForm from "react-native-simple-radio-button";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { Feather, FontAwesome, AntDesign } from "@expo/vector-icons";
@@ -35,10 +36,12 @@ const Documentacion = ({ navigation }) => {
   const { invBox, setInvBox } = useContext(InvBoxContext);
   //const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Función para subir la documentación
   const handlePress = async () => {
     setDisabled(true);
+    setLoading(true);
     console.log("Agregando los documentos a la inversión o caja de ahorro...");
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
@@ -84,6 +87,7 @@ const Documentacion = ({ navigation }) => {
       const response = await APIPut(url, formData);
 
       if (response.error) {
+        setLoading(false);
         console.error(
           "Error al agregar los documentos a la inversión o caja de ahorro:",
           response.error
@@ -95,6 +99,7 @@ const Documentacion = ({ navigation }) => {
           }. Intente nuevamente.`
         );
       } else {
+        setLoading(false);
         console.log("Documentos agregados exitosamente:", response);
         navigation.navigate("DatosBancarios", {
           flujo: flujo,
@@ -102,9 +107,11 @@ const Documentacion = ({ navigation }) => {
         });
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error en la petición:", error);
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
     } finally {
+      setLoading(false);
       setDisabled(false);
     }
   };
@@ -128,6 +135,7 @@ const Documentacion = ({ navigation }) => {
     );
 
     const cancelar = async () => {
+      setLoading(true);
       const url = `/api/v1/${
         flujo === "Inversión" ? "investments" : "box_savings"
       }/${idInversion}/cancel`;
@@ -136,6 +144,7 @@ const Documentacion = ({ navigation }) => {
       const response = await APIPost(url, data);
       if (response.error) {
         // Manejar el error
+        setLoading(false);
         console.error(
           "Error al eliminar la caja de ahorro o inversion:",
           response.error
@@ -145,6 +154,7 @@ const Documentacion = ({ navigation }) => {
           `No se pudo eliminar la ${flujo}. Intente nuevamente.`
         );
       } else {
+        setLoading(false);
         console.log(
           "Caja de ahorro o Inversión eliminada exitosamente:",
           response
@@ -821,6 +831,11 @@ const Documentacion = ({ navigation }) => {
           </View>
         </View>
       </Modal>*/}
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -964,6 +979,12 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     fontFamily: "opensans",
     textAlign: "center",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
