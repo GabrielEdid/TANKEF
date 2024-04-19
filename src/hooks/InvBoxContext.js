@@ -34,6 +34,15 @@ const initialState = {
   apellidos2: "",
   parentesco2: "",
   porcentaje2: "",
+  alias: "",
+  clabe: "",
+  NCuenta: "",
+  comprobanteNCuenta: "",
+  nombreComprobante: "",
+  banco: "",
+  nombreCuentahabiente: "",
+  accountID: "",
+  accounts: [],
 };
 
 // Componente UserProvider
