@@ -1,0 +1,50 @@
+// Importaciones de React
+import React, { createContext, useState } from "react";
+
+// Creación del contexto UserContext
+export const Investment_Box_Context = createContext();
+
+// Estado inicial definido fuera del componente
+const initialState = {
+  monto: "10000",
+  montoNumeric: 10000,
+  montoShow: "10,000",
+  plazo: "",
+  comision_por_apertura: "",
+  tasa_de_operacion: "",
+  pago_mensual: "",
+  total_a_pagar: "",
+  obligados_solidarios: [],
+  politico: "",
+  domicilio: "",
+  telCasa: "",
+  telCasaShow: "",
+  telTrabajo: "",
+  telTrabajoShow: "",
+  celularShow: "",
+  celular: "",
+  cuenta_bancaria: "",
+  descripcion: "",
+  aceptarSIC: "",
+  actuoComo: "",
+  paso: 1,
+  // Variables para el modal
+  modalCotizadorVisible: false,
+};
+
+// Componente UserProvider
+export const InvBoxProvider = ({ children }) => {
+  const [invBox, setInvBox] = useState(initialState);
+
+  // Función para restablecer el estado de user
+  const resetInvBox = () => {
+    setInvBox(initialState);
+  };
+
+  // Proporcionar user, setUser y resetUser a través del contexto a todo el árbol de pantallas
+  return (
+    <Investment_Box_Context.Provider value={{ invBox, setInvBox, resetInvBox }}>
+      {children}
+    </Investment_Box_Context.Provider>
+  );
+};
