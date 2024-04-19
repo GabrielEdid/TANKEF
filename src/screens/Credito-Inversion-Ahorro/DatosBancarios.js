@@ -13,12 +13,14 @@ import {
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { useFocusEffect } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import RadioForm from "react-native-simple-radio-button";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
-import { APIPost } from "../../API/APIService";
+import { APIPost, APIGet } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
@@ -39,6 +41,10 @@ const DatosBancarios = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [initial, setInitial] = useState(-1);
+  const [accountID, setAccountID] = useState("");
+  const [addAccount, setAddAccount] = useState(false);
+  const [accounts, setAccounts] = useState([]);
 
   // Funcion para guardar los datos de la cuenta bancaria
   const handlePress = async () => {
@@ -48,6 +54,14 @@ const DatosBancarios = ({ navigation }) => {
     }/${idInversion}/bank_accounts`;
 
     const key = flujo === "Inversión" ? "investment" : "box_saving";
+    const data = {
+      key: {
+        bank_account_attributes: {
+          bank_account_id: 1,
+        },
+      },
+    };
+
     const formData = new FormData();
 
     formData.append(`${key}[bank_account_attributes][short_name]`, alias);
@@ -62,7 +76,7 @@ const DatosBancarios = ({ navigation }) => {
     });
 
     try {
-      const response = await APIPost(url, formData);
+      const response = await APIPost(url, addAccount ? formData : data);
 
       if (response.error) {
         console.error("Error al guardar la cuenta bancaria:", response.error);
@@ -170,18 +184,53 @@ const DatosBancarios = ({ navigation }) => {
     verificarClabe();
   }, [clabe]);
 
+  // Función para obtener las cuentas bancarias del usuario
+  const fetchElement = async () => {
+    const url = `/api/v1/users/bank_accounts`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener las cuentas de banco del usuario:",
+        result.error
+      );
+      setAddAccount(true);
+    } else {
+      console.log(
+        "Resultado de las cuentas de banco del usuario:",
+        result.data.data
+      );
+      setAddAccount(false);
+      setAccounts(result.data.data);
+    }
+  };
+
+  // Efecto para obtener las cuentas bancarias del usuario
+  useFocusEffect(
+    useCallback(() => {
+      fetchElement();
+    }, [])
+  );
+
+  useEffect(() => {
+    setInitial(-1);
+    setAccountID("");
+  }, [addAccount]);
+
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
     const camposLlenos =
-      nombre &&
-      alias &&
-      clabe &&
-      clabe.length === 18 &&
-      NCuenta &&
-      comprobanteNCuenta &&
-      banco;
+      (nombre &&
+        alias &&
+        clabe &&
+        clabe.length === 18 &&
+        NCuenta &&
+        comprobanteNCuenta &&
+        banco) ||
+      accountID;
     setDisabled(!camposLlenos);
-  }, [nombre, alias, clabe, NCuenta, comprobanteNCuenta, banco]);
+  }, [nombre, alias, clabe, NCuenta, comprobanteNCuenta, banco, accountID]);
 
   const showUploadOptions = () => {
     Alert.alert(
@@ -294,6 +343,7 @@ const DatosBancarios = ({ navigation }) => {
                 Ingresa los datos solicitados para continuar.
               </Text>
             </View>
+
             <View
               style={{
                 marginTop: 5,
@@ -301,122 +351,211 @@ const DatosBancarios = ({ navigation }) => {
                 paddingTop: 15,
               }}
             >
-              {/* Campos para introducir los datos bancarios */}
-              <Text style={styles.tituloCampo}>Alias Cuenta</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setAlias}
-                value={alias}
-                placeholder="Eje. Raúl G. Torres"
-              />
-              <View style={styles.separacion} />
-              <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setClabe}
-                value={clabe}
-                placeholder="18 dígitos"
-                maxLength={18}
-                keyboardType="numeric"
-              />
-              <View style={styles.separacion} />
-              <Text style={styles.tituloCampo}>
-                Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
-              </Text>
-              {!comprobanteNCuenta ? (
-                <TouchableOpacity
-                  style={{ flexDirection: "row" }}
-                  onPress={showUploadOptions}
-                >
-                  <Text
-                    style={[
-                      styles.input,
-                      {
-                        width: "92%",
-                        color: "#c7c7c9ff",
-                      },
-                    ]}
-                  >
-                    Selecciona documento
-                  </Text>
-                  <Feather name="upload" size={20} color="#060B4D" />
-                </TouchableOpacity>
-              ) : (
+              {!addAccount && (
                 <>
-                  <View
+                  <Text style={styles.tituloCampo}>Cuentas Bancarias</Text>
+                  <RadioForm
+                    radio_props={accounts.map((account) => ({
+                      label: account.short_name,
+                      value: account.id,
+                    }))}
+                    initial={initial}
+                    onPress={(value) => [
+                      setAccountID(value),
+                      console.log(value),
+                    ]}
+                    buttonColor={"#060B4D"}
+                    buttonSize={10}
+                    selectedButtonColor={"#060B4D"}
+                    labelStyle={styles.input}
+                    animation={false}
+                    style={{
+                      alignSelf: "baseline",
+                      marginTop: 10,
+                      marginLeft: 15,
+                    }}
+                  />
+                  <View style={styles.separacion} />
+                  <TouchableOpacity
                     style={{
                       flexDirection: "row",
-                      paddingBottom: 7.5,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      paddingVertical: 10,
                     }}
+                    onPress={() => [setAddAccount(true)]}
                   >
-                    <FontAwesome
-                      name="image"
-                      size={20}
+                    <MaterialIcons
+                      name="add-circle"
+                      size={25}
                       color="#060B4D"
-                      style={{ marginLeft: 15 }}
                     />
                     <Text
                       style={{
-                        flex: 1,
-                        paddingHorizontal: 15,
                         fontSize: 16,
                         color: "#060B4D",
-                        fontFamily: "opensans",
+                        fontFamily: "opensanssemibold",
+                        paddingLeft: 10,
                       }}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
                     >
-                      {nombreComprobante}
+                      Agregar cuenta bancaria
                     </Text>
-                    <TouchableOpacity
-                      onPress={() => [
-                        setComprobanteNCuenta(""),
-                        setNombreComprobante(""),
-                      ]}
-                    >
-                      <FontAwesome
-                        name="trash-o"
-                        size={25}
-                        color="#F95C5C"
-                        style={{ marginRight: 15 }}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
                 </>
               )}
-              <View style={styles.separacion} />
+              {/* Campos para introducir los datos bancarios */}
+              {addAccount && (
+                <>
+                  <Text style={styles.tituloCampo}>Alias Cuenta</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setAlias}
+                    value={alias}
+                    placeholder="Eje. Raúl G. Torres"
+                  />
+                  <View style={styles.separacion} />
+                  <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setClabe}
+                    value={clabe}
+                    placeholder="18 dígitos"
+                    maxLength={18}
+                    keyboardType="numeric"
+                  />
+                  <View style={styles.separacion} />
+                  <Text style={styles.tituloCampo}>
+                    Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
+                  </Text>
+                  {!comprobanteNCuenta ? (
+                    <TouchableOpacity
+                      style={{ flexDirection: "row" }}
+                      onPress={showUploadOptions}
+                    >
+                      <Text
+                        style={[
+                          styles.input,
+                          {
+                            width: "92%",
+                            color: "#c7c7c9ff",
+                          },
+                        ]}
+                      >
+                        Selecciona documento
+                      </Text>
+                      <Feather name="upload" size={20} color="#060B4D" />
+                    </TouchableOpacity>
+                  ) : (
+                    <>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          paddingBottom: 7.5,
+                        }}
+                      >
+                        <FontAwesome
+                          name="image"
+                          size={20}
+                          color="#060B4D"
+                          style={{ marginLeft: 15 }}
+                        />
+                        <Text
+                          style={{
+                            flex: 1,
+                            paddingHorizontal: 15,
+                            fontSize: 16,
+                            color: "#060B4D",
+                            fontFamily: "opensans",
+                          }}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
+                          {nombreComprobante}
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() => [
+                            setComprobanteNCuenta(""),
+                            setNombreComprobante(""),
+                          ]}
+                        >
+                          <FontAwesome
+                            name="trash-o"
+                            size={25}
+                            color="#F95C5C"
+                            style={{ marginRight: 15 }}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </>
+                  )}
+                  <View style={styles.separacion} />
 
-              <Text style={styles.tituloCampo}>No. Cuenta</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setNCuenta}
-                value={NCuenta}
-                placeholder="8-11 dígitos"
-                maxLength={11}
-                keyboardType="numeric"
-              />
-              <View style={styles.separacion} />
-              <Text style={[styles.tituloCampo, { color: "#9c9db8" }]}>
-                Banco
-              </Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setBanco}
-                value={banco}
-                placeholder="Autorrelleno"
-                editable={false}
-              />
-              <View style={styles.separacion} />
-              <View>
-                <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setNombre}
-                  value={nombre}
-                  placeholder="Nombre Cuentahabiente"
-                />
-              </View>
-              <View style={styles.separacion} />
+                  <Text style={styles.tituloCampo}>No. Cuenta</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setNCuenta}
+                    value={NCuenta}
+                    placeholder="8-11 dígitos"
+                    maxLength={11}
+                    keyboardType="numeric"
+                  />
+                  <View style={styles.separacion} />
+                  <Text style={[styles.tituloCampo, { color: "#9c9db8" }]}>
+                    Banco
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={setBanco}
+                    value={banco}
+                    placeholder="Autorrelleno"
+                    editable={false}
+                  />
+                  <View style={styles.separacion} />
+                  <View>
+                    <Text style={styles.tituloCampo}>
+                      Nombre(s) y Apellidos
+                    </Text>
+                    <TextInput
+                      style={styles.input}
+                      onChangeText={setNombre}
+                      value={nombre}
+                      placeholder="Nombre Cuentahabiente"
+                    />
+                  </View>
+                  <View style={styles.separacion} />
+                  {accounts && accounts.length > 0 && (
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingVertical: 10,
+                      }}
+                      onPress={() => [
+                        setAddAccount(false),
+                        setInitial(-1),
+                        setAccountID(""),
+                      ]}
+                    >
+                      <MaterialIcons
+                        name="remove-circle"
+                        size={25}
+                        color="#060B4D"
+                      />
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: "#060B4D",
+                          fontFamily: "opensanssemibold",
+                          paddingLeft: 10,
+                        }}
+                      >
+                        Elegir cuenta ya existente
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
             </View>
           </View>
         </KeyboardAwareScrollView>
