@@ -6,7 +6,7 @@ export const InvBoxContext = createContext();
 
 // Estado inicial definido fuera del componente
 const initialState = {
-  nombre: "",
+  nombreInvBox: "",
   monto: "",
   montoNumeric: "",
   montoShow: "",
@@ -26,6 +26,14 @@ const initialState = {
   isThereIdentificacion: false,
   actuoComo: "",
   documents: [{}],
+  nombre: "",
+  apellidos: "",
+  parentesco: "",
+  porcentaje: "100",
+  nombre2: "",
+  apellidos2: "",
+  parentesco2: "",
+  porcentaje2: "",
 };
 
 // Componente UserProvider

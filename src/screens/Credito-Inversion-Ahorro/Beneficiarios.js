@@ -9,7 +9,7 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import CountryPicker from "react-native-country-picker-modal";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -18,39 +18,34 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { APIPut, APIPost } from "../../API/APIService";
 import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 
-const Inversion2 = ({ navigation }) => {
+const Beneficiarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { invBox, setInvBox } = useContext(InvBoxContext);
   const [focus, setFocus] = useState("Beneficiarios");
-  const [nombre, setNombre] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [parentesco, setParentesco] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [porcentaje, setPorcentaje] = useState("100");
   const [segundoBeneficiaro, setSegundoBeneficiaro] = useState(false);
-  const [nombre2, setNombre2] = useState("");
-  const [apellidos2, setApellidos2] = useState("");
-  const [parentesco2, setParentesco2] = useState("");
-  const [telefono2, setTelefono2] = useState("");
-  const [porcentaje2, setPorcentaje2] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  //const [telefono, setTelefono] = useState("");
+  //const [telefono2, setTelefono2] = useState("");
   /*const [pickerVisible, setPickerVisible] = useState(false);
   const [pickerVisible2, setPickerVisible2] = useState(false);
   const [countryCode, setCountryCode] = useState("MX");
   const [callingCode, setCallingCode] = useState("52");
   const [countryCode2, setCountryCode2] = useState("MX");
   const [callingCode2, setCallingCode2] = useState("52");*/
-  const [open, setOpen] = useState(false);
-  const [open2, setOpen2] = useState(false);
 
   const [dataParentesco] = useState([
     { label: "Madre", value: "mother_primary" },
@@ -86,14 +81,14 @@ const Inversion2 = ({ navigation }) => {
     const key = flujo === "Inversión" ? "investment" : "box_saving";
     const data = {
       [key]: {
-        primary_beneficiary_first_name: nombre,
-        primary_beneficiary_percentage: parseInt(porcentaje, 10),
-        primary_beneficiary_kinship: parentesco,
-        primary_beneficiary_last_name: apellidos,
-        secondary_beneficiary_first_name: nombre2,
-        secondary_beneficiary_percentage: parseInt(porcentaje2, 10),
-        secondary_beneficiary_kinship: parentesco2,
-        secondary_beneficiary_last_name: apellidos2,
+        primary_beneficiary_first_name: invBox.nombre,
+        primary_beneficiary_percentage: parseInt(invBox.porcentaje, 10),
+        primary_beneficiary_kinship: invBox.parentesco,
+        primary_beneficiary_last_name: invBox.apellidos,
+        secondary_beneficiary_first_name: invBox.nombre2,
+        secondary_beneficiary_percentage: parseInt(invBox.porcentaje2, 10),
+        secondary_beneficiary_kinship: invBox.parentesco2,
+        secondary_beneficiary_last_name: invBox.apellidos2,
       },
     };
     try {
@@ -172,13 +167,16 @@ const Inversion2 = ({ navigation }) => {
 
   // Función para manejar la cancelación del segundo beneficiario
   const handleCancelBeneficiario = () => {
+    setInvBox({
+      ...invBox,
+      porcentaje: "100",
+      nombre2: "",
+      apellidos2: "",
+      parentesco2: "",
+      porcentaje2: "",
+    });
     setSegundoBeneficiaro(false);
-    setPorcentaje("100");
-    setNombre2("");
-    setApellidos2("");
-    setParentesco2("");
     //setTelefono2("");
-    setPorcentaje2("");
     //setCallingCode2("52");
     //setCountryCode2("MX");
   };
@@ -186,18 +184,18 @@ const Inversion2 = ({ navigation }) => {
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
     const camposLlenos =
-      nombre !== "" &&
-      apellidos !== "" &&
-      parentesco !== "" &&
+      invBox.nombre !== "" &&
+      invBox.apellidos !== "" &&
+      invBox.parentesco !== "" &&
       //telefono !== "" &&
-      porcentaje !== "";
+      invBox.porcentaje !== "";
 
     const camposSegundoBeneficiarioLlenos =
-      nombre2 !== "" &&
-      apellidos2 !== "" &&
-      parentesco2 !== "" &&
+      invBox.nombre2 !== "" &&
+      invBox.apellidos2 !== "" &&
+      invBox.parentesco2 !== "" &&
       //telefono2 !== "" &&
-      porcentaje2 !== "";
+      invBox.porcentaje2 !== "";
 
     const todosCamposLlenos = segundoBeneficiaro
       ? camposLlenos && camposSegundoBeneficiarioLlenos
@@ -205,43 +203,50 @@ const Inversion2 = ({ navigation }) => {
 
     setDisabled(!todosCamposLlenos);
   }, [
-    nombre,
-    apellidos,
-    parentesco,
+    invBox.nombre,
+    invBox.apellidos,
+    invBox.parentesco,
     //telefono,
-    porcentaje,
-    nombre2,
-    apellidos2,
-    parentesco2,
+    invBox.porcentaje,
+    invBox.nombre2,
+    invBox.apellidos2,
+    invBox.parentesco2,
     //telefono2,
-    porcentaje2,
+    invBox.porcentaje2,
     segundoBeneficiaro,
   ]);
 
-  // Helper function to calculate the other percentage
-  const calculateOtherPercentage = (currentPercentage) => {
-    const otherPercentage = 100 - currentPercentage;
-    return otherPercentage > 0 ? otherPercentage : 0;
-  };
-
+  // Función para manejar el cambio en el porcentaje
   const handlePorcentajeChange = (value) => {
     let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
-    numericValue = Math.max(numericValue, 1); // Asegura que el valor mínimo sea 1
-    if (numericValue <= 100) {
-      setPorcentaje(numericValue.toString());
+    numericValue = Math.min(Math.max(numericValue, 1), 100); // Ensure value is between 1 and 100
+    setInvBox((prevState) => {
       const otherValue = calculateOtherPercentage(numericValue);
-      setPorcentaje2(otherValue.toString());
-    }
+      return {
+        ...prevState,
+        porcentaje: numericValue.toString(),
+        porcentaje2: otherValue.toString(),
+      };
+    });
   };
 
+  // Función para manejar el cambio en el porcentaje del segundo beneficiario
   const handlePorcentaje2Change = (value) => {
     let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
-    numericValue = Math.max(numericValue, 1); // Asegura que el valor mínimo sea 1
-    if (numericValue <= 100) {
-      setPorcentaje2(numericValue.toString());
+    numericValue = Math.min(Math.max(numericValue, 1), 100); // Ensure value is between 1 and 100
+    setInvBox((prevState) => {
       const otherValue = calculateOtherPercentage(numericValue);
-      setPorcentaje(otherValue.toString());
-    }
+      return {
+        ...prevState,
+        porcentaje2: numericValue.toString(),
+        porcentaje: otherValue.toString(),
+      };
+    });
+  };
+
+  // Función para calcular el porcentaje restante
+  const calculateOtherPercentage = (currentPercentage) => {
+    return 100 - currentPercentage;
   };
 
   // Function to format the phone number as user types
@@ -378,8 +383,10 @@ const Inversion2 = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Nombre(s)</Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={setNombre}
-                  value={nombre}
+                  onChangeText={(text) =>
+                    setInvBox({ ...invBox, nombre: text })
+                  }
+                  value={invBox.nombre}
                   placeholder="Eje. Humberto Arturo"
                 />
                 <View style={styles.separacion} />
@@ -387,8 +394,10 @@ const Inversion2 = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Apellidos</Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={setApellidos}
-                  value={apellidos}
+                  onChangeText={(text) =>
+                    setInvBox({ ...invBox, apellidos: text })
+                  }
+                  value={invBox.apellidos}
                   placeholder="Eje. Flores Guillán"
                 />
                 <View style={styles.separacion} />
@@ -450,7 +459,7 @@ const Inversion2 = ({ navigation }) => {
                   <TextInput
                     style={[styles.input, { flex: 0.08 }]}
                     onChangeText={handlePorcentajeChange}
-                    value={porcentaje}
+                    value={invBox.porcentaje}
                     keyboardType="numeric"
                     maxLength={3}
                     editable={segundoBeneficiaro}
@@ -471,7 +480,7 @@ const Inversion2 = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Parentesco</Text>
                 <DropDownPicker
                   open={open}
-                  value={parentesco}
+                  value={invBox.parentesco}
                   items={dataParentesco}
                   placeholder="Selecciona una opción"
                   listMode="MODAL"
@@ -479,8 +488,15 @@ const Inversion2 = ({ navigation }) => {
                     animationType: "slide",
                   }}
                   setOpen={setOpen}
-                  setValue={setParentesco}
-                  onChangeValue={(value) => setParentesco(value)}
+                  setValue={(callback) => {
+                    setInvBox((prevState) => ({
+                      ...prevState,
+                      parentesco: callback(prevState.parentesco),
+                    }));
+                  }}
+                  onChangeValue={(choice) =>
+                    setInvBox({ ...invBox, parentesco: choice })
+                  }
                   style={styles.DropDownPicker}
                   arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
                   placeholderStyle={{
@@ -517,8 +533,10 @@ const Inversion2 = ({ navigation }) => {
                     <Text style={styles.tituloCampo}>Nombre(s)</Text>
                     <TextInput
                       style={styles.input}
-                      onChangeText={setNombre2}
-                      value={nombre2}
+                      onChangeText={(text) =>
+                        setInvBox({ ...invBox, nombre2: text })
+                      }
+                      value={invBox.nombre2}
                       placeholder="Eje. Humberto Arturo"
                     />
                     <View style={styles.separacion} />
@@ -526,8 +544,10 @@ const Inversion2 = ({ navigation }) => {
                     <Text style={styles.tituloCampo}>Apellidos</Text>
                     <TextInput
                       style={styles.input}
-                      onChangeText={setApellidos2}
-                      value={apellidos2}
+                      onChangeText={(text) =>
+                        setInvBox({ ...invBox, apellidos2: text })
+                      }
+                      value={invBox.apellidos2}
                       placeholder="Eje. Flores Guillán"
                     />
                     <View style={styles.separacion} />
@@ -592,7 +612,7 @@ const Inversion2 = ({ navigation }) => {
                       <TextInput
                         style={[styles.input, { flex: 0.08 }]}
                         onChangeText={handlePorcentaje2Change}
-                        value={porcentaje2}
+                        value={invBox.porcentaje2}
                         keyboardType="numeric"
                         maxLength={3}
                       />
@@ -612,7 +632,7 @@ const Inversion2 = ({ navigation }) => {
                     <Text style={styles.tituloCampo}>Parentesco</Text>
                     <DropDownPicker
                       open={open2}
-                      value={parentesco2}
+                      value={invBox.parentesco2}
                       items={dataParentesco2}
                       listMode="MODAL"
                       modalProps={{
@@ -620,8 +640,15 @@ const Inversion2 = ({ navigation }) => {
                       }}
                       placeholder="Selecciona una opción"
                       setOpen={setOpen2}
-                      setValue={setParentesco2}
-                      onChangeValue={(value) => setParentesco2(value)}
+                      setValue={(callback) => {
+                        setInvBox((prevState) => ({
+                          ...prevState,
+                          parentesco2: callback(prevState.parentesco2),
+                        }));
+                      }}
+                      onChangeValue={(choice) =>
+                        setInvBox({ ...invBox, parentesco2: choice })
+                      }
                       style={styles.DropDownPicker}
                       arrowIconStyle={{
                         tintColor: "#060B4D",
@@ -648,8 +675,11 @@ const Inversion2 = ({ navigation }) => {
                     ? handleCancelBeneficiario()
                     : [
                         setSegundoBeneficiaro(true),
-                        setPorcentaje("50"),
-                        setPorcentaje2("50"),
+                        setInvBox({
+                          ...invBox,
+                          porcentaje: "50",
+                          porcentaje2: "50",
+                        }),
                       ]
                 }
               >
@@ -813,4 +843,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Inversion2;
+export default Beneficiarios;

@@ -66,10 +66,10 @@ const DefinirInversion = ({ navigation }) => {
 
   const handlePress = async () => {
     const url = "/api/v1/investments";
-    console.log(invBox.nombre, invBox.montoNumeric, invBox.plazo);
+    console.log(invBox.nombreInvBox, invBox.montoNumeric, invBox.plazo);
     const data = {
       investment: {
-        name: invBox.nombre,
+        name: invBox.nombreInvBox,
         amount: invBox.montoNumeric,
         term: invBox.plazo,
         condition: invBox.condiciones,
@@ -166,7 +166,7 @@ const DefinirInversion = ({ navigation }) => {
   const isAcceptable =
     invBox.montoNumeric >= 5000 &&
     invBox.plazo &&
-    invBox.nombre &&
+    invBox.nombreInvBox &&
     invBox.condiciones;
 
   const isTable = invBox.montoNumeric >= 5000 && invBox.plazo;
@@ -220,11 +220,13 @@ const DefinirInversion = ({ navigation }) => {
             <Text style={styles.texto}>Nombre de la Inversión</Text>
             <TextInput
               style={styles.inputNombre}
-              value={invBox.nombre}
+              value={invBox.nombreInvBox}
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
               placeholder="Mi inversión"
-              onChangeText={(text) => setInvBox({ ...invBox, nombre: text })}
+              onChangeText={(text) =>
+                setInvBox({ ...invBox, nombreInvBox: text })
+              }
             />
             <View style={styles.separacion} />
           </View>
