@@ -9,11 +9,12 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { APIGet, APIPost } from "../../API/APIService";
 import ModalAmortizacion from "../../components/ModalAmortizacion";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -26,22 +27,17 @@ const DefinirInversion = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const [nombreInversion, setNombreInversion] = useState("");
-  const [monto, setMonto] = useState("");
-  const [montoNumeric, setMontoNumeric] = useState(0);
-  const [montoShow, setMontoShow] = useState("");
-  const [plazo, setPlazo] = useState("");
+  const { invBox, setInvBox } = useContext(InvBoxContext);
   const [totalInversion, setTotalInversion] = useState("");
   const [tasa, setTasa] = useState("");
   const [focusTab, setFocusTab] = useState("");
-  const [condiciones, setCondiciones] = useState(false);
   const [modalAmortizacionVisible, setModalAmortizacionVisible] =
     useState(false);
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
     const fetchCotizacion = async () => {
-      const url = `/api/v1/simulator?term=${plazo}&type=investment&amount=${montoNumeric}`;
+      const url = `/api/v1/simulator?term=${invBox.plazo}&type=investment&amount=${invBox.montoNumeric}`;
 
       try {
         const response = await APIGet(url);
@@ -61,22 +57,22 @@ const DefinirInversion = ({ navigation }) => {
         Alert.alert("Error", "Ha ocurrido un error al realizar la cotización.");
       }
     };
-    if (montoNumeric >= 5000 && plazo) fetchCotizacion();
-    else if (montoNumeric < 5000) {
+    if (invBox.montoNumeric >= 5000 && invBox.plazo) fetchCotizacion();
+    else if (invBox.montoNumeric < 5000) {
       setTotalInversion("");
       setTasa("");
     }
-  }, [montoNumeric, plazo]);
+  }, [invBox.montoNumeric, invBox.plazo]);
 
   const handlePress = async () => {
     const url = "/api/v1/investments";
-    console.log(nombreInversion, montoNumeric, plazo);
+    console.log(invBox.nombre, invBox.montoNumeric, invBox.plazo);
     const data = {
       investment: {
-        name: nombreInversion,
-        amount: montoNumeric,
-        term: plazo,
-        condition: condiciones,
+        name: invBox.nombre,
+        amount: invBox.montoNumeric,
+        term: invBox.plazo,
+        condition: invBox.condiciones,
       },
     };
 
@@ -115,55 +111,65 @@ const DefinirInversion = ({ navigation }) => {
     );
   };
 
-  // Funcion para manejar el cambio de texto en el input de monto
+  // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
-    let newText = inputText.replace(/[^0-9.]/g, "");
-    if ((newText.match(/\./g) || []).length > 1) {
-      newText = newText.replace(/\.(?=.*\.)/, "");
+    const cleanedInput = inputText.replace(/[^0-9.]/g, ""); // Remove all non-numeric characters except dot
+    if ((cleanedInput.match(/\./g) || []).length > 1) {
+      // Ensure only one dot
+      cleanedInput = cleanedInput.replace(/\.(?=.*\.)/, "");
     }
 
-    let [integer, decimal] = newText.split(".");
-    integer = integer.replace(/^0+/, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    if (decimal && decimal.length > 2) {
-      decimal = decimal.substring(0, 2);
-    }
+    const [integer, decimal] = cleanedInput.split(".");
+    const formattedInteger = integer
+      .replace(/^0+/, "")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Format thousands with comma
+    const formattedDecimal =
+      decimal && decimal.length > 2 ? decimal.substring(0, 2) : decimal; // Limit decimal places to 2
 
     const formattedText =
-      decimal !== undefined ? `${integer}.${decimal}` : integer;
-    setMontoShow(formattedText); // Display value with formatting
-    setMonto(newText); // Store raw value for further processing
+      formattedDecimal !== undefined
+        ? `${formattedInteger}.${formattedDecimal}`
+        : formattedInteger;
+    setInvBox((prevState) => ({
+      ...prevState,
+      montoShow: formattedText,
+      monto: cleanedInput,
+    }));
 
-    // Parse the raw input to a float and update montoNumeric for validation
-    const numericValue = parseFloat(newText.replace(/,/g, ""));
-    setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
+    // Parse the raw input to a float for numeric validations or calculations
+    const numericValue = parseFloat(cleanedInput.replace(/,/g, ""));
+    setInvBox((prevState) => ({
+      ...prevState,
+      montoNumeric: numericValue || 0,
+    }));
+  };
+
+  // Focus and Blur Handlers for the input
+  const handleFocus = () => {
+    // When focused, remove formatting for editing
+    const rawNumericValue = invBox.monto.replace(/,/g, "");
+    setInvBox((prevState) => ({ ...prevState, monto: rawNumericValue }));
+  };
+
+  const handleBlur = () => {
+    // When input is blurred, apply formatting
+    const formattedValue = formatInput(invBox.monto);
+    setInvBox((prevState) => ({ ...prevState, monto: formattedValue }));
+  };
+
+  // Helper function to format the numeric input on blur
+  const formatInput = (text) => {
+    const numericValue = parseFloat(text.replace(/,/g, ""));
+    return isNaN(numericValue) ? "" : numericValue.toLocaleString();
   };
 
   const isAcceptable =
-    montoNumeric >= 5000 && plazo && nombreInversion && condiciones;
+    invBox.montoNumeric >= 5000 &&
+    invBox.plazo &&
+    invBox.nombre &&
+    invBox.condiciones;
 
-  const isTable = montoNumeric >= 5000 && plazo;
-
-  // Funcion para formatear el input de monto
-  const formatInput = (text) => {
-    // Elimina comas para el cálculo
-    const numericValue = parseInt(text.replace(/,/g, ""), 10);
-    if (!isNaN(numericValue)) {
-      // Vuelve a formatear con comas
-      return numericValue.toLocaleString();
-    }
-    return "";
-  };
-
-  // Funcion para manejar el input de monto al seleccionar
-  const handleFocus = () => {
-    const numericValue = monto.replace(/,/g, "");
-    setMonto(numericValue);
-  };
-
-  // Funcion para manejar el input de monto al deseleccionar
-  const handleBlur = () => {
-    setMonto(formatInput(monto));
-  };
+  const isTable = invBox.montoNumeric >= 5000 && invBox.plazo;
 
   // Componente Visual
   return (
@@ -214,11 +220,11 @@ const DefinirInversion = ({ navigation }) => {
             <Text style={styles.texto}>Nombre de la Inversión</Text>
             <TextInput
               style={styles.inputNombre}
-              value={nombreInversion}
+              value={invBox.nombre}
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
               placeholder="Mi inversión"
-              onChangeText={(text) => setNombreInversion(text)}
+              onChangeText={(text) => setInvBox({ ...invBox, nombre: text })}
             />
             <View style={styles.separacion} />
           </View>
@@ -229,14 +235,14 @@ const DefinirInversion = ({ navigation }) => {
               <Text
                 style={[
                   styles.dollarSign,
-                  { color: monto ? "#060B4D" : "#b3b5c9ff" },
+                  { color: invBox.monto ? "#060B4D" : "#b3b5c9ff" },
                 ]}
               >
                 $
               </Text>
               <TextInput
                 style={styles.inputMonto}
-                value={montoShow}
+                value={invBox.montoShow}
                 keyboardType="numeric"
                 maxLength={20}
                 placeholderTextColor={"#b3b5c9ff"}
@@ -248,7 +254,10 @@ const DefinirInversion = ({ navigation }) => {
               <Text
                 style={[
                   styles.dollarSign,
-                  { color: monto ? "#060B4D" : "#b3b5c9ff", marginLeft: 5 },
+                  {
+                    color: invBox.monto ? "#060B4D" : "#b3b5c9ff",
+                    marginLeft: 5,
+                  },
                 ]}
               >
                 MXN
@@ -274,7 +283,10 @@ const DefinirInversion = ({ navigation }) => {
                     backgroundColor: focusTab === "6" ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFocusTab("6"), setPlazo(6)]}
+                onPress={() => [
+                  setFocusTab("6"),
+                  setInvBox({ ...invBox, plazo: 6 }),
+                ]}
               >
                 <Text style={styles.textoTab}>6</Text>
               </TouchableOpacity>
@@ -285,7 +297,10 @@ const DefinirInversion = ({ navigation }) => {
                     backgroundColor: focusTab === "12" ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFocusTab("12"), setPlazo(12)]}
+                onPress={() => [
+                  setFocusTab("12"),
+                  setInvBox({ ...invBox, plazo: 12 }),
+                ]}
               >
                 <Text style={styles.textoTab}>12</Text>
               </TouchableOpacity>
@@ -296,7 +311,10 @@ const DefinirInversion = ({ navigation }) => {
                     backgroundColor: focusTab === "18" ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFocusTab("18"), setPlazo(18)]}
+                onPress={() => [
+                  setFocusTab("18"),
+                  setInvBox({ ...invBox, plazo: 18 }),
+                ]}
               >
                 <Text style={styles.textoTab}>18</Text>
               </TouchableOpacity>
@@ -308,7 +326,10 @@ const DefinirInversion = ({ navigation }) => {
                     marginRight: 0,
                   },
                 ]}
-                onPress={() => [setFocusTab("24"), setPlazo(24)]}
+                onPress={() => [
+                  setFocusTab("24"),
+                  setInvBox({ ...invBox, plazo: 24 }),
+                ]}
               >
                 <Text style={styles.textoTab}>24</Text>
               </TouchableOpacity>
@@ -386,10 +407,12 @@ const DefinirInversion = ({ navigation }) => {
           >
             <TouchableOpacity
               style={{ marginTop: 10, marginRight: 7.5 }}
-              onPress={() => setCondiciones(!condiciones)}
+              onPress={() =>
+                setInvBox({ ...invBox, condiciones: !invBox.condiciones })
+              }
             >
               <Feather
-                name={condiciones ? "check-square" : "square"}
+                name={invBox.condiciones ? "check-square" : "square"}
                 size={24}
                 color="#060B4D"
               />

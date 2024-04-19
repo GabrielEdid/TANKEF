@@ -10,7 +10,7 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
@@ -19,13 +19,10 @@ import * as ImagePicker from "expo-image-picker";
 import { useRoute } from "@react-navigation/native";
 import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
-import {
-  Feather,
-  MaterialIcons,
-  FontAwesome,
-  AntDesign,
-} from "@expo/vector-icons";
+import { InvBoxContext } from "../../hooks/InvBoxContext";
+import { Feather, FontAwesome, AntDesign } from "@expo/vector-icons";
 import { APIPut, APIGet, APIPost } from "../../API/APIService";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -35,24 +32,9 @@ const Documentacion = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const [CURP, setCURP] = useState("");
-  const [nombreCURP, setNombreCURP] = useState("");
-  const [isThereCURP, setIsThereCURP] = useState(false);
-  const [situacionFiscal, setSituacionFiscal] = useState("");
-  const [nombreSituacionFiscal, setNombreSituacionFiscal] = useState("");
-  const [isThereSituacionFiscal, setIsThereSituacionFiscal] = useState(false);
-  const [comprobanteDomicilio, setComprobanteDomicilio] = useState("");
-  const [nombreComprobanteDomicilio, setNombreComprobanteDomicilio] =
-    useState("");
-  const [isThereComprobanteDomicilio, setIsThereComprobanteDomicilio] =
-    useState(false);
-  const [identificacion, setIdentificacion] = useState("");
-  const [nombreIdentificacion, setNombreIdentificacion] = useState("");
-  const [isThereIdentificacion, setIsThereIdentificacion] = useState(false);
-  const [actuoComo, setActuoComo] = useState("");
+  const { invBox, setInvBox } = useContext(InvBoxContext);
   //const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [documents, setDocuments] = useState([{}]);
 
   // Función para subir la documentación
   const handlePress = async () => {
@@ -66,32 +48,34 @@ const Documentacion = ({ navigation }) => {
     const formData = new FormData();
 
     formData.append(`${key}[official_identification]`, {
-      uri: identificacion,
+      uri: invBox.identificacion,
       type: "application/jpeg",
       name: "identificacion.jpeg",
     });
     formData.append(`${key}[curp]`, {
-      uri: CURP,
+      uri: invBox.CURP,
       type: "application/jpeg",
       name: "CURP.jpeg",
     });
     formData.append(`${key}[proof_sat]`, {
-      uri: situacionFiscal,
+      uri: invBox.situacionFiscal,
       type: "application/jpeg",
       name: "situacionFiscal.jpeg",
     });
     formData.append(`${key}[proof_address]`, {
-      uri: comprobanteDomicilio,
+      uri: invBox.comprobanteDomicilio,
       type: "application/jpeg",
       name: "comprobanteDomicilio.jpeg",
     });
     formData.append(
       `${key}[accept_documentation_1]`,
-      actuoComo === "Actúo a nombre y por cuenta propia." ? "true" : "false"
+      invBox.actuoComo === "Actúo a nombre y por cuenta propia."
+        ? "true"
+        : "false"
     );
     formData.append(
       `${key}[accept_documentation_2]`,
-      actuoComo === "Actúo a nombre y por cuenta de un tercero."
+      invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero."
         ? "true"
         : "false"
     );
@@ -173,34 +157,34 @@ const Documentacion = ({ navigation }) => {
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
     const camposLlenos =
-      (CURP &&
-        situacionFiscal &&
-        comprobanteDomicilio &&
-        identificacion &&
-        actuoComo) ||
-      (isThereIdentificacion &&
-        isThereCURP &&
-        isThereSituacionFiscal &&
-        isThereComprobanteDomicilio &&
-        actuoComo);
+      (invBox.CURP &&
+        invBox.situacionFiscal &&
+        invBox.comprobanteDomicilio &&
+        invBox.identificacion &&
+        invBox.actuoComo) ||
+      (invBox.isThereIdentificacion &&
+        invBox.isThereCURP &&
+        invBox.isThereSituacionFiscal &&
+        invBox.isThereComprobanteDomicilio &&
+        invBox.actuoComo);
     setDisabled(!camposLlenos);
   }, [
-    CURP,
-    situacionFiscal,
-    comprobanteDomicilio,
-    identificacion,
-    actuoComo,
-    isThereIdentificacion,
-    isThereCURP,
-    isThereSituacionFiscal,
-    isThereComprobanteDomicilio,
+    invBox.CURP,
+    invBox.situacionFiscal,
+    invBox.comprobanteDomicilio,
+    invBox.identificacion,
+    invBox.actuoComo,
+    invBox.isThereIdentificacion,
+    invBox.isThereCURP,
+    invBox.isThereSituacionFiscal,
+    invBox.isThereComprobanteDomicilio,
   ]);
 
   // Función para obtener la existencia de documentos de la inversión o caja de ahorro
   const fetchElement = async () => {
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
-    }/${177}`;
+    }/${idInversion}`;
 
     const result = await APIGet(url);
 
@@ -215,42 +199,43 @@ const Documentacion = ({ navigation }) => {
         result.data.data.attached_documents_user
       );
       if (result.data.data.attached_documents_user === undefined) return;
-      setDocuments(result.data.data.attached_documents_user);
+      setInvBox((prevState) => ({
+        ...prevState,
+        documents: result.data.data.attached_documents_user,
+      }));
     }
   };
 
-  // Efecto para iterar sobre los documentos y determinar si están aprobadados
-  useEffect(() => {
-    documents.forEach((doc, index) => {
-      if (doc.attached) {
-        handleDocuments(index);
+  // Function to update document statuses based on their order
+  const updateDocumentStatuses = (documents) => {
+    const statusKeys = [
+      "isThereIdentificacion",
+      "isThereCURP",
+      "isThereSituacionFiscal",
+      "isThereComprobanteDomicilio",
+    ];
+
+    const updatedStatus = documents.reduce((acc, doc, index) => {
+      // Ensure that the index has a corresponding status key to prevent errors
+      if (index < statusKeys.length) {
+        acc[statusKeys[index]] = doc.attached;
       }
-    });
-  }, [documents]);
+      return acc;
+    }, {});
 
-  // Función para determinar si un documento está aprobado
-  const handleDocuments = (index) => {
-    switch (index) {
-      case 0:
-        setIsThereIdentificacion(true);
-        break;
-      case 1:
-        setIsThereCURP(true);
-        break;
-      case 2:
-        setIsThereSituacionFiscal(true);
-        break;
-      case 3:
-        setIsThereComprobanteDomicilio(true);
-        break;
-      default:
-        setIsThereIdentificacion(false);
-        setIsThereCURP(false);
-        setIsThereSituacionFiscal(false);
-        setIsThereComprobanteDomicilio(false);
-        break;
-    }
+    // Update the context state with the new statuses
+    setInvBox((prevState) => ({
+      ...prevState,
+      ...updatedStatus,
+    }));
   };
+
+  // useEffect to handle document status updates
+  useEffect(() => {
+    if (invBox.documents) {
+      updateDocumentStatuses(invBox.documents);
+    }
+  }, [invBox.documents]);
 
   // Efecto para obtener los documentos de la inversión o caja de ahorro, se ejecuta al cargar la pantalla
   useFocusEffect(
@@ -289,17 +274,29 @@ const Documentacion = ({ navigation }) => {
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
       if (setType === "fiscal") {
-        setSituacionFiscal(selectedDocument.uri);
-        setNombreSituacionFiscal(selectedDocument.name);
+        setInvBox({
+          ...invBox,
+          situacionFiscal: selectedDocument.uri,
+          nombreSituacionFiscal: selectedDocument.name,
+        });
       } else if (setType === "domicilio") {
-        setComprobanteDomicilio(selectedDocument.uri);
-        setNombreComprobanteDomicilio(selectedDocument.name);
+        setInvBox({
+          ...invBox,
+          comprobanteDomicilio: selectedDocument.uri,
+          nombreComprobanteDomicilio: selectedDocument.name,
+        });
       } else if (setType === "identificacion") {
-        setIdentificacion(selectedDocument.uri);
-        setNombreIdentificacion(selectedDocument.name);
+        setInvBox({
+          ...invBox,
+          identificacion: selectedDocument.uri,
+          nombreIdentificacion: selectedDocument.name,
+        });
       } else if (setType === "curp") {
-        setCURP(selectedDocument.uri);
-        setNombreCURP(selectedDocument.name);
+        setInvBox({
+          ...invBox,
+          CURP: selectedDocument.uri,
+          nombreCURP: selectedDocument.name,
+        });
       }
     } else {
       console.log("Operación cancelada o no se seleccionó ningún documento");
@@ -318,17 +315,29 @@ const Documentacion = ({ navigation }) => {
     if (!result.canceled) {
       const selectedImage = result.assets[0];
       if (setType === "fiscal") {
-        setSituacionFiscal(selectedImage.uri);
-        setNombreSituacionFiscal("Constancia Seleccionada");
+        setInvBox({
+          ...invBox,
+          situacionFiscal: selectedImage.uri,
+          nombreSituacionFiscal: "Constancia Seleccionada",
+        });
       } else if (setType === "domicilio") {
-        setComprobanteDomicilio(selectedImage.uri);
-        setNombreComprobanteDomicilio("Comprobante Seleccionado");
+        setInvBox({
+          ...invBox,
+          comprobanteDomicilio: selectedImage.uri,
+          nombreComprobanteDomicilio: "Comprobante Seleccionado",
+        });
       } else if (setType === "identificacion") {
-        setIdentificacion(selectedImage.uri);
-        setNombreIdentificacion("Identificación Seleccionada");
+        setInvBox({
+          ...invBox,
+          identificacion: selectedImage.uri,
+          nombreIdentificacion: "Identificación Seleccionada",
+        });
       } else if (setType === "curp") {
-        setCURP(selectedImage.uri);
-        setNombreCURP("CURP Seleccionado");
+        setInvBox({
+          ...invBox,
+          CURP: selectedImage.uri,
+          nombreCURP: "CURP Seleccionado",
+        });
       }
     } else {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
@@ -407,8 +416,8 @@ const Documentacion = ({ navigation }) => {
               }}
             >
               <Text style={styles.tituloCampo}>Identificación vigente</Text>
-              {!isThereIdentificacion ? (
-                !identificacion ? (
+              {!invBox.isThereIdentificacion ? (
+                !invBox.identificacion ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("identificacion")}
@@ -441,12 +450,15 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {nombreIdentificacion}
+                        {invBox.nombreIdentificacion}
                       </Text>
                       <TouchableOpacity
                         onPress={() => [
-                          setIdentificacion(""),
-                          setNombreIdentificacion(""),
+                          setInvBox({
+                            ...invBox,
+                            identificacion: "",
+                            nombreIdentificacion: "",
+                          }),
                         ]}
                       >
                         <FontAwesome
@@ -480,8 +492,8 @@ const Documentacion = ({ navigation }) => {
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>CURP</Text>
-              {!isThereCURP ? (
-                !CURP ? (
+              {!invBox.isThereCURP ? (
+                !invBox.CURP ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("curp")}
@@ -514,10 +526,12 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {nombreCURP}
+                        {invBox.nombreCURP}
                       </Text>
                       <TouchableOpacity
-                        onPress={() => [setCURP(""), setNombreCURP("")]}
+                        onPress={() => [
+                          setInvBox({ ...invBox, CURP: "", nombreCURP: "" }),
+                        ]}
                       >
                         <FontAwesome
                           name="trash-o"
@@ -553,8 +567,8 @@ const Documentacion = ({ navigation }) => {
               <Text style={styles.tituloCampo}>
                 Constancia de Situación Fiscal (SAT)
               </Text>
-              {!isThereSituacionFiscal ? (
-                !situacionFiscal ? (
+              {!invBox.isThereSituacionFiscal ? (
+                !invBox.situacionFiscal ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("fiscal")}
@@ -587,12 +601,15 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {nombreSituacionFiscal}
+                        {invBox.nombreSituacionFiscal}
                       </Text>
                       <TouchableOpacity
                         onPress={() => [
-                          setSituacionFiscal(""),
-                          setNombreSituacionFiscal(""),
+                          setInvBox({
+                            ...invBox,
+                            situacionFiscal: "",
+                            nombreSituacionFiscal: "",
+                          }),
                         ]}
                       >
                         <FontAwesome
@@ -629,8 +646,8 @@ const Documentacion = ({ navigation }) => {
               <Text style={styles.tituloCampo}>
                 Comprobante de domicilio (no más de tres meses)
               </Text>
-              {!isThereComprobanteDomicilio ? (
-                !comprobanteDomicilio ? (
+              {!invBox.isThereComprobanteDomicilio ? (
+                !invBox.comprobanteDomicilio ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("domicilio")}
@@ -663,12 +680,15 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {nombreComprobanteDomicilio}
+                        {invBox.nombreComprobanteDomicilio}
                       </Text>
                       <TouchableOpacity
                         onPress={() => [
-                          setComprobanteDomicilio(""),
-                          setNombreComprobanteDomicilio(""),
+                          setInvBox({
+                            ...invBox,
+                            comprobanteDomicilio: "",
+                            nombreComprobanteDomicilio: "",
+                          }),
                         ]}
                       >
                         <FontAwesome
@@ -713,7 +733,7 @@ const Documentacion = ({ navigation }) => {
               <RadioForm
                 radio_props={dataActuo}
                 initial={-1}
-                onPress={(value) => setActuoComo(value)}
+                onPress={(value) => setInvBox({ ...invBox, actuoComo: value })}
                 buttonColor={"#060B4D"}
                 buttonSize={10}
                 selectedButtonColor={"#060B4D"}
