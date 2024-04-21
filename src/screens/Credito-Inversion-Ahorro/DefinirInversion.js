@@ -116,18 +116,6 @@ const DefinirInversion = ({ navigation }) => {
     );
   };
 
-  useEffect((e) => {
-    if (!invBox.canNavigate) {
-      e.preventDefault(); // Prevent tab change
-      // Optionally show an alert or some feedback
-      Alert.alert(
-        "Unsaved Changes",
-        "You have unsaved changes. Please save or discard them before navigating away."
-      );
-    }
-  }),
-    [invBox.canNavigate, navigation];
-
   // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
     const cleanedInput = inputText.replace(/[^0-9.]/g, ""); // Remove all non-numeric characters except dot
