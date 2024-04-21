@@ -30,7 +30,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox } = useContext(InvBoxContext);
+  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
   const [open, setOpen] = useState(false);
   const [retornoNeto, setRetornoNeto] = useState("");
   const [tasa, setTasa] = useState("");
@@ -75,12 +75,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
     setMontoShow(formattedValue);
   };*/
 
-  const isAcceptable =
-    invBox.montoNumeric >= 25000 && invBox.nombreInvBox && invBox.condiciones;
-
-  const isTable = invBox.montoNumeric >= 25000;
-
-  // Funcion para formatear el input de monto
+  /* Funcion para formatear el input de monto
   const formatInput = (text) => {
     // Elimina comas para el cálculo
     const numericValue = parseInt(text.replace(/,/g, ""), 10);
@@ -90,6 +85,20 @@ const DefinirCajaAhorro = ({ navigation }) => {
     }
     return "";
   };
+
+  // Funcion para manejar el input de monto al seleccionar
+  const handleFocus = () => {
+    const numericValue = invBox.monto.replace(/,/g, "");
+    setInvBox((prevState) => ({ ...prevState, monto: numericValue }));
+  };
+
+  // Funcion para manejar el input de monto al deseleccionar
+  const handleBlur = () => {
+    setInvBox((prevState) => ({
+      ...prevState,
+      monto: formatInput(invBox.monto),
+    }));
+  };*/
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
@@ -158,12 +167,12 @@ const DefinirCajaAhorro = ({ navigation }) => {
       "Si cancelas la Caja de Ahorro, perderás la información ingresada hasta el momento.",
       [
         {
-          text: "Cancelar Caja de Ahorro",
-          onPress: () => [navigation.navigate("Inicio")],
-          style: "cancel",
+          text: "Si",
+          onPress: () => [navigation.navigate("Inicio"), resetInvBox()],
+          style: "destructive",
         },
         {
-          text: "Continuar Caja de Ahorro",
+          text: "No",
         },
       ],
       { cancelable: true }
@@ -175,19 +184,10 @@ const DefinirCajaAhorro = ({ navigation }) => {
     { label: "$50,000.00 MXN", value: 50000 },
   ]);
 
-  // Funcion para manejar el input de monto al seleccionar
-  const handleFocus = () => {
-    const numericValue = invBox.monto.replace(/,/g, "");
-    setInvBox((prevState) => ({ ...prevState, monto: numericValue }));
-  };
+  const isAcceptable =
+    invBox.montoNumeric >= 25000 && invBox.nombreInvBox && invBox.condiciones;
 
-  // Funcion para manejar el input de monto al deseleccionar
-  const handleBlur = () => {
-    setInvBox((prevState) => ({
-      ...prevState,
-      monto: formatInput(invBox.monto),
-    }));
-  };
+  const isTable = invBox.montoNumeric >= 25000;
 
   // Componente Visual
   return (
@@ -412,7 +412,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
               styles.botonContinuar,
               {
                 backgroundColor: "white",
-                marginBottom: 20,
+                marginBottom: 30,
               },
             ]}
             onPress={() => {

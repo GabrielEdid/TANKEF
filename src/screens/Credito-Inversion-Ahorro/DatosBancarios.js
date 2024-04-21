@@ -25,7 +25,6 @@ import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { APIPost, APIGet } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -35,7 +34,7 @@ const DatosBancarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox } = useContext(InvBoxContext);
+  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [initial, setInitial] = useState(-1);
@@ -113,12 +112,12 @@ const DatosBancarios = ({ navigation }) => {
       `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
       [
         {
-          text: `Cancelar ${flujo}`,
+          text: `Si`,
           onPress: () => [cancelar()],
-          style: "cancel",
+          style: "destructive",
         },
         {
-          text: `Continuar ${flujo}`,
+          text: `No`,
         },
       ],
       { cancelable: true }
@@ -148,6 +147,7 @@ const DatosBancarios = ({ navigation }) => {
           "Caja de ahorro o Inversión eliminada exitosamente:",
           response
         );
+        resetInvBox();
         navigation.navigate("Inicio");
       }
     };
@@ -624,6 +624,7 @@ const DatosBancarios = ({ navigation }) => {
             styles.botonContinuar,
             {
               backgroundColor: "white",
+              marginBottom: 10,
             },
           ]}
           onPress={() => {

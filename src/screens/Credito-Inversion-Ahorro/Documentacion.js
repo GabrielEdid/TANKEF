@@ -33,7 +33,7 @@ const Documentacion = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox } = useContext(InvBoxContext);
+  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
   //const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -123,12 +123,12 @@ const Documentacion = ({ navigation }) => {
       `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
       [
         {
-          text: `Cancelar ${flujo}`,
+          text: `Si`,
           onPress: () => [cancelar()],
-          style: "cancel",
+          style: "destructive",
         },
         {
-          text: `Continuar ${flujo}`,
+          text: `No`,
         },
       ],
       { cancelable: true }
@@ -160,6 +160,7 @@ const Documentacion = ({ navigation }) => {
           response
         );
         navigation.navigate("Inicio");
+        resetInvBox();
       }
     };
   };
@@ -790,6 +791,7 @@ const Documentacion = ({ navigation }) => {
               styles.botonContinuar,
               {
                 backgroundColor: "white",
+                marginBottom: 10,
               },
             ]}
             onPress={() => {

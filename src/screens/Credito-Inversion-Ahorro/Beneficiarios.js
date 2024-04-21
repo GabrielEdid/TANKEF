@@ -32,7 +32,7 @@ const Beneficiarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox } = useContext(InvBoxContext);
+  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
   const [focus, setFocus] = useState("Beneficiarios");
   const [segundoBeneficiaro, setSegundoBeneficiaro] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -132,12 +132,12 @@ const Beneficiarios = ({ navigation }) => {
       `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
       [
         {
-          text: `Cancelar ${flujo}`,
+          text: `Si`,
           onPress: () => [cancelar()],
-          style: "cancel",
+          style: "destructive",
         },
         {
-          text: `Continuar ${flujo}`,
+          text: `No`,
         },
       ],
       { cancelable: true }
@@ -169,6 +169,7 @@ const Beneficiarios = ({ navigation }) => {
           response
         );
         navigation.navigate("Inicio");
+        resetInvBox();
       }
     };
   };
@@ -725,6 +726,7 @@ const Beneficiarios = ({ navigation }) => {
                   styles.botonContinuar,
                   {
                     backgroundColor: "white",
+                    marginBottom: 10,
                   },
                 ]}
                 onPress={() => {

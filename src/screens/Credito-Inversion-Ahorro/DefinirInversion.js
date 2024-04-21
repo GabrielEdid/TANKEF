@@ -28,7 +28,7 @@ const DefinirInversion = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox } = useContext(InvBoxContext);
+  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
   const [totalInversion, setTotalInversion] = useState("");
   const [tasa, setTasa] = useState("");
   const [focusTab, setFocusTab] = useState("");
@@ -105,8 +105,8 @@ const DefinirInversion = ({ navigation }) => {
       [
         {
           text: "Si",
-          onPress: () => [navigation.navigate("Inicio")],
-          style: "cancel",
+          onPress: () => [navigation.navigate("Inicio"), resetInvBox()],
+          style: "destructive",
         },
         {
           text: "No",
@@ -115,6 +115,18 @@ const DefinirInversion = ({ navigation }) => {
       { cancelable: true }
     );
   };
+
+  useEffect((e) => {
+    if (!invBox.canNavigate) {
+      e.preventDefault(); // Prevent tab change
+      // Optionally show an alert or some feedback
+      Alert.alert(
+        "Unsaved Changes",
+        "You have unsaved changes. Please save or discard them before navigating away."
+      );
+    }
+  }),
+    [invBox.canNavigate, navigation];
 
   // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
@@ -457,7 +469,7 @@ const DefinirInversion = ({ navigation }) => {
               styles.botonContinuar,
               {
                 backgroundColor: "white",
-                marginBottom: 20,
+                marginBottom: 30,
               },
             ]}
             onPress={() => {

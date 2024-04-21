@@ -1,6 +1,7 @@
 // Importaciones de React Native y React
 import { Image, View, Dimensions } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -101,6 +102,7 @@ const createTabScreenOptions = (
       </View>
     );
   },
+  tabBarStyle: label === "Crear" ? { display: "none" } : {},
 });
 
 // Pantalla Perfil con Drawer
@@ -201,6 +203,18 @@ function MainFlow() {
   const [customFocusedTab, setCustomFocusedTab] = useState("");
   const [previousActiveTab, setPreviousActiveTab] = useState("");
 
+  const shouldTabBarBeVisible = (route) => {
+    // Get the current route name
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "DefaultRouteName";
+    // Define screens where you want to hide the tab bar
+    const hideOnScreens = [
+      "DefinirInversion",
+      "Beneficiarios",
+      "DatosBancarios",
+    ]; // Add more as needed
+    return !hideOnScreens.includes(routeName);
+  };
+
   const handleTabPress = (e, routeName) => {
     if (routeName === "Crear") {
       e.preventDefault();
@@ -230,17 +244,18 @@ function MainFlow() {
   return (
     <>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({ route }) => ({
           tabBarShowLabel: false,
           tabBarStyle: {
-            shadowOffset: { width: 0, height: -2 }, // Desplazamiento de la sombra
-            shadowOpacity: 0.3, // Opacidad de la sombra
-            shadowRadius: 4, // Radio de la sombra
-            elevation: 5, // Elevación para Android
-            shadowColor: "#000000", // Color de la sombra
-            borderTopColor: "transparent", // Color del borde superior
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
+            elevation: 5,
+            shadowColor: "#000000",
+            borderTopColor: "transparent",
           },
-        }}
+          tabBarVisible: shouldTabBarBeVisible(route),
+        })}
       >
         <Tab.Screen
           name="Inicio"
