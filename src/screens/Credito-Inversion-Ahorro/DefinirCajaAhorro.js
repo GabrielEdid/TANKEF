@@ -138,7 +138,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
         name: invBox.nombreInvBox,
         amount: invBox.monto,
         term: 36,
-        condition: true,
+        condition: invBox.condiciones,
       },
     };
 
@@ -187,7 +187,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const isAcceptable =
     invBox.montoNumeric >= 25000 && invBox.nombreInvBox && invBox.condiciones;
 
-  const isTable = invBox.montoNumeric >= 25000;
+  const isTable = invBox.monto >= 25000;
 
   // Componente Visual
   return (
