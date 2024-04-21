@@ -15,11 +15,11 @@ const TablaAmortizacion = (props) => {
     inicio: `Inicio ${i + 1}`,
     vencimiento: `Vencimiento ${i + 1}`,
     dias: `Días ${i + 1}`,
-    depositos: 1000 + i * 100, // Assuming these are numerical for demonstration
-    acumulado: 5000 + i * 500, // Assuming these are numerical for demonstration
-    rendimientoBruto: 200 + i * 20, // Assuming these are numerical for demonstration
-    impuesto: 50 + i * 5, // Assuming these are numerical for demonstration
-    rendimientoNeto: 150 + i * 15, // Assuming these are numerical for demonstration
+    depositos: 1000 + i * 100,
+    acumulado: 5000 + i * 500,
+    rendimientoBruto: 200 + i * 20,
+    impuesto: 50 + i * 5,
+    rendimientoNeto: 150 + i * 15,
     tasa: `${i + 1}%`,
   }));
 
