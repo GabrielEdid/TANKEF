@@ -13,13 +13,12 @@ import {
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { useFocusEffect } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import RadioForm from "react-native-simple-radio-button";
 import { ActivityIndicator } from "react-native-paper";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { APIPost, APIGet } from "../../API/APIService";
@@ -157,7 +156,7 @@ const DatosBancarios = ({ navigation }) => {
   useEffect(() => {
     const verificarClabe = async () => {
       if (invBox.clabe.length < 18) {
-        setBanco("");
+        setInvBox({ ...invBox, banco: "" });
       } else if (invBox.clabe.length === 18) {
         const url = `/api/v1/clabe_validation`;
         const formData = new FormData();
@@ -176,9 +175,9 @@ const DatosBancarios = ({ navigation }) => {
               "Error",
               "La clabe introducida no está asociada a ningun banco"
             );
-            setBanco("");
+            setInvBox({ ...invBox, banco: "" });
           } else {
-            setBanco(response.data.data.bank_tag);
+            setInvBox({ ...invBox, banco: response.data.data.bank_tag });
           }
         } catch (error) {
           console.error("Error al encontrar la cuenta de banco:", error);
@@ -206,15 +205,19 @@ const DatosBancarios = ({ navigation }) => {
       );
       setAddAccount(true);
     } else {
-      console.log(
-        "Resultado de las cuentas de banco del usuario:",
-        result.data.data
-      );
-      setAddAccount(false);
-      setInvBox((prevState) => ({
-        ...prevState,
-        accounts: result.data.data || [], // Ensure fallback to empty array if data is undefined
-      }));
+      if (result.data.data.length === 0) {
+        setAddAccount(true);
+      } else {
+        console.log(
+          "Resultado de las cuentas de banco del usuario:",
+          result.data.data
+        );
+        setAddAccount(false);
+        setInvBox((prevState) => ({
+          ...prevState,
+          accounts: result.data.data || [], // Ensure fallback to empty array if data is undefined
+        }));
+      }
     }
   };
 
@@ -606,7 +609,7 @@ const DatosBancarios = ({ navigation }) => {
               marginBottom: 0,
             },
           ]}
-          onPress={() => handlePress()}
+          onPress={() => navigation.navigate("MiTankef") /*handlePress()*/}
           disabled={disabled}
         >
           <Text
@@ -624,7 +627,7 @@ const DatosBancarios = ({ navigation }) => {
             styles.botonContinuar,
             {
               backgroundColor: "white",
-              marginBottom: 10,
+              marginBottom: 30,
             },
           ]}
           onPress={() => {

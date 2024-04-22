@@ -389,7 +389,7 @@ const MiTankefInversion = (props) => {
                 setModalVisible(false),
                 navigation.navigate("Crear", {
                   screen: "OrdenPago",
-                  params: { flujo: "Inversión" },
+                  params: { flujo: "Inversión", idInversion: currentID },
                 }),
               ]}
             />

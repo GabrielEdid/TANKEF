@@ -15,11 +15,12 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
-import { APIPost } from "../../API/APIService";
+import { APIGet } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -29,65 +30,62 @@ const OrdenPago = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const [modalVisible, setModalVisible] = useState(false);
-  const [disabled, setDisabled] = useState(true);
+  const [beneficiario, setBeneficiario] = useState(false);
+  const [institucion, setInstitucion] = useState(false);
+  const [cuentaClabe, setCuentaClabe] = useState(false);
+  const [referencia, setReferencia] = useState(false);
+  const [monto, setMonto] = useState(false);
 
-  const showUploadOptions = () => {
-    Alert.alert(
-      "Seleccionar Documento",
-      "Elige de donde deseas subir tu documento:",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        {
-          text: "Galería de Fotos",
-          onPress: () => {
-            pickImage();
-            console.log("Photo Gallery Pressed");
-          },
-        },
-        {
-          text: "Documentos",
-          onPress: () => {
-            pickDocument();
-            console.log("Documents Pressed");
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
+  // Obtener la orden de pago del usuario
+  const fetchOrden = async () => {
+    const url = `/api/v1/investments/${idInversion}`;
 
-  const pickDocument = async () => {
-    let result = await DocumentPicker.getDocumentAsync({});
-    if (!result.canceled && result.assets) {
-      const selectedDocument = result.assets[0];
-      setComprobanteNCuenta(selectedDocument.uri);
-      setNombreComprobante(selectedDocument.name);
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener la orden de pago del usuario:",
+        result.error
+      );
+      Alert.alert("Error", "Error al obtener la orden de pago.");
     } else {
-      console.log("Operación cancelada o no se seleccionó ningún documento");
+      console.log(
+        "Resultado de la orden de pago del usuario:",
+        result.data.data.stp_account
+      );
+      setBeneficiario(titleCase(result.data.data.stp_account.beneficiary));
+      setInstitucion(result.data.data.stp_account.institution);
+      setCuentaClabe(result.data.data.stp_account.clabe);
+      setReferencia(result.data.data.stp_account.reference);
+      setMonto(formatAmount(result.data.data.stp_account.amount));
     }
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.2,
-    });
-    if (!result.canceled) {
-      const selectedImage = result.assets[0];
-      console.log(selectedImage.uri);
+  // Efecto para obtener las cuentas bancarias del usuario
+  useFocusEffect(
+    useCallback(() => {
+      fetchOrden();
+    }, [])
+  );
 
-      setComprobanteNCuenta(selectedImage.uri);
-      setNombreComprobante("Carátula Seleccionada");
-    } else {
-      console.log("Operación cancelada o no se seleccionó ninguna imagen");
-    }
+  // Función para convertir la primera letra de cada palabra en mayúscula
+  function titleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
+  // Formatea un monto a pesos mexicanos
+  const formatAmount = (amount) => {
+    const number = parseFloat(amount);
+    return `${number.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    })}`;
   };
 
   // Componente Visual
@@ -153,23 +151,23 @@ const OrdenPago = ({ navigation }) => {
             >
               {/* Campos para introducir los datos bancarios */}
               <Text style={styles.tituloCampo}>Nombre del Beneficiario</Text>
-              <Text style={styles.input}>a.rivera@tankef.com</Text>
+              <Text style={styles.input}>{beneficiario}</Text>
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Institución</Text>
-              <Text style={styles.input}>STP</Text>
+              <Text style={styles.input}>{institucion}</Text>
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Cuenta clabe</Text>
-              <Text style={styles.input}>646180518134213704</Text>
+              <Text style={styles.input}>{cuentaClabe}</Text>
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Referencia</Text>
-              <Text style={styles.input}>5991786</Text>
+              <Text style={styles.input}>{referencia}</Text>
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>Monto a depositar</Text>
-              <Text style={styles.input}>$10,000.00 MXN</Text>
+              <Text style={styles.input}>{monto} MXN</Text>
               <View style={styles.separacion} />
             </View>
           </View>
@@ -250,7 +248,7 @@ const styles = StyleSheet.create({
   },
   botonContinuar: {
     marginTop: 15,
-    marginBottom: 20,
+    marginBottom: 30,
     backgroundColor: "#060B4D",
     width: "80%",
     alignSelf: "center",

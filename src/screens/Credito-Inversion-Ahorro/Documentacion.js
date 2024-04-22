@@ -791,7 +791,7 @@ const Documentacion = ({ navigation }) => {
               styles.botonContinuar,
               {
                 backgroundColor: "white",
-                marginBottom: 10,
+                marginBottom: 30,
               },
             ]}
             onPress={() => {
