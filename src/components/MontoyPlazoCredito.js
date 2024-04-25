@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Contextos
 import { Ionicons } from "@expo/vector-icons";
+import { UserContext } from "../hooks/UserContext";
 import { CreditContext } from "../hooks/CreditContext";
 
 /**
@@ -42,6 +43,7 @@ const widthFourth = screenWidth / 4 - 15;
 const MontoyPlazoCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
+  const { user } = useContext(UserContext);
   const { credit, setCredit } = useContext(CreditContext);
 
   // Funcion para manejar el cambio de texto en el input de monto
@@ -108,7 +110,7 @@ const MontoyPlazoCredito = () => {
   // Componente visual
   return (
     <>
-      <View style={[styles.contenedores, { flexDirection: "row" }]}>
+      {/*<View style={[styles.contenedores, { flexDirection: "row" }]}>
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
           <Text style={styles.valorConcepto}>$120K</Text>
@@ -133,10 +135,10 @@ const MontoyPlazoCredito = () => {
           <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
           <Text style={styles.valorConcepto}>$1M</Text>
         </View>
-      </View>
+      </View>*/}
       <View style={[styles.contenedores, { paddingBottom: 0 }]}>
         <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-          Introduce el monto que deseas solicitar.
+          Monto a solicitar
         </Text>
         <View style={styles.inputWrapper}>
           <Text
@@ -171,6 +173,15 @@ const MontoyPlazoCredito = () => {
             MXN
           </Text>
         </View>
+        <Text style={[styles.concepto, { marginBottom: 15, fontSize: 12 }]}>
+          {`Monto mínimo $10,000.00, valor de la red ${user.valorRed.toLocaleString(
+            "es-MX",
+            {
+              style: "currency",
+              currency: "MXN",
+            }
+          )}MXN.`}
+        </Text>
         {/*<Slider
           style={{ width: "90%" }}
           minimumValue={10000}
@@ -187,7 +198,7 @@ const MontoyPlazoCredito = () => {
 
       <View style={styles.contenedores}>
         <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-          Plazo del Crédito
+          ¿A qué plazo quieres pagarlo?
         </Text>
         <View
           style={{
@@ -295,21 +306,20 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     flexDirection: "row",
-    marginTop: -10,
     paddingHorizontal: 10,
     alignItems: "center",
     alignContent: "center",
   },
   inputMonto: {
     paddingTop: 10,
-    fontSize: 35,
+    fontSize: 30,
     color: "#060B4D",
     marginBottom: 10,
     fontFamily: "opensanssemibold",
   },
   dollarSign: {
     color: "#060B4D",
-    fontSize: 35,
+    fontSize: 30,
     fontFamily: "opensanssemibold",
   },
 });

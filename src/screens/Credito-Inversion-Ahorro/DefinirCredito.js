@@ -229,7 +229,7 @@ const DefinirCredito = ({ navigation }) => {
             <Text
               style={{
                 fontFamily: "opensansbold",
-                fontSize: 20,
+                fontSize: 16,
                 color: "#060B4D",
                 textAlign: "center",
               }}
@@ -324,7 +324,7 @@ const DefinirCredito = ({ navigation }) => {
 
             <MontoyPlazoCredito />
 
-            {credit.paso === 1 && (
+            {/* {credit.paso === 1 && (
               <View style={styles.contenedores}>
                 <Text style={styles.texto}>
                   Invita a tus amigos a unirse a tu red financiera. Cuantos más
@@ -333,7 +333,7 @@ const DefinirCredito = ({ navigation }) => {
                   financiamiento!
                 </Text>
               </View>
-            )}
+            )} */}
 
             {credit.paso >= 2 && <DatosCotizadorCredito />}
 
@@ -473,7 +473,7 @@ const DefinirCredito = ({ navigation }) => {
 
             <MontoyPlazoCredito />
 
-            {credit.paso === 1 && (
+            {/* {credit.paso === 1 && (
               <View style={styles.contenedores}>
                 <Text style={styles.texto}>
                   Al solicitar un crédito a través del comité, tu historial
@@ -481,7 +481,7 @@ const DefinirCredito = ({ navigation }) => {
                   serán evaluados.
                 </Text>
               </View>
-            )}
+            )} */}
 
             {credit.paso >= 2 && (
               <>

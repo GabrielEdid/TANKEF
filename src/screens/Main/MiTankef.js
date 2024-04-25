@@ -7,11 +7,12 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Componentes y Hooks
+import { UserContext } from "../../hooks/UserContext";
 import { APIGet } from "../../API/APIService";
 import { Feather } from "@expo/vector-icons";
 import StackedImages from "../../components/StackedImages";
@@ -26,6 +27,7 @@ const widthHalf = screenWidth / 2;
 
 const MiTankef = () => {
   // Estados y Contexto
+  const { user, setUser } = useContext(UserContext);
   const [focus, setFocus] = useState("Credito");
   const [dashboard, setDashboard] = useState({});
   const [secondFocus, setSecondFocus] = useState("Detalle");
@@ -44,6 +46,7 @@ const MiTankef = () => {
       console.error("Error al obtener el Dashboard:", response.error);
     } else {
       setDashboard(response.data);
+      setUser({ ...user, valorRed: response.data.data.value_network });
     }
   };
 
@@ -85,11 +88,10 @@ const MiTankef = () => {
       <View style={{ marginTop: 3, backgroundColor: "white" }}>
         <Text style={styles.textoValorRed}>Valor general de tu red</Text>
         <Text style={styles.valorRed}>
-          {dashboard.data &&
-            dashboard.data.value_network.toLocaleString("es-MX", {
-              style: "currency",
-              currency: "MXN",
-            })}
+          {user.valorRed.toLocaleString("es-MX", {
+            style: "currency",
+            currency: "MXN",
+          })}
           MXN
         </Text>
         {/* Componente de Imagenes de los usuarios en la red */}
