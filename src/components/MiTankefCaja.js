@@ -273,7 +273,15 @@ const MiTankefCaja = (props) => {
           )}
         </>
       ) : (
-        <Text style={styles.noBoxes}>No tienes Cajas de Ahorro activas</Text>
+        <>
+          <Text style={styles.noBoxes}>No tienes Cajas de Ahorro activas</Text>
+          <Entypo
+            name="emoji-sad"
+            size={35}
+            color="#060B4D"
+            style={{ alignSelf: "center", marginTop: 10 }}
+          />
+        </>
       )}
     </View>
   );

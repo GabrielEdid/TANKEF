@@ -302,7 +302,15 @@ const MiTankefInversion = (props) => {
           )}
         </>
       ) : (
-        <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
+        <>
+          <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
+          <Entypo
+            name="emoji-sad"
+            size={35}
+            color="#060B4D"
+            style={{ alignSelf: "center", marginTop: 10 }}
+          />
+        </>
       )}
 
       {
