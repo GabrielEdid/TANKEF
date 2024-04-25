@@ -153,6 +153,7 @@ const MiTankefInversion = (props) => {
               textAlign: "center",
               fontSize: 12,
               marginTop: -5,
+              marginBottom: 5,
             }}
           >
             Nueva{"\n"}Inversión
