@@ -91,7 +91,6 @@ const MiTankefInversion = (props) => {
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setInversionInicial(formatAmount(result.data.data.amount));
-      setTasaInteres("Falta");
       setRetornoNeto("Falta");
     }
   };
@@ -176,6 +175,7 @@ const MiTankefInversion = (props) => {
               onPress={() => [
                 fetchInvestment(investment.id),
                 setCurrentID(investment.id),
+                setTasaInteres(investment.rate_operation),
               ]}
             >
               <Image source={imageMap["Bill"]} style={styles.bill} />
