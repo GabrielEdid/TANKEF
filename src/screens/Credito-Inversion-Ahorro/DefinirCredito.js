@@ -94,10 +94,10 @@ const DefinirCredito = ({ navigation }) => {
           {
             text: "Cambiar de opción",
             onPress: () => [resetCredit(), setFocus(tab)],
+            style: "destructive",
           },
           {
             text: "Cancelar",
-            style: "cancel",
           },
         ],
         { cancelable: true }
@@ -140,6 +140,24 @@ const DefinirCredito = ({ navigation }) => {
         });
       }
     }
+  };
+
+  const handleCancelar = () => {
+    Alert.alert(
+      "¿Deseas cancelar el Crédito?",
+      "Si cancelas el Crédito, perderás la información ingresada hasta el momento.",
+      [
+        {
+          text: "Si",
+          onPress: () => [navigation.navigate("Inicio"), resetCredit()],
+          style: "destructive",
+        },
+        {
+          text: "No",
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   useEffect(() => {
@@ -533,6 +551,23 @@ const DefinirCredito = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={[
+            styles.botonContinuar,
+            {
+              backgroundColor: "white",
+              marginBottom: 30,
+              width: "76.5%",
+            },
+          ]}
+          onPress={() => {
+            handleCancelar();
+          }}
+        >
+          <Text style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}>
+            Cancelar Crédito
+          </Text>
+        </TouchableOpacity>
         <ModalCotizadorCredito />
       </ScrollView>
     </View>
@@ -589,7 +624,6 @@ const styles = StyleSheet.create({
   },
   botonContinuar: {
     marginTop: 15,
-    marginBottom: 20,
     backgroundColor: "#060B4D",
     width: "80%",
     alignSelf: "center",
