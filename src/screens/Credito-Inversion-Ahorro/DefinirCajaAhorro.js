@@ -271,10 +271,17 @@ const DefinirCajaAhorro = ({ navigation }) => {
                   setInvBox((prevState) => ({
                     ...prevState,
                     monto: callback(prevState.monto),
+                    montoNumeric: callback(prevState.montoNumeric),
+                    plazo: 36,
                   }));
                 }}
                 onChangeValue={(value) =>
-                  setInvBox({ ...invBox, monto: value })
+                  setInvBox({
+                    ...invBox,
+                    monto: value,
+                    montoNumeric: value,
+                    plazo: 36,
+                  })
                 }
                 style={styles.DropDownPicker}
                 arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
@@ -429,6 +436,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
           onClose={() => {
             setModalAmortizacionVisible(false);
           }}
+          flujo={"box_saving"}
         />
       </ScrollView>
       {loading && (

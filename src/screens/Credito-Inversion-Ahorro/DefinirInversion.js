@@ -474,6 +474,7 @@ const DefinirInversion = ({ navigation }) => {
           onClose={() => {
             setModalAmortizacionVisible(false);
           }}
+          flujo={"investment"}
         />
       </ScrollView>
       {loading && (

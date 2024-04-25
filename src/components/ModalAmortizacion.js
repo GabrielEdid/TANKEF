@@ -1,4 +1,5 @@
-import React from "react";
+// Importaciones de React Native y React
+import React, { useEffect, useContext, useState } from "react";
 import {
   View,
   Text,
@@ -7,37 +8,58 @@ import {
   ScrollView,
   Modal,
 } from "react-native";
+// Importaciones de Componentes y Hooks
+import { InvBoxContext } from "../hooks/InvBoxContext";
+import { APIGet } from "../API/APIService";
 import { AntDesign } from "@expo/vector-icons";
 
 const TablaAmortizacion = (props) => {
-  const data = Array.from({ length: 24 }, (_, i) => ({
-    cuota: i + 1,
-    inicio: `Inicio ${i + 1}`,
-    vencimiento: `Vencimiento ${i + 1}`,
-    dias: `Días ${i + 1}`,
-    depositos: 1000 + i * 100,
-    acumulado: 5000 + i * 500,
-    rendimientoBruto: 200 + i * 20,
-    impuesto: 50 + i * 5,
-    rendimientoNeto: 150 + i * 15,
-    tasa: `${i + 1}%`,
-  }));
+  const { invBox } = useContext(InvBoxContext);
+  const [tablaData, setTablaData] = useState([]);
+
+  useEffect(() => {
+    const fetchTabla = async () => {
+      const url = `/api/v1/simulator?term=${invBox.plazo}&type=${props.flujo}&amount=${invBox.montoNumeric}`;
+      try {
+        const response = await APIGet(url);
+        if (response.error) {
+          console.error("Error al obtener la tabla:", response.error);
+        } else {
+          console.log("Tabla obtenida exitosamente:", response.data);
+          setTablaData(response.data.table); // Assuming data is directly under table key
+        }
+      } catch (error) {
+        console.error("Error en la petición de la tabla:", error);
+      }
+    };
+
+    if (props.visible) {
+      fetchTabla();
+    }
+  }, [props.visible, invBox.plazo, invBox.montoNumeric, props.flujo]);
+
+  // Helper function to format the numeric values as currency
+  const formatAmmount = (text) => {
+    const inputText = String(text || "0").replace(/,/g, "");
+    const numericValue = parseFloat(inputText);
+    return isNaN(numericValue) ? "" : `$${numericValue.toLocaleString()}`;
+  };
 
   // Calculate totals
-  const totals = data.reduce(
+  const totals = tablaData.reduce(
     (acc, curr) => {
-      acc.depositos += curr.depositos;
-      acc.acumulado += curr.acumulado;
-      acc.rendimientoBruto += curr.rendimientoBruto;
-      acc.impuesto += curr.impuesto;
-      acc.rendimientoNeto += curr.rendimientoNeto;
+      acc.depositos += curr.deposit || 0;
+      acc.acumulado += curr.amount_accumulated || 0;
+      acc.rendimientoBruto += curr.rendimiento_bruto || 0;
+      acc.impuest += curr.impuest || 0;
+      acc.rendimientoNeto += curr.rendimiento_neto || 0;
       return acc;
     },
     {
       depositos: 0,
       acumulado: 0,
       rendimientoBruto: 0,
-      impuesto: 0,
+      impuest: 0,
       rendimientoNeto: 0,
     }
   );
@@ -83,32 +105,70 @@ const TablaAmortizacion = (props) => {
                   </Text>
                 ))}
               </View>
-              {data.map((item, index) => (
+              {tablaData.map((item, index) => (
                 <View key={index} style={styles.tableRow}>
-                  <Text style={styles.cell}>{item.cuota}</Text>
-                  <Text style={styles.cell}>{item.inicio}</Text>
-                  <Text style={styles.cell}>{item.vencimiento}</Text>
-                  <Text style={styles.cell}>{item.dias}</Text>
-                  <Text style={styles.cell}>{item.depositos}</Text>
-                  <Text style={styles.cell}>{item.acumulado}</Text>
-                  <Text style={styles.cell}>{item.rendimientoBruto}</Text>
-                  <Text style={styles.cell}>{item.impuesto}</Text>
-                  <Text style={styles.cell}>{item.rendimientoNeto}</Text>
-                  <Text style={styles.cell}>{item.tasa}</Text>
+                  <Text style={styles.cell}>{index + 1}</Text>
+                  <Text style={styles.cell}>{item.start_date}</Text>
+                  <Text style={styles.cell}>{item.end_date}</Text>
+                  <Text style={styles.cell}>{item.days}</Text>
+                  <Text style={styles.cell}>{formatAmmount(item.deposit)}</Text>
+                  <Text style={styles.cell}>
+                    {formatAmmount(item.amount_accumulated)}
+                  </Text>
+                  <Text style={styles.cell}>
+                    {formatAmmount(item.rendimiento_bruto.toFixed(2))}
+                  </Text>
+                  <Text style={styles.cell}>
+                    {formatAmmount(item.impuest.toFixed(2))}
+                  </Text>
+                  <Text style={styles.cell}>
+                    {formatAmmount(item.rendimiento_neto.toFixed(2))}
+                  </Text>
+                  <Text style={styles.cell}>
+                    {formatAmmount(item.investment_rate)}
+                  </Text>
                 </View>
               ))}
-              {/* Totals Row */}
-              <View style={[styles.tableRow, { marginBottom: 30 }]}>
-                <Text style={styles.cellTotal}>Totals</Text>
-                <Text style={styles.cellTotal} />
-                <Text style={styles.cellTotal} />
-                <Text style={styles.cellTotal} />
-                <Text style={styles.cellTotal}>{totals.depositos}</Text>
-                <Text style={styles.cellTotal}>{totals.acumulado}</Text>
-                <Text style={styles.cellTotal}>{totals.rendimientoBruto}</Text>
-                <Text style={styles.cellTotal}>{totals.impuesto}</Text>
-                <Text style={styles.cellTotal}>{totals.rendimientoNeto}</Text>
-                <Text style={styles.cellTotal} />
+              <View style={styles.tableRow}>
+                <Text style={styles.cellTotal}>Totales</Text>
+                <Text style={styles.cellTotal}></Text>
+                <Text style={styles.cellTotal}></Text>
+                <Text style={styles.cellTotal}></Text>
+                <Text style={styles.cellTotal}>
+                  {formatAmmount(totals.depositos.toFixed(2))}
+                </Text>
+                <Text style={styles.cellTotal}>
+                  {props.flujo === "box_saving"
+                    ? formatAmmount(totals.acumulado.toFixed(2))
+                    : ""}
+                </Text>
+                <Text style={styles.cellTotal}>
+                  {formatAmmount(totals.rendimientoBruto.toFixed(2))}
+                </Text>
+                <Text style={styles.cellTotal}>
+                  {formatAmmount(totals.impuest.toFixed(2))}
+                </Text>
+                <Text style={styles.cellTotal}>
+                  {formatAmmount(totals.rendimientoNeto.toFixed(2))}
+                </Text>
+                <Text style={styles.cellTotal}></Text>
+              </View>
+              <View style={{ margin: 20, marginBottom: 40 }}>
+                <Text
+                  style={{
+                    color: "#060B4D",
+                    fontFamily: "opensans",
+                    fontSize: 12,
+                  }}
+                >
+                  1.- Tasa de interés variable, por lo que las condiciones
+                  pueden cambiar de acuerdo a los mercados financieros.{"\n"}
+                  2.- Tasa base de cotización. TIIE a 28 días publicada en el
+                  Diario Oficial de la Federación (DOF) el día inmediato
+                  anterior a la fecha del cálculo.{"\n"}
+                  3.- Tasa de impuesto vigente del año en curso, por lo que
+                  puede variar para los años posteriores.
+                </Text>
               </View>
             </ScrollView>
           </View>
@@ -164,7 +224,7 @@ const styles = StyleSheet.create({
   cellTotal: {
     minWidth: 120,
     padding: 10,
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
     color: "#060B4D",
     fontFamily: "opensansbold",
