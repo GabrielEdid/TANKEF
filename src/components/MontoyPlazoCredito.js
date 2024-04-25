@@ -139,7 +139,14 @@ const MontoyPlazoCredito = () => {
           Introduce el monto que deseas solicitar.
         </Text>
         <View style={styles.inputWrapper}>
-          <Text style={[styles.dollarSign]}>$</Text>
+          <Text
+            style={[
+              styles.dollarSign,
+              { color: credit.monto ? "#060B4D" : "#b3b5c9ff" },
+            ]}
+          >
+            $
+          </Text>
           <TextInput
             style={styles.inputMonto}
             value={credit.montoShow}
@@ -149,12 +156,14 @@ const MontoyPlazoCredito = () => {
             onChangeText={handleChangeText}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            placeholder="10,000.00"
             //editable={credit.paso === 1} // Para deshabilitar el input
           />
           <Text
             style={[
               styles.dollarSign,
               {
+                color: credit.monto ? "#060B4D" : "#b3b5c9ff",
                 marginLeft: 5,
               },
             ]}

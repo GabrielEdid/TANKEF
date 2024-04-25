@@ -6,9 +6,9 @@ export const CreditContext = createContext();
 
 // Estado inicial definido fuera del componente
 const initialState = {
-  monto: "10000",
-  montoNumeric: 10000,
-  montoShow: "10,000",
+  monto: "",
+  montoNumeric: "",
+  montoShow: "",
   plazo: "",
   comision_por_apertura: "",
   tasa_de_operacion: "",
