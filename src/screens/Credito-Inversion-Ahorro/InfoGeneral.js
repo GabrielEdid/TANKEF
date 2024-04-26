@@ -561,6 +561,7 @@ const styles = StyleSheet.create({
   botonContinuar: {
     backgroundColor: "#060B4D",
     marginTop: 15,
+    marginBottom: 20,
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,

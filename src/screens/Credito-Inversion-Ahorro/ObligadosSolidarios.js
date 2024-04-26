@@ -62,7 +62,6 @@ const ObligadosSolidarios = ({ navigation }) => {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de la red:", filteredResults);
       setNetwork(filteredResults);
-      setUser({ ...user, conexiones: filteredResults.length });
     }
   };
 
@@ -160,7 +159,7 @@ const ObligadosSolidarios = ({ navigation }) => {
               {
                 flex: 1,
                 marginLeft: credit.paso === 1 ? 0 : 5,
-                width: credit.paso === 1 && "80%", // Ensure width is consistent for the "Continuar" button
+                width: credit.paso === 1 && "80%",
                 backgroundColor: disabled ? "#D5D5D5" : "#060B4D",
               },
             ]}
@@ -291,7 +290,7 @@ const styles = StyleSheet.create({
   },
   botonContinuar: {
     backgroundColor: "#060B4D",
-    marginTop: 15,
+    marginBottom: 30,
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,

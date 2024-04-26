@@ -41,12 +41,12 @@ const DatosCotizadorCredito = () => {
   // Componente visual
   return (
     <>
-      <View style={styles.contenedores}>
+      {/* <View style={styles.contenedores}>
         <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
           Total a pagar
         </Text>
         <Text style={styles.monto}>{credit.total_a_pagar}</Text>
-      </View>
+      </View> */}
       <View style={[styles.contenedores, { flexDirection: "row" }]}>
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Comisión por{"\n"}apertura</Text>
@@ -74,6 +74,16 @@ const DatosCotizadorCredito = () => {
           <Text style={styles.concepto}>Pago{"\n"}mensual</Text>
           <Text style={styles.valorConcepto}>{credit.pago_mensual}</Text>
         </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Total a{"\n"}pagar</Text>
+          <Text style={styles.valorConcepto}>{credit.total_a_pagar}</Text>
+        </View>
       </View>
     </>
   );
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
   },
   concepto: {
     fontFamily: "opensans",
-    fontSize: 14,
+    fontSize: 12,
     color: "#060B4D",
     textAlign: "center",
   },
@@ -104,7 +114,7 @@ const styles = StyleSheet.create({
   },
   valorConcepto: {
     fontFamily: "opensanssemibold",
-    fontSize: 16,
+    fontSize: 14,
     color: "#060B4D",
     textAlign: "center",
   },

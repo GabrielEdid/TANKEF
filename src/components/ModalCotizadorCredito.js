@@ -52,9 +52,9 @@ const ModalCotizadorCredito = () => {
               style={{ width: 63, height: 50, marginBottom: 10 }}
               source={require("../../assets/images/BillCredito.png")}
             />
-            <Text style={styles.modalText}>Pago Mensual</Text>
-            <Text style={[styles.modalText, { fontSize: 24 }]}>
-              {credit.pago_mensual}
+            <Text style={styles.modalText}>Total a pagar</Text>
+            <Text style={[styles.modalText, { fontSize: 30 }]}>
+              {credit.total_a_pagar}
             </Text>
             <View
               style={[
@@ -97,10 +97,10 @@ const ModalCotizadorCredito = () => {
               />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.concepto, { fontSize: 13 }]}>
-                  Pago{"\n"}total
+                  Pago{"\n"}mensual
                 </Text>
-                <Text style={[styles.valorConcepto, { fontSize: 14 }]}>
-                  {credit.total_a_pagar} MXN
+                <Text style={[styles.valorConcepto]}>
+                  {credit.pago_mensual}
                 </Text>
               </View>
             </View>
