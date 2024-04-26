@@ -53,31 +53,20 @@ const Documentacion = ({ navigation }) => {
       invBox.isThereSituacionFiscal &&
       invBox.isThereComprobanteDomicilio
     ) {
-      console.log(
-        "All documents are already there, send as JSON:" +
-          invBox.identificacion +
-          " " +
-          invBox.CURP +
-          " " +
-          invBox.situacionFiscal +
-          " " +
-          invBox.comprobanteDomicilio +
-          " " +
-          invBox.actuoComo
-      );
       // All documents are already there, send as JSON
       const data = {
         [flujo === "Inversión" ? "investment" : "box_saving"]: {
-          official_identification: "",
-          curp: "",
-          proof_sat: "",
-          proof_address: "",
           accept_documentation_1:
-            invBox.actuoComo === "Actúo a nombre y por cuenta propia.",
+            invBox.actuoComo === "Actúo a nombre y por cuenta propia."
+              ? true
+              : false,
           accept_documentation_2:
-            invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero.",
+            invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero."
+              ? true
+              : false,
         },
       };
+      console.log("Data to send:", data);
 
       try {
         const response = await APIPut(url, data);
