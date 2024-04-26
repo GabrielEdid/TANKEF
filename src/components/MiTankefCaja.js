@@ -17,6 +17,7 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -67,6 +68,7 @@ const MiTankefCaja = (props) => {
       setBoxes(filteredResults);
       setCurrentID(filteredResults[0].id);
       fetchBox(filteredResults[0].id);
+      setTasaInteres(filteredResults[0].rate_operation);
     }
   };
 
@@ -84,7 +86,6 @@ const MiTankefCaja = (props) => {
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setMontoAcumulado(formatAmount(result.data.data.amount));
-      setTasaInteres("Falta");
     }
   };
 
@@ -150,7 +151,11 @@ const MiTankefCaja = (props) => {
                   backgroundColor: currentID === box.id ? "#2FF690" : "white",
                 },
               ]}
-              onPress={() => [fetchBox(box.id), setCurrentID(box.id)]}
+              onPress={() => [
+                fetchBox(box.id),
+                setCurrentID(box.id),
+                setTasaInteres(box.rate_operation),
+              ]}
             >
               <FontAwesome5
                 name="piggy-bank"
