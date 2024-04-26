@@ -50,6 +50,7 @@ const DefinirCredito = ({ navigation }) => {
   };
 
   const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
+  const isAcceptablePaso4 = credit.aceptarSIC && credit.actuoComo;
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
@@ -170,6 +171,22 @@ const DefinirCredito = ({ navigation }) => {
       navigation.navigate("ObligadosSolidarios", { flujo: flujo });
     }
   }, [credit.obligados_solidarios]);
+
+  // Function to determine button's background color
+  const getButtonBackgroundColor = () => {
+    if (credit.paso === 4) {
+      return isAcceptablePaso4 ? "#060B4D" : "#D5D5D5";
+    }
+    return isAcceptable ? "#060B4D" : "#D5D5D5";
+  };
+
+  // Function to determine text color
+  const getTextColor = () => {
+    if (credit.paso === 4) {
+      return isAcceptablePaso4 ? "white" : "grey";
+    }
+    return isAcceptable ? "white" : "grey";
+  };
 
   const [dataAceptar] = useState([{ label: "Si acepto", value: "Si" }]);
 
@@ -319,7 +336,13 @@ const DefinirCredito = ({ navigation }) => {
                     { fontFamily: "opensansbold", marginLeft: 10 },
                   ]}
                 >
-                  Mi Red con Obligados Solidarios
+                  {credit.paso === 1
+                    ? "Solicitud de crédito por Mi Red"
+                    : credit.paso === 2
+                    ? "Revisión de Cotización"
+                    : credit.paso === 3
+                    ? "Obligados solidarios"
+                    : "Revisión y Validación de información"}
                 </Text>
               </View>
 
@@ -539,18 +562,15 @@ const DefinirCredito = ({ navigation }) => {
                 {
                   flex: 1,
                   marginLeft: credit.paso === 1 ? 0 : 5,
-                  width: credit.paso === 1 && "80%", // Ensure width is consistent for the "Continuar" button
-                  backgroundColor: !isAcceptable ? "#D5D5D5" : "#060B4D",
+                  width: credit.paso === 1 && "80%",
+                  backgroundColor: getButtonBackgroundColor(),
                 },
               ]}
               onPress={handleAccept}
-              disabled={!isAcceptable}
+              disabled={credit.paso === 4 ? !isAcceptablePaso4 : !isAcceptable}
             >
               <Text
-                style={[
-                  styles.textoBotonContinuar,
-                  { color: !isAcceptable ? "grey" : "white" },
-                ]}
+                style={[styles.textoBotonContinuar, { color: getTextColor() }]}
               >
                 Continuar
               </Text>

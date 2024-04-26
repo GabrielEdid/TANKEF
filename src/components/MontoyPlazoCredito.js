@@ -48,63 +48,46 @@ const MontoyPlazoCredito = () => {
 
   // Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
-    let newText = inputText.replace(/[^0-9.]/g, "");
+    let newText = inputText.replace(/[^0-9.]/g, ""); // Only allow numbers and dot
     if ((newText.match(/\./g) || []).length > 1) {
-      newText = newText.replace(/\.(?=.*\.)/, "");
+      // Avoid multiple dots
+      newText = newText.replace(/\.(?=.*\.)/, ""); // Replace all dots if there's more than one
     }
 
     let [integer, decimal] = newText.split(".");
-    integer = integer.replace(/^0+/, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    integer = integer.replace(/^0+/, ""); // Remove leading zeros
+    if (integer !== "") {
+      integer = parseInt(integer).toLocaleString(); // Add commas
+    }
     if (decimal && decimal.length > 2) {
-      decimal = decimal.substring(0, 2);
+      decimal = decimal.substring(0, 2); // Limit decimal places to 2
     }
 
     const formattedText =
       decimal !== undefined ? `${integer}.${decimal}` : integer;
-    const numericValue = parseFloat(newText.replace(/,/g, ""));
+    const numericValue = parseFloat(newText.replace(/,/g, "")) || 0;
+
     setCredit({
       ...credit,
       montoShow: formattedText,
-      monto: newText,
-      montoNumeric: numericValue || 0,
+      monto: newText, // Keep as plain number string for easy re-edit
+      montoNumeric: numericValue, // Use as a numeric value for calculations
     });
-  };
-
-  // Funcion para manejar el cambio de valor en el slider
-  const handleSliderChange = (value) => {
-    // Use functional update form to ensure we're working with the most current state
-    setCredit((currentCredit) => {
-      const formattedValue = value
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return {
-        ...currentCredit,
-        montoNumeric: value,
-        montoShow: formattedValue,
-      };
-    });
-  };
-
-  // Funcion para formatear el input de monto
-  const formatInput = (text) => {
-    // Elimina comas para el cálculo
-    const numericValue = parseInt(text.replace(/,/g, ""), 10);
-    if (!isNaN(numericValue)) {
-      // Vuelve a formatear con comas
-      return numericValue.toLocaleString();
-    }
-    return "";
-  };
-
-  // Funcion para manejar el input de monto al seleccionar
-  const handleFocus = () => {
-    const numericValue = credit.monto.replace(/,/g, "");
-    setCredit({ ...credit, monto: numericValue });
   };
 
   // Funcion para manejar el input de monto al deseleccionar
   const handleBlur = () => {
-    setCredit({ ...credit, montoShow: formatInput(credit.monto) });
+    const numericValue = parseFloat(credit.monto.replace(/,/g, ""));
+    if (!isNaN(numericValue)) {
+      setCredit({
+        ...credit,
+        montoShow: numericValue.toLocaleString("en-US", {
+          style: "decimal",
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2,
+        }),
+      });
+    }
   };
 
   // Componente visual
@@ -156,7 +139,6 @@ const MontoyPlazoCredito = () => {
             maxLength={20}
             placeholderTextColor={"#b3b5c9ff"}
             onChangeText={handleChangeText}
-            onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder="10,000.00"
             //editable={credit.paso === 1} // Para deshabilitar el input
