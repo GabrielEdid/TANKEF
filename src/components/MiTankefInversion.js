@@ -17,6 +17,7 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -73,6 +74,7 @@ const MiTankefInversion = (props) => {
       console.log("Resultados de las inversiones:", filteredResults);
       setInvestments(filteredResults);
       setCurrentID(filteredResults[0].id);
+      setTasaInteres(filteredResults[0].rate_operation);
       fetchInvestment(filteredResults[0].id);
     }
   };

@@ -40,81 +40,144 @@ const Documentacion = ({ navigation }) => {
 
   // Función para subir la documentación
   const handlePress = async () => {
-    setDisabled(true);
     setLoading(true);
-    console.log("Agregando los documentos a la inversión o caja de ahorro...");
+    setDisabled(true);
+
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
 
-    const key = flujo === "Inversión" ? "investment" : "box_saving";
-    const formData = new FormData();
+    if (
+      invBox.isThereIdentificacion &&
+      invBox.isThereCURP &&
+      invBox.isThereSituacionFiscal &&
+      invBox.isThereComprobanteDomicilio
+    ) {
+      console.log(
+        "All documents are already there, send as JSON:" +
+          invBox.identificacion +
+          " " +
+          invBox.CURP +
+          " " +
+          invBox.situacionFiscal +
+          " " +
+          invBox.comprobanteDomicilio +
+          " " +
+          invBox.actuoComo
+      );
+      // All documents are already there, send as JSON
+      const data = {
+        [flujo === "Inversión" ? "investment" : "box_saving"]: {
+          official_identification: "",
+          curp: "",
+          proof_sat: "",
+          proof_address: "",
+          accept_documentation_1:
+            invBox.actuoComo === "Actúo a nombre y por cuenta propia.",
+          accept_documentation_2:
+            invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero.",
+        },
+      };
 
-    formData.append(`${key}[official_identification]`, {
-      uri: invBox.identificacion,
-      type: "application/jpeg",
-      name: "identificacion.jpeg",
-    });
-    formData.append(`${key}[curp]`, {
-      uri: invBox.CURP,
-      type: "application/jpeg",
-      name: "CURP.jpeg",
-    });
-    formData.append(`${key}[proof_sat]`, {
-      uri: invBox.situacionFiscal,
-      type: "application/jpeg",
-      name: "situacionFiscal.jpeg",
-    });
-    formData.append(`${key}[proof_address]`, {
-      uri: invBox.comprobanteDomicilio,
-      type: "application/jpeg",
-      name: "comprobanteDomicilio.jpeg",
-    });
-    formData.append(
-      `${key}[accept_documentation_1]`,
-      invBox.actuoComo === "Actúo a nombre y por cuenta propia."
-        ? "true"
-        : "false"
-    );
-    formData.append(
-      `${key}[accept_documentation_2]`,
-      invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero."
-        ? "true"
-        : "false"
-    );
+      try {
+        const response = await APIPut(url, data);
 
-    try {
-      const response = await APIPut(url, formData);
-
-      if (response.error) {
-        setLoading(false);
-        console.error(
-          "Error al agregar los documentos a la inversión o caja de ahorro:",
-          response.error
-        );
+        if (response.error) {
+          console.error("Error updating the records:", response.error);
+          Alert.alert(
+            "Error",
+            `Could not update the records. Please try again.`
+          );
+        } else {
+          console.log("Records updated successfully:", response);
+          navigation.navigate("DatosBancarios", { flujo, idInversion });
+        }
+      } catch (error) {
+        console.error("Request error:", error);
         Alert.alert(
           "Error",
-          `No se pudieron agregar los documentos a la ${
-            flujo === "Inversión" ? "Inversión" : "Caja de Ahorro"
-          }. Intente nuevamente.`
+          "An error occurred while processing your request."
         );
-      } else {
+      } finally {
         setLoading(false);
-        console.log("Documentos agregados exitosamente:", response);
-        navigation.navigate("DatosBancarios", {
-          flujo: flujo,
-          idInversion: idInversion,
-        });
+        setDisabled(false);
       }
-    } catch (error) {
-      setLoading(false);
-      console.error("Error en la petición:", error);
-      Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
-    } finally {
-      setLoading(false);
-      setDisabled(false);
+    } else {
+      // Use FormData to upload new documents
+      const formData = new FormData();
+      appendDocumentsToFormData(formData);
+
+      try {
+        const response = await APIPut(url, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        if (response.error) {
+          console.error("Error while uploading documents:", response.error);
+          Alert.alert(
+            "Error",
+            `Could not upload the documents. Please try again.`
+          );
+        } else {
+          console.log("Documents uploaded successfully:", response);
+          navigation.navigate("DatosBancarios", { flujo, idInversion });
+        }
+      } catch (error) {
+        console.error("Request error:", error);
+        Alert.alert(
+          "Error",
+          "An error occurred while processing your request."
+        );
+      } finally {
+        setLoading(false);
+        setDisabled(false);
+      }
     }
   };
+
+  function appendDocumentsToFormData(formData) {
+    // This function appends files to formData if they exist
+    if (invBox.identificacion) {
+      formData.append("investment[official_identification]", {
+        uri: invBox.identificacion,
+        type: "image/jpeg",
+        name: "identificacion.jpeg",
+      });
+    }
+    if (invBox.CURP) {
+      formData.append("investment[curp]", {
+        uri: invBox.CURP,
+        type: "image/jpeg",
+        name: "CURP.jpeg",
+      });
+    }
+    if (invBox.situacionFiscal) {
+      formData.append("investment[proof_sat]", {
+        uri: invBox.situacionFiscal,
+        type: "image/jpeg",
+        name: "situacionFiscal.jpeg",
+      });
+    }
+    if (invBox.comprobanteDomicilio) {
+      formData.append("investment[proof_address]", {
+        uri: invBox.comprobanteDomicilio,
+        type: "image/jpeg",
+        name: "comprobanteDomicilio.jpeg",
+      });
+    }
+
+    // Always send these as they are likely just boolean flags
+    formData.append(
+      "investment[accept_documentation_1]",
+      invBox.actuoComo === "Actúo a nombre y por cuenta propia."
+    );
+    formData.append(
+      "investment[accept_documentation_2]",
+      invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero."
+    );
+  }
 
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
@@ -212,6 +275,10 @@ const Documentacion = ({ navigation }) => {
       if (result.data.data.attached_documents_user === undefined) return;
       setInvBox((prevState) => ({
         ...prevState,
+        identificacion: "",
+        CURP: "",
+        situacionFiscal: "",
+        comprobanteDomicilio: "",
         documents: result.data.data.attached_documents_user,
       }));
     }
