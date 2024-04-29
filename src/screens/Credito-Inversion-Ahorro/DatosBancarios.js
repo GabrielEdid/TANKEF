@@ -52,7 +52,7 @@ const DatosBancarios = ({ navigation }) => {
     const data = {
       key: {
         bank_account_attributes: {
-          bank_account_id: 1,
+          bank_account_id: invBox.accountID,
         },
       },
     };
@@ -78,6 +78,7 @@ const DatosBancarios = ({ navigation }) => {
 
     try {
       const response = await APIPost(url, addAccount ? formData : data);
+      console.log("Respuesta de la API:", addAccount ? formData : data);
 
       if (response.error) {
         setLoading(false);
@@ -609,7 +610,7 @@ const DatosBancarios = ({ navigation }) => {
               marginBottom: 0,
             },
           ]}
-          onPress={() => navigation.navigate("MiTankef") /*handlePress()*/}
+          onPress={() => handlePress()}
           disabled={disabled}
         >
           <Text
@@ -650,6 +651,7 @@ const DatosBancarios = ({ navigation }) => {
         onAccept={() => [
           setModalVisible(false),
           navigation.navigate("MiTankef"),
+          resetInvBox(),
         ]}
       />
       {loading && (

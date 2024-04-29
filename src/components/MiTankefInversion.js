@@ -17,7 +17,6 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
-import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;

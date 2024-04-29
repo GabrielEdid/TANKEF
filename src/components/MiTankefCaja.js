@@ -17,7 +17,6 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
-import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -44,12 +43,12 @@ const MiTankefCaja = (props) => {
   const [focus, setFocus] = useState("Balance");
   const [boxes, setBoxes] = useState([]);
   const [currentID, setCurrentID] = useState(null);
-  const [boxState, setBoxState] = useState(null);
-  const [investmentState, setInvestmentState] = useState(null);
+  const [boxState, setBoxState] = useState("");
   const [plazo, setPlazo] = useState(null);
   const [folio, setFolio] = useState(null);
   const [montoAcumulado, setMontoAcumulado] = useState(null);
   const [tasaInteres, setTasaInteres] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Funcion para obtener las cajas de ahorro del usuario
   const fetchUserBoxes = async () => {
@@ -288,6 +287,118 @@ const MiTankefCaja = (props) => {
           />
         </>
       )}
+
+      {
+        <>
+          {boxState === "reviewing_documentation" && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "Tu documentación ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+              }
+              imagen={"Alert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => setModalVisible(false)}
+            />
+          )}
+
+          {boxState === "rejected_documentation" && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "Tu documentación ha sido rechazada, por favor revisa que coincidan con lo que se solicita y que sean vigentes antes de volver a enviarlos.\n¡Gracias por tu preferencia!"
+              }
+              imagen={"RedAlert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                navigation.navigate("Crear", {
+                  screen: "Documentacion",
+                  params: { flujo: "Caja de ahorro", idInversion: currentID },
+                }),
+              ]}
+            />
+          )}
+
+          {boxState === "sign_contract" && (
+            <ModalEstatus
+              titulo={"¡Felicidades!"}
+              texto={
+                "Tu información ha sido validada, por favor continua a la firma de contrato."
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                navigation.navigate("Crear", {
+                  screen: "DefinirFirma",
+                  params: { flujo: "Caja de ahorro", idInversion: currentID },
+                }),
+              ]}
+            />
+          )}
+
+          {boxState === "signing_contract" && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "La firma del contrato está pendiente. Por favor completa ese paso para continuar.\n¡Gracias!"
+              }
+              imagen={"RedAlert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                /*navigation.navigate("Crear", {
+                  screen: "DefinirFirma",
+                  params: { flujo: "Inversión" },
+                }),*/
+              ]}
+            />
+          )}
+
+          {boxState === "request_payment" && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "Tu pago está pendiente. Por favor, completa la transacción para continuar."
+              }
+              imagen={"RedAlert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                navigation.navigate("Crear", {
+                  screen: "OrdenPago",
+                  params: { flujo: "Caja de ahorro", idInversion: currentID },
+                }),
+              ]}
+            />
+          )}
+
+          {boxState === "reviewing_payment" && (
+            <ModalEstatus
+              titulo={"¡Depósito exitoso!"}
+              texto={
+                "¡Hemos recibido el comprobante de depósito, gracias por tu transacción!. Pronto recibirás un correo con la confirmación de tu caja de ahorro."
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                /*navigation.navigate("Crear", {
+                  screen: "DefinirFirma",
+                  params: { flujo: "Inversión" },
+                }),*/
+              ]}
+            />
+          )}
+        </>
+      }
     </View>
   );
 };
