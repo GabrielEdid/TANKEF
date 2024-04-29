@@ -6,22 +6,27 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  Keyboard,
   Alert,
   Modal,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TextInput,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../hooks/UserContext"; // Contexto para manejar el estado del usuario
 import SpecialInput from "../../components/SpecialInput"; // Componente para entradas de texto especializadas
 import { setToken, APIPost } from "../../API/APIService";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 // Componente de pantalla inicial
 const InitialScreen = ({ navigation }) => {
+  const { user, setUser } = useContext(UserContext); // Consumir el contexto del usuario
   const [email, setEmail] = useState(""); // Estado para manejar el email del usuario
   const [password, setPassword] = useState(""); // Estado para manejar la contraseña del usuario
   const [isLoading, setIsLoading] = useState(false); // Estado para manejar el indicador de carga
-  const { user, setUser } = useContext(UserContext); // Consumir el contexto del usuario
+  const [condiciones, setCondiciones] = useState(false); // Estado para manejar la aceptación de términos y condiciones
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // Estado para manejar la visibilidad de la contraseña
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -78,150 +83,222 @@ const InitialScreen = ({ navigation }) => {
     setIsLoading(false);
   };
 
+  const disabled = email && password && condiciones;
+
   // Componente visual
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => Keyboard.dismiss()} // Cerrar el teclado cuando se toca fuera de un input, no funciono touchableWithoutFeedBack
-      style={{ flex: 1 }}
-    >
-      <ImageBackground
-        source={require("../../../assets/images/Fondo.png")}
-        style={styles.background}
-      >
-        <View style={styles.contentContainer}>
-          {/* Logo y título */}
-          <View style={styles.header}>
-            <Image
-              source={require("../../../assets/images/Logo_Tankef.png")}
-              style={styles.logo}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.contentContainer}>
+        {/* Logo y título */}
+        <View style={{ marginTop: 140 }}>
+          <Image
+            source={require("../../../assets/images/Logo.png")}
+            style={styles.logo}
+          />
+          <Text style={styles.title}>
+            Inicia sesión ingresando los datos solicitados o regístrate.
+          </Text>
+        </View>
+
+        {/* Contenedor del formulario */}
+        <View style={styles.formContainer}>
+          <Text style={styles.campo}>Correo</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="nombre@correo.com"
+            placeholderTextColor={"#b3b5c9"}
+            onChangeText={(text) => setEmail(text)}
+          />
+          <Text style={[styles.campo, { marginTop: 20 }]}>Contraseña</Text>
+
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="•••••••"
+              placeholderTextColor={"#b3b5c9"}
+              secureTextEntry={!isPasswordVisible}
+              onChangeText={(text) => setPassword(text)}
             />
-            <Text style={styles.title}>TANKEF</Text>
+
+            {password && (
+              <TouchableOpacity
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                style={styles.toggleButton}
+              >
+                <Ionicons
+                  name={isPasswordVisible ? "eye-off" : "eye"}
+                  size={24}
+                  color={"#060B4D"}
+                />
+              </TouchableOpacity>
+            )}
           </View>
 
-          {/* Contenedor del formulario */}
-          <View style={styles.formContainer}>
-            <Text style={styles.welcomeText}>WELCOME BACK</Text>
-            <SpecialInput field="Correo" editable={true} set={setEmail} />
-            <SpecialInput
-              field="Contraseña"
-              editable={true}
-              password={true}
-              set={setPassword}
-            />
-            <TouchableOpacity
-              onPress={() => navigation.navigate("OlvideContrasena")}
-            >
-              <Text style={styles.forgotPasswordText}>
-                Olvidé mi Contraseña
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("OlvideContrasena")}
+          >
+            <Text style={styles.forgotPasswordText}>
+              ¿Olvidaste tu contraseña?{" "}
+              <Text style={{ color: "#2ef095" }}>Click aquí</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-          {/* Botones */}
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: "white" }]}
-              onPress={() => navigation.navigate("Registro1")}
+        {/* Botones */}
+        <View style={{ marginBottom: 30 }}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                backgroundColor: !disabled || isLoading ? "#F3F3F3" : "#060B4D",
+                marginBottom: 0,
+              },
+            ]}
+            onPress={() => signIn()}
+            disabled={isLoading || !disabled}
+          >
+            <Text
+              style={[
+                styles.buttonText,
+                { color: !disabled || isLoading ? "#060B4D" : "white" },
+              ]}
             >
-              <Text style={[styles.buttonText, { color: "#29364d" }]}>
-                CREAR UNA CUENTA
+              Iniciar sesión
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "#F3F3F3" }]}
+            onPress={() => navigation.navigate("Registro1")}
+          >
+            <Text style={[styles.buttonText, { color: "#060B4D" }]}>
+              Registrate
+            </Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: "row",
+              alignSelf: "center",
+              marginTop: 5,
+            }}
+          >
+            <TouchableOpacity
+              style={{ marginTop: 10, marginRight: 7.5 }}
+              onPress={() => setCondiciones(!condiciones)}
+            >
+              <Feather
+                name={condiciones ? "check-square" : "square"}
+                size={24}
+                color="#060B4D"
+              />
+            </TouchableOpacity>
+            <Text style={styles.textoTerminos}>
+              Al iniciar sesión estás aceptando{" "}
+              <Text style={{ fontFamily: "opensansbold", color: "#2ef095" }}>
+                Términos y Condiciones
+              </Text>{" "}
+              así como
+              <Text style={{ fontFamily: "opensansbold", color: "#2ef095" }}>
+                {" "}
+                Políticas de Privacidad
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: "#29364d" }]}
-              onPress={() => signIn()}
-              disabled={isLoading}
-            >
-              <Text style={styles.buttonText}>INICIAR SESIÓN</Text>
-            </TouchableOpacity>
+            </Text>
           </View>
         </View>
 
-        {/* Modal de carga */}
-        <Modal transparent={true} animationType="fade" visible={isLoading}>
+        {/* Vista de carga */}
+        {isLoading && (
           <View style={styles.overlay}>
-            <ActivityIndicator size={75} color="white" />
+            <ActivityIndicator size={75} color="#060B4D" />
           </View>
-        </Modal>
-      </ImageBackground>
-    </TouchableOpacity>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
   contentContainer: {
     flex: 1,
-    justifyContent: "space-between",
-  },
-  header: {
-    alignItems: "center",
-    paddingTop: 60,
-  },
-  logo: {
-    width: 90,
-    height: 90,
-  },
-  title: {
-    fontSize: 35,
-    color: "white",
-    fontFamily: "conthrax",
-  },
-  formContainer: {
-    alignSelf: "center",
-    width: "85%",
     backgroundColor: "white",
-    borderRadius: 25,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  welcomeText: {
-    fontSize: 22,
-    fontFamily: "conthrax",
-    color: "#29364d",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  forgotPasswordText: {
-    color: "#29364d",
-    textAlign: "center",
-    fontSize: 15,
-    marginTop: 10,
-    fontWeight: "bold",
-  },
-  buttonGroup: {
-    paddingBottom: 30,
+    justifyContent: "space-between",
     paddingHorizontal: 20,
   },
-  button: {
-    height: 60,
-    justifyContent: "center",
-    borderRadius: 25,
+  logo: {
+    width: 175,
+    height: 70,
+    alignSelf: "center",
+  },
+  title: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 20,
+    color: "white",
+    fontFamily: "opensans",
+    color: "#060B4D",
+  },
+  formContainer: {
+    marginTop: -30,
+    alignSelf: "center",
+    backgroundColor: "white",
+    width: "100%",
+  },
+  campo: {
+    width: "100%",
+    fontSize: 16,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    alignSelf: "center",
+    textAlign: "center",
+  },
+  input: {
+    width: "100%",
+    fontSize: 20,
     marginTop: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
+    fontFamily: "opensans",
+    alignSelf: "center",
+    textAlign: "center",
+    borderWidth: 1,
+    borderColor: "transparent",
+    borderBottomColor: "#dfdfe8",
+    color: "#060B4D",
+  },
+  toggleButton: {
+    position: "absolute",
+    right: 25,
+    marginTop: 10,
+    justifyContent: "center",
+  },
+  textoTerminos: {
+    color: "#060B4D",
+    fontFamily: "opensans",
+    marginTop: 10,
+    paddingRight: 10,
+  },
+  forgotPasswordText: {
+    color: "#060B4D",
+    textAlign: "center",
+    fontSize: 15,
+    marginTop: 15,
+    fontFamily: "opensanssemibold",
+  },
+  button: {
+    marginTop: 15,
+    backgroundColor: "#060B4D",
+    width: "100%",
+    alignSelf: "center",
+    borderRadius: 5,
   },
   buttonText: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "conthrax",
+    alignSelf: "center",
+    padding: 10,
+    fontFamily: "opensanssemibold",
+    fontSize: 16,
   },
   overlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
 });
 

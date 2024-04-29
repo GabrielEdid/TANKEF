@@ -90,7 +90,7 @@ const AuthPinPad = ({ navigation, route }) => {
       />
       <Modal transparent={true} animationType="fade" visible={isLoading}>
         <View style={styles.overlay}>
-          <ActivityIndicator size={75} color="white" />
+          <ActivityIndicator size={75} color="#060B4D" />
           <Text
             style={{
               fontFamily: "opensanssemibold",
