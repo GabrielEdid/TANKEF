@@ -1,5 +1,12 @@
 // Importaciones de React Native y React
-import { Text, View, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Image,
+} from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -105,95 +112,119 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
 
   // Componente visual
   return (
-    <View>
-      {/* Boton de Regresar */}
+    <View style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={{ zIndex: 10 }}
+        style={styles.backButton}
       >
-        <AntDesign
-          name="arrowleft"
-          size={40}
-          color="#29364d"
-          style={styles.back}
-        />
+        <Text style={styles.backText}>Cancelar</Text>
       </TouchableOpacity>
-      {/* Texto de Confirma el PIN */}
-      <View style={{ height: "89%" }}>
-        <Text style={styles.titulo}>Confirma tu PIN</Text>
-        {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
+
+      <View style={styles.content}>
+        <Image
+          source={require("../../../assets/images/Logo.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.title}>Confirma tu PIN</Text>
         <PinPad id={false} get={confirmPin} set={setConfirmPin} />
-        <Modal transparent={true} animationType="fade" visible={isLoading}>
-          <View style={styles.overlay}>
-            <ActivityIndicator size={75} color="#060B4D" />
-            <Text
-              style={{
-                fontFamily: "opensanssemibold",
-                marginTop: 15,
-                color: "white",
-              }}
-            >
-              Estamos recuperando tus datos
-            </Text>
-          </View>
-        </Modal>
-        {/* Logica para activar el boton de Guardar PIN si el PIN tiene el largo esperado */}
       </View>
-      {confirmPin.length === 6 && isProfileLoaded ? (
-        <TouchableOpacity
-          style={styles.botonGrande}
-          onPress={() => [
-            handleConfirmPin(),
-            console.log("El Pin es: " + confirmPin),
+
+      <TouchableOpacity
+        style={[
+          styles.button,
+          {
+            backgroundColor:
+              confirmPin.length === 6 && isProfileLoaded
+                ? "#060B4D"
+                : "#F3F3F3",
+          },
+        ]}
+        onPress={handleConfirmPin}
+        disabled={!isProfileLoaded || confirmPin.length !== 6}
+      >
+        <Text
+          style={[
+            styles.buttonText,
+            {
+              color:
+                confirmPin.length === 6 && isProfileLoaded ? "white" : "grey",
+            },
           ]}
         >
-          <Text style={styles.textoBotonGrande}>GUARDAR PIN</Text>
-        </TouchableOpacity>
-      ) : null}
+          Siguiente
+        </Text>
+      </TouchableOpacity>
+      {isLoading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+          <Text
+            style={{
+              fontFamily: "opensanssemibold",
+              marginTop: 15,
+              color: "white",
+            }}
+          >
+            Estamos recuperando tus datos
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
 
 // Estilos de la Pantalla
 const styles = StyleSheet.create({
-  back: {
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "space-between",
+  },
+  backButton: {
+    zIndex: 10,
     marginTop: 60,
     marginLeft: 20,
     position: "absolute",
-    zIndex: 10000000,
   },
-  titulo: {
-    marginTop: 210,
-    fontSize: 15,
-    alignSelf: "center",
-    position: "absolute",
-    color: "#29364d",
+  backText: {
+    fontSize: 16,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
   },
-  botonGrande: {
-    width: "85%",
-    height: 60,
-    alignSelf: "center",
-    justifyContent: "center",
-    backgroundColor: "#29364d",
-    borderRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
-    marginTop: 20,
-  },
-  textoBotonGrande: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "conthrax",
-  },
-  overlay: {
+  content: {
+    marginTop: 100,
     flex: 1,
     justifyContent: "center",
+  },
+  logo: {
+    width: 175,
+    height: 70,
+    alignSelf: "center",
+  },
+  title: {
+    alignSelf: "center",
+    marginTop: 40,
+    fontSize: 16,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
+  },
+  button: {
+    backgroundColor: "#060B4D",
+    marginHorizontal: 20,
+    marginBottom: 40,
+    borderRadius: 5,
+  },
+  buttonText: {
+    alignSelf: "center",
+    padding: 10,
+    fontSize: 16,
+    color: "white",
+    fontFamily: "opensanssemibold",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
 

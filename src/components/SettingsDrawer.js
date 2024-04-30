@@ -61,7 +61,7 @@ const SettingsDrawer = ({ navigation }) => {
     await AsyncStorage.setItem("userInfo", JSON.stringify(user));
     console.log("Información reseteada y guardada con éxito");
     navigation.closeDrawer();
-    navigation.navigate("InitialScreen");
+    navigation.navigate("LogIn");
   };
 
   return (
