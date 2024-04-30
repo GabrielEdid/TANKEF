@@ -175,8 +175,7 @@ const styles = StyleSheet.create({
   },
   pinContainer: {
     flexDirection: "row",
-    marginTop: 75,
-    marginBottom: 40,
+    marginVertical: 40,
   },
   pinIndicator: {
     width: 15,
