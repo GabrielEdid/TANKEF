@@ -4,10 +4,8 @@ import {
   Text,
   StyleSheet,
   Image,
-  ImageBackground,
   TouchableOpacity,
   Alert,
-  Modal,
   TouchableWithoutFeedback,
   Keyboard,
   TextInput,
@@ -20,7 +18,7 @@ import { setToken, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
 // Componente de pantalla inicial
-const InitialScreen = ({ navigation }) => {
+const LogIn = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext); // Consumir el contexto del usuario
   const [email, setEmail] = useState(""); // Estado para manejar el email del usuario
   const [password, setPassword] = useState(""); // Estado para manejar la contraseña del usuario
@@ -168,7 +166,7 @@ const InitialScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "#F3F3F3" }]}
-            onPress={() => navigation.navigate("Registro1")}
+            onPress={() => navigation.navigate("NumeroTelefonico")}
           >
             <Text style={[styles.buttonText, { color: "#060B4D" }]}>
               Registrate
@@ -302,4 +300,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InitialScreen;
+export default LogIn;

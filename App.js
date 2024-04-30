@@ -14,8 +14,8 @@ import { CreditProvider } from "./src/hooks/CreditContext";
 import { InvBoxProvider } from "./src/hooks/InvBoxContext";
 import { setToken, getToken } from "./src/API/APIService";
 // Importar pantallas de la aplicación
-import InitialScreen from "./src/screens/LogIn/InitialScreen";
-import Registro1 from "./src/screens/LogIn/Registro1";
+import LogIn from "./src/screens/LogIn/LogIn";
+import NumeroTelefonico from "./src/screens/LogIn/NumeroTelefonico";
 import Registro2 from "./src/screens/LogIn/Registro2";
 import Registro3 from "./src/screens/LogIn/Registro3";
 import Registro4 from "./src/screens/LogIn/Registro4";
@@ -398,7 +398,7 @@ function LoginFlow() {
 
   // Determinar la pantalla inicial basada en el estado de inicio de sesión del usuario
   const initialRouteName =
-    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "InitialScreen";
+    userInfo && userInfo.userLoggedIn === true ? "AuthPinPad" : "LogIn";
 
   // Comnentar esta linea, se utiliza para pruebas y emepzar de la pagina deseada
   //const initialRouteName = "MainFlow"; //Prueba para ir a una pantalla directa, MainFlow para saltar authentication
@@ -419,8 +419,8 @@ function LoginFlow() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="InitialScreen"
-        component={InitialScreen}
+        name="LogIn"
+        component={LogIn}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -448,8 +448,8 @@ function LoginFlow() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Registro1"
-        component={Registro1}
+        name="NumeroTelefonico"
+        component={NumeroTelefonico}
         options={{ headerShown: false }}
       />
       <Stack.Screen
