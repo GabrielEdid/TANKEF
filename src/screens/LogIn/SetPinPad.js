@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React, { useState, useContext } from "react";
 // Importaciones de Firebase
 import { auth } from "../../../firebaseConfig";
@@ -30,26 +30,25 @@ const SetPinPad = ({ navigation }) => {
 
   // Componente visual
   return (
-    <View>
+    <View style={{ backgroundColor: "white", flex: 1 }}>
       {/* Boton de Regresar */}
       <TouchableOpacity onPress={() => handleGoBack()} style={{ zIndex: 10 }}>
-        <AntDesign
-          name="arrowleft"
-          size={40}
-          color="#29364d"
-          style={styles.back}
-        />
+        <Text style={styles.back}>Cancelar</Text>
       </TouchableOpacity>
-      {/* Texto de Crear el PIN */}
-      <View style={{ height: "89%" }}>
+      <View>
+        <Image
+          source={require("../../../assets/images/Logo.png")}
+          style={styles.logo}
+        />
         <Text style={styles.titulo}>Crea tu PIN</Text>
-        {/* Componente de PinPad, ahí mismo aparece el logo y titulo de Tankef */}
-        <PinPad id={false} get={pin} set={setPin} style={{ zIndex: 1000 }} />
-        {/* Logica para activar el boton de Siguiente si el PIN tiene el largo esperado */}
       </View>
-      {pin.length === 6 ? (
+      <View style={{ marginTop: -50 }}>
+        <PinPad id={false} get={pin} set={setPin} style={{ zIndex: 1000 }} />
+      </View>
+      {/* Logica para activar el boton de Siguiente si el PIN tiene el largo esperado */}
+      {pin.length === 6 && (
         <TouchableOpacity
-          style={styles.botonGrande}
+          style={styles.button}
           onPress={() => [
             navigation.navigate("ConfirmSetPinPad", {
               pin: pin,
@@ -58,46 +57,49 @@ const SetPinPad = ({ navigation }) => {
             console.log("El pin es: " + pin),
           ]}
         >
-          <Text style={styles.textoBotonGrande}>SIGUIENTE</Text>
+          <Text style={styles.buttonText}>Siguiente</Text>
         </TouchableOpacity>
-      ) : null}
+      )}
     </View>
   );
 };
 
 // Estilos de la Pantalla
 const styles = StyleSheet.create({
+  logo: {
+    marginTop: 100,
+    width: 175,
+    height: 70,
+    alignSelf: "center",
+  },
   back: {
+    fontSize: 16,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
     marginTop: 60,
     marginLeft: 20,
     position: "absolute",
   },
   titulo: {
-    marginTop: 210,
-    fontSize: 15,
+    marginTop: 40,
+    fontSize: 16,
     alignSelf: "center",
-    position: "absolute",
-    color: "#29364d",
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
   },
-  botonGrande: {
-    width: "85%",
-    height: 60,
+  button: {
+    marginTop: 30,
+    backgroundColor: "#060B4D",
+    width: "90%",
     alignSelf: "center",
-    justifyContent: "center",
-    backgroundColor: "#29364d",
-    borderRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
-    marginTop: 20,
+    borderRadius: 5,
   },
-  textoBotonGrande: {
+  buttonText: {
+    alignSelf: "center",
+    padding: 10,
+    fontFamily: "opensanssemibold",
+    fontSize: 16,
     color: "white",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "conthrax",
   },
 });
 

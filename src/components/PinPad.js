@@ -45,7 +45,7 @@ const PinPad = ({ ...props }) => {
       "Recuperación de PIN",
       "Porfavor vuelve a iniciar sesión para recuperar tu PIN"
     );
-    navigation.navigate("InitialScreen");
+    navigation.navigate("LogIn");
   };
 
   // Maneja la autenticación biométrica
@@ -116,12 +116,6 @@ const PinPad = ({ ...props }) => {
   // Renderiza el componente
   return (
     <View style={styles.background}>
-      {/* Logo y Titulo */}
-      <Image
-        source={require("../../assets/images/Logo_Tankef.png")}
-        style={styles.imagen}
-      />
-      <Text style={styles.titulo}>TANKEF</Text>
       {/* Indicadores de PIN */}
       <View style={styles.pinContainer}>{renderPinIndicators()}</View>
 
@@ -165,11 +159,11 @@ const PinPad = ({ ...props }) => {
         </TouchableOpacity>
       </View>
       {/* Opción para recuperar PIN olvidado, solo activada con el prop id */}
-      {props.id === true ? (
+      {props.id === true && (
         <TouchableOpacity onPress={onForgotPin}>
           <Text style={styles.forgotPinText}>Olvidé mi PIN</Text>
         </TouchableOpacity>
-      ) : null}
+      )}
     </View>
   );
 };
@@ -179,36 +173,22 @@ const styles = StyleSheet.create({
   background: {
     alignItems: "center",
   },
-  imagen: {
-    width: 90,
-    height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-    position: "absolute",
-  },
-  titulo: {
-    fontFamily: "conthrax",
-    fontSize: 30,
-    color: "#29364d",
-    marginTop: 160,
-    alignSelf: "center",
-    position: "absolute",
-  },
   pinContainer: {
     flexDirection: "row",
-    marginTop: 240,
-    marginBottom: 48,
+    marginTop: 75,
+    marginBottom: 40,
   },
   pinIndicator: {
     width: 15,
     height: 15,
-    borderRadius: 7.5,
-    borderWidth: 1,
-    borderColor: "#29364d",
-    margin: 15,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#060B4D",
+    marginVertical: 15,
+    marginHorizontal: 10,
   },
   pinIndicatorFilled: {
-    backgroundColor: "#29364d",
+    backgroundColor: "#060B4D",
   },
   keypadRow: {
     flexDirection: "row",
@@ -217,20 +197,21 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   keypadButton: {
-    width: 75,
-    height: 75,
+    width: 65,
+    height: 65,
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 10,
   },
   keypadButtonText: {
     fontSize: 35,
-    fontFamily: "conthrax",
-    color: "#29364d",
+    fontFamily: "opensansbold",
+    color: "#060B4D",
   },
   forgotPinText: {
     fontSize: 16,
-    color: "#29364d",
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
     textDecorationLine: "underline",
     marginTop: 24,
   },
