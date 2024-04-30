@@ -3,97 +3,111 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TextInput,
   Alert,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
-import { UserContext } from "../../hooks/UserContext";
 import { AntDesign } from "@expo/vector-icons";
+import { APIPost } from "../../API/APIService";
 
 const OlvideContrasena = ({ navigation }) => {
   // Estados locales y contexto global
-  const { user, setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Función para enviar el correo de restablecimiento de contraseña
-  const sendResetPasswordEmail = async (email) => {
-    fetch(
-      "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/account/password_resets",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password_reset: {
-            email: email,
-          },
-        }),
+  // Función para iniciar sesión
+  const sendResetPasswordEmail = async () => {
+    setIsLoading(true);
+    const url = "/api/v1/account/password_resets";
+    const data = {
+      password_reset: { email: email },
+    };
+
+    const response = await APIPost(url, data);
+
+    if (response.error) {
+      console.error(
+        "Error al enviar correo de recuperacion de contraseña:",
+        response.error
+      );
+      let errorMessage = "Error en la solicitud";
+      if (typeof response.error === "object") {
+        errorMessage = Object.values(response.error).flat().join(". ");
       }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        navigation.navigate("InitialScreen");
-        Alert.alert(
-          "Correo Enviado",
-          "Checa tu buzon de entrada para restablecer tu contraseña.",
-          [{ text: "Entendido" }],
-          { cancelable: true }
-        );
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      Alert.alert("Error al Enviar Correo", errorMessage);
+    } else if (response.data) {
+      Alert.alert(
+        "Correo Enviado",
+        "Se ha enviado un correo con las instrucciones para restablecer tu contraseña"
+      );
+      navigation.goBack();
+    } else {
+      Alert.alert(
+        "Error al Enviar Correo",
+        "Respuesta inesperada del servidor"
+      );
+    }
+    setIsLoading(false);
   };
 
   // Componente visual
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.background}>
-        {/* Logo, Titulo y Imagen de Avance y Regresar */}
+        {/* Regresar */}
         <TouchableOpacity
           style={styles.back}
           onPress={() => navigation.goBack()}
         >
           <AntDesign name="arrowleft" size={40} color="#29364d" />
         </TouchableOpacity>
-        <View style={{ flex: 1 }}>
-          <Image
-            source={require("../../../assets/images/Logo_Tankef.png")}
-            style={styles.imagen}
+        {/* Contenedor Principal */}
+
+        <View style={styles.container}>
+          {/* Texto de Bienvenida a Olvide mi Contraseña */}
+          <Text style={styles.titulo}>Restablecer{"\n"}contraseña</Text>
+          <Text style={styles.texto}>
+            Para restablecer tu contraseña ingresa el correo electrónico con el
+            que te registraste.
+          </Text>
+
+          {/* Input de Correo al que enviar el correo de restablecimiento */}
+          <Text style={styles.campo}>Correo electrónico</Text>
+          <TextInput
+            style={styles.input}
+            autoCapitalize="none"
+            placeholder="nombre@correo.com"
+            placeholderTextColor={"#b3b5c9"}
+            onChangeText={(text) => setEmail(text)}
           />
-          <Text style={styles.header}>TANKEF</Text>
-          {/* Contenedor Principal */}
-          <View style={styles.container}>
-            {/* Texto de Bienvenida a Olvide mi Contraseña */}
-            <Text style={styles.titulo}>¿Olvidaste tu contraseña?</Text>
-            <Text style={styles.texto}>
-              ¡No te preocupes! Introduce tu correo y se te enviaran
-              instrucciones para modificar tu contraseña.
+
+          {/* Boton de Enviar Correo */}
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { backgroundColor: email ? "#060B4D" : "#F3F3F3" },
+            ]}
+            onPress={() => sendResetPasswordEmail(email)}
+            disabled={!email}
+          >
+            <Text
+              style={[styles.buttonText, { color: email ? "white" : "grey" }]}
+            >
+              Enviar correo
             </Text>
-            {/* Input de Correo al que enviar el correo de restablecimiento */}
-            <TextInput
-              style={styles.input}
-              placeholder="Ingresa tu correo electrónico"
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-            />
-          </View>
+          </TouchableOpacity>
         </View>
-        {/* Boton de Enviar Correo */}
-        <TouchableOpacity
-          style={styles.botonGrande}
-          onPress={() => sendResetPasswordEmail(email)}
-        >
-          <Text style={styles.textoBotonGrande}>ENVIAR CORREO</Text>
-        </TouchableOpacity>
+        {/* Vista de carga */}
+        {isLoading && (
+          <View style={styles.overlay}>
+            <ActivityIndicator size={75} color="#060B4D" />
+          </View>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -110,78 +124,67 @@ const styles = StyleSheet.create({
   background: {
     backgroundColor: "white",
     flex: 1,
-  },
-  imagen: {
-    width: 90,
-    height: 90,
-    alignSelf: "center",
-    marginTop: 60,
-  },
-  header: {
-    fontFamily: "conthrax",
-    fontSize: 25,
-    color: "#29364d",
-    marginTop: 10,
-    alignSelf: "center",
+    paddingHorizontal: 20,
+    justifyContent: "space-between",
   },
   container: {
-    marginTop: 25,
-    alignSelf: "center",
-    backgroundColor: "white",
-    width: "90%",
-    padding: 20,
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.6,
-    shadowRadius: 5,
-    elevation: 8,
+    marginTop: 250,
+    alignItems: "center",
   },
   titulo: {
-    fontSize: 16,
-    color: "#29364d",
+    color: "#060B4D",
     alignSelf: "center",
     textAlign: "center",
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 35,
+    fontFamily: "opensansbold",
   },
   texto: {
-    top: 10,
+    marginTop: 15,
     fontSize: 16,
-    color: "#29364d",
+    color: "#060B4D",
     alignSelf: "center",
     textAlign: "center",
-    marginBottom: 25,
+    fontFamily: "opensans",
+  },
+  campo: {
+    marginTop: 30,
+    fontSize: 16,
+    color: "#060B4D",
+    fontFamily: "opensanssemibold",
+    alignSelf: "center",
+    textAlign: "center",
   },
   input: {
-    borderColor: "#29364d",
-    borderWidth: 2,
-    borderRadius: 10,
+    width: "100%",
+    fontSize: 20,
+    marginTop: 10,
+    fontFamily: "opensans",
     alignSelf: "center",
-    width: "95%",
-    height: 40,
-    paddingLeft: 10,
+    textAlign: "center",
+    borderWidth: 1,
+    borderColor: "transparent",
+    borderBottomColor: "#dfdfe8",
+    color: "#060B4D",
+  },
+  button: {
+    marginTop: 40,
+    backgroundColor: "#060B4D",
+    width: "100%",
+    alignSelf: "center",
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    alignSelf: "center",
+    padding: 10,
+    fontFamily: "opensanssemibold",
     fontSize: 16,
   },
-  botonGrande: {
-    width: "85%",
-    height: 60,
-    alignSelf: "center",
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
-    backgroundColor: "#29364d",
-    borderRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
-    marginBottom: 30,
-  },
-  textoBotonGrande: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 20,
-    fontFamily: "conthrax",
+    alignItems: "center",
   },
 });
 

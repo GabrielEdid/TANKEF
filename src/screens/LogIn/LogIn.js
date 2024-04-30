@@ -104,16 +104,18 @@ const LogIn = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="nombre@correo.com"
+            autoCapitalize="none"
             placeholderTextColor={"#b3b5c9"}
             onChangeText={(text) => setEmail(text)}
           />
-          <Text style={[styles.campo, { marginTop: 20 }]}>Contraseña</Text>
 
+          <Text style={[styles.campo, { marginTop: 20 }]}>Contraseña</Text>
           <View>
             <TextInput
               style={styles.input}
               placeholder="•••••••"
               placeholderTextColor={"#b3b5c9"}
+              autoCapitalize="none"
               secureTextEntry={!isPasswordVisible}
               onChangeText={(text) => setPassword(text)}
             />
@@ -158,7 +160,7 @@ const LogIn = ({ navigation }) => {
             <Text
               style={[
                 styles.buttonText,
-                { color: !disabled || isLoading ? "#060B4D" : "white" },
+                { color: !disabled || isLoading ? "grey" : "white" },
               ]}
             >
               Iniciar sesión
@@ -241,7 +243,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   campo: {
-    width: "100%",
     fontSize: 16,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
