@@ -61,7 +61,7 @@ const ConfirmNumber = ({ navigation, route }) => {
           telefono: callingCode + number,
         });
         setCode("");
-        navigation.navigate("Registro3");
+        navigation.navigate("RegistroDatos");
       })
       .catch((error) => {
         alert(error);
@@ -78,7 +78,13 @@ const ConfirmNumber = ({ navigation, route }) => {
     return maskedSection + visibleSection;
   };
 
-  // Efecto para el temporizador y habilitación de botón de reenvío de código
+  // Function to format time in seconds to "0:MM"
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`; // Pads seconds with a leading zero if needed
+  };
+
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -86,7 +92,7 @@ const ConfirmNumber = ({ navigation, route }) => {
       }, 1000);
       return () => clearInterval(interval);
     } else {
-      setIsButtonEnabled(true);
+      setIsButtonEnabled(true); // Enable button when countdown finishes
     }
   }, [timer]);
 
@@ -117,7 +123,7 @@ const ConfirmNumber = ({ navigation, route }) => {
         <View style={styles.smsInputContainer}>
           <CodigoSMS setCode={setCode} />
           <Text style={styles.text}>¡No recibí el código!</Text>
-          {timer > 0 && <Text style={styles.text}>{timer}</Text>}
+          {timer > 0 && <Text style={styles.text}>{formatTime(timer)}</Text>}
           <TouchableOpacity
             style={[
               styles.resendButton,

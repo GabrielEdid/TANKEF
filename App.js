@@ -18,7 +18,7 @@ import LogIn from "./src/screens/LogIn/LogIn";
 import NumeroTelefonico from "./src/screens/LogIn/NumeroTelefonico";
 import ConfirmNumber from "./src/screens/LogIn/ConfirmNumber";
 import Registro3 from "./src/screens/LogIn/Registro3";
-import Registro4 from "./src/screens/LogIn/Registro4";
+import RegistroDatos from "./src/screens/LogIn/RegistroDatos";
 import SetPinPad from "./src/screens/LogIn/SetPinPad";
 import ConfirmSetPinPad from "./src/screens/LogIn/ConfirmSetPinPad";
 import OlvideContrasena from "./src/screens/LogIn/OlivideContrasena";
@@ -463,8 +463,8 @@ function LoginFlow() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Registro4"
-        component={Registro4}
+        name="RegistroDatos"
+        component={RegistroDatos}
         options={{ headerShown: false }}
       />
       <Stack.Screen
