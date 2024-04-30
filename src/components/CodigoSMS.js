@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 40,
     color: "#060B4D",
-    fontWeight: "bold",
+    fontFamily: "opensansbold",
   },
   hiddenInput: {
     position: "absolute",

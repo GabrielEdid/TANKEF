@@ -17,7 +17,9 @@ const initialState = {
   backEndEstadoNacimiento: "", // El valor que se envía al backend como estado de nacimiento
   sexo: "",
   email: "",
+  confirmEmail: "",
   password: "",
+  confirmPassword: "",
   // Datos con AsyncStorage
   pin: "",
   loggedIn: false,
