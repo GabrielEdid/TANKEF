@@ -16,7 +16,7 @@ import { setToken, getToken } from "./src/API/APIService";
 // Importar pantallas de la aplicación
 import LogIn from "./src/screens/LogIn/LogIn";
 import NumeroTelefonico from "./src/screens/LogIn/NumeroTelefonico";
-import Registro2 from "./src/screens/LogIn/Registro2";
+import ConfirmNumber from "./src/screens/LogIn/ConfirmNumber";
 import Registro3 from "./src/screens/LogIn/Registro3";
 import Registro4 from "./src/screens/LogIn/Registro4";
 import SetPinPad from "./src/screens/LogIn/SetPinPad";
@@ -453,8 +453,8 @@ function LoginFlow() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Registro2"
-        component={Registro2}
+        name="ConfirmNumber"
+        component={ConfirmNumber}
         options={{ headerShown: false }}
       />
       <Stack.Screen

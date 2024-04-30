@@ -33,7 +33,7 @@ const NumeroTelefonico = ({ navigation }) => {
   useEffect(() => {
     if (verificationId) {
       // Chequea que verificationId tenga un valor válido
-      navigation.navigate("Registro2", {
+      navigation.navigate("ConfirmNumber", {
         callingCode,
         number,
         verificationId,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 60,
     fontSize: 20,
     color: "white",
     fontFamily: "opensans",
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     marginBottom: -5,
   },
   formContainer: {
-    marginTop: -80,
+    marginTop: -350,
     width: "100%",
     alignSelf: "center",
     flexDirection: "row",

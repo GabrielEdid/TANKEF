@@ -18,7 +18,7 @@ import { UserContext } from "../../hooks/UserContext";
 import CodigoSMS from "../../components/CodigoSMS";
 import { AntDesign } from "@expo/vector-icons";
 
-const Registro2 = ({ navigation, route }) => {
+const ConfirmNumber = ({ navigation, route }) => {
   // Obteniendo parámetros de la ruta y estado global del context
   const { callingCode, number, verificationId } = route.params;
   const { user, setUser } = useContext(UserContext);
@@ -68,6 +68,16 @@ const Registro2 = ({ navigation, route }) => {
       });
   };
 
+  // Función para enmascarar los dígitos del número de teléfono
+  const maskNumber = (str) => {
+    if (str.length <= 4) {
+      return str;
+    }
+    const maskedSection = str.slice(0, -4).replace(/./g, "*");
+    const visibleSection = str.slice(-4);
+    return maskedSection + visibleSection;
+  };
+
   // Efecto para el temporizador y habilitación de botón de reenvío de código
   useEffect(() => {
     if (timer > 0) {
@@ -83,62 +93,58 @@ const Registro2 = ({ navigation, route }) => {
   // Componente visual
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.background}>
+      <View style={styles.contentContainer}>
+        {/* Logo y Titulo */}
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.back}
         >
           <AntDesign name="arrowleft" size={40} color="#29364d" />
         </TouchableOpacity>
-        <View style={styles.contentContainer}>
+        <View style={{ marginTop: 140 }}>
           <Image
-            source={require("../../../assets/images/Logo_Tankef.png")}
+            source={require("../../../assets/images/Logo.png")}
             style={styles.logo}
           />
-          <Text style={styles.title}>TANKEF</Text>
-
-          <View style={styles.formContainer}>
-            <FirebaseRecaptchaVerifierModal
-              ref={recaptchaVerifier}
-              firebaseConfig={firebaseConfig}
-            />
-            <Image
-              source={require("../../../assets/images/LoginFlow2.png")}
-              style={styles.progressImage}
-            />
-            <Text style={styles.smsText}>
-              Introduce el código de 6 dígitos enviado al{" "}
-              <Text style={{ fontWeight: "bold" }}>{phoneNumber}</Text>
+          <Text style={styles.title}>
+            Introduce el código de 6 dígitos enviado al{" "}
+            <Text style={{ fontWeight: "bold" }}>
+              {maskNumber(phoneNumber)}
             </Text>
-            <View style={styles.smsInputContainer}>
-              <CodigoSMS setCode={setCode} />
-            </View>
-          </View>
+          </Text>
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View style={styles.smsInputContainer}>
+          <CodigoSMS setCode={setCode} />
+          <Text style={styles.text}>¡No recibí el código!</Text>
+          {timer > 0 && <Text style={styles.text}>{timer}</Text>}
           <TouchableOpacity
-            style={styles.resendButton}
+            style={[
+              styles.resendButton,
+              { borderColor: !isButtonEnabled ? "#b5b6c9" : "#060B4D" },
+            ]}
             onPress={() => sendVerification()}
             disabled={!isButtonEnabled}
           >
             <Text
               style={[
                 styles.resendButtonText,
-                !isButtonEnabled && { color: "grey" },
+                { color: !isButtonEnabled ? "#b5b6c9" : "#060B4D" },
               ]}
             >
-              {!isButtonEnabled
-                ? `No recibí el código (Espera ${timer} segundos)`
-                : "No recibí el código"}
+              Reenviar código
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.nextButton}
-            onPress={() => confirmCode()}
-          >
-            <Text style={styles.nextButtonText}>SIGUIENTE</Text>
-          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={() => confirmCode()}>
+          <Text style={styles.buttonText}>Siguiente</Text>
+        </TouchableOpacity>
+        <View style={{ position: "absolute" }}>
+          <FirebaseRecaptchaVerifierModal
+            ref={recaptchaVerifier}
+            firebaseConfig={firebaseConfig}
+          />
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -146,12 +152,6 @@ const Registro2 = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
   back: {
     position: "absolute",
     top: 60,
@@ -159,78 +159,60 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   contentContainer: {
-    alignItems: "center",
-    marginTop: 60,
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
   },
   logo: {
-    width: 90,
-    height: 90,
+    width: 175,
+    height: 70,
+    alignSelf: "center",
   },
   title: {
-    fontFamily: "conthrax",
-    fontSize: 25,
-    color: "#29364d",
-    marginTop: 20,
-  },
-  formContainer: {
-    width: "85%",
-    backgroundColor: "white",
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.6,
-    shadowRadius: 5,
-    elevation: 8,
-    alignItems: "center",
-    padding: 20,
-    marginTop: 20,
-  },
-  progressImage: {
-    width: 300,
-    height: 35,
-    marginTop: 5,
-  },
-  smsText: {
-    fontSize: 16,
-    color: "#29364d",
-    marginTop: 40,
+    textAlign: "center",
+    marginTop: 60,
+    fontSize: 20,
+    color: "white",
+    fontFamily: "opensans",
+    color: "#060B4D",
   },
   smsInputContainer: {
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    width: "100%",
-    alignItems: "center",
-    paddingBottom: 30,
+    marginTop: -330,
   },
   resendButton: {
-    marginBottom: 10,
+    alignSelf: "center",
+    marginTop: 10,
+    padding: 10,
+    width: 180,
+    borderWidth: 2,
+    borderRadius: 100,
   },
   resendButtonText: {
-    color: "#29364d",
     textAlign: "center",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
   },
-  nextButton: {
-    width: "85%",
-    height: 60,
-    justifyContent: "center",
-    backgroundColor: "#29364d",
-    borderRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.37,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  nextButtonText: {
-    color: "white",
+  text: {
+    color: "#060B4D",
+    fontSize: 16,
     textAlign: "center",
-    fontSize: 20,
-    fontFamily: "conthrax",
+    fontFamily: "opensans",
+  },
+  button: {
+    marginBottom: 40,
+    backgroundColor: "#060B4D",
+    width: "100%",
+    alignSelf: "center",
+    borderRadius: 5,
+  },
+  buttonText: {
+    alignSelf: "center",
+    color: "white",
+    padding: 10,
+    fontFamily: "opensanssemibold",
+    fontSize: 16,
   },
 });
 
-export default Registro2;
+export default ConfirmNumber;
