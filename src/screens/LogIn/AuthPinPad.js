@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import { Text, View, StyleSheet, Alert, Modal } from "react-native";
+import { Text, View, StyleSheet, Alert, Image } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
@@ -78,17 +78,22 @@ const AuthPinPad = ({ navigation, route }) => {
 
   // Componente visual
   return (
-    <View>
-      {/* Texto de Introduce tu PIN */}
-      <Text style={styles.titulo}>Introduce tu PIN</Text>
-      {/* Componente de PinPad, ahí mismo aparece el logo, titulo de Tankef, faceID y olvide mi PIN */}
-      <PinPad
-        id={true}
-        get={pin}
-        set={setPin}
-        onAuthenticationSuccess={handleAuthenticationSuccess}
-      />
-      <Modal transparent={true} animationType="fade" visible={isLoading}>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Image
+          source={require("../../../assets/images/Logo.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.title}>Introduce tu PIN</Text>
+        <PinPad
+          id={true}
+          get={pin}
+          set={setPin}
+          onAuthenticationSuccess={handleAuthenticationSuccess}
+        />
+      </View>
+
+      {isLoading && (
         <View style={styles.overlay}>
           <ActivityIndicator size={75} color="#060B4D" />
           <Text
@@ -101,30 +106,40 @@ const AuthPinPad = ({ navigation, route }) => {
             Estamos recuperando tus datos
           </Text>
         </View>
-      </Modal>
+      )}
     </View>
   );
 };
 
 // Estilos de la pantalla
 const styles = StyleSheet.create({
-  back: {
-    marginTop: 60,
-    marginLeft: 20,
-    position: "absolute",
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "space-between",
   },
-  titulo: {
-    marginTop: 210,
-    fontSize: 15,
-    alignSelf: "center",
-    position: "absolute",
-    color: "#29364d",
-  },
-  overlay: {
+  content: {
+    marginTop: 100,
     flex: 1,
     justifyContent: "center",
+  },
+  logo: {
+    width: 175,
+    height: 70,
+    alignSelf: "center",
+  },
+  title: {
+    alignSelf: "center",
+    marginTop: 40,
+    fontSize: 16,
+    fontFamily: "opensanssemibold",
+    color: "#060B4D",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
 
