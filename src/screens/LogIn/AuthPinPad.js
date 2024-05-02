@@ -101,9 +101,10 @@ const AuthPinPad = ({ navigation, route }) => {
               fontFamily: "opensanssemibold",
               marginTop: 15,
               color: "white",
+              textAlign: "center",
             }}
           >
-            Estamos recuperando tus datos
+            Estamos recuperando tus datos{"\n"}Por favor espera...
           </Text>
         </View>
       )}
