@@ -295,21 +295,6 @@ const DefinirCajaAhorro = ({ navigation }) => {
                 textStyle={styles.DropDownText}
               />
             </View>
-            <View
-              style={{
-                backgroundColor: "#2FF690",
-                marginTop: 10,
-                flex: 1,
-                borderRadius: 5,
-                padding: 10,
-                width: "95%",
-              }}
-            >
-              <Text style={[styles.texto, { fontSize: 14 }]}>
-                Por este momento solo contamos con una caja de ahorro de
-                $25,000.00 y $50,000.00 a 36 meses.
-              </Text>
-            </View>
           </View>
 
           <View
