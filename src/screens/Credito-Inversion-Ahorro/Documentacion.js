@@ -20,10 +20,10 @@ import { useRoute } from "@react-navigation/native";
 import RadioForm from "react-native-simple-radio-button";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
+import ModalEstatus from "../../components/ModalEstatus";
 import { InvBoxContext } from "../../hooks/InvBoxContext";
 import { Feather, FontAwesome, AntDesign } from "@expo/vector-icons";
 import { APIPut, APIGet, APIPost } from "../../API/APIService";
-import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -37,77 +37,88 @@ const Documentacion = ({ navigation }) => {
   //const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [documentsLoaded, setDocumentsLoaded] = useState(false);
 
   // Función para subir la documentación
   const handlePress = async () => {
     setDisabled(true);
     setLoading(true);
     console.log("Agregando los documentos a la inversión o caja de ahorro...");
+    console.log("Documentos cargados?:", documentsLoaded);
+
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
-
     const key = flujo === "Inversión" ? "investment" : "box_saving";
-    const formData = new FormData();
-
-    formData.append(`${key}[official_identification]`, {
-      uri: invBox.identificacion,
-      type: "application/jpeg",
-      name: "identificacion.jpeg",
-    });
-    formData.append(`${key}[curp]`, {
-      uri: invBox.CURP,
-      type: "application/jpeg",
-      name: "CURP.jpeg",
-    });
-    formData.append(`${key}[proof_sat]`, {
-      uri: invBox.situacionFiscal,
-      type: "application/jpeg",
-      name: "situacionFiscal.jpeg",
-    });
-    formData.append(`${key}[proof_address]`, {
-      uri: invBox.comprobanteDomicilio,
-      type: "application/jpeg",
-      name: "comprobanteDomicilio.jpeg",
-    });
-    formData.append(
-      `${key}[accept_documentation_1]`,
-      invBox.actuoComo === "Actúo a nombre y por cuenta propia."
-        ? "true"
-        : "false"
-    );
-    formData.append(
-      `${key}[accept_documentation_2]`,
-      invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero."
-        ? "true"
-        : "false"
-    );
 
     try {
-      const response = await APIPut(url, formData);
+      let body;
+
+      if (documentsLoaded) {
+        console.log("Documentos ya cargados, enviando JSON...");
+        // Sending JSON data
+        body = {
+          [key]: {
+            accept_documentation_1:
+              invBox.actuoComo === "Actúo a nombre y por cuenta propia.",
+            accept_documentation_2:
+              invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero.",
+          },
+        };
+      } else {
+        console.log("Documentos no cargados, enviando FormData...");
+        // Sending FormData
+        const formData = new FormData();
+        formData.append(`${key}[official_identification]`, {
+          uri: invBox.identificacion,
+          type: "image/jpeg",
+          name: "identificacion.jpeg",
+        });
+        formData.append(`${key}[curp]`, {
+          uri: invBox.CURP,
+          type: "image/jpeg",
+          name: "CURP.jpeg",
+        });
+        formData.append(`${key}[proof_sat]`, {
+          uri: invBox.situacionFiscal,
+          type: "image/jpeg",
+          name: "situacionFiscal.jpeg",
+        });
+        formData.append(`${key}[proof_address]`, {
+          uri: invBox.comprobanteDomicilio,
+          type: "image/jpeg",
+          name: "comprobanteDomicilio.jpeg",
+        });
+        formData.append(
+          `${key}[accept_documentation_1]`,
+          invBox.actuoComo === "Actúo a nombre y por cuenta propia."
+            ? "true"
+            : "false"
+        );
+        formData.append(
+          `${key}[accept_documentation_2]`,
+          invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero."
+            ? "true"
+            : "false"
+        );
+
+        body = formData;
+      }
+
+      const response = await APIPut(url, body);
 
       if (response.error) {
-        setLoading(false);
-        console.error(
-          "Error al agregar los documentos a la inversión o caja de ahorro:",
-          response.error
-        );
+        console.error("Error al agregar los documentos:", response.error);
         Alert.alert(
           "Error",
-          `No se pudieron agregar los documentos a la ${
-            flujo === "Inversión" ? "Inversión" : "Caja de Ahorro"
-          }. Intente nuevamente.`
+          "No se pudieron agregar los documentos. Intente nuevamente."
         );
       } else {
-        setLoading(false);
         console.log("Documentos agregados exitosamente:", response);
-        navigation.navigate("DatosBancarios", {
-          flujo: flujo,
-          idInversion: idInversion,
-        });
+        setModalVisible(true);
       }
     } catch (error) {
-      setLoading(false);
       console.error("Error en la petición:", error);
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
     } finally {
@@ -197,23 +208,36 @@ const Documentacion = ({ navigation }) => {
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
 
-    const result = await APIGet(url);
+    try {
+      const result = await APIGet(url);
+      if (result.error) {
+        console.error(
+          "Error al obtener la inversion o caja de ahorro:",
+          result.error
+        );
+        setDocumentsLoaded(false);
+      } else {
+        console.log(
+          "Resultado de documentos",
+          result.data.data.attached_documents_user
+        );
+        const docs = result.data.data.attached_documents_user;
 
-    if (result.error) {
-      console.error(
-        "Error al obtener la inversion o caja de ahorro:",
-        result.error
-      );
-    } else {
-      console.log(
-        "Resultado de documentos",
-        result.data.data.attached_documents_user
-      );
-      if (result.data.data.attached_documents_user === undefined) return;
-      setInvBox((prevState) => ({
-        ...prevState,
-        documents: result.data.data.attached_documents_user,
-      }));
+        // Assuming the order of documents is always the same
+        const allDocsPresent =
+          docs.length === 4 && docs.every((doc) => doc.attached);
+
+        setDocumentsLoaded(allDocsPresent);
+        console.log("Documentos cargados?:", allDocsPresent);
+
+        setInvBox((prevState) => ({
+          ...prevState,
+          documents: docs,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      setDocumentsLoaded(false);
     }
   };
 
@@ -838,6 +862,19 @@ const Documentacion = ({ navigation }) => {
           <ActivityIndicator size={75} color="#060B4D" />
         </View>
       )}
+      <ModalEstatus
+        titulo={"¡Atención!"}
+        texto={
+          "Tu documentación ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+        }
+        imagen={"Alert"}
+        visible={modalVisible}
+        onAccept={() => [
+          setModalVisible(false),
+          resetInvBox(),
+          navigation.navigate("MiTankef"),
+        ]}
+      />
     </View>
   );
 };

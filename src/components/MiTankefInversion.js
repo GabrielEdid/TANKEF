@@ -49,6 +49,7 @@ const MiTankefInversion = (props) => {
   const [retornoNeto, setRetornoNeto] = useState("");
   const [investmentState, setInvestmentState] = useState("");
   const [currentID, setCurrentID] = useState(0);
+  const [bank, setBank] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   // Mapa de imágenes
@@ -74,6 +75,7 @@ const MiTankefInversion = (props) => {
       setInvestments(filteredResults);
       setCurrentID(filteredResults[0].id);
       setTasaInteres(filteredResults[0].rate_operation);
+      setBank(filteredResults[0].bank_account);
       fetchInvestment(filteredResults[0].id);
     }
   };
@@ -93,6 +95,7 @@ const MiTankefInversion = (props) => {
       setFolio(result.data.data.invoice_number);
       setInversionInicial(formatAmount(result.data.data.amount));
       setRetornoNeto("Falta");
+      setBank(result.data.data.bank_account);
     }
   };
 
@@ -342,6 +345,25 @@ const MiTankefInversion = (props) => {
                 setModalVisible(false),
                 navigation.navigate("Crear", {
                   screen: "Documentacion",
+                  params: { flujo: "Inversión", idInversion: currentID },
+                }),
+              ]}
+            />
+          )}
+
+          {investmentState === "sign_contract" && !bank && (
+            <ModalEstatus
+              titulo={"¡Atención!"}
+              texto={
+                "Tu documentación ha sido validada, por favor proporciona los datos de tu cuenta bancaria."
+              }
+              imagen={"Alert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [
+                setModalVisible(false),
+                navigation.navigate("Crear", {
+                  screen: "DatosBancarios",
                   params: { flujo: "Inversión", idInversion: currentID },
                 }),
               ]}

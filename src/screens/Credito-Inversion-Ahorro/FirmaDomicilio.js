@@ -425,7 +425,6 @@ const FirmaDomicilio = ({ navigation }) => {
           }
           imagen={"Alert"}
           visible={modalVisible}
-          onClose={() => setModalVisible(false)}
           onAccept={() => [
             setModalVisible(false),
             navigation.navigate("MiTankef"),

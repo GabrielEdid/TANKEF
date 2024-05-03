@@ -50,10 +50,8 @@ const DatosBancarios = ({ navigation }) => {
 
     const key = flujo === "Inversión" ? "investment" : "box_saving";
     const data = {
-      key: {
-        bank_account_attributes: {
-          bank_account_id: invBox.accountID,
-        },
+      [key]: {
+        bank_account_id: invBox.accountID,
       },
     };
 
@@ -77,6 +75,10 @@ const DatosBancarios = ({ navigation }) => {
     });
 
     try {
+      console.log(
+        "Datos de cuenta bancaria a enviar:",
+        addAccount ? formData : data
+      );
       const response = await APIPost(url, addAccount ? formData : data);
       console.log("Respuesta de la API:", addAccount ? formData : data);
 
@@ -90,6 +92,10 @@ const DatosBancarios = ({ navigation }) => {
       } else {
         setLoading(false);
         console.log("Datos de cuenta bancaria guardados con éxito");
+        navigation.navigate("DefinirFirma", {
+          flujo: flujo,
+          idInversion: idInversion,
+        });
         setModalVisible(true);
       }
     } catch (error) {
@@ -641,7 +647,7 @@ const DatosBancarios = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ModalEstatus
+      {/* <ModalEstatus
         titulo={"¡Atención!"}
         texto={
           "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
@@ -650,10 +656,11 @@ const DatosBancarios = ({ navigation }) => {
         visible={modalVisible}
         onAccept={() => [
           setModalVisible(false),
-          navigation.navigate("MiTankef"),
+          setInitial(-1),
           resetInvBox(),
+          navigation.navigate("MiTankef"),
         ]}
-      />
+      /> */}
       {loading && (
         <View style={styles.overlay}>
           <ActivityIndicator size={75} color="#060B4D" />
