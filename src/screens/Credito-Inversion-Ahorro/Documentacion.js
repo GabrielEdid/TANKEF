@@ -14,15 +14,20 @@ import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useFocusEffect } from "@react-navigation/native";
+import RadioForm from "react-native-simple-radio-button";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { useRoute } from "@react-navigation/native";
-import RadioForm from "react-native-simple-radio-button";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import ModalEstatus from "../../components/ModalEstatus";
 import { InvBoxContext } from "../../hooks/InvBoxContext";
-import { Feather, FontAwesome, AntDesign } from "@expo/vector-icons";
+import {
+  Feather,
+  FontAwesome,
+  AntDesign,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { APIPut, APIGet, APIPost } from "../../API/APIService";
 
 // Se mide la pantalla para determinar medidas
@@ -39,6 +44,8 @@ const Documentacion = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [documentsLoaded, setDocumentsLoaded] = useState(false);
+  const [addAccount, setAddAccount] = useState(false);
+  const [initial, setInitial] = useState(-1);
 
   // Función para subir la documentación
   const handlePress = async () => {
@@ -203,7 +210,7 @@ const Documentacion = ({ navigation }) => {
   ]);
 
   // Función para obtener la existencia de documentos de la inversión o caja de ahorro
-  const fetchElement = async () => {
+  const fetchDocuments = async () => {
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
@@ -272,10 +279,45 @@ const Documentacion = ({ navigation }) => {
     }
   }, [invBox.documents]);
 
-  // Efecto para obtener los documentos de la inversión o caja de ahorro, se ejecuta al cargar la pantalla
+  // Función para obtener las cuentas bancarias del usuario
+  const fetchAccounts = async () => {
+    const url = `/api/v1/users/bank_accounts`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener las cuentas de banco del usuario:",
+        result.error
+      );
+      setAddAccount(true);
+    } else {
+      if (result.data.data.length === 0) {
+        setAddAccount(true);
+      } else {
+        console.log(
+          "Resultado de las cuentas de banco del usuario:",
+          result.data.data
+        );
+        setAddAccount(false);
+        setInvBox((prevState) => ({
+          ...prevState,
+          accounts: result.data.data || [], // Ensure fallback to empty array if data is undefined
+        }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    setInitial(-1);
+    setInvBox({ ...invBox, accountID: "" });
+  }, [addAccount]);
+
+  // Efecto para obtener los documentos de la inversión o caja de ahorro, y las cuentas bancarias del usuario se ejecuta al cargar la pantalla
   useFocusEffect(
     useCallback(() => {
-      fetchElement();
+      fetchDocuments();
+      fetchAccounts();
     }, [])
   );
 
@@ -756,6 +798,64 @@ const Documentacion = ({ navigation }) => {
                 </>
               )}
               <View style={styles.separacion} />
+              {!addAccount && (
+                <>
+                  <Text style={styles.tituloCampo}>
+                    Elige una cuenta bancaria
+                  </Text>
+                  <RadioForm
+                    radio_props={invBox.accounts.map((account) => ({
+                      label: account.short_name,
+                      value: account.id,
+                    }))}
+                    initial={initial}
+                    onPress={(value) => [
+                      setInvBox({ ...invBox, accountID: value }),
+                      console.log(value),
+                    ]}
+                    buttonColor={"#060B4D"}
+                    buttonSize={10}
+                    selectedButtonColor={"#060B4D"}
+                    labelStyle={[styles.input, { color: "#060B4D" }]}
+                    animation={false}
+                    style={{
+                      alignSelf: "baseline",
+                      marginTop: 10,
+                      marginLeft: 15,
+                    }}
+                  />
+                  <View style={styles.separacion} />
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      paddingVertical: 10,
+                    }}
+                    onPress={() => [
+                      navigation.navigate("DatosBancarios", {
+                        flujo: flujo,
+                      }),
+                    ]}
+                  >
+                    <MaterialIcons
+                      name="add-circle"
+                      size={25}
+                      color="#060B4D"
+                    />
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensanssemibold",
+                        paddingLeft: 10,
+                      }}
+                    >
+                      Agregar cuenta bancaria
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
             <View style={styles.contenedores}>
               <Text style={styles.subTexto}>

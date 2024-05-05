@@ -112,19 +112,11 @@ const Registro4 = ({ navigation }) => {
 
   // Manejador para el botón Siguiente
   const handleSiguiente = () => {
-    if (!verificarCampos()) {
-      // Alerta de campos incompletos
-      Alert.alert(
-        "Campos Incompletos",
-        "Introduce todos tus datos para continuar.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
-      );
-    } else if (!verificarContraseñas() || !verificarCorreos()) {
+    if (!verificarContraseñas() || !verificarCorreos()) {
       // Alerta de contraseñas no coinciden
       Alert.alert(
-        "Contraseñas o Correos no Coinciden",
-        "Las contraseñas y los correos deben coincidir.",
+        "Correos o Contraseñas no coinciden",
+        "Los correos electrónicos y las constraseñas deben coincidir. Verificalos y vuelve a intentar.",
         [{ text: "Entendido" }],
         { cancelable: true }
       );
@@ -168,11 +160,7 @@ const Registro4 = ({ navigation }) => {
   };
 
   // Variable para deshabilitar el botón de continuar
-  const disabled = !(
-    verificarCampos() &&
-    verificarContraseñas() &&
-    verificarCorreos()
-  );
+  const disabled = !verificarCampos();
 
   // Componente Visual
   return (
