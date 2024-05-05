@@ -40,7 +40,6 @@ const Registro4 = ({ navigation }) => {
   // Función para crear usuario y manejar el registro
   const createUser = async () => {
     setIsLoading(true); // Activar el indicador de carga
-    console.log("Creando usuario: " + user.backEndEstadoNacimiento);
     const url = "/api/v1/account/registrations";
     const body = {
       account_registration: {

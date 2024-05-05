@@ -57,6 +57,13 @@ const Documentacion = ({ navigation }) => {
         idInversion: idInversion,
         sendDocuments: sendDocuments.bind(this),
       });
+      console.log(
+        invBox.identificacion,
+        invBox.CURP,
+        invBox.situacionFiscal,
+        invBox.comprobanteDomicilio,
+        invBox.actuoComo
+      );
     } else {
       sendDocuments();
     }
@@ -104,7 +111,7 @@ const Documentacion = ({ navigation }) => {
         }
       } catch (error) {
         setLoading(false);
-        console.error("Error al enviar datos:", error);
+        console.error("Error al enviar datos (documentacion):", error);
         Alert.alert(
           "Error",
           "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."

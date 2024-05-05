@@ -71,18 +71,19 @@ const DatosBancarios = ({ navigation }) => {
     });
 
     try {
-      console.log("Datos de cuenta bancaria a enviar:", data);
       const response = await APIPost(url, formData);
 
       if (response.error) {
+        const errorMessages = response.error.errors
+          ? Object.values(response.error.errors).flat().join(". ")
+          : response.error;
         setLoading(false);
         console.error("Error al guardar la cuenta bancaria:", response.error);
-        Alert.alert(
-          "Error",
-          "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
-        );
+        Alert.alert("Error", errorMessages);
       } else {
+        console.log("Enviando documentos desde Datos Bancarios");
         await sendDocuments();
+        console.log("Se termino de envair documentos desde Datos Bancarios");
         setLoading(false);
         console.log("Datos de cuenta bancaria guardados con éxito");
         navigation.navigate("DefinirFirma", {
@@ -93,7 +94,7 @@ const DatosBancarios = ({ navigation }) => {
       }
     } catch (error) {
       setLoading(false);
-      console.error("Error al enviar datos:", error);
+      console.error("Error al enviar datos (bancarios):", error);
       Alert.alert(
         "Error",
         "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
