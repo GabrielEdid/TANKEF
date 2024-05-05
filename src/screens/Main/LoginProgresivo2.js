@@ -55,9 +55,7 @@ const LoginProgresivo2 = ({ navigation }) => {
       console.error("Hubo un problema al actualizar el usuario:", error);
       Alert.alert(
         "Hubo un problema al completar tus datos",
-        "Verificalos y vuelve a intentarlo.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
+        "Verificalos y vuelve a intentarlo."
       );
       setIsLoading(false);
     }
@@ -68,9 +66,7 @@ const LoginProgresivo2 = ({ navigation }) => {
     if (!verificarCampos()) {
       Alert.alert(
         "Campos Incompletos",
-        "Introduce todos tus datos para continuar.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
+        "Introduce todos tus datos para continuar."
       );
     } else {
       console.log("Datos de usuario:", user);

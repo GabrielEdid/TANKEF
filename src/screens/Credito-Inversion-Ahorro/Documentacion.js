@@ -48,11 +48,31 @@ const Documentacion = ({ navigation }) => {
   const [initial, setInitial] = useState(-1);
 
   // Función para subir la documentación
+
   const handlePress = async () => {
+    if (addAccount) {
+      navigation.navigate("DatosBancarios", {
+        flujo: flujo,
+        idInversion: idInversion,
+        sendDocuments: sendDocuments.bind(this),
+      });
+    } else {
+      sendDocuments();
+    }
+  };
+
+  const sendDocuments = async () => {
     setDisabled(true);
     setLoading(true);
     console.log("Agregando los documentos a la inversión o caja de ahorro...");
     console.log("Documentos cargados?:", documentsLoaded);
+
+    if (addAccount) {
+      navigation.navigate("DatosBancarios", {
+        flujo: flujo,
+        idInversion: idInversion,
+      });
+    }
 
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
@@ -320,6 +340,21 @@ const Documentacion = ({ navigation }) => {
       fetchAccounts();
     }, [])
   );
+
+  // Función para agregar una cuenta bancaria
+  const handleAgregar = () => {
+    if (disabled) {
+      Alert.alert(
+        "Campos Faltantes",
+        "Por favor, completa la información solicitada para poder agregar una cuenta bancaria nueva."
+      );
+    } else {
+      navigation.navigate("DatosBancarios", {
+        flujo: flujo,
+        idInversion: idInversion,
+      });
+    }
+  };
 
   // Función para mostrar las opciones de subida de documentos
   const showUploadOptions = (setType) => {
@@ -832,11 +867,7 @@ const Documentacion = ({ navigation }) => {
                       alignItems: "center",
                       paddingVertical: 10,
                     }}
-                    onPress={() => [
-                      navigation.navigate("DatosBancarios", {
-                        flujo: flujo,
-                      }),
-                    ]}
+                    onPress={() => handleAgregar()}
                   >
                     <MaterialIcons
                       name="add-circle"

@@ -73,9 +73,7 @@ const Registro4 = ({ navigation }) => {
       console.log("Success:", result.data);
       Alert.alert(
         "¡Tu cuenta ha sido creada con éxito!",
-        "Checa tu buzon de entrada para confirmar tu correo e inicia sesión.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
+        "Checa tu buzon de entrada para confirmar tu correo e inicia sesión."
       );
       navigation.navigate("LogIn");
     }
@@ -116,9 +114,7 @@ const Registro4 = ({ navigation }) => {
       // Alerta de contraseñas no coinciden
       Alert.alert(
         "Correos o Contraseñas no coinciden",
-        "Los correos electrónicos y las constraseñas deben coincidir. Verificalos y vuelve a intentar.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
+        "Los correos electrónicos y las constraseñas deben coincidir. Verificalos y vuelve a intentar."
       );
     } else {
       createUser();

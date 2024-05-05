@@ -31,7 +31,7 @@ const widthHalf = screenWidth / 2;
 
 const DatosBancarios = ({ navigation }) => {
   const route = useRoute();
-  const { flujo, idInversion } = route.params;
+  const { flujo, idInversion, sendDocuments } = route.params;
   // Estados y Contexto
   const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -44,6 +44,9 @@ const DatosBancarios = ({ navigation }) => {
   const handlePress = async () => {
     setLoading(true);
     setDisabled(true);
+
+    await sendDocuments();
+
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}/bank_accounts`;
@@ -199,47 +202,6 @@ const DatosBancarios = ({ navigation }) => {
     verificarClabe();
   }, [invBox.clabe]);
 
-  // Función para obtener las cuentas bancarias del usuario
-  const fetchElement = async () => {
-    const url = `/api/v1/users/bank_accounts`;
-
-    const result = await APIGet(url);
-
-    if (result.error) {
-      console.error(
-        "Error al obtener las cuentas de banco del usuario:",
-        result.error
-      );
-      setAddAccount(true);
-    } else {
-      if (result.data.data.length === 0) {
-        setAddAccount(true);
-      } else {
-        console.log(
-          "Resultado de las cuentas de banco del usuario:",
-          result.data.data
-        );
-        setAddAccount(false);
-        setInvBox((prevState) => ({
-          ...prevState,
-          accounts: result.data.data || [], // Ensure fallback to empty array if data is undefined
-        }));
-      }
-    }
-  };
-
-  // Efecto para obtener las cuentas bancarias del usuario
-  useFocusEffect(
-    useCallback(() => {
-      fetchElement();
-    }, [])
-  );
-
-  useEffect(() => {
-    setInitial(-1);
-    setInvBox({ ...invBox, accountID: "" });
-  }, [addAccount]);
-
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
     const camposLlenos =
@@ -386,224 +348,130 @@ const DatosBancarios = ({ navigation }) => {
                 paddingTop: 15,
               }}
             >
-              {!addAccount && (
-                <>
-                  <Text style={styles.tituloCampo}>Cuentas Bancarias</Text>
-                  <RadioForm
-                    radio_props={invBox.accounts.map((account) => ({
-                      label: account.short_name,
-                      value: account.id,
-                    }))}
-                    initial={initial}
-                    onPress={(value) => [
-                      setInvBox({ ...invBox, accountID: value }),
-                      console.log(value),
+              {/* Campos para introducir los datos bancarios */}
+
+              <Text style={styles.tituloCampo}>Alias Cuenta</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(value) => setInvBox({ ...invBox, alias: value })}
+                value={invBox.alias}
+                placeholder="Eje. Raúl G. Torres"
+              />
+              <View style={styles.separacion} />
+              <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(value) => setInvBox({ ...invBox, clabe: value })}
+                value={invBox.clabe}
+                placeholder="18 dígitos"
+                maxLength={18}
+                keyboardType="numeric"
+              />
+              <View style={styles.separacion} />
+              <Text style={styles.tituloCampo}>
+                Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
+              </Text>
+              {!invBox.comprobanteNCuenta ? (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={showUploadOptions}
+                >
+                  <Text
+                    style={[
+                      styles.input,
+                      {
+                        width: "92%",
+                        color: "#c7c7c9ff",
+                      },
                     ]}
-                    buttonColor={"#060B4D"}
-                    buttonSize={10}
-                    selectedButtonColor={"#060B4D"}
-                    labelStyle={styles.input}
-                    animation={false}
-                    style={{
-                      alignSelf: "baseline",
-                      marginTop: 10,
-                      marginLeft: 15,
-                    }}
-                  />
-                  <View style={styles.separacion} />
-                  <TouchableOpacity
+                  >
+                    Selecciona documento
+                  </Text>
+                  <Feather name="upload" size={20} color="#060B4D" />
+                </TouchableOpacity>
+              ) : (
+                <>
+                  <View
                     style={{
                       flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingVertical: 10,
+                      paddingBottom: 7.5,
                     }}
-                    onPress={() => [setAddAccount(true)]}
                   >
-                    <MaterialIcons
-                      name="add-circle"
-                      size={25}
+                    <FontAwesome
+                      name="image"
+                      size={20}
                       color="#060B4D"
+                      style={{ marginLeft: 15 }}
                     />
                     <Text
                       style={{
+                        flex: 1,
+                        paddingHorizontal: 15,
                         fontSize: 16,
                         color: "#060B4D",
-                        fontFamily: "opensanssemibold",
-                        paddingLeft: 10,
+                        fontFamily: "opensans",
                       }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
                     >
-                      Agregar cuenta bancaria
+                      {invBox.nombreComprobante}
                     </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-              {/* Campos para introducir los datos bancarios */}
-              {addAccount && (
-                <>
-                  <Text style={styles.tituloCampo}>Alias Cuenta</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={(value) =>
-                      setInvBox({ ...invBox, alias: value })
-                    }
-                    value={invBox.alias}
-                    placeholder="Eje. Raúl G. Torres"
-                  />
-                  <View style={styles.separacion} />
-                  <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={(value) =>
-                      setInvBox({ ...invBox, clabe: value })
-                    }
-                    value={invBox.clabe}
-                    placeholder="18 dígitos"
-                    maxLength={18}
-                    keyboardType="numeric"
-                  />
-                  <View style={styles.separacion} />
-                  <Text style={styles.tituloCampo}>
-                    Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
-                  </Text>
-                  {!invBox.comprobanteNCuenta ? (
                     <TouchableOpacity
-                      style={{ flexDirection: "row" }}
-                      onPress={showUploadOptions}
-                    >
-                      <Text
-                        style={[
-                          styles.input,
-                          {
-                            width: "92%",
-                            color: "#c7c7c9ff",
-                          },
-                        ]}
-                      >
-                        Selecciona documento
-                      </Text>
-                      <Feather name="upload" size={20} color="#060B4D" />
-                    </TouchableOpacity>
-                  ) : (
-                    <>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          paddingBottom: 7.5,
-                        }}
-                      >
-                        <FontAwesome
-                          name="image"
-                          size={20}
-                          color="#060B4D"
-                          style={{ marginLeft: 15 }}
-                        />
-                        <Text
-                          style={{
-                            flex: 1,
-                            paddingHorizontal: 15,
-                            fontSize: 16,
-                            color: "#060B4D",
-                            fontFamily: "opensans",
-                          }}
-                          numberOfLines={1}
-                          ellipsizeMode="tail"
-                        >
-                          {invBox.nombreComprobante}
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => [
-                            setInvBox({
-                              ...invBox,
-                              comprobanteNCuenta: "",
-                              nombreComprobante: "",
-                            }),
-                          ]}
-                        >
-                          <FontAwesome
-                            name="trash-o"
-                            size={25}
-                            color="#F95C5C"
-                            style={{ marginRight: 15 }}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </>
-                  )}
-                  <View style={styles.separacion} />
-
-                  <Text style={styles.tituloCampo}>No. Cuenta</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={(value) =>
-                      setInvBox({ ...invBox, NCuenta: value })
-                    }
-                    value={invBox.NCuenta}
-                    placeholder="8-11 dígitos"
-                    maxLength={11}
-                    keyboardType="numeric"
-                  />
-                  <View style={styles.separacion} />
-                  <Text style={[styles.tituloCampo, { color: "#9c9db8" }]}>
-                    Banco
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={(value) =>
-                      setInvBox({ ...invBox, banco: value })
-                    }
-                    value={invBox.banco}
-                    placeholder="Autorrelleno"
-                    editable={false}
-                  />
-                  <View style={styles.separacion} />
-                  <View>
-                    <Text style={styles.tituloCampo}>
-                      Nombre(s) y Apellidos
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      onChangeText={(value) =>
-                        setInvBox({ ...invBox, nombreCuentahabiente: value })
-                      }
-                      value={invBox.nombreCuentahabiente}
-                      placeholder="Nombre Cuentahabiente"
-                    />
-                  </View>
-                  <View style={styles.separacion} />
-                  {invBox.accounts && invBox.accounts.length > 0 && (
-                    <TouchableOpacity
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        paddingVertical: 10,
-                      }}
                       onPress={() => [
-                        setAddAccount(false),
-                        setInitial(-1),
-                        setInvBox({ ...invBox, accountID: "" }),
+                        setInvBox({
+                          ...invBox,
+                          comprobanteNCuenta: "",
+                          nombreComprobante: "",
+                        }),
                       ]}
                     >
-                      <MaterialIcons
-                        name="remove-circle"
+                      <FontAwesome
+                        name="trash-o"
                         size={25}
-                        color="#060B4D"
+                        color="#F95C5C"
+                        style={{ marginRight: 15 }}
                       />
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          color: "#060B4D",
-                          fontFamily: "opensanssemibold",
-                          paddingLeft: 10,
-                        }}
-                      >
-                        Elegir cuenta ya existente
-                      </Text>
                     </TouchableOpacity>
-                  )}
+                  </View>
                 </>
               )}
+              <View style={styles.separacion} />
+
+              <Text style={styles.tituloCampo}>No. Cuenta</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(value) =>
+                  setInvBox({ ...invBox, NCuenta: value })
+                }
+                value={invBox.NCuenta}
+                placeholder="8-11 dígitos"
+                maxLength={11}
+                keyboardType="numeric"
+              />
+              <View style={styles.separacion} />
+              <Text style={[styles.tituloCampo, { color: "#9c9db8" }]}>
+                Banco
+              </Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(value) => setInvBox({ ...invBox, banco: value })}
+                value={invBox.banco}
+                placeholder="Autorrelleno"
+                editable={false}
+              />
+              <View style={styles.separacion} />
+              <View>
+                <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(value) =>
+                    setInvBox({ ...invBox, nombreCuentahabiente: value })
+                  }
+                  value={invBox.nombreCuentahabiente}
+                  placeholder="Nombre Cuentahabiente"
+                />
+              </View>
+              <View style={styles.separacion} />
             </View>
           </View>
         </KeyboardAwareScrollView>

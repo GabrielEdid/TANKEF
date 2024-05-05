@@ -44,9 +44,7 @@ const Registro3 = ({ navigation }) => {
     if (!verificarCampos()) {
       Alert.alert(
         "Campos Incompletos",
-        "Introduce todos tus datos para continuar.",
-        [{ text: "Entendido" }],
-        { cancelable: true }
+        "Introduce todos tus datos para continuar."
       );
     } else {
       navigation.navigate("Registro4");
