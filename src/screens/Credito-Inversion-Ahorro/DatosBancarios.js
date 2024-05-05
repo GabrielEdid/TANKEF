@@ -31,13 +31,13 @@ const widthHalf = screenWidth / 2;
 
 const DatosBancarios = ({ navigation }) => {
   const route = useRoute();
-  const { flujo, idInversion, sendDocuments } = route.params;
+  const { flujo, idInversion, sendDocuments, addAccount } = route.params;
   // Estados y Contexto
   const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [initial, setInitial] = useState(-1);
-  const [addAccount, setAddAccount] = useState(false);
+  const [x, setX] = useState(true);
   const [loading, setLoading] = useState(false);
 
   // Funcion para guardar los datos de la cuenta bancaria
@@ -45,18 +45,11 @@ const DatosBancarios = ({ navigation }) => {
     setLoading(true);
     setDisabled(true);
 
-    await sendDocuments();
-
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}/bank_accounts`;
 
     const key = flujo === "Inversión" ? "investment" : "box_saving";
-    const data = {
-      [key]: {
-        bank_account_id: invBox.accountID,
-      },
-    };
 
     const formData = new FormData();
 
@@ -78,12 +71,8 @@ const DatosBancarios = ({ navigation }) => {
     });
 
     try {
-      console.log(
-        "Datos de cuenta bancaria a enviar:",
-        addAccount ? formData : data
-      );
-      const response = await APIPost(url, addAccount ? formData : data);
-      console.log("Respuesta de la API:", addAccount ? formData : data);
+      console.log("Datos de cuenta bancaria a enviar:", data);
+      const response = await APIPost(url, formData);
 
       if (response.error) {
         setLoading(false);
@@ -93,6 +82,7 @@ const DatosBancarios = ({ navigation }) => {
           "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
         );
       } else {
+        await sendDocuments();
         setLoading(false);
         console.log("Datos de cuenta bancaria guardados con éxito");
         navigation.navigate("DefinirFirma", {
@@ -476,6 +466,26 @@ const DatosBancarios = ({ navigation }) => {
           </View>
         </KeyboardAwareScrollView>
         {/* Boton de Aceptar */}
+
+        {addAccount === false && (
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor: "white",
+                borderWidth: 1,
+                borderColor: "#060B4D",
+                marginBottom: 0,
+              },
+            ]}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
+              Regresar
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={[
             styles.botonContinuar,

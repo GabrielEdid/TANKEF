@@ -29,6 +29,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { APIPut, APIGet, APIPost } from "../../API/APIService";
+import { add } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -67,17 +68,54 @@ const Documentacion = ({ navigation }) => {
     console.log("Agregando los documentos a la inversión o caja de ahorro...");
     console.log("Documentos cargados?:", documentsLoaded);
 
-    if (addAccount) {
-      navigation.navigate("DatosBancarios", {
-        flujo: flujo,
-        idInversion: idInversion,
-      });
+    const key = flujo === "Inversión" ? "investment" : "box_saving";
+
+    if (invBox.accountID) {
+      const url = `/api/v1/${
+        flujo === "Inversión" ? "investments" : "box_savings"
+      }/${idInversion}/bank_accounts`;
+
+      const data = {
+        [key]: {
+          bank_account_id: invBox.accountID,
+        },
+      };
+
+      try {
+        console.log("Datos de cuenta bancaria a enviar:", data);
+        const response = await APIPost(url, data);
+
+        if (response.error) {
+          setLoading(false);
+          console.error("Error al guardar la cuenta bancaria:", response.error);
+          Alert.alert(
+            "Error",
+            "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
+          );
+        } else {
+          await sendDocuments();
+          setLoading(false);
+          console.log("Datos de cuenta bancaria guardados con éxito");
+          navigation.navigate("DefinirFirma", {
+            flujo: flujo,
+            idInversion: idInversion,
+          });
+          setModalVisible(true);
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error("Error al enviar datos:", error);
+        Alert.alert(
+          "Error",
+          "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
+        );
+      }
     }
 
+    // Ahora si se mandan los documentos
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}`;
-    const key = flujo === "Inversión" ? "investment" : "box_saving";
 
     try {
       let body;
@@ -349,9 +387,12 @@ const Documentacion = ({ navigation }) => {
         "Por favor, completa la información solicitada para poder agregar una cuenta bancaria nueva."
       );
     } else {
+      setInvBox({ ...invBox, accountID: "" });
       navigation.navigate("DatosBancarios", {
         flujo: flujo,
         idInversion: idInversion,
+        sendDocuments: sendDocuments.bind(this),
+        addAccount: addAccount, // Variable manages if the user has to add a new bank account or not
       });
     }
   };
