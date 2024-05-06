@@ -77,48 +77,6 @@ const Documentacion = ({ navigation }) => {
 
     const key = flujo === "Inversión" ? "investment" : "box_saving";
 
-    if (invBox.accountID) {
-      const url = `/api/v1/${
-        flujo === "Inversión" ? "investments" : "box_savings"
-      }/${idInversion}/bank_accounts`;
-
-      const data = {
-        [key]: {
-          bank_account_id: invBox.accountID,
-        },
-      };
-
-      try {
-        console.log("Datos de cuenta bancaria a enviar:", data);
-        const response = await APIPost(url, data);
-
-        if (response.error) {
-          setLoading(false);
-          console.error("Error al guardar la cuenta bancaria:", response.error);
-          Alert.alert(
-            "Error",
-            "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
-          );
-        } else {
-          await sendDocuments();
-          setLoading(false);
-          console.log("Datos de cuenta bancaria guardados con éxito");
-          navigation.navigate("DefinirFirma", {
-            flujo: flujo,
-            idInversion: idInversion,
-          });
-          setModalVisible(true);
-        }
-      } catch (error) {
-        setLoading(false);
-        console.error("Error al enviar datos (documentacion):", error);
-        Alert.alert(
-          "Error",
-          "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
-        );
-      }
-    }
-
     // Ahora si se mandan los documentos
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
@@ -188,14 +146,50 @@ const Documentacion = ({ navigation }) => {
         );
       } else {
         console.log("Documentos agregados exitosamente:", response);
-        setModalVisible(true);
       }
     } catch (error) {
       console.error("Error en la petición:", error);
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
     } finally {
       setLoading(false);
-      setDisabled(false);
+    }
+
+    if (invBox.accountID) {
+      setLoading(true);
+      const url = `/api/v1/${
+        flujo === "Inversión" ? "investments" : "box_savings"
+      }/${idInversion}/bank_accounts`;
+
+      const data = {
+        [key]: {
+          bank_account_id: invBox.accountID,
+        },
+      };
+
+      try {
+        console.log("Datos de cuenta bancaria a enviar:", data);
+        const response = await APIPost(url, data);
+
+        if (response.error) {
+          setLoading(false);
+          console.error("Error al guardar la cuenta bancaria:", response.error);
+          Alert.alert(
+            "Error",
+            "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
+          );
+        } else {
+          setModalVisible(true);
+          setLoading(false);
+          console.log("Datos de cuenta bancaria guardados con éxito");
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error("Error al enviar datos (documentacion):", error);
+        Alert.alert(
+          "Error",
+          "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
+        );
+      }
     }
   };
 

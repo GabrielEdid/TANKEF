@@ -45,6 +45,10 @@ const DatosBancarios = ({ navigation }) => {
     setLoading(true);
     setDisabled(true);
 
+    console.log("Enviando documentos desde Datos Bancarios");
+    await sendDocuments();
+    console.log("Se termino de enviar documentos desde Datos Bancarios");
+
     const url = `/api/v1/${
       flujo === "Inversión" ? "investments" : "box_savings"
     }/${idInversion}/bank_accounts`;
@@ -71,6 +75,7 @@ const DatosBancarios = ({ navigation }) => {
     });
 
     try {
+      console.log("Enviando datos de cuenta bancaria");
       const response = await APIPost(url, formData);
 
       if (response.error) {
@@ -81,15 +86,9 @@ const DatosBancarios = ({ navigation }) => {
         console.error("Error al guardar la cuenta bancaria:", response.error);
         Alert.alert("Error", errorMessages);
       } else {
-        console.log("Enviando documentos desde Datos Bancarios");
-        await sendDocuments();
-        console.log("Se termino de envair documentos desde Datos Bancarios");
         setLoading(false);
         console.log("Datos de cuenta bancaria guardados con éxito");
-        navigation.navigate("DefinirFirma", {
-          flujo: flujo,
-          idInversion: idInversion,
-        });
+        navigation.navigate("MiTankef");
         setModalVisible(true);
       }
     } catch (error) {
@@ -545,6 +544,19 @@ const DatosBancarios = ({ navigation }) => {
           <ActivityIndicator size={75} color="#060B4D" />
         </View>
       )}
+      <ModalEstatus
+        titulo={"¡Atención!"}
+        texto={
+          "Tu documentación ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+        }
+        imagen={"Alert"}
+        visible={modalVisible}
+        onAccept={() => [
+          setModalVisible(false),
+          resetInvBox(),
+          navigation.navigate("MiTankef"),
+        ]}
+      />
     </View>
   );
 };

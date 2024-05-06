@@ -90,6 +90,7 @@ const DefinirInversion = ({ navigation }) => {
     } else {
       setLoading(false);
       console.log("Inversión creada exitosamente:", response);
+      setFocusTab("");
       navigation.navigate("Beneficiarios", {
         flujo: flujo,
         idInversion: response.data.data.id,
@@ -105,7 +106,11 @@ const DefinirInversion = ({ navigation }) => {
       [
         {
           text: "Si",
-          onPress: () => [navigation.navigate("Inicio"), resetInvBox()],
+          onPress: () => [
+            navigation.navigate("Inicio"),
+            resetInvBox(),
+            setFocusTab(""),
+          ],
           style: "destructive",
         },
         {
