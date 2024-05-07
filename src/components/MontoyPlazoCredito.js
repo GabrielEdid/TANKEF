@@ -46,48 +46,56 @@ const MontoyPlazoCredito = () => {
   const { user } = useContext(UserContext);
   const { finance, setFinance } = useContext(FinanceContext);
 
-  // Funcion para manejar el cambio de texto en el input de monto
+  // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
-    let newText = inputText.replace(/[^0-9.]/g, ""); // Only allow numbers and dot
-    if ((newText.match(/\./g) || []).length > 1) {
-      // Avoid multiple dots
-      newText = newText.replace(/\.(?=.*\.)/, ""); // Replace all dots if there's more than one
+    const cleanedInput = inputText.replace(/[^0-9.]/g, ""); // Remove all non-numeric characters except dot
+    if ((cleanedInput.match(/\./g) || []).length > 1) {
+      // Ensure only one dot
+      cleanedInput = cleanedInput.replace(/\.(?=.*\.)/, "");
     }
 
-    let [integer, decimal] = newText.split(".");
-    integer = integer.replace(/^0+/, ""); // Remove leading zeros
-    if (integer !== "") {
-      integer = parseInt(integer).toLocaleString(); // Add commas
-    }
-    if (decimal && decimal.length > 2) {
-      decimal = decimal.substring(0, 2); // Limit decimal places to 2
-    }
+    const [integer, decimal] = cleanedInput.split(".");
+    const formattedInteger = integer
+      .replace(/^0+/, "")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Format thousands with comma
+    const formattedDecimal =
+      decimal && decimal.length > 2 ? decimal.substring(0, 2) : decimal; // Limit decimal places to 2
 
     const formattedText =
-      decimal !== undefined ? `${integer}.${decimal}` : integer;
-    const numericValue = parseFloat(newText.replace(/,/g, "")) || 0;
-
-    setFinance({
-      ...finance,
+      formattedDecimal !== undefined
+        ? `${formattedInteger}.${formattedDecimal}`
+        : formattedInteger;
+    setFinance((prevState) => ({
+      ...prevState,
       montoShow: formattedText,
-      monto: newText, // Keep as plain number string for easy re-edit
-      montoNumeric: numericValue, // Use as a numeric value for calculations
-    });
+      monto: cleanedInput,
+    }));
+
+    // Parse the raw input to a float for numeric validations or calculations
+    const numericValue = parseFloat(cleanedInput.replace(/,/g, ""));
+    setFinance((prevState) => ({
+      ...prevState,
+      montoNumeric: numericValue || 0,
+    }));
   };
 
-  // Funcion para manejar el input de monto al deseleccionar
+  // Focus and Blur Handlers for the input
+  const handleFocus = () => {
+    // When focused, remove formatting for editing
+    const rawNumericValue = finance.monto.replace(/,/g, "");
+    setFinance((prevState) => ({ ...prevState, monto: rawNumericValue }));
+  };
+
   const handleBlur = () => {
-    const numericValue = parseFloat(finance.monto.replace(/,/g, ""));
-    if (!isNaN(numericValue)) {
-      setFinance({
-        ...finance,
-        montoShow: numericValue.toLocaleString("en-US", {
-          style: "decimal",
-          maximumFractionDigits: 2,
-          minimumFractionDigits: 2,
-        }),
-      });
-    }
+    // When input is blurred, apply formatting
+    const formattedValue = formatInput(finance.monto);
+    setFinance((prevState) => ({ ...prevState, monto: formattedValue }));
+  };
+
+  // Helper function to format the numeric input on blur
+  const formatInput = (text) => {
+    const numericValue = parseFloat(text.replace(/,/g, ""));
+    return isNaN(numericValue) ? "" : numericValue.toLocaleString();
   };
 
   // Componente visual
@@ -139,6 +147,7 @@ const MontoyPlazoCredito = () => {
             maxLength={20}
             placeholderTextColor={"#b3b5c9ff"}
             onChangeText={handleChangeText}
+            onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder="10,000.00"
             //editable={finance.paso === 1} // Para deshabilitar el input
@@ -155,6 +164,7 @@ const MontoyPlazoCredito = () => {
             MXN
           </Text>
         </View>
+        <View style={styles.separacion} />
         <Text style={[styles.concepto, { marginBottom: 15, fontSize: 12 }]}>
           {`Monto mínimo $10,000.00, valor de la red ${user.valorRed.toLocaleString(
             "es-MX",
@@ -297,12 +307,19 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#060B4D",
     marginBottom: 10,
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensans",
   },
   dollarSign: {
     color: "#060B4D",
     fontSize: 30,
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensans",
+  },
+  separacion: {
+    height: 1,
+    marginBottom: 10,
+    width: "100%",
+    alignSelf: "center",
+    backgroundColor: "#cecfdb",
   },
 });
 
