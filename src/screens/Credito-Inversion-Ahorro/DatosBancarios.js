@@ -91,6 +91,7 @@ const DatosBancarios = ({ navigation }) => {
       } else {
         setLoading(false);
         console.log("Datos de cuenta bancaria guardados con éxito");
+        resetFinance();
         navigation.navigate("MiTankef");
         setModalVisible(true);
       }

@@ -48,8 +48,8 @@ const MiTankefInversion = (props) => {
   const [tasaInteres, setTasaInteres] = useState("");
   const [retornoNeto, setRetornoNeto] = useState("");
   const [investmentState, setInvestmentState] = useState("");
+  const [effectTrigger, setEffectTrigger] = useState(false);
   const [currentID, setCurrentID] = useState(0);
-  const [bank, setBank] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   // Mapa de imágenes
@@ -75,7 +75,6 @@ const MiTankefInversion = (props) => {
       setInvestments(filteredResults);
       setCurrentID(filteredResults[0].id);
       setTasaInteres(filteredResults[0].rate_operation);
-      setBank(filteredResults[0].bank_account);
       fetchInvestment(filteredResults[0].id);
     }
   };
@@ -91,11 +90,11 @@ const MiTankefInversion = (props) => {
     } else {
       console.log("Resultados de la inversion:", result.data.data);
       setInvestmentState(result.data.data.aasm_state);
+      handleInvestmentStateChange(result.data.data.aasm_state);
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setInversionInicial(formatAmount(result.data.data.amount));
       setRetornoNeto("Falta");
-      setBank(result.data.data.bank_account);
     }
   };
 
@@ -126,7 +125,14 @@ const MiTankefInversion = (props) => {
     ) {
       setModalVisible(true);
     }
-  }, [investmentState]);
+  }, [investmentState, effectTrigger]);
+
+  const handleInvestmentStateChange = (newState) => {
+    if (investmentState === newState) {
+      setEffectTrigger((t) => !t); // Toggles the trigger to force useEffect execution
+    }
+    setInvestmentState(newState);
+  };
 
   // Componente visual
   return (
@@ -286,6 +292,7 @@ const MiTankefInversion = (props) => {
               </View>
             </>
           )}
+
           {focus === "Movimientos" && (
             <>
               <View>
@@ -345,25 +352,6 @@ const MiTankefInversion = (props) => {
                 setModalVisible(false),
                 navigation.navigate("Crear", {
                   screen: "Documentacion",
-                  params: { flujo: "Inversión", idInversion: currentID },
-                }),
-              ]}
-            />
-          )}
-
-          {investmentState === "sign_contract" && !bank && (
-            <ModalEstatus
-              titulo={"¡Atención!"}
-              texto={
-                "Tu documentación ha sido validada, por favor proporciona los datos de tu cuenta bancaria."
-              }
-              imagen={"Alert"}
-              visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              onAccept={() => [
-                setModalVisible(false),
-                navigation.navigate("Crear", {
-                  screen: "DatosBancarios",
                   params: { flujo: "Inversión", idInversion: currentID },
                 }),
               ]}

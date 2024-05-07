@@ -245,17 +245,36 @@ const Documentacion = ({ navigation }) => {
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
-    const camposLlenos =
-      (finance.CURP &&
-        finance.situacionFiscal &&
-        finance.comprobanteDomicilio &&
-        finance.identificacion &&
-        finance.actuoComo) ||
-      (finance.isThereIdentificacion &&
-        finance.isThereCURP &&
-        finance.isThereSituacionFiscal &&
-        finance.isThereComprobanteDomicilio &&
-        finance.actuoComo);
+    let camposLlenos = false;
+    if (finance.accounts.length > 0) {
+      camposLlenos =
+        (finance.CURP &&
+          finance.situacionFiscal &&
+          finance.comprobanteDomicilio &&
+          finance.identificacion &&
+          finance.actuoComo &&
+          finance.accountID) ||
+        (finance.isThereIdentificacion &&
+          finance.isThereCURP &&
+          finance.isThereSituacionFiscal &&
+          finance.isThereComprobanteDomicilio &&
+          finance.actuoComo &&
+          finance.accountID);
+    } else {
+      camposLlenos =
+        (finance.CURP &&
+          finance.situacionFiscal &&
+          finance.comprobanteDomicilio &&
+          finance.identificacion &&
+          finance.actuoComo &&
+          addAccount) ||
+        (finance.isThereIdentificacion &&
+          finance.isThereCURP &&
+          finance.isThereSituacionFiscal &&
+          finance.isThereComprobanteDomicilio &&
+          finance.actuoComo &&
+          addAccount);
+    }
     setDisabled(!camposLlenos);
   }, [
     finance.CURP,

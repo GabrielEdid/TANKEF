@@ -44,6 +44,7 @@ const MiTankefCaja = (props) => {
   const [boxes, setBoxes] = useState([]);
   const [currentID, setCurrentID] = useState(null);
   const [boxState, setBoxState] = useState("");
+  const [effectTrigger, setEffectTrigger] = useState(false);
   const [plazo, setPlazo] = useState(null);
   const [folio, setFolio] = useState(null);
   const [montoAcumulado, setMontoAcumulado] = useState(null);
@@ -66,8 +67,8 @@ const MiTankefCaja = (props) => {
       console.log("Resultados de las cajas de ahorro:", filteredResults);
       setBoxes(filteredResults);
       setCurrentID(filteredResults[0].id);
-      fetchBox(filteredResults[0].id);
       setTasaInteres(filteredResults[0].rate_operation);
+      fetchBox(filteredResults[0].id);
     }
   };
 
@@ -82,6 +83,7 @@ const MiTankefCaja = (props) => {
     } else {
       console.log("Resultados de la caja de ahorro:", result.data.data);
       setBoxState(result.data.data.aasm_state);
+      handleBoxStateChange(result.data.data.aasm_state);
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setMontoAcumulado(formatAmount(result.data.data.amount));
@@ -102,6 +104,26 @@ const MiTankefCaja = (props) => {
       style: "currency",
       currency: "MXN",
     })}`;
+  };
+
+  useEffect(() => {
+    if (
+      boxState === "reviewing_documentation" ||
+      boxState === "rejected_documentation" ||
+      boxState === "signing_contract" ||
+      boxState === "sign_contract" ||
+      boxState === "request_payment" ||
+      boxState === "reviewing_payment"
+    ) {
+      setModalVisible(true);
+    }
+  }, [boxState, effectTrigger]);
+
+  const handleBoxStateChange = (newState) => {
+    if (boxState === newState) {
+      setEffectTrigger((t) => !t); // Toggles the trigger to force useEffect execution
+    }
+    setBoxState(newState);
   };
 
   // Componente visual
