@@ -302,7 +302,8 @@ const DatosBancarios = ({ navigation }) => {
             styles.tituloPantalla,
             {
               fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+              marginRight:
+                flujo === "Caja de ahorro" ? 35 : flujo === "Crédito" ? -35 : 0,
             },
           ]}
         >
