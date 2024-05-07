@@ -13,7 +13,7 @@ import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Contextos
 import { Ionicons } from "@expo/vector-icons";
 import { UserContext } from "../hooks/UserContext";
-import { CreditContext } from "../hooks/CreditContext";
+import { FinanceContext } from "../hooks/FinanceContext";
 
 /**
  * `Conexion` es un componente que muestra información de una conexión específica,
@@ -44,7 +44,7 @@ const MontoyPlazoCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
   const { user } = useContext(UserContext);
-  const { credit, setCredit } = useContext(CreditContext);
+  const { finance, setFinance } = useContext(FinanceContext);
 
   // Funcion para manejar el cambio de texto en el input de monto
   const handleChangeText = (inputText) => {
@@ -67,8 +67,8 @@ const MontoyPlazoCredito = () => {
       decimal !== undefined ? `${integer}.${decimal}` : integer;
     const numericValue = parseFloat(newText.replace(/,/g, "")) || 0;
 
-    setCredit({
-      ...credit,
+    setFinance({
+      ...finance,
       montoShow: formattedText,
       monto: newText, // Keep as plain number string for easy re-edit
       montoNumeric: numericValue, // Use as a numeric value for calculations
@@ -77,10 +77,10 @@ const MontoyPlazoCredito = () => {
 
   // Funcion para manejar el input de monto al deseleccionar
   const handleBlur = () => {
-    const numericValue = parseFloat(credit.monto.replace(/,/g, ""));
+    const numericValue = parseFloat(finance.monto.replace(/,/g, ""));
     if (!isNaN(numericValue)) {
-      setCredit({
-        ...credit,
+      setFinance({
+        ...finance,
         montoShow: numericValue.toLocaleString("en-US", {
           style: "decimal",
           maximumFractionDigits: 2,
@@ -127,27 +127,27 @@ const MontoyPlazoCredito = () => {
           <Text
             style={[
               styles.dollarSign,
-              { color: credit.monto ? "#060B4D" : "#b3b5c9ff" },
+              { color: finance.monto ? "#060B4D" : "#b3b5c9ff" },
             ]}
           >
             $
           </Text>
           <TextInput
             style={styles.inputMonto}
-            value={credit.montoShow}
+            value={finance.montoShow}
             keyboardType="numeric"
             maxLength={20}
             placeholderTextColor={"#b3b5c9ff"}
             onChangeText={handleChangeText}
             onBlur={handleBlur}
             placeholder="10,000.00"
-            //editable={credit.paso === 1} // Para deshabilitar el input
+            //editable={finance.paso === 1} // Para deshabilitar el input
           />
           <Text
             style={[
               styles.dollarSign,
               {
-                color: credit.monto ? "#060B4D" : "#b3b5c9ff",
+                color: finance.monto ? "#060B4D" : "#b3b5c9ff",
                 marginLeft: 5,
               },
             ]}
@@ -169,12 +169,12 @@ const MontoyPlazoCredito = () => {
           minimumValue={10000}
           maximumValue={1000000}
           step={100}
-          value={credit.montoNumeric}
+          value={finance.montoNumeric}
           onValueChange={handleSliderChange}
           thumbTintColor="#2FF690"
           minimumTrackTintColor="#2FF690"
           maximumTrackTintColor="#F2F2F2"
-          //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el slider
+          //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el slider
           />*/}
       </View>
 
@@ -193,11 +193,11 @@ const MontoyPlazoCredito = () => {
             style={[
               styles.tab,
               {
-                backgroundColor: credit.plazo === 6 ? "#2FF690" : "#F3F3F3",
+                backgroundColor: finance.plazo === 6 ? "#2FF690" : "#F3F3F3",
               },
             ]}
-            onPress={() => [setCredit({ ...credit, plazo: 6 })]}
-            //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
+            onPress={() => [setFinance({ ...finance, plazo: 6 })]}
+            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
           >
             <Text style={styles.textoTab}>6</Text>
           </TouchableOpacity>
@@ -205,11 +205,11 @@ const MontoyPlazoCredito = () => {
             style={[
               styles.tab,
               {
-                backgroundColor: credit.plazo === 12 ? "#2FF690" : "#F3F3F3",
+                backgroundColor: finance.plazo === 12 ? "#2FF690" : "#F3F3F3",
               },
             ]}
-            onPress={() => [setCredit({ ...credit, plazo: 12 })]}
-            //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
+            onPress={() => [setFinance({ ...finance, plazo: 12 })]}
+            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
           >
             <Text style={styles.textoTab}>12</Text>
           </TouchableOpacity>
@@ -217,11 +217,11 @@ const MontoyPlazoCredito = () => {
             style={[
               styles.tab,
               {
-                backgroundColor: credit.plazo === 18 ? "#2FF690" : "#F3F3F3",
+                backgroundColor: finance.plazo === 18 ? "#2FF690" : "#F3F3F3",
               },
             ]}
-            onPress={() => [setCredit({ ...credit, plazo: 18 })]}
-            //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
+            onPress={() => [setFinance({ ...finance, plazo: 18 })]}
+            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
           >
             <Text style={styles.textoTab}>18</Text>
           </TouchableOpacity>
@@ -229,12 +229,12 @@ const MontoyPlazoCredito = () => {
             style={[
               styles.tab,
               {
-                backgroundColor: credit.plazo === 24 ? "#2FF690" : "#F3F3F3",
+                backgroundColor: finance.plazo === 24 ? "#2FF690" : "#F3F3F3",
                 marginRight: 0,
               },
             ]}
-            onPress={() => [setCredit({ ...credit, plazo: 24 })]}
-            //disabled={credit.paso === 1 ? false : true} // Para deshabilitar el tab
+            onPress={() => [setFinance({ ...finance, plazo: 24 })]}
+            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
           >
             <Text style={styles.textoTab}>24</Text>
           </TouchableOpacity>

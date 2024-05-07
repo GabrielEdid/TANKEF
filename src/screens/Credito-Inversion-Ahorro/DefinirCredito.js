@@ -16,7 +16,7 @@ import RadioForm from "react-native-simple-radio-button";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../../API/APIService";
-import { CreditContext } from "../../hooks/CreditContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import MontoyPlazoCredito from "../../components/MontoyPlazoCredito";
 import DatosGeneralesCredito from "../../components/DatosGeneralesCredito";
@@ -33,7 +33,7 @@ const DefinirCredito = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { credit, setCredit, resetCredit } = useContext(CreditContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [focus, setFocus] = useState("Mi Red");
 
@@ -49,14 +49,14 @@ const DefinirCredito = ({ navigation }) => {
     AddSign: require("../../../assets/images/AddSign.png"),
   };
 
-  const isAcceptable = credit.montoNumeric >= 10000 && credit.plazo;
-  const isAcceptablePaso4 = credit.aceptarSIC && credit.actuoComo;
+  const isAcceptable = finance.montoNumeric >= 10000 && finance.plazo;
+  const isAcceptablePaso4 = finance.aceptarSIC && finance.actuoComo;
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
     const cotizar = async () => {
-      console.log(credit.plazo, credit.montoNumeric);
-      const url = `/api/v1/simulator?term=${credit.plazo}&type=credit&amount=${credit.montoNumeric}`;
+      console.log(finance.plazo, finance.montoNumeric);
+      const url = `/api/v1/simulator?term=${finance.plazo}&type=credit&amount=${finance.montoNumeric}`;
 
       const response = await APIGet(url);
       if (response.error) {
@@ -68,8 +68,8 @@ const DefinirCredito = ({ navigation }) => {
         );
       } else {
         console.log("Cotización exitosa:", response);
-        setCredit({
-          ...credit,
+        setFinance({
+          ...finance,
           comision_por_apertura: response.data.commision,
           tasa_de_operacion: response.data.rate,
           pago_mensual: response.data.amount,
@@ -77,15 +77,15 @@ const DefinirCredito = ({ navigation }) => {
         });
       }
     };
-    if (credit.plazo && credit.montoNumeric >= 10000) {
+    if (finance.plazo && finance.montoNumeric >= 10000) {
       cotizar();
     }
-  }, [credit.plazo, credit.montoNumeric]);
+  }, [finance.plazo, finance.montoNumeric]);
 
   // Función para cambiar el focus de la pantalla
   const handleFocus = (tab) => {
     if (tab === focus) return;
-    if (credit.paso === 1) {
+    if (finance.paso === 1) {
       setFocus(tab);
     } else {
       Alert.alert(
@@ -94,7 +94,7 @@ const DefinirCredito = ({ navigation }) => {
         [
           {
             text: "Cambiar de opción",
-            onPress: () => [resetCredit(), setFocus(tab)],
+            onPress: () => [resetFinance(), setFocus(tab)],
             style: "destructive",
           },
           {
@@ -108,36 +108,36 @@ const DefinirCredito = ({ navigation }) => {
 
   const handleAccept = () => {
     if (focus === "Mi Red") {
-      if (credit.paso === 4) {
+      if (finance.paso === 4) {
         navigation.navigate("MiTankef");
-      } else if (credit.paso === 1) {
-        setCredit({
-          ...credit,
+      } else if (finance.paso === 1) {
+        setFinance({
+          ...finance,
           modalCotizadorVisible: true,
         });
-      } else if (credit.paso === 2) {
+      } else if (finance.paso === 2) {
         navigation.navigate("ObligadosSolidarios", { flujo: flujo });
-      } else if (credit.paso === 3) {
+      } else if (finance.paso === 3) {
         navigation.navigate("InfoGeneral", { flujo: flujo });
       } else {
-        setCredit({
-          ...credit,
-          paso: credit.paso + 1,
+        setFinance({
+          ...finance,
+          paso: finance.paso + 1,
         });
       }
     } else if (focus === "Comite") {
-      if (credit.paso === 3) {
-        resetCredit();
+      if (finance.paso === 3) {
+        resetFinance();
         setFocus("Mi Red");
         navigation.navigate("MiTankef");
-      } else if (credit.paso === 1) {
-        setCredit({ ...credit, modalCotizadorVisible: true });
-      } else if (credit.paso === 2) {
+      } else if (finance.paso === 1) {
+        setFinance({ ...finance, modalCotizadorVisible: true });
+      } else if (finance.paso === 2) {
         navigation.navigate("InfoGeneral", { flujo: flujo });
       } else {
-        setCredit({
-          ...credit,
-          paso: credit.paso + 1,
+        setFinance({
+          ...finance,
+          paso: finance.paso + 1,
         });
       }
     }
@@ -150,7 +150,7 @@ const DefinirCredito = ({ navigation }) => {
       [
         {
           text: "Si",
-          onPress: () => [navigation.navigate("Inicio"), resetCredit()],
+          onPress: () => [navigation.navigate("Inicio"), resetFinance()],
           style: "destructive",
         },
         {
@@ -162,19 +162,19 @@ const DefinirCredito = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (credit.obligados_solidarios.length === 0 && credit.paso >= 3) {
+    if (finance.obligados_solidarios.length === 0 && finance.paso >= 3) {
       Alert.alert(
         "¡Atención!",
         "Debes tener al menos un obligado solidario para solicitar un crédito por tu red."
       );
-      setCredit({ ...credit, paso: 2 });
+      setFinance({ ...finance, paso: 2 });
       navigation.navigate("ObligadosSolidarios", { flujo: flujo });
     }
-  }, [credit.obligados_solidarios]);
+  }, [finance.obligados_solidarios]);
 
   // Function to determine button's background color
   const getButtonBackgroundColor = () => {
-    if (credit.paso === 4) {
+    if (finance.paso === 4) {
       return isAcceptablePaso4 ? "#060B4D" : "#D5D5D5";
     }
     return isAcceptable ? "#060B4D" : "#D5D5D5";
@@ -182,7 +182,7 @@ const DefinirCredito = ({ navigation }) => {
 
   // Function to determine text color
   const getTextColor = () => {
-    if (credit.paso === 4) {
+    if (finance.paso === 4) {
       return isAcceptablePaso4 ? "white" : "grey";
     }
     return isAcceptable ? "white" : "grey";
@@ -234,7 +234,7 @@ const DefinirCredito = ({ navigation }) => {
         keyboardDismissMode="on-drag"
       >
         <View style={{ flex: 1 }}>
-          {credit.paso === 1 && (
+          {finance.paso === 1 && (
             <View
               style={{
                 alignItems: "center",
@@ -327,7 +327,7 @@ const DefinirCredito = ({ navigation }) => {
                 ]}
               >
                 <Image
-                  source={imageMap[`${credit.paso}de4`]}
+                  source={imageMap[`${finance.paso}de4`]}
                   style={{ height: 50, width: 50 }}
                 />
                 <Text
@@ -336,11 +336,11 @@ const DefinirCredito = ({ navigation }) => {
                     { fontFamily: "opensansbold", marginLeft: 10 },
                   ]}
                 >
-                  {credit.paso === 1
+                  {finance.paso === 1
                     ? "Solicitud de crédito por Mi Red"
-                    : credit.paso === 2
+                    : finance.paso === 2
                     ? "Revisión de Cotización"
-                    : credit.paso === 3
+                    : finance.paso === 3
                     ? "Obligados solidarios"
                     : "Revisión y Validación de información"}
                 </Text>
@@ -348,7 +348,7 @@ const DefinirCredito = ({ navigation }) => {
 
               <MontoyPlazoCredito />
 
-              {/* {credit.paso === 1 && (
+              {/* {finance.paso === 1 && (
               <View style={styles.contenedores}>
                 <Text style={styles.texto}>
                   Invita a tus amigos a unirse a tu red financiera. Cuantos más
@@ -359,11 +359,11 @@ const DefinirCredito = ({ navigation }) => {
               </View>
             )} */}
 
-              {credit.paso >= 2 && <DatosCotizadorCredito />}
+              {finance.paso >= 2 && <DatosCotizadorCredito />}
 
-              {credit.paso >= 3 && (
+              {finance.paso >= 3 && (
                 <>
-                  {credit.obligados_solidarios.map((obligado, index) => (
+                  {finance.obligados_solidarios.map((obligado, index) => (
                     <>
                       <ObligadoSolidario
                         key={index}
@@ -383,7 +383,7 @@ const DefinirCredito = ({ navigation }) => {
                       navigation.navigate("ObligadosSolidarios", {
                         flujo: flujo,
                       }),
-                      setCredit({ ...credit, paso: 2 }),
+                      setFinance({ ...finance, paso: 2 }),
                     ]}
                   >
                     <ObligadoSolidario
@@ -392,7 +392,7 @@ const DefinirCredito = ({ navigation }) => {
                       button={false}
                     />
                   </TouchableOpacity>
-                  {credit.paso >= 4 && (
+                  {finance.paso >= 4 && (
                     <>
                       <DatosGeneralesCredito />
                       <View style={styles.contenedores}>
@@ -401,14 +401,14 @@ const DefinirCredito = ({ navigation }) => {
                           Crediticia (SIC)
                         </Text>
                         <RadioForm
-                          key={credit.aceptarSIC}
+                          key={finance.aceptarSIC}
                           radio_props={dataAceptar}
-                          initial={credit.aceptarSIC === "" ? -1 : 0}
+                          initial={finance.aceptarSIC === "" ? -1 : 0}
                           onPress={(value) =>
-                            setCredit({
-                              ...credit,
+                            setFinance({
+                              ...finance,
                               aceptarSIC:
-                                value === credit.aceptarSIC ? "" : value,
+                                value === finance.aceptarSIC ? "" : value,
                             })
                           }
                           buttonColor={"#060B4D"}
@@ -437,7 +437,7 @@ const DefinirCredito = ({ navigation }) => {
                           radio_props={dataActuo}
                           initial={-1}
                           onPress={(value) =>
-                            setCredit({ ...credit, actuoComo: value })
+                            setFinance({ ...finance, actuoComo: value })
                           }
                           buttonColor={"#060B4D"}
                           buttonSize={10}
@@ -478,7 +478,7 @@ const DefinirCredito = ({ navigation }) => {
                 ]}
               >
                 <Image
-                  source={imageMap[`${credit.paso}de3`]}
+                  source={imageMap[`${finance.paso}de3`]}
                   style={{ height: 50, width: 50 }}
                 />
                 <Text
@@ -487,9 +487,9 @@ const DefinirCredito = ({ navigation }) => {
                     { fontFamily: "opensansbold", marginLeft: 10 },
                   ]}
                 >
-                  {credit.paso === 1
+                  {finance.paso === 1
                     ? "Solicitud de crédito por Comité"
-                    : credit.paso === 2
+                    : finance.paso === 2
                     ? "Revisión de Cotización"
                     : "Revisión y Validación de infromación"}
                 </Text>
@@ -497,7 +497,7 @@ const DefinirCredito = ({ navigation }) => {
 
               <MontoyPlazoCredito />
 
-              {/* {credit.paso === 1 && (
+              {/* {finance.paso === 1 && (
               <View style={styles.contenedores}>
                 <Text style={styles.texto}>
                   Al solicitar un crédito a través del comité, tu historial
@@ -507,10 +507,10 @@ const DefinirCredito = ({ navigation }) => {
               </View>
             )} */}
 
-              {credit.paso >= 2 && (
+              {finance.paso >= 2 && (
                 <>
                   <DatosCotizadorCredito />
-                  {credit.paso >= 3 && <DatosGeneralesCredito />}
+                  {finance.paso >= 3 && <DatosGeneralesCredito />}
                 </>
               )}
             </>
@@ -521,13 +521,13 @@ const DefinirCredito = ({ navigation }) => {
           <View
             style={{
               paddingHorizontal: 10,
-              flexDirection: credit.paso === 1 ? "column" : "row",
+              flexDirection: finance.paso === 1 ? "column" : "row",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
             {/* Botones de Atrás y Continuar */}
-            {credit.paso !== 1 && (
+            {finance.paso !== 1 && (
               <TouchableOpacity
                 style={[
                   styles.botonContinuar,
@@ -540,13 +540,13 @@ const DefinirCredito = ({ navigation }) => {
                   },
                 ]}
                 onPress={() => {
-                  credit.paso === 3
-                    ? setCredit({
-                        ...credit,
-                        paso: credit.paso - 1,
+                  finance.paso === 3
+                    ? setFinance({
+                        ...finance,
+                        paso: finance.paso - 1,
                         obligados_solidarios: [],
                       })
-                    : setCredit({ ...credit, paso: credit.paso - 1 });
+                    : setFinance({ ...finance, paso: finance.paso - 1 });
                 }}
               >
                 <Text
@@ -561,13 +561,13 @@ const DefinirCredito = ({ navigation }) => {
                 styles.botonContinuar,
                 {
                   flex: 1,
-                  marginLeft: credit.paso === 1 ? 0 : 5,
-                  width: credit.paso === 1 && "80%",
+                  marginLeft: finance.paso === 1 ? 0 : 5,
+                  width: finance.paso === 1 && "80%",
                   backgroundColor: getButtonBackgroundColor(),
                 },
               ]}
               onPress={handleAccept}
-              disabled={credit.paso === 4 ? !isAcceptablePaso4 : !isAcceptable}
+              disabled={finance.paso === 4 ? !isAcceptablePaso4 : !isAcceptable}
             >
               <Text
                 style={[styles.textoBotonContinuar, { color: getTextColor() }]}

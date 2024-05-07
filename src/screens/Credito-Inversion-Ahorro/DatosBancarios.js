@@ -20,7 +20,7 @@ import RadioForm from "react-native-simple-radio-button";
 import { ActivityIndicator } from "react-native-paper";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
-import { InvBoxContext } from "../../hooks/InvBoxContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIPost, APIGet } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
@@ -33,7 +33,7 @@ const DatosBancarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion, sendDocuments, addAccount } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [initial, setInitial] = useState(-1);
@@ -59,17 +59,20 @@ const DatosBancarios = ({ navigation }) => {
 
     formData.append(
       `${key}[bank_account_attributes][short_name]`,
-      invBox.alias
+      finance.alias
     );
-    formData.append(`${key}[bank_account_attributes][clabe]`, invBox.clabe);
-    formData.append(`${key}[bank_account_attributes][bank]`, invBox.banco);
+    formData.append(`${key}[bank_account_attributes][clabe]`, finance.clabe);
+    formData.append(`${key}[bank_account_attributes][bank]`, finance.banco);
     formData.append(
       `${key}[bank_account_attributes][owner_name]`,
-      invBox.nombreCuentahabiente
+      finance.nombreCuentahabiente
     );
-    formData.append(`${key}[bank_account_attributes][account]`, invBox.NCuenta);
+    formData.append(
+      `${key}[bank_account_attributes][account]`,
+      finance.NCuenta
+    );
     formData.append(`${key}[bank_account_attributes][proof_clabe]`, {
-      uri: invBox.comprobanteNCuenta,
+      uri: finance.comprobanteNCuenta,
       type: "image/jpeg",
       name: "comprobanteNCuenta.jpg",
     });
@@ -146,7 +149,7 @@ const DatosBancarios = ({ navigation }) => {
           "Caja de ahorro o Inversión eliminada exitosamente:",
           response
         );
-        resetInvBox();
+        resetFinance();
         navigation.navigate("Inicio");
       }
     };
@@ -155,13 +158,13 @@ const DatosBancarios = ({ navigation }) => {
   // Efecto para encontrar el banco asociado a la clabe
   useEffect(() => {
     const verificarClabe = async () => {
-      if (invBox.clabe.length < 18) {
-        setInvBox({ ...invBox, banco: "" });
-      } else if (invBox.clabe.length === 18) {
+      if (finance.clabe.length < 18) {
+        setFinance({ ...finance, banco: "" });
+      } else if (finance.clabe.length === 18) {
         const url = `/api/v1/clabe_validation`;
         const formData = new FormData();
 
-        formData.append("clabe", invBox.clabe);
+        formData.append("clabe", finance.clabe);
 
         try {
           const response = await APIPost(url, formData);
@@ -175,9 +178,9 @@ const DatosBancarios = ({ navigation }) => {
               "Error",
               "La clabe introducida no está asociada a ningun banco"
             );
-            setInvBox({ ...invBox, banco: "" });
+            setFinance({ ...finance, banco: "" });
           } else {
-            setInvBox({ ...invBox, banco: response.data.data.bank_tag });
+            setFinance({ ...finance, banco: response.data.data.bank_tag });
           }
         } catch (error) {
           console.error("Error al encontrar la cuenta de banco:", error);
@@ -190,28 +193,28 @@ const DatosBancarios = ({ navigation }) => {
     };
 
     verificarClabe();
-  }, [invBox.clabe]);
+  }, [finance.clabe]);
 
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
     const camposLlenos =
-      (invBox.nombreCuentahabiente &&
-        invBox.alias &&
-        invBox.clabe &&
-        invBox.clabe.length === 18 &&
-        invBox.NCuenta &&
-        invBox.comprobanteNCuenta &&
-        invBox.banco) ||
-      invBox.accountID;
+      (finance.nombreCuentahabiente &&
+        finance.alias &&
+        finance.clabe &&
+        finance.clabe.length === 18 &&
+        finance.NCuenta &&
+        finance.comprobanteNCuenta &&
+        finance.banco) ||
+      finance.accountID;
     setDisabled(!camposLlenos);
   }, [
-    invBox.nombreCuentahabiente,
-    invBox.alias,
-    invBox.clabe,
-    invBox.NCuenta,
-    invBox.comprobanteNCuenta,
-    invBox.banco,
-    invBox.accountID,
+    finance.nombreCuentahabiente,
+    finance.alias,
+    finance.clabe,
+    finance.NCuenta,
+    finance.comprobanteNCuenta,
+    finance.banco,
+    finance.accountID,
   ]);
 
   const showUploadOptions = () => {
@@ -247,8 +250,8 @@ const DatosBancarios = ({ navigation }) => {
     let result = await DocumentPicker.getDocumentAsync({});
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
-      setInvBox({
-        ...invBox,
+      setFinance({
+        ...finance,
         comprobanteNCuenta: selectedDocument.uri,
         nombreComprobante: selectedDocument.name,
       });
@@ -267,8 +270,8 @@ const DatosBancarios = ({ navigation }) => {
     if (!result.canceled) {
       const selectedImage = result.assets[0];
       console.log(selectedImage.uri);
-      setInvBox({
-        ...invBox,
+      setFinance({
+        ...finance,
         comprobanteNCuenta: selectedImage.uri,
         nombreComprobante: "Carátula Seleccionada",
       });
@@ -343,16 +346,20 @@ const DatosBancarios = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Alias Cuenta</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) => setInvBox({ ...invBox, alias: value })}
-                value={invBox.alias}
+                onChangeText={(value) =>
+                  setFinance({ ...finance, alias: value })
+                }
+                value={finance.alias}
                 placeholder="Eje. Raúl G. Torres"
               />
               <View style={styles.separacion} />
               <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) => setInvBox({ ...invBox, clabe: value })}
-                value={invBox.clabe}
+                onChangeText={(value) =>
+                  setFinance({ ...finance, clabe: value })
+                }
+                value={finance.clabe}
                 placeholder="18 dígitos"
                 maxLength={18}
                 keyboardType="numeric"
@@ -361,7 +368,7 @@ const DatosBancarios = ({ navigation }) => {
               <Text style={styles.tituloCampo}>
                 Comprobante CLABE Interbancaria (pdf, jpg, jpeg, png)
               </Text>
-              {!invBox.comprobanteNCuenta ? (
+              {!finance.comprobanteNCuenta ? (
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
                   onPress={showUploadOptions}
@@ -404,12 +411,12 @@ const DatosBancarios = ({ navigation }) => {
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {invBox.nombreComprobante}
+                      {finance.nombreComprobante}
                     </Text>
                     <TouchableOpacity
                       onPress={() => [
-                        setInvBox({
-                          ...invBox,
+                        setFinance({
+                          ...finance,
                           comprobanteNCuenta: "",
                           nombreComprobante: "",
                         }),
@@ -431,9 +438,9 @@ const DatosBancarios = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 onChangeText={(value) =>
-                  setInvBox({ ...invBox, NCuenta: value })
+                  setFinance({ ...finance, NCuenta: value })
                 }
-                value={invBox.NCuenta}
+                value={finance.NCuenta}
                 placeholder="8-11 dígitos"
                 maxLength={11}
                 keyboardType="numeric"
@@ -444,8 +451,10 @@ const DatosBancarios = ({ navigation }) => {
               </Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) => setInvBox({ ...invBox, banco: value })}
-                value={invBox.banco}
+                onChangeText={(value) =>
+                  setFinance({ ...finance, banco: value })
+                }
+                value={finance.banco}
                 placeholder="Autorrelleno"
                 editable={false}
               />
@@ -455,9 +464,9 @@ const DatosBancarios = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   onChangeText={(value) =>
-                    setInvBox({ ...invBox, nombreCuentahabiente: value })
+                    setFinance({ ...finance, nombreCuentahabiente: value })
                   }
-                  value={invBox.nombreCuentahabiente}
+                  value={finance.nombreCuentahabiente}
                   placeholder="Nombre Cuentahabiente"
                 />
               </View>
@@ -535,7 +544,7 @@ const DatosBancarios = ({ navigation }) => {
         onAccept={() => [
           setModalVisible(false),
           setInitial(-1),
-          resetInvBox(),
+          resetFinance(),
           navigation.navigate("MiTankef"),
         ]}
       /> */}
@@ -553,7 +562,7 @@ const DatosBancarios = ({ navigation }) => {
         visible={modalVisible}
         onAccept={() => [
           setModalVisible(false),
-          resetInvBox(),
+          resetFinance(),
           navigation.navigate("MiTankef"),
         ]}
       />

@@ -11,7 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
 import { Ionicons } from "@expo/vector-icons";
-import { CreditContext } from "../hooks/CreditContext";
+import { FinanceContext } from "../hooks/FinanceContext";
 
 /**
  * `Conexion` es un componente que muestra información de una conexión específica,
@@ -36,7 +36,7 @@ import { CreditContext } from "../hooks/CreditContext";
 const DatosCotizadorCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
-  const { credit, setCredit } = useContext(CreditContext);
+  const { finance, setFinance } = useContext(FinanceContext);
 
   // Componente visual
   return (
@@ -45,13 +45,13 @@ const DatosCotizadorCredito = () => {
         <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
           Total a pagar
         </Text>
-        <Text style={styles.monto}>{credit.total_a_pagar}</Text>
+        <Text style={styles.monto}>{finance.total_a_pagar}</Text>
       </View> */}
       <View style={[styles.contenedores, { flexDirection: "row" }]}>
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Comisión por{"\n"}apertura</Text>
           <Text style={styles.valorConcepto}>
-            {credit.comision_por_apertura}
+            {finance.comision_por_apertura}
           </Text>
         </View>
         <Ionicons
@@ -62,7 +62,7 @@ const DatosCotizadorCredito = () => {
         />
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Tasa de{"\n"}operación</Text>
-          <Text style={styles.valorConcepto}>{credit.tasa_de_operacion}</Text>
+          <Text style={styles.valorConcepto}>{finance.tasa_de_operacion}</Text>
         </View>
         <Ionicons
           name="remove-outline"
@@ -72,7 +72,7 @@ const DatosCotizadorCredito = () => {
         />
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Pago{"\n"}mensual</Text>
-          <Text style={styles.valorConcepto}>{credit.pago_mensual}</Text>
+          <Text style={styles.valorConcepto}>{finance.pago_mensual}</Text>
         </View>
         <Ionicons
           name="remove-outline"
@@ -82,7 +82,7 @@ const DatosCotizadorCredito = () => {
         />
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Total a{"\n"}pagar</Text>
-          <Text style={styles.valorConcepto}>{credit.total_a_pagar}</Text>
+          <Text style={styles.valorConcepto}>{finance.total_a_pagar}</Text>
         </View>
       </View>
     </>

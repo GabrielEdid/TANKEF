@@ -75,8 +75,8 @@ export const FinanceProvider = ({ children }) => {
 
   // Proporcionar user, setUser y resetUser a través del contexto a todo el árbol de pantallas
   return (
-    <FinanceProvider.Provider value={{ finance, setFinance, resetFinance }}>
+    <FinanceContext.Provider value={{ finance, setFinance, resetFinance }}>
       {children}
-    </FinanceProvider.Provider>
+    </FinanceContext.Provider>
   );
 };

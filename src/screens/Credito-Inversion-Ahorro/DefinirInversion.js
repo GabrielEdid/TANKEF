@@ -15,7 +15,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
-import { InvBoxContext } from "../../hooks/InvBoxContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIGet, APIPost } from "../../API/APIService";
 import ModalAmortizacion from "../../components/ModalAmortizacion";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -28,7 +28,7 @@ const DefinirInversion = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [totalInversion, setTotalInversion] = useState("");
   const [tasa, setTasa] = useState("");
   const [focusTab, setFocusTab] = useState("");
@@ -39,7 +39,7 @@ const DefinirInversion = ({ navigation }) => {
   // Función para hacer la cotizacion al API
   useEffect(() => {
     const fetchCotizacion = async () => {
-      const url = `/api/v1/simulator?term=${invBox.plazo}&type=investment&amount=${invBox.montoNumeric}`;
+      const url = `/api/v1/simulator?term=${finance.plazo}&type=investment&amount=${finance.montoNumeric}`;
 
       try {
         const response = await APIGet(url);
@@ -59,23 +59,23 @@ const DefinirInversion = ({ navigation }) => {
         Alert.alert("Error", "Ha ocurrido un error al realizar la cotización.");
       }
     };
-    if (invBox.montoNumeric >= 5000 && invBox.plazo) fetchCotizacion();
-    else if (invBox.montoNumeric < 5000) {
+    if (finance.montoNumeric >= 5000 && finance.plazo) fetchCotizacion();
+    else if (finance.montoNumeric < 5000) {
       setTotalInversion("");
       setTasa("");
     }
-  }, [invBox.montoNumeric, invBox.plazo]);
+  }, [finance.montoNumeric, finance.plazo]);
 
   const handlePress = async () => {
     setLoading(true);
     const url = "/api/v1/investments";
-    console.log(invBox.nombreInvBox, invBox.montoNumeric, invBox.plazo);
+    console.log(finance.nombreFinance, finance.montoNumeric, finance.plazo);
     const data = {
       investment: {
-        name: invBox.nombreInvBox,
-        amount: invBox.montoNumeric,
-        term: invBox.plazo,
-        condition: invBox.condiciones,
+        name: finance.nombreFinance,
+        amount: finance.montoNumeric,
+        term: finance.plazo,
+        condition: finance.condiciones,
       },
     };
 
@@ -83,10 +83,10 @@ const DefinirInversion = ({ navigation }) => {
     if (response.error) {
       setLoading(false);
       console.error("Error al crear la inversión:", response.error);
-      Alert.alert(
-        "Error",
-        "No se pudo crear la Inversión. Intente nuevamente."
-      );
+      const errorMessages = response.error.errors
+        ? Object.values(response.error.errors).flat().join(". ")
+        : response.error;
+      Alert.alert("Error al crear la inversion", errorMessages);
     } else {
       setLoading(false);
       console.log("Inversión creada exitosamente:", response);
@@ -108,7 +108,7 @@ const DefinirInversion = ({ navigation }) => {
           text: "Si",
           onPress: () => [
             navigation.navigate("Inicio"),
-            resetInvBox(),
+            resetFinance(),
             setFocusTab(""),
           ],
           style: "destructive",
@@ -140,7 +140,7 @@ const DefinirInversion = ({ navigation }) => {
       formattedDecimal !== undefined
         ? `${formattedInteger}.${formattedDecimal}`
         : formattedInteger;
-    setInvBox((prevState) => ({
+    setFinance((prevState) => ({
       ...prevState,
       montoShow: formattedText,
       monto: cleanedInput,
@@ -148,7 +148,7 @@ const DefinirInversion = ({ navigation }) => {
 
     // Parse the raw input to a float for numeric validations or calculations
     const numericValue = parseFloat(cleanedInput.replace(/,/g, ""));
-    setInvBox((prevState) => ({
+    setFinance((prevState) => ({
       ...prevState,
       montoNumeric: numericValue || 0,
     }));
@@ -157,14 +157,14 @@ const DefinirInversion = ({ navigation }) => {
   // Focus and Blur Handlers for the input
   const handleFocus = () => {
     // When focused, remove formatting for editing
-    const rawNumericValue = invBox.monto.replace(/,/g, "");
-    setInvBox((prevState) => ({ ...prevState, monto: rawNumericValue }));
+    const rawNumericValue = finance.monto.replace(/,/g, "");
+    setFinance((prevState) => ({ ...prevState, monto: rawNumericValue }));
   };
 
   const handleBlur = () => {
     // When input is blurred, apply formatting
-    const formattedValue = formatInput(invBox.monto);
-    setInvBox((prevState) => ({ ...prevState, monto: formattedValue }));
+    const formattedValue = formatInput(finance.monto);
+    setFinance((prevState) => ({ ...prevState, monto: formattedValue }));
   };
 
   // Helper function to format the numeric input on blur
@@ -174,12 +174,12 @@ const DefinirInversion = ({ navigation }) => {
   };
 
   const isAcceptable =
-    invBox.montoNumeric >= 5000 &&
-    invBox.plazo &&
-    invBox.nombreInvBox &&
-    invBox.condiciones;
+    finance.montoNumeric >= 5000 &&
+    finance.plazo &&
+    finance.nombreFinance &&
+    finance.condiciones;
 
-  const isTable = invBox.montoNumeric >= 5000 && invBox.plazo;
+  const isTable = finance.montoNumeric >= 5000 && finance.plazo;
 
   // Componente Visual
   return (
@@ -230,12 +230,12 @@ const DefinirInversion = ({ navigation }) => {
             <Text style={styles.texto}>Nombre de la Inversión</Text>
             <TextInput
               style={styles.inputNombre}
-              value={invBox.nombreInvBox}
+              value={finance.nombreFinance}
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
               placeholder="Mi inversión"
               onChangeText={(text) =>
-                setInvBox({ ...invBox, nombreInvBox: text })
+                setFinance({ ...finance, nombreFinance: text })
               }
             />
             <View style={styles.separacion} />
@@ -247,14 +247,14 @@ const DefinirInversion = ({ navigation }) => {
               <Text
                 style={[
                   styles.dollarSign,
-                  { color: invBox.monto ? "#060B4D" : "#b3b5c9ff" },
+                  { color: finance.monto ? "#060B4D" : "#b3b5c9ff" },
                 ]}
               >
                 $
               </Text>
               <TextInput
                 style={styles.inputMonto}
-                value={invBox.montoShow}
+                value={finance.montoShow}
                 keyboardType="numeric"
                 maxLength={20}
                 placeholderTextColor={"#b3b5c9ff"}
@@ -267,7 +267,7 @@ const DefinirInversion = ({ navigation }) => {
                 style={[
                   styles.dollarSign,
                   {
-                    color: invBox.monto ? "#060B4D" : "#b3b5c9ff",
+                    color: finance.monto ? "#060B4D" : "#b3b5c9ff",
                     marginLeft: 5,
                   },
                 ]}
@@ -297,7 +297,7 @@ const DefinirInversion = ({ navigation }) => {
                 ]}
                 onPress={() => [
                   setFocusTab("6"),
-                  setInvBox({ ...invBox, plazo: 6 }),
+                  setFinance({ ...finance, plazo: 6 }),
                 ]}
               >
                 <Text style={styles.textoTab}>6</Text>
@@ -311,7 +311,7 @@ const DefinirInversion = ({ navigation }) => {
                 ]}
                 onPress={() => [
                   setFocusTab("12"),
-                  setInvBox({ ...invBox, plazo: 12 }),
+                  setFinance({ ...finance, plazo: 12 }),
                 ]}
               >
                 <Text style={styles.textoTab}>12</Text>
@@ -325,7 +325,7 @@ const DefinirInversion = ({ navigation }) => {
                 ]}
                 onPress={() => [
                   setFocusTab("18"),
-                  setInvBox({ ...invBox, plazo: 18 }),
+                  setFinance({ ...finance, plazo: 18 }),
                 ]}
               >
                 <Text style={styles.textoTab}>18</Text>
@@ -340,7 +340,7 @@ const DefinirInversion = ({ navigation }) => {
                 ]}
                 onPress={() => [
                   setFocusTab("24"),
-                  setInvBox({ ...invBox, plazo: 24 }),
+                  setFinance({ ...finance, plazo: 24 }),
                 ]}
               >
                 <Text style={styles.textoTab}>24</Text>
@@ -420,11 +420,11 @@ const DefinirInversion = ({ navigation }) => {
             <TouchableOpacity
               style={{ marginTop: 10, marginRight: 7.5 }}
               onPress={() =>
-                setInvBox({ ...invBox, condiciones: !invBox.condiciones })
+                setFinance({ ...finance, condiciones: !finance.condiciones })
               }
             >
               <Feather
-                name={invBox.condiciones ? "check-square" : "square"}
+                name={finance.condiciones ? "check-square" : "square"}
                 size={24}
                 color="#060B4D"
               />

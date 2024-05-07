@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
-import { CreditContext } from "../hooks/CreditContext";
+import { FinanceContext } from "../hooks/FinanceContext";
 
 /**
  * `Conexion` es un componente que muestra información de una conexión específica,
@@ -35,7 +35,7 @@ import { CreditContext } from "../hooks/CreditContext";
 const DatosGeneralesCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
-  const { credit, setCredit } = useContext(CreditContext);
+  const { finance, setFinance } = useContext(FinanceContext);
 
   // Componente visual
   return (
@@ -53,29 +53,29 @@ const DatosGeneralesCredito = () => {
         <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
           ¿Ha desempeñado algún cargo político?
         </Text>
-        <Text style={styles.bodyCampo}>{credit.politico}</Text>
+        <Text style={styles.bodyCampo}>{finance.politico}</Text>
         <View style={styles.separacion} />
 
         <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
-        <Text style={styles.bodyCampo}>{credit.domicilio}</Text>
+        <Text style={styles.bodyCampo}>{finance.domicilio}</Text>
         <View style={styles.separacion} />
 
         <Text style={styles.tituloCampo}>Teléfono Casa</Text>
-        <Text style={styles.bodyCampo}>{credit.telCasa}</Text>
+        <Text style={styles.bodyCampo}>{finance.telCasa}</Text>
         <View style={styles.separacion} />
 
         <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
-        <Text style={styles.bodyCampo}>{credit.telTrabajo}</Text>
+        <Text style={styles.bodyCampo}>{finance.telTrabajo}</Text>
         <View style={styles.separacion} />
 
         <Text style={styles.tituloCampo}>Celular</Text>
-        <Text style={styles.bodyCampo}>{credit.celular}</Text>
+        <Text style={styles.bodyCampo}>{finance.celular}</Text>
         <View style={styles.separacion} />
 
         <Text style={styles.tituloCampo}>
           Cuenta bancaria a depositar fondos
         </Text>
-        <Text style={styles.bodyCampo}>{credit.cuenta_bancaria}</Text>
+        <Text style={styles.bodyCampo}>{finance.cuenta_bancaria}</Text>
         <View style={styles.separacion} />
 
         <View style={styles.Description}>
@@ -89,7 +89,7 @@ const DatosGeneralesCredito = () => {
               },
             ]}
           >
-            {credit.descripcion}
+            {finance.descripcion}
           </Text>
         </View>
         <View style={{ alignSelf: "center", marginTop: 15, marginBottom: -5 }}>
@@ -100,7 +100,7 @@ const DatosGeneralesCredito = () => {
               alignItems: "center",
             }}
             onPress={() => [
-              setCredit({ ...credit, paso: 2 }),
+              setFinance({ ...finance, paso: 2 }),
               navigation.navigate("InfoGeneral", { flujo: "Crédito" }),
             ]}
           >

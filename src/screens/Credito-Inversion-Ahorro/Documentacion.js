@@ -21,7 +21,7 @@ import { useRoute } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import ModalEstatus from "../../components/ModalEstatus";
-import { InvBoxContext } from "../../hooks/InvBoxContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import {
   Feather,
   FontAwesome,
@@ -39,7 +39,7 @@ const Documentacion = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   //const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -58,11 +58,11 @@ const Documentacion = ({ navigation }) => {
         sendDocuments: sendDocuments.bind(this),
       });
       console.log(
-        invBox.identificacion,
-        invBox.CURP,
-        invBox.situacionFiscal,
-        invBox.comprobanteDomicilio,
-        invBox.actuoComo
+        finance.identificacion,
+        finance.CURP,
+        finance.situacionFiscal,
+        finance.comprobanteDomicilio,
+        finance.actuoComo
       );
     } else {
       sendDocuments();
@@ -91,9 +91,10 @@ const Documentacion = ({ navigation }) => {
         body = {
           [key]: {
             accept_documentation_1:
-              invBox.actuoComo === "Actúo a nombre y por cuenta propia.",
+              finance.actuoComo === "Actúo a nombre y por cuenta propia.",
             accept_documentation_2:
-              invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero.",
+              finance.actuoComo ===
+              "Actúo a nombre y por cuenta de un tercero.",
           },
         };
       } else {
@@ -101,34 +102,34 @@ const Documentacion = ({ navigation }) => {
         // Sending FormData
         const formData = new FormData();
         formData.append(`${key}[official_identification]`, {
-          uri: invBox.identificacion,
+          uri: finance.identificacion,
           type: "image/jpeg",
           name: "identificacion.jpeg",
         });
         formData.append(`${key}[curp]`, {
-          uri: invBox.CURP,
+          uri: finance.CURP,
           type: "image/jpeg",
           name: "CURP.jpeg",
         });
         formData.append(`${key}[proof_sat]`, {
-          uri: invBox.situacionFiscal,
+          uri: finance.situacionFiscal,
           type: "image/jpeg",
           name: "situacionFiscal.jpeg",
         });
         formData.append(`${key}[proof_address]`, {
-          uri: invBox.comprobanteDomicilio,
+          uri: finance.comprobanteDomicilio,
           type: "image/jpeg",
           name: "comprobanteDomicilio.jpeg",
         });
         formData.append(
           `${key}[accept_documentation_1]`,
-          invBox.actuoComo === "Actúo a nombre y por cuenta propia."
+          finance.actuoComo === "Actúo a nombre y por cuenta propia."
             ? "true"
             : "false"
         );
         formData.append(
           `${key}[accept_documentation_2]`,
-          invBox.actuoComo === "Actúo a nombre y por cuenta de un tercero."
+          finance.actuoComo === "Actúo a nombre y por cuenta de un tercero."
             ? "true"
             : "false"
         );
@@ -154,7 +155,7 @@ const Documentacion = ({ navigation }) => {
       setLoading(false);
     }
 
-    if (invBox.accountID) {
+    if (finance.accountID) {
       setLoading(true);
       const url = `/api/v1/${
         flujo === "Inversión" ? "investments" : "box_savings"
@@ -162,7 +163,7 @@ const Documentacion = ({ navigation }) => {
 
       const data = {
         [key]: {
-          bank_account_id: invBox.accountID,
+          bank_account_id: finance.accountID,
         },
       };
 
@@ -237,7 +238,7 @@ const Documentacion = ({ navigation }) => {
           response
         );
         navigation.navigate("Inicio");
-        resetInvBox();
+        resetFinance();
       }
     };
   };
@@ -245,27 +246,27 @@ const Documentacion = ({ navigation }) => {
   // Efecto para deshabilitar el botón si algún campo está vacío
   useEffect(() => {
     const camposLlenos =
-      (invBox.CURP &&
-        invBox.situacionFiscal &&
-        invBox.comprobanteDomicilio &&
-        invBox.identificacion &&
-        invBox.actuoComo) ||
-      (invBox.isThereIdentificacion &&
-        invBox.isThereCURP &&
-        invBox.isThereSituacionFiscal &&
-        invBox.isThereComprobanteDomicilio &&
-        invBox.actuoComo);
+      (finance.CURP &&
+        finance.situacionFiscal &&
+        finance.comprobanteDomicilio &&
+        finance.identificacion &&
+        finance.actuoComo) ||
+      (finance.isThereIdentificacion &&
+        finance.isThereCURP &&
+        finance.isThereSituacionFiscal &&
+        finance.isThereComprobanteDomicilio &&
+        finance.actuoComo);
     setDisabled(!camposLlenos);
   }, [
-    invBox.CURP,
-    invBox.situacionFiscal,
-    invBox.comprobanteDomicilio,
-    invBox.identificacion,
-    invBox.actuoComo,
-    invBox.isThereIdentificacion,
-    invBox.isThereCURP,
-    invBox.isThereSituacionFiscal,
-    invBox.isThereComprobanteDomicilio,
+    finance.CURP,
+    finance.situacionFiscal,
+    finance.comprobanteDomicilio,
+    finance.identificacion,
+    finance.actuoComo,
+    finance.isThereIdentificacion,
+    finance.isThereCURP,
+    finance.isThereSituacionFiscal,
+    finance.isThereComprobanteDomicilio,
   ]);
 
   // Función para obtener la existencia de documentos de la inversión o caja de ahorro
@@ -296,7 +297,7 @@ const Documentacion = ({ navigation }) => {
         setDocumentsLoaded(allDocsPresent);
         console.log("Documentos cargados?:", allDocsPresent);
 
-        setInvBox((prevState) => ({
+        setFinance((prevState) => ({
           ...prevState,
           documents: docs,
         }));
@@ -325,7 +326,7 @@ const Documentacion = ({ navigation }) => {
     }, {});
 
     // Update the context state with the new statuses
-    setInvBox((prevState) => ({
+    setFinance((prevState) => ({
       ...prevState,
       ...updatedStatus,
     }));
@@ -333,10 +334,10 @@ const Documentacion = ({ navigation }) => {
 
   // useEffect to handle document status updates
   useEffect(() => {
-    if (invBox.documents) {
-      updateDocumentStatuses(invBox.documents);
+    if (finance.documents) {
+      updateDocumentStatuses(finance.documents);
     }
-  }, [invBox.documents]);
+  }, [finance.documents]);
 
   // Función para obtener las cuentas bancarias del usuario
   const fetchAccounts = async () => {
@@ -359,7 +360,7 @@ const Documentacion = ({ navigation }) => {
           result.data.data
         );
         setAddAccount(false);
-        setInvBox((prevState) => ({
+        setFinance((prevState) => ({
           ...prevState,
           accounts: result.data.data || [], // Ensure fallback to empty array if data is undefined
         }));
@@ -369,7 +370,7 @@ const Documentacion = ({ navigation }) => {
 
   useEffect(() => {
     setInitial(-1);
-    setInvBox({ ...invBox, accountID: "" });
+    setFinance({ ...finance, accountID: "" });
   }, [addAccount]);
 
   // Efecto para obtener los documentos de la inversión o caja de ahorro, y las cuentas bancarias del usuario se ejecuta al cargar la pantalla
@@ -388,7 +389,7 @@ const Documentacion = ({ navigation }) => {
         "Por favor, completa la información solicitada para poder agregar una cuenta bancaria nueva."
       );
     } else {
-      setInvBox({ ...invBox, accountID: "" });
+      setFinance({ ...finance, accountID: "" });
       navigation.navigate("DatosBancarios", {
         flujo: flujo,
         idInversion: idInversion,
@@ -428,26 +429,26 @@ const Documentacion = ({ navigation }) => {
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
       if (setType === "fiscal") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           situacionFiscal: selectedDocument.uri,
           nombreSituacionFiscal: selectedDocument.name,
         });
       } else if (setType === "domicilio") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           comprobanteDomicilio: selectedDocument.uri,
           nombreComprobanteDomicilio: selectedDocument.name,
         });
       } else if (setType === "identificacion") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           identificacion: selectedDocument.uri,
           nombreIdentificacion: selectedDocument.name,
         });
       } else if (setType === "curp") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           CURP: selectedDocument.uri,
           nombreCURP: selectedDocument.name,
         });
@@ -469,26 +470,26 @@ const Documentacion = ({ navigation }) => {
     if (!result.canceled) {
       const selectedImage = result.assets[0];
       if (setType === "fiscal") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           situacionFiscal: selectedImage.uri,
           nombreSituacionFiscal: "Constancia Seleccionada",
         });
       } else if (setType === "domicilio") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           comprobanteDomicilio: selectedImage.uri,
           nombreComprobanteDomicilio: "Comprobante Seleccionado",
         });
       } else if (setType === "identificacion") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           identificacion: selectedImage.uri,
           nombreIdentificacion: "Identificación Seleccionada",
         });
       } else if (setType === "curp") {
-        setInvBox({
-          ...invBox,
+        setFinance({
+          ...finance,
           CURP: selectedImage.uri,
           nombreCURP: "CURP Seleccionado",
         });
@@ -570,8 +571,8 @@ const Documentacion = ({ navigation }) => {
               }}
             >
               <Text style={styles.tituloCampo}>Identificación vigente</Text>
-              {!invBox.isThereIdentificacion ? (
-                !invBox.identificacion ? (
+              {!finance.isThereIdentificacion ? (
+                !finance.identificacion ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("identificacion")}
@@ -604,12 +605,12 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {invBox.nombreIdentificacion}
+                        {finance.nombreIdentificacion}
                       </Text>
                       <TouchableOpacity
                         onPress={() => [
-                          setInvBox({
-                            ...invBox,
+                          setFinance({
+                            ...finance,
                             identificacion: "",
                             nombreIdentificacion: "",
                           }),
@@ -646,8 +647,8 @@ const Documentacion = ({ navigation }) => {
               <View style={styles.separacion} />
 
               <Text style={styles.tituloCampo}>CURP</Text>
-              {!invBox.isThereCURP ? (
-                !invBox.CURP ? (
+              {!finance.isThereCURP ? (
+                !finance.CURP ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("curp")}
@@ -680,11 +681,11 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {invBox.nombreCURP}
+                        {finance.nombreCURP}
                       </Text>
                       <TouchableOpacity
                         onPress={() => [
-                          setInvBox({ ...invBox, CURP: "", nombreCURP: "" }),
+                          setFinance({ ...finance, CURP: "", nombreCURP: "" }),
                         ]}
                       >
                         <FontAwesome
@@ -721,8 +722,8 @@ const Documentacion = ({ navigation }) => {
               <Text style={styles.tituloCampo}>
                 Constancia de Situación Fiscal (SAT)
               </Text>
-              {!invBox.isThereSituacionFiscal ? (
-                !invBox.situacionFiscal ? (
+              {!finance.isThereSituacionFiscal ? (
+                !finance.situacionFiscal ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("fiscal")}
@@ -755,12 +756,12 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {invBox.nombreSituacionFiscal}
+                        {finance.nombreSituacionFiscal}
                       </Text>
                       <TouchableOpacity
                         onPress={() => [
-                          setInvBox({
-                            ...invBox,
+                          setFinance({
+                            ...finance,
                             situacionFiscal: "",
                             nombreSituacionFiscal: "",
                           }),
@@ -800,8 +801,8 @@ const Documentacion = ({ navigation }) => {
               <Text style={styles.tituloCampo}>
                 Comprobante de domicilio (no más de tres meses)
               </Text>
-              {!invBox.isThereComprobanteDomicilio ? (
-                !invBox.comprobanteDomicilio ? (
+              {!finance.isThereComprobanteDomicilio ? (
+                !finance.comprobanteDomicilio ? (
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}
                     onPress={() => showUploadOptions("domicilio")}
@@ -834,12 +835,12 @@ const Documentacion = ({ navigation }) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {invBox.nombreComprobanteDomicilio}
+                        {finance.nombreComprobanteDomicilio}
                       </Text>
                       <TouchableOpacity
                         onPress={() => [
-                          setInvBox({
-                            ...invBox,
+                          setFinance({
+                            ...finance,
                             comprobanteDomicilio: "",
                             nombreComprobanteDomicilio: "",
                           }),
@@ -881,13 +882,13 @@ const Documentacion = ({ navigation }) => {
                     Elige una cuenta bancaria
                   </Text>
                   <RadioForm
-                    radio_props={invBox.accounts.map((account) => ({
+                    radio_props={finance.accounts.map((account) => ({
                       label: account.short_name,
                       value: account.id,
                     }))}
                     initial={initial}
                     onPress={(value) => [
-                      setInvBox({ ...invBox, accountID: value }),
+                      setFinance({ ...finance, accountID: value }),
                       console.log(value),
                     ]}
                     buttonColor={"#060B4D"}
@@ -941,7 +942,9 @@ const Documentacion = ({ navigation }) => {
               <RadioForm
                 radio_props={dataActuo}
                 initial={-1}
-                onPress={(value) => setInvBox({ ...invBox, actuoComo: value })}
+                onPress={(value) =>
+                  setFinance({ ...finance, actuoComo: value })
+                }
                 buttonColor={"#060B4D"}
                 buttonSize={10}
                 selectedButtonColor={"#060B4D"}
@@ -1044,7 +1047,7 @@ const Documentacion = ({ navigation }) => {
         visible={modalVisible}
         onAccept={() => [
           setModalVisible(false),
-          resetInvBox(),
+          resetFinance(),
           navigation.navigate("MiTankef"),
         ]}
       />

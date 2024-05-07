@@ -13,7 +13,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../../API/APIService";
-import { CreditContext } from "../../hooks/CreditContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import ObligadoSolidario from "../../components/ObligadoSolidario";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
@@ -25,7 +25,7 @@ const ObligadosSolidarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { credit, setCredit } = useContext(CreditContext);
+  const { finance, setFinance } = useContext(FinanceContext);
   const [network, setNetwork] = useState([]);
   const [disabled, setDisabled] = useState(true);
 
@@ -42,8 +42,8 @@ const ObligadosSolidarios = ({ navigation }) => {
 
   // Efecto para deshabilitar el botón de continuar si no hay ningun obligado
   useEffect(() => {
-    setDisabled(credit.obligados_solidarios.length === 0 ? true : false);
-  }, [credit.obligados_solidarios]);
+    setDisabled(finance.obligados_solidarios.length === 0 ? true : false);
+  }, [finance.obligados_solidarios]);
 
   // Llama a fetchNetwork cuando el componente se monta
   useEffect(() => {
@@ -125,13 +125,13 @@ const ObligadosSolidarios = ({ navigation }) => {
           style={{
             paddingHorizontal: 10,
             marginBottom: 20,
-            flexDirection: credit.paso === 1 ? "column" : "row",
+            flexDirection: finance.paso === 1 ? "column" : "row",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           {/* Botones de Atrás y Continuar */}
-          {credit.paso !== 1 && (
+          {finance.paso !== 1 && (
             <TouchableOpacity
               style={[
                 styles.botonContinuar,
@@ -145,7 +145,7 @@ const ObligadosSolidarios = ({ navigation }) => {
               ]}
               onPress={() => [
                 navigation.navigate("DefinirCredito", { flujo: "Crédito" }),
-                setCredit({ ...credit, paso: 2 }),
+                setFinance({ ...finance, paso: 2 }),
               ]}
             >
               <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
@@ -158,14 +158,14 @@ const ObligadosSolidarios = ({ navigation }) => {
               styles.botonContinuar,
               {
                 flex: 1,
-                marginLeft: credit.paso === 1 ? 0 : 5,
-                width: credit.paso === 1 && "80%",
+                marginLeft: finance.paso === 1 ? 0 : 5,
+                width: finance.paso === 1 && "80%",
                 backgroundColor: disabled ? "#D5D5D5" : "#060B4D",
               },
             ]}
             onPress={() => [
               navigation.navigate("DefinirCredito", { flujo: "Crédito" }),
-              setCredit({ ...credit, paso: credit.paso + 1 }),
+              setFinance({ ...finance, paso: finance.paso + 1 }),
             ]}
             disabled={disabled}
           >

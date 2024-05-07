@@ -19,7 +19,7 @@ import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
-import { CreditContext } from "../../hooks/CreditContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -30,7 +30,7 @@ const InfoGeneral = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { credit, setCredit } = useContext(CreditContext);
+  const { finance, setFinance } = useContext(FinanceContext);
   const [focus, setFocus] = useState("General");
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
@@ -59,24 +59,24 @@ const InfoGeneral = ({ navigation }) => {
     //setIsEmailValid(emailValido);
 
     const camposLlenos =
-      credit.domicilio !== "" &&
-      credit.politico !== "" &&
-      credit.telCasa !== "" &&
-      credit.telTrabajo !== "" &&
-      credit.celular !== "" &&
-      credit.cuenta_bancaria !== "" &&
-      credit.cuenta_bancaria.length === 16 &&
-      credit.descripcion !== "";
+      finance.domicilio !== "" &&
+      finance.politico !== "" &&
+      finance.telCasa !== "" &&
+      finance.telTrabajo !== "" &&
+      finance.celular !== "" &&
+      finance.cuenta_bancaria !== "" &&
+      finance.cuenta_bancaria.length === 16 &&
+      finance.descripcion !== "";
     //emailValido; // Utiliza la variable local para la validación
     setDisabled(!camposLlenos);
   }, [
-    credit.domicilio,
-    credit.politico,
-    credit.telCasa,
-    credit.telTrabajo,
-    credit.celular,
-    credit.cuenta_bancaria,
-    credit.descripcion,
+    finance.domicilio,
+    finance.politico,
+    finance.telCasa,
+    finance.telTrabajo,
+    finance.celular,
+    finance.cuenta_bancaria,
+    finance.descripcion,
   ]);
 
   // Function to format the phone number as user types
@@ -84,11 +84,11 @@ const InfoGeneral = ({ navigation }) => {
     const formatter = new AsYouType(country);
     const formatted = formatter.input(text);
     if (setter === "Casa") {
-      setCredit({ ...credit, telCasa: text, telCasaShow: formatted });
+      setFinance({ ...finance, telCasa: text, telCasaShow: formatted });
     } else if (setter === "Trabajo") {
-      setCredit({ ...credit, telTrabajo: text, telTrabajoShow: formatted });
+      setFinance({ ...finance, telTrabajo: text, telTrabajoShow: formatted });
     } else if (setter === "Celular") {
-      setCredit({ ...credit, celular: text, celularShow: formatted });
+      setFinance({ ...finance, celular: text, celularShow: formatted });
     }
   };
 
@@ -205,14 +205,14 @@ const InfoGeneral = ({ navigation }) => {
                   <RadioForm
                     radio_props={dataPolitico}
                     initial={
-                      credit.politico === "Si"
+                      finance.politico === "Si"
                         ? 0
-                        : credit.politico === "No"
+                        : finance.politico === "No"
                         ? 1
                         : -1
                     }
                     onPress={(value) =>
-                      setCredit({ ...credit, politico: value })
+                      setFinance({ ...finance, politico: value })
                     }
                     buttonColor={"#060B4D"}
                     buttonSize={10}
@@ -233,14 +233,14 @@ const InfoGeneral = ({ navigation }) => {
                   <RadioForm
                     radio_props={dataDomicilio}
                     initial={
-                      credit.domicilio === "Propio"
+                      finance.domicilio === "Propio"
                         ? 0
-                        : credit.domicilio === "Rentado"
+                        : finance.domicilio === "Rentado"
                         ? 1
                         : -1
                     }
                     onPress={(value) =>
-                      setCredit({ ...credit, domicilio: value })
+                      setFinance({ ...finance, domicilio: value })
                     }
                     buttonColor={"#060B4D"}
                     buttonSize={10}
@@ -275,7 +275,7 @@ const InfoGeneral = ({ navigation }) => {
                       const { cca2, callingCode } = country;
                       setCountryCode3(cca2);
                       setCallingCode3(callingCode[0]);
-                      setCredit({ ...credit, telCasa: "", telCasaShow: "" });
+                      setFinance({ ...finance, telCasa: "", telCasaShow: "" });
                     }}
                     visible={pickerVisible3}
                     onClose={() => setPickerVisible3(false)}
@@ -288,7 +288,7 @@ const InfoGeneral = ({ navigation }) => {
                     onChangeText={(text) =>
                       formatPhoneNumber(text, countryCode3, "Casa")
                     }
-                    value={credit.telCasaShow}
+                    value={finance.telCasaShow}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
                   />
@@ -314,8 +314,8 @@ const InfoGeneral = ({ navigation }) => {
                       const { cca2, callingCode } = country;
                       setCountryCode2(cca2);
                       setCallingCode2(callingCode[0]);
-                      setCredit({
-                        ...credit,
+                      setFinance({
+                        ...finance,
                         telTrabajo: "",
                         telTrabajoShow: "",
                       });
@@ -331,7 +331,7 @@ const InfoGeneral = ({ navigation }) => {
                     onChangeText={(text) =>
                       formatPhoneNumber(text, countryCode2, "Trabajo")
                     }
-                    value={credit.telTrabajoShow}
+                    value={finance.telTrabajoShow}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
                   />
@@ -357,7 +357,7 @@ const InfoGeneral = ({ navigation }) => {
                       const { cca2, callingCode } = country;
                       setCountryCode(cca2);
                       setCallingCode(callingCode[0]);
-                      setCredit({ ...credit, celular: "", celularShow: "" });
+                      setFinance({ ...finance, celular: "", celularShow: "" });
                     }}
                     visible={pickerVisible}
                     onClose={() => setPickerVisible(false)}
@@ -370,7 +370,7 @@ const InfoGeneral = ({ navigation }) => {
                     onChangeText={(text) =>
                       formatPhoneNumber(text, countryCode, "Celular")
                     }
-                    value={credit.celularShow}
+                    value={finance.celularShow}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
                   />
@@ -383,9 +383,9 @@ const InfoGeneral = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   onChangeText={(value) =>
-                    setCredit({ ...credit, cuenta_bancaria: value })
+                    setFinance({ ...finance, cuenta_bancaria: value })
                   }
-                  value={credit.cuenta_bancaria}
+                  value={finance.cuenta_bancaria}
                   placeholder="16 dígitos"
                   maxLength={16}
                   keyboardType="numeric"
@@ -403,9 +403,9 @@ const InfoGeneral = ({ navigation }) => {
                   <TextInput
                     style={styles.inputDescription}
                     onChangeText={(value) =>
-                      setCredit({ ...credit, descripcion: value })
+                      setFinance({ ...finance, descripcion: value })
                     }
-                    value={credit.descripcion}
+                    value={finance.descripcion}
                     placeholder="Breve descripción de las necesidades del crédito"
                     multiline={true}
                     maxLength={300}
@@ -421,12 +421,12 @@ const InfoGeneral = ({ navigation }) => {
                   { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
                 ]}
                 onPress={() => [
-                  setCredit({
-                    ...credit,
-                    paso: credit.paso + 1,
+                  setFinance({
+                    ...finance,
+                    paso: finance.paso + 1,
                   }),
                   navigation.navigate("DefinirCredito", { flujo: flujo }),
-                  console.log(credit),
+                  console.log(finance),
                 ]}
                 disabled={disabled}
               >

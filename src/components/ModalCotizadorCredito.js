@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
-import { CreditContext } from "../hooks/CreditContext";
+import { FinanceContext } from "../hooks/FinanceContext";
 import { Ionicons } from "@expo/vector-icons";
 
 /**
@@ -36,7 +36,7 @@ import { Ionicons } from "@expo/vector-icons";
 const ModalCotizadorCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
-  const { credit, setCredit } = useContext(CreditContext);
+  const { finance, setFinance } = useContext(FinanceContext);
 
   // Componente visual
   return (
@@ -44,7 +44,7 @@ const ModalCotizadorCredito = () => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={credit.modalCotizadorVisible}
+        visible={finance.modalCotizadorVisible}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -54,7 +54,7 @@ const ModalCotizadorCredito = () => {
             />
             <Text style={styles.modalText}>Total a pagar</Text>
             <Text style={[styles.modalText, { fontSize: 30 }]}>
-              {credit.total_a_pagar}
+              {finance.total_a_pagar}
             </Text>
             <View
               style={[
@@ -72,7 +72,7 @@ const ModalCotizadorCredito = () => {
                   Comisión por{"\n"}apertura
                 </Text>
                 <Text style={styles.valorConcepto}>
-                  {credit.comision_por_apertura}
+                  {finance.comision_por_apertura}
                 </Text>
               </View>
               <Ionicons
@@ -86,7 +86,7 @@ const ModalCotizadorCredito = () => {
                   Tasa de{"\n"}operación
                 </Text>
                 <Text style={styles.valorConcepto}>
-                  {credit.tasa_de_operacion}
+                  {finance.tasa_de_operacion}
                 </Text>
               </View>
               <Ionicons
@@ -100,7 +100,7 @@ const ModalCotizadorCredito = () => {
                   Pago{"\n"}mensual
                 </Text>
                 <Text style={[styles.valorConcepto]}>
-                  {credit.pago_mensual}
+                  {finance.pago_mensual}
                 </Text>
               </View>
             </View>
@@ -122,7 +122,7 @@ const ModalCotizadorCredito = () => {
                   },
                 ]}
                 onPress={() =>
-                  setCredit({ ...credit, modalCotizadorVisible: false })
+                  setFinance({ ...finance, modalCotizadorVisible: false })
                 }
               >
                 <Text
@@ -142,10 +142,10 @@ const ModalCotizadorCredito = () => {
                   },
                 ]}
                 onPress={() => {
-                  if (credit.paso === 1) {
-                    setCredit({
-                      ...credit,
-                      paso: credit.paso + 1,
+                  if (finance.paso === 1) {
+                    setFinance({
+                      ...finance,
+                      paso: finance.paso + 1,
                       modalCotizadorVisible: false,
                     });
                   }

@@ -18,7 +18,7 @@ import Slider from "@react-native-community/slider";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import ModalAmortizacion from "../../components/ModalAmortizacion";
-import { InvBoxContext } from "../../hooks/InvBoxContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIGet, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
@@ -30,7 +30,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [open, setOpen] = useState(false);
   const [retornoNeto, setRetornoNeto] = useState("");
   const [tasa, setTasa] = useState("");
@@ -88,22 +88,22 @@ const DefinirCajaAhorro = ({ navigation }) => {
 
   // Funcion para manejar el input de monto al seleccionar
   const handleFocus = () => {
-    const numericValue = invBox.monto.replace(/,/g, "");
-    setInvBox((prevState) => ({ ...prevState, monto: numericValue }));
+    const numericValue = finance.monto.replace(/,/g, "");
+    setFinance((prevState) => ({ ...prevState, monto: numericValue }));
   };
 
   // Funcion para manejar el input de monto al deseleccionar
   const handleBlur = () => {
-    setInvBox((prevState) => ({
+    setFinance((prevState) => ({
       ...prevState,
-      monto: formatInput(invBox.monto),
+      monto: formatInput(finance.monto),
     }));
   };*/
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
     const fetchCotizacion = async () => {
-      const url = `/api/v1/simulator?term=36&type=box_saving&amount=${invBox.monto}`;
+      const url = `/api/v1/simulator?term=36&type=box_saving&amount=${finance.monto}`;
 
       try {
         const response = await APIGet(url);
@@ -123,22 +123,22 @@ const DefinirCajaAhorro = ({ navigation }) => {
         Alert.alert("Error", "Ha ocurrido un error al realizar la cotización.");
       }
     };
-    if (invBox.monto) fetchCotizacion();
-    else if (!invBox.monto) {
+    if (finance.monto) fetchCotizacion();
+    else if (!finance.monto) {
       setRetornoNeto("");
       setTasa("");
     }
-  }, [invBox.monto]);
+  }, [finance.monto]);
 
   const handlePress = async () => {
     setLoading(true);
     const url = "/api/v1/box_savings";
     const data = {
       box_saving: {
-        name: invBox.nombreInvBox,
-        amount: invBox.monto,
+        name: finance.nombreFinance,
+        amount: finance.monto,
         term: 36,
-        condition: invBox.condiciones,
+        condition: finance.condiciones,
       },
     };
 
@@ -147,10 +147,10 @@ const DefinirCajaAhorro = ({ navigation }) => {
       // Manejar el error
       setLoading(false);
       console.error("Error al crear la caja de ahorro:", response.error);
-      Alert.alert(
-        "Error",
-        "No se pudo crear la Caja de Ahorro. Intente nuevamente."
-      );
+      const errorMessages = response.error.errors
+        ? Object.values(response.error.errors).flat().join(". ")
+        : response.error;
+      Alert.alert("Error al crear la caja de ahorro", errorMessages);
     } else {
       setLoading(false);
       console.log("Caja de ahorro creada exitosamente:", response);
@@ -168,7 +168,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
       [
         {
           text: "Si",
-          onPress: () => [navigation.navigate("Inicio"), resetInvBox()],
+          onPress: () => [navigation.navigate("Inicio"), resetFinance()],
           style: "destructive",
         },
         {
@@ -185,9 +185,11 @@ const DefinirCajaAhorro = ({ navigation }) => {
   ]);
 
   const isAcceptable =
-    invBox.montoNumeric >= 25000 && invBox.nombreInvBox && invBox.condiciones;
+    finance.montoNumeric >= 25000 &&
+    finance.nombreFinance &&
+    finance.condiciones;
 
-  const isTable = invBox.monto >= 25000;
+  const isTable = finance.monto >= 25000;
 
   // Componente Visual
   return (
@@ -243,12 +245,12 @@ const DefinirCajaAhorro = ({ navigation }) => {
             <Text style={styles.texto}>Nombre de la Caja de Ahorro</Text>
             <TextInput
               style={styles.inputNombre}
-              value={invBox.nombreInvBox}
+              value={finance.nombreFinance}
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
               placeholder="Mi Caja de Ahorro"
               onChangeText={(text) =>
-                setInvBox({ ...invBox, nombreInvBox: text })
+                setFinance({ ...finance, nombreFinance: text })
               }
             />
             <View style={styles.separacion} />
@@ -259,7 +261,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
             <View style={styles.inputWrapper}>
               <DropDownPicker
                 open={open}
-                value={invBox.monto}
+                value={finance.monto}
                 items={dataMonto}
                 placeholder="Elige una opción"
                 setOpen={setOpen}
@@ -268,7 +270,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
                   animationType: "slide",
                 }}
                 setValue={(callback) => {
-                  setInvBox((prevState) => ({
+                  setFinance((prevState) => ({
                     ...prevState,
                     monto: callback(prevState.monto),
                     montoNumeric: callback(prevState.montoNumeric),
@@ -276,8 +278,8 @@ const DefinirCajaAhorro = ({ navigation }) => {
                   }));
                 }}
                 onChangeValue={(value) =>
-                  setInvBox({
-                    ...invBox,
+                  setFinance({
+                    ...finance,
                     monto: value,
                     montoNumeric: value,
                     plazo: 36,
@@ -362,11 +364,11 @@ const DefinirCajaAhorro = ({ navigation }) => {
             <TouchableOpacity
               style={{ marginTop: 10, marginRight: 7.5 }}
               onPress={() =>
-                setInvBox({ ...invBox, condiciones: !invBox.condiciones })
+                setFinance({ ...finance, condiciones: !finance.condiciones })
               }
             >
               <Feather
-                name={invBox.condiciones ? "check-square" : "square"}
+                name={finance.condiciones ? "check-square" : "square"}
                 size={24}
                 color="#060B4D"
               />

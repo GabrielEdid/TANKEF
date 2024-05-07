@@ -10,8 +10,6 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "./src/hooks/UserContext";
-import { CreditProvider } from "./src/hooks/CreditContext";
-import { InvBoxProvider } from "./src/hooks/InvBoxContext";
 import { FinanceProvider } from "./src/hooks/FinanceContext";
 import { setToken, getToken } from "./src/API/APIService";
 // Importar pantallas de la aplicación
@@ -170,36 +168,26 @@ function InicioStack() {
 function CrearStack() {
   return (
     <FinanceProvider>
-      <InvBoxProvider>
-        <CreditProvider>
-          <Stack.Navigator
-            screenOptions={{ headerShown: false }}
-            options={{ gestureEnabled: false }}
-          >
-            <Stack.Screen name="Placeholder" component={Placeholder} />
-            <Stack.Screen
-              name="DefinirInversion"
-              component={DefinirInversion}
-            />
-            <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
-            <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
-            <Stack.Screen name="OrdenPago" component={OrdenPago} />
-            <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
-            <Stack.Screen name="FirmaDomicilio" component={FirmaDomicilio} />
-            <Stack.Screen name="DefinirCredito" component={DefinirCredito} />
-            <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
-            <Stack.Screen
-              name="DefinirCajaAhorro"
-              component={DefinirCajaAhorro}
-            />
-            <Stack.Screen name="Documentacion" component={Documentacion} />
-            <Stack.Screen
-              name="ObligadosSolidarios"
-              component={ObligadosSolidarios}
-            />
-          </Stack.Navigator>
-        </CreditProvider>
-      </InvBoxProvider>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        options={{ gestureEnabled: false }}
+      >
+        <Stack.Screen name="Placeholder" component={Placeholder} />
+        <Stack.Screen name="DefinirInversion" component={DefinirInversion} />
+        <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
+        <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
+        <Stack.Screen name="OrdenPago" component={OrdenPago} />
+        <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
+        <Stack.Screen name="FirmaDomicilio" component={FirmaDomicilio} />
+        <Stack.Screen name="DefinirCredito" component={DefinirCredito} />
+        <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
+        <Stack.Screen name="DefinirCajaAhorro" component={DefinirCajaAhorro} />
+        <Stack.Screen name="Documentacion" component={Documentacion} />
+        <Stack.Screen
+          name="ObligadosSolidarios"
+          component={ObligadosSolidarios}
+        />
+      </Stack.Navigator>
     </FinanceProvider>
   );
 }

@@ -19,7 +19,7 @@ import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
-import { InvBoxContext } from "../../hooks/InvBoxContext";
+import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIPut, APIPost } from "../../API/APIService";
 import BulletPointText from "../../components/BulletPointText";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
@@ -32,7 +32,7 @@ const Beneficiarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const { invBox, setInvBox, resetInvBox } = useContext(InvBoxContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [focus, setFocus] = useState("Beneficiarios");
   const [segundoBeneficiaro, setSegundoBeneficiaro] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -83,14 +83,14 @@ const Beneficiarios = ({ navigation }) => {
     const key = flujo === "Inversión" ? "investment" : "box_saving";
     const data = {
       [key]: {
-        primary_beneficiary_first_name: invBox.nombre,
-        primary_beneficiary_percentage: parseInt(invBox.porcentaje, 10),
-        primary_beneficiary_kinship: invBox.parentesco,
-        primary_beneficiary_last_name: invBox.apellidos,
-        secondary_beneficiary_first_name: invBox.nombre2,
-        secondary_beneficiary_percentage: parseInt(invBox.porcentaje2, 10),
-        secondary_beneficiary_kinship: invBox.parentesco2,
-        secondary_beneficiary_last_name: invBox.apellidos2,
+        primary_beneficiary_first_name: finance.nombre,
+        primary_beneficiary_percentage: parseInt(finance.porcentaje, 10),
+        primary_beneficiary_kinship: finance.parentesco,
+        primary_beneficiary_last_name: finance.apellidos,
+        secondary_beneficiary_first_name: finance.nombre2,
+        secondary_beneficiary_percentage: parseInt(finance.porcentaje2, 10),
+        secondary_beneficiary_kinship: finance.parentesco2,
+        secondary_beneficiary_last_name: finance.apellidos2,
       },
     };
     try {
@@ -169,15 +169,15 @@ const Beneficiarios = ({ navigation }) => {
           response
         );
         navigation.navigate("Inicio");
-        resetInvBox();
+        resetFinance();
       }
     };
   };
 
   // Función para manejar la cancelación del segundo beneficiario
   const handleCancelBeneficiario = () => {
-    setInvBox({
-      ...invBox,
+    setFinance({
+      ...finance,
       porcentaje: "100",
       nombre2: "",
       apellidos2: "",
@@ -193,18 +193,18 @@ const Beneficiarios = ({ navigation }) => {
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
     const camposLlenos =
-      invBox.nombre !== "" &&
-      invBox.apellidos !== "" &&
-      invBox.parentesco !== "" &&
+      finance.nombre !== "" &&
+      finance.apellidos !== "" &&
+      finance.parentesco !== "" &&
       //telefono !== "" &&
-      invBox.porcentaje !== "";
+      finance.porcentaje !== "";
 
     const camposSegundoBeneficiarioLlenos =
-      invBox.nombre2 !== "" &&
-      invBox.apellidos2 !== "" &&
-      invBox.parentesco2 !== "" &&
+      finance.nombre2 !== "" &&
+      finance.apellidos2 !== "" &&
+      finance.parentesco2 !== "" &&
       //telefono2 !== "" &&
-      invBox.porcentaje2 !== "";
+      finance.porcentaje2 !== "";
 
     const todosCamposLlenos = segundoBeneficiaro
       ? camposLlenos && camposSegundoBeneficiarioLlenos
@@ -212,16 +212,16 @@ const Beneficiarios = ({ navigation }) => {
 
     setDisabled(!todosCamposLlenos);
   }, [
-    invBox.nombre,
-    invBox.apellidos,
-    invBox.parentesco,
+    finance.nombre,
+    finance.apellidos,
+    finance.parentesco,
     //telefono,
-    invBox.porcentaje,
-    invBox.nombre2,
-    invBox.apellidos2,
-    invBox.parentesco2,
+    finance.porcentaje,
+    finance.nombre2,
+    finance.apellidos2,
+    finance.parentesco2,
     //telefono2,
-    invBox.porcentaje2,
+    finance.porcentaje2,
     segundoBeneficiaro,
   ]);
 
@@ -229,7 +229,7 @@ const Beneficiarios = ({ navigation }) => {
   const handlePorcentajeChange = (value) => {
     let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
     numericValue = Math.min(Math.max(numericValue, 1), 100); // Ensure value is between 1 and 100
-    setInvBox((prevState) => {
+    setFinance((prevState) => {
       const otherValue = calculateOtherPercentage(numericValue);
       return {
         ...prevState,
@@ -243,7 +243,7 @@ const Beneficiarios = ({ navigation }) => {
   const handlePorcentaje2Change = (value) => {
     let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
     numericValue = Math.min(Math.max(numericValue, 1), 100); // Ensure value is between 1 and 100
-    setInvBox((prevState) => {
+    setFinance((prevState) => {
       const otherValue = calculateOtherPercentage(numericValue);
       return {
         ...prevState,
@@ -393,9 +393,9 @@ const Beneficiarios = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   onChangeText={(text) =>
-                    setInvBox({ ...invBox, nombre: text })
+                    setFinance({ ...finance, nombre: text })
                   }
-                  value={invBox.nombre}
+                  value={finance.nombre}
                   placeholder="Eje. Humberto Arturo"
                 />
                 <View style={styles.separacion} />
@@ -404,9 +404,9 @@ const Beneficiarios = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   onChangeText={(text) =>
-                    setInvBox({ ...invBox, apellidos: text })
+                    setFinance({ ...finance, apellidos: text })
                   }
-                  value={invBox.apellidos}
+                  value={finance.apellidos}
                   placeholder="Eje. Flores Guillán"
                 />
                 <View style={styles.separacion} />
@@ -468,7 +468,7 @@ const Beneficiarios = ({ navigation }) => {
                   <TextInput
                     style={[styles.input, { flex: 0.08 }]}
                     onChangeText={handlePorcentajeChange}
-                    value={invBox.porcentaje}
+                    value={finance.porcentaje}
                     keyboardType="numeric"
                     maxLength={3}
                     editable={segundoBeneficiaro}
@@ -489,7 +489,7 @@ const Beneficiarios = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Parentesco</Text>
                 <DropDownPicker
                   open={open}
-                  value={invBox.parentesco}
+                  value={finance.parentesco}
                   items={dataParentesco}
                   placeholder="Selecciona una opción"
                   listMode="MODAL"
@@ -498,13 +498,13 @@ const Beneficiarios = ({ navigation }) => {
                   }}
                   setOpen={setOpen}
                   setValue={(callback) => {
-                    setInvBox((prevState) => ({
+                    setFinance((prevState) => ({
                       ...prevState,
                       parentesco: callback(prevState.parentesco),
                     }));
                   }}
                   onChangeValue={(choice) =>
-                    setInvBox({ ...invBox, parentesco: choice })
+                    setFinance({ ...finance, parentesco: choice })
                   }
                   style={styles.DropDownPicker}
                   arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
@@ -543,9 +543,9 @@ const Beneficiarios = ({ navigation }) => {
                     <TextInput
                       style={styles.input}
                       onChangeText={(text) =>
-                        setInvBox({ ...invBox, nombre2: text })
+                        setFinance({ ...finance, nombre2: text })
                       }
-                      value={invBox.nombre2}
+                      value={finance.nombre2}
                       placeholder="Eje. Humberto Arturo"
                     />
                     <View style={styles.separacion} />
@@ -554,9 +554,9 @@ const Beneficiarios = ({ navigation }) => {
                     <TextInput
                       style={styles.input}
                       onChangeText={(text) =>
-                        setInvBox({ ...invBox, apellidos2: text })
+                        setFinance({ ...finance, apellidos2: text })
                       }
-                      value={invBox.apellidos2}
+                      value={finance.apellidos2}
                       placeholder="Eje. Flores Guillán"
                     />
                     <View style={styles.separacion} />
@@ -621,7 +621,7 @@ const Beneficiarios = ({ navigation }) => {
                       <TextInput
                         style={[styles.input, { flex: 0.08 }]}
                         onChangeText={handlePorcentaje2Change}
-                        value={invBox.porcentaje2}
+                        value={finance.porcentaje2}
                         keyboardType="numeric"
                         maxLength={3}
                       />
@@ -641,7 +641,7 @@ const Beneficiarios = ({ navigation }) => {
                     <Text style={styles.tituloCampo}>Parentesco</Text>
                     <DropDownPicker
                       open={open2}
-                      value={invBox.parentesco2}
+                      value={finance.parentesco2}
                       items={dataParentesco2}
                       listMode="MODAL"
                       modalProps={{
@@ -650,13 +650,13 @@ const Beneficiarios = ({ navigation }) => {
                       placeholder="Selecciona una opción"
                       setOpen={setOpen2}
                       setValue={(callback) => {
-                        setInvBox((prevState) => ({
+                        setFinance((prevState) => ({
                           ...prevState,
                           parentesco2: callback(prevState.parentesco2),
                         }));
                       }}
                       onChangeValue={(choice) =>
-                        setInvBox({ ...invBox, parentesco2: choice })
+                        setFinance({ ...finance, parentesco2: choice })
                       }
                       style={styles.DropDownPicker}
                       arrowIconStyle={{
@@ -684,8 +684,8 @@ const Beneficiarios = ({ navigation }) => {
                     ? handleCancelBeneficiario()
                     : [
                         setSegundoBeneficiaro(true),
-                        setInvBox({
-                          ...invBox,
+                        setFinance({
+                          ...finance,
                           porcentaje: "50",
                           porcentaje2: "50",
                         }),

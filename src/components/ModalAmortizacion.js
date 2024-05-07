@@ -9,17 +9,17 @@ import {
   Modal,
 } from "react-native";
 // Importaciones de Componentes y Hooks
-import { InvBoxContext } from "../hooks/InvBoxContext";
+import { FinanceContext } from "../hooks/FinanceContext";
 import { APIGet } from "../API/APIService";
 import { AntDesign } from "@expo/vector-icons";
 
 const TablaAmortizacion = (props) => {
-  const { invBox } = useContext(InvBoxContext);
+  const { finance } = useContext(FinanceContext);
   const [tablaData, setTablaData] = useState([]);
 
   useEffect(() => {
     const fetchTabla = async () => {
-      const url = `/api/v1/simulator?term=${invBox.plazo}&type=${props.flujo}&amount=${invBox.montoNumeric}`;
+      const url = `/api/v1/simulator?term=${finance.plazo}&type=${props.flujo}&amount=${finance.montoNumeric}`;
       try {
         const response = await APIGet(url);
         if (response.error) {
@@ -36,7 +36,7 @@ const TablaAmortizacion = (props) => {
     if (props.visible) {
       fetchTabla();
     }
-  }, [props.visible, invBox.plazo, invBox.montoNumeric, props.flujo]);
+  }, [props.visible, finance.plazo, finance.montoNumeric, props.flujo]);
 
   // Helper function to format the numeric values as currency
   const formatAmmount = (text) => {

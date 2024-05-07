@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
-import { CreditContext } from "../hooks/CreditContext";
+import { FinanceContext } from "../hooks/FinanceContext";
 // Importaciones de Componentes
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
@@ -36,7 +36,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 const ObligadoSolidario = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
-  const { credit, setCredit } = useContext(CreditContext);
+  const { finance, setFinance } = useContext(FinanceContext);
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selected, setSelected] = useState(false);
@@ -60,16 +60,16 @@ const ObligadoSolidario = (props) => {
   const handlePress = () => {
     // Si se trata de seleccionar un obligado solidario
     if (props.button && props.select) {
-      const isSelected = credit.obligados_solidarios.some(
+      const isSelected = finance.obligados_solidarios.some(
         (obligado) => obligado.userID === props.userID
       );
 
       // Si ya está seleccionado, lo eliminamos de la lista
       if (isSelected) {
-        const updatedObligados = credit.obligados_solidarios.filter(
+        const updatedObligados = finance.obligados_solidarios.filter(
           (obligado) => obligado.userID !== props.userID
         );
-        setCredit((prevState) => ({
+        setFinance((prevState) => ({
           ...prevState,
           obligados_solidarios: updatedObligados,
         }));
@@ -80,7 +80,7 @@ const ObligadoSolidario = (props) => {
           nombre: props.nombre,
           imagen: props.imagen,
         };
-        setCredit((prevState) => ({
+        setFinance((prevState) => ({
           ...prevState,
           obligados_solidarios: [
             ...prevState.obligados_solidarios,
@@ -95,10 +95,10 @@ const ObligadoSolidario = (props) => {
     // Si se trata de eliminar un obligado solidario
     else if (props.button && !props.select) {
       // Directamente eliminamos el obligado solidario sin alterar el estado de `selected`
-      const updatedObligados = credit.obligados_solidarios.filter(
+      const updatedObligados = finance.obligados_solidarios.filter(
         (obligado) => obligado.userID !== props.userID
       );
-      setCredit((prevState) => ({
+      setFinance((prevState) => ({
         ...prevState,
         obligados_solidarios: updatedObligados,
       }));
@@ -108,11 +108,11 @@ const ObligadoSolidario = (props) => {
   };
   // Establece el estado inicial de `selected` basado en si el userID ya está en la lista
   useEffect(() => {
-    const isSelected = credit.obligados_solidarios.some(
+    const isSelected = finance.obligados_solidarios.some(
       (obligado) => obligado.userID === props.userID
     );
     setSelected(isSelected);
-  }, [credit.obligados_solidarios, props.userID]);
+  }, [finance.obligados_solidarios, props.userID]);
 
   // Componente visual
   return (
