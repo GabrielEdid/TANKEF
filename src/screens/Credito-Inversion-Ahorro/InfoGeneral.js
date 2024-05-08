@@ -31,7 +31,7 @@ const InfoGeneral = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const { finance, setFinance } = useContext(FinanceContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [focus, setFocus] = useState("General");
   const [disabled, setDisabled] = useState(true);
   const [pickerVisible, setPickerVisible] = useState(false);
