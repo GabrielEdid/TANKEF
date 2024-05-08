@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import CountryPicker from "react-native-country-picker-modal";
 import DropDownPicker from "react-native-dropdown-picker";
+import { ActivityIndicator } from "react-native-paper";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AsYouType } from "libphonenumber-js";
@@ -42,6 +42,7 @@ const InfoGeneral = ({ navigation }) => {
   const [callingCode, setCallingCode] = useState("52");
   const [callingCode2, setCallingCode2] = useState("52");
   const [callingCode3, setCallingCode3] = useState("52");
+  const [loading, setLoading] = useState(false);
 
   const [dataDomicilio] = useState([
     { label: "Propio", value: "Propio" },
@@ -52,6 +53,59 @@ const InfoGeneral = ({ navigation }) => {
     { label: "Si", value: "Si" },
     { label: "No", value: "No" },
   ]);
+
+  const sendInfo = async () => {
+    setDisabled(true);
+    setLoading(true);
+    console.log("Agregando los documentos a la inversión o caja de ahorro...");
+    console.log("Documentos cargados?:", documentsLoaded);
+
+    const key = flujo === "Inversión" ? "investment" : "box_saving";
+
+    // Ahora si se mandan los documentos
+    const url = `/api/v1/credits/${idInversion}`;
+
+    try {
+      const body = {
+        credit: {
+          home_situation: finance.domicilio,
+          held_political_position: finance.politico,
+          home_phone: finance.telCasa,
+          office_phone: finance.telTrabajo,
+          cell_phone: finance.celular,
+          descripcion: finance.descripcion,
+        },
+      };
+
+      const response = await APIPut(url, body);
+
+      if (response.error) {
+        console.error(
+          "Error al agregar la información general:",
+          response.error
+        );
+        Alert.alert(
+          "Error",
+          "No se pudo agregar la información general. Intente nuevamente."
+        );
+      } else {
+        console.log("Informacion general agregada exitosamente:", response);
+        setFinance({
+          ...finance,
+          paso: finance.paso + 1,
+        }),
+          navigation.navigate("Documentacion", {
+            flujo: flujo,
+            idInversion: idInversion,
+          });
+      }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+      Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
   useEffect(() => {
@@ -402,14 +456,7 @@ const InfoGeneral = ({ navigation }) => {
                   styles.botonContinuar,
                   { backgroundColor: disabled ? "#E1E1E1" : "#060B4D" },
                 ]}
-                onPress={() => [
-                  setFinance({
-                    ...finance,
-                    paso: finance.paso + 1,
-                  }),
-                  navigation.navigate("DefinirCredito", { flujo: flujo }),
-                  console.log(finance),
-                ]}
+                onPress={() => sendInfo()}
                 disabled={disabled}
               >
                 <Text
@@ -424,6 +471,11 @@ const InfoGeneral = ({ navigation }) => {
             </View>
           </KeyboardAwareScrollView>
         </>
+      )}
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
       )}
     </View>
   );
@@ -554,6 +606,12 @@ const styles = StyleSheet.create({
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

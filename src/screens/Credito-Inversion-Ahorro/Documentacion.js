@@ -75,11 +75,20 @@ const Documentacion = ({ navigation }) => {
     console.log("Agregando los documentos a la inversión o caja de ahorro...");
     console.log("Documentos cargados?:", documentsLoaded);
 
-    const key = flujo === "Inversión" ? "investment" : "box_saving";
+    const key =
+      flujo === "Inversión"
+        ? "investment"
+        : flujo === "Crédito"
+        ? "credit"
+        : "box_saving";
 
     // Ahora si se mandan los documentos
     const url = `/api/v1/${
-      flujo === "Inversión" ? "investments" : "box_savings"
+      flujo === "Inversión"
+        ? "investments"
+        : flujo === "Crédito"
+        ? "credits"
+        : "box_savings"
     }/${idInversion}`;
 
     try {
@@ -158,7 +167,11 @@ const Documentacion = ({ navigation }) => {
     if (finance.accountID) {
       setLoading(true);
       const url = `/api/v1/${
-        flujo === "Inversión" ? "investments" : "box_savings"
+        flujo === "Inversión"
+          ? "investments"
+          : flujo === "Crédito"
+          ? "credits"
+          : "box_savings"
       }/${idInversion}/bank_accounts`;
 
       const data = {
@@ -215,7 +228,11 @@ const Documentacion = ({ navigation }) => {
     const cancelar = async () => {
       setLoading(true);
       const url = `/api/v1/${
-        flujo === "Inversión" ? "investments" : "box_savings"
+        flujo === "Inversión"
+          ? "investments"
+          : flujo === "Crédito"
+          ? "credits"
+          : "box_savings"
       }/${idInversion}/cancel`;
       const data = "";
 

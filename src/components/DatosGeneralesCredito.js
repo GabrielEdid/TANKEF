@@ -92,7 +92,7 @@ const DatosGeneralesCredito = () => {
             {finance.descripcion}
           </Text>
         </View>
-        <View style={{ alignSelf: "center", marginTop: 15, marginBottom: -5 }}>
+        {/*<View style={{ alignSelf: "center", marginTop: 15, marginBottom: -5 }}>
           <TouchableOpacity
             style={{
               alignSelf: "center",
@@ -112,7 +112,7 @@ const DatosGeneralesCredito = () => {
               Editar información general
             </Text>
           </TouchableOpacity>
-        </View>
+          </View>*/}
       </View>
     </>
   );

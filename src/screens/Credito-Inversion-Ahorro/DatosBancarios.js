@@ -48,10 +48,19 @@ const DatosBancarios = ({ navigation }) => {
     console.log("Se termino de enviar documentos desde Datos Bancarios");
 
     const url = `/api/v1/${
-      flujo === "Inversión" ? "investments" : "box_savings"
+      flujo === "Inversión"
+        ? "investments"
+        : flujo === "Crédito"
+        ? "credits"
+        : "box_savings"
     }/${idInversion}/bank_accounts`;
 
-    const key = flujo === "Inversión" ? "investment" : "box_saving";
+    const key =
+      flujo === "Inversión"
+        ? "investment"
+        : flujo === "Crédito"
+        ? "credit"
+        : "box_saving";
 
     const formData = new FormData();
 
@@ -127,7 +136,11 @@ const DatosBancarios = ({ navigation }) => {
     const cancelar = async () => {
       setLoading(true);
       const url = `/api/v1/${
-        flujo === "Inversión" ? "investments" : "box_savings"
+        flujo === "Inversión"
+          ? "investments"
+          : flujo === "Crédito"
+          ? "credits"
+          : "box_savings"
       }/${idInversion}/cancel`;
       const data = "";
 
