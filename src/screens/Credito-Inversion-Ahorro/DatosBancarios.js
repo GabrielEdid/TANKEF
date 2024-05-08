@@ -36,8 +36,6 @@ const DatosBancarios = ({ navigation }) => {
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [initial, setInitial] = useState(-1);
-  const [x, setX] = useState(true);
   const [loading, setLoading] = useState(false);
 
   // Funcion para guardar los datos de la cuenta bancaria
