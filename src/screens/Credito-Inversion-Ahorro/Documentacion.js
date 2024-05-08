@@ -308,7 +308,11 @@ const Documentacion = ({ navigation }) => {
   // Función para obtener la existencia de documentos de la inversión o caja de ahorro
   const fetchDocuments = async () => {
     const url = `/api/v1/${
-      flujo === "Inversión" ? "investments" : "box_savings"
+      flujo === "Inversión"
+        ? "investments"
+        : flujo === "Crédito"
+        ? "credits"
+        : "box_savings"
     }/${idInversion}`;
 
     try {
