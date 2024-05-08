@@ -29,7 +29,6 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { APIPut, APIGet, APIPost } from "../../API/APIService";
-import { add } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;

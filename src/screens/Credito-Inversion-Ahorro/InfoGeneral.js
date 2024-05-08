@@ -19,6 +19,7 @@ import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
+import { APIPut, APIPost } from "../../API/APIService";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
@@ -57,10 +58,7 @@ const InfoGeneral = ({ navigation }) => {
   const sendInfo = async () => {
     setDisabled(true);
     setLoading(true);
-    console.log("Agregando los documentos a la inversión o caja de ahorro...");
-    console.log("Documentos cargados?:", documentsLoaded);
-
-    const key = flujo === "Inversión" ? "investment" : "box_saving";
+    console.log("Agregando la info general al credito...");
 
     // Ahora si se mandan los documentos
     const url = `/api/v1/credits/${idInversion}`;
@@ -103,8 +101,62 @@ const InfoGeneral = ({ navigation }) => {
       console.error("Error en la petición:", error);
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
     } finally {
+      setDisabled(false);
       setLoading(false);
     }
+  };
+
+  // Funcion para manejar el boton de cancelar
+  const handleCancelar = () => {
+    Alert.alert(
+      `¿Deseas cancelar la ${flujo}`,
+      `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
+      [
+        {
+          text: `Si`,
+          onPress: () => [cancelar()],
+          style: "destructive",
+        },
+        {
+          text: `No`,
+        },
+      ],
+      { cancelable: true }
+    );
+
+    const cancelar = async () => {
+      setLoading(true);
+      const url = `/api/v1/${
+        flujo === "Inversión"
+          ? "investments"
+          : flujo === "Crédito"
+          ? "credits"
+          : "box_savings"
+      }/${idInversion}/cancel`;
+      const data = "";
+
+      const response = await APIPost(url, data);
+      if (response.error) {
+        // Manejar el error
+        setLoading(false);
+        console.error(
+          "Error al eliminar la caja de ahorro o inversion:",
+          response.error
+        );
+        Alert.alert(
+          "Error",
+          `No se pudo eliminar la ${flujo}. Intente nuevamente.`
+        );
+      } else {
+        setLoading(false);
+        console.log(
+          "Caja de ahorro o Inversión eliminada exitosamente:",
+          response
+        );
+        navigation.navigate("Inicio");
+        resetFinance();
+      }
+    };
   };
 
   // Efecto para deshabilitar el botón de continuar si no se han llenado todos los campos
@@ -450,7 +502,7 @@ const InfoGeneral = ({ navigation }) => {
               </View>
             </View>
             {/* Boton de Continuar */}
-            <View style={{ marginBottom: 20, zIndex: -1 }}>
+            <View style={{ zIndex: -1 }}>
               <TouchableOpacity
                 style={[
                   styles.botonContinuar,
@@ -466,6 +518,25 @@ const InfoGeneral = ({ navigation }) => {
                   ]}
                 >
                   Aceptar
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.botonContinuar,
+                  {
+                    backgroundColor: "white",
+                    marginBottom: 30,
+                  },
+                ]}
+                onPress={() => {
+                  handleCancelar();
+                }}
+              >
+                <Text
+                  style={[styles.textoBotonContinuar, { color: "#F95C5C" }]}
+                >
+                  Cancelar {flujo}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -595,7 +666,6 @@ const styles = StyleSheet.create({
   botonContinuar: {
     backgroundColor: "#060B4D",
     marginTop: 15,
-    marginBottom: 20,
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,
