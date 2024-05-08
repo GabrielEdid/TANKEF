@@ -150,7 +150,7 @@ const MontoyPlazoCredito = () => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder="10,000.00"
-            //editable={finance.paso === 1} // Para deshabilitar el input
+            editable={finance.paso < 2}
           />
           <Text
             style={[
@@ -207,7 +207,7 @@ const MontoyPlazoCredito = () => {
               },
             ]}
             onPress={() => [setFinance({ ...finance, plazo: 6 })]}
-            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
+            disabled={finance.paso > 2}
           >
             <Text style={styles.textoTab}>6</Text>
           </TouchableOpacity>
@@ -219,7 +219,7 @@ const MontoyPlazoCredito = () => {
               },
             ]}
             onPress={() => [setFinance({ ...finance, plazo: 12 })]}
-            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
+            disabled={finance.paso > 2}
           >
             <Text style={styles.textoTab}>12</Text>
           </TouchableOpacity>
@@ -231,7 +231,7 @@ const MontoyPlazoCredito = () => {
               },
             ]}
             onPress={() => [setFinance({ ...finance, plazo: 18 })]}
-            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
+            disabled={finance.paso > 2}
           >
             <Text style={styles.textoTab}>18</Text>
           </TouchableOpacity>
@@ -244,7 +244,7 @@ const MontoyPlazoCredito = () => {
               },
             ]}
             onPress={() => [setFinance({ ...finance, plazo: 24 })]}
-            //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el tab
+            disabled={finance.paso > 2}
           >
             <Text style={styles.textoTab}>24</Text>
           </TouchableOpacity>

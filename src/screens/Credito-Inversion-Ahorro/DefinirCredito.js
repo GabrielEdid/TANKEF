@@ -13,9 +13,10 @@ import React, { useState, useCallback, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import RadioForm from "react-native-simple-radio-button";
+import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
-import { APIGet } from "../../API/APIService";
+import { APIGet, APIPost } from "../../API/APIService";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import MontoyPlazoCredito from "../../components/MontoyPlazoCredito";
@@ -23,6 +24,7 @@ import DatosGeneralesCredito from "../../components/DatosGeneralesCredito";
 import DatosCotizadorCredito from "../../components/DatosCotizadorCredito";
 import ModalCotizadorCredito from "../../components/ModalCotizadorCredito";
 import ObligadoSolidario from "../../components/ObligadoSolidario";
+import ModalEstatus from "../../components/ModalEstatus";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -35,6 +37,7 @@ const DefinirCredito = ({ navigation }) => {
   // Estados y Contexto
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [focus, setFocus] = useState("Mi Red");
 
   const imageMap = {
@@ -48,9 +51,6 @@ const DefinirCredito = ({ navigation }) => {
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     AddSign: require("../../../assets/images/AddSign.png"),
   };
-
-  const isAcceptable = finance.montoNumeric >= 10000 && finance.plazo;
-  const isAcceptablePaso4 = finance.aceptarSIC && finance.actuoComo;
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
@@ -108,17 +108,17 @@ const DefinirCredito = ({ navigation }) => {
 
   const handleAccept = () => {
     if (focus === "Mi Red") {
-      if (finance.paso === 4) {
-        navigation.navigate("MiTankef");
-      } else if (finance.paso === 1) {
+      if (finance.paso === 1) {
         setFinance({
           ...finance,
           modalCotizadorVisible: true,
         });
       } else if (finance.paso === 2) {
-        navigation.navigate("ObligadosSolidarios", { flujo: flujo });
+        setModalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
       } else if (finance.paso === 3) {
         navigation.navigate("InfoGeneral", { flujo: flujo });
+      } else if (finance.paso === 4) {
+        navigation.navigate("MiTankef");
       } else {
         setFinance({
           ...finance,
@@ -126,20 +126,59 @@ const DefinirCredito = ({ navigation }) => {
         });
       }
     } else if (focus === "Comite") {
-      if (finance.paso === 3) {
+      if (finance.paso === 1) {
+        setFinance({
+          ...finance,
+          modalCotizadorVisible: true,
+        });
+      } else if (finance.paso === 2) {
+        createCredit();
+      } else if (finance.paso === 3) {
         resetFinance();
         setFocus("Mi Red");
         navigation.navigate("MiTankef");
-      } else if (finance.paso === 1) {
-        setFinance({ ...finance, modalCotizadorVisible: true });
-      } else if (finance.paso === 2) {
-        navigation.navigate("InfoGeneral", { flujo: flujo });
       } else {
         setFinance({
           ...finance,
           paso: finance.paso + 1,
         });
       }
+    }
+  };
+
+  const createCredit = async () => {
+    setLoading(true);
+    const url = "/api/v1/credits";
+    console.log(
+      finance.montoNumeric,
+      finance.plazo,
+      finance.condiciones,
+      focus
+    );
+    const data = {
+      credit: {
+        amount: finance.montoNumeric,
+        term: finance.plazo,
+        approval: focus === "Mi Red" ? "network" : "committee",
+        term_and_conditions: finance.condiciones,
+      },
+    };
+
+    const response = await APIPost(url, data);
+    if (response.error) {
+      setLoading(false);
+      console.error("Error al crear el crédito:", response.error);
+      const errorMessages = response.error.errors
+        ? Object.values(response.error.errors).flat().join(". ")
+        : response.error;
+      Alert.alert("Error al crear el crédito", errorMessages);
+    } else {
+      setLoading(false);
+      navigation.navigate("InfoGeneral", {
+        flujo: flujo,
+        idInversion: response.data.data.id,
+      });
+      console.log("Crédito creado exitosamente:", response);
     }
   };
 
@@ -172,20 +211,40 @@ const DefinirCredito = ({ navigation }) => {
     }
   }, [finance.obligados_solidarios]);
 
+  const isAcceptable1 =
+    finance.montoNumeric >= 10000 && finance.plazo && finance.condiciones;
+  const isAcceptable4 = finance.aceptarSIC && finance.actuoComo;
+
   // Function to determine button's background color
   const getButtonBackgroundColor = () => {
-    if (finance.paso === 4) {
-      return isAcceptablePaso4 ? "#060B4D" : "#D5D5D5";
+    if (finance.paso <= 2) {
+      return isAcceptable1 ? "#060B4D" : "#D5D5D5";
+    } else if (finance.paso === 4) {
+      return isAcceptable4 ? "#060B4D" : "#D5D5D5";
+    } else if (loading) {
+      return "#D5D5D5";
     }
-    return isAcceptable ? "#060B4D" : "#D5D5D5";
   };
 
   // Function to determine text color
   const getTextColor = () => {
-    if (finance.paso === 4) {
-      return isAcceptablePaso4 ? "white" : "grey";
+    if (finance.paso <= 2) {
+      return isAcceptable1 ? "white" : "grey";
+    } else if (finance.paso === 4) {
+      return isAcceptable4 ? "white" : "grey";
+    } else if (loading) {
+      return "grey";
     }
-    return isAcceptable ? "white" : "grey";
+  };
+
+  const handleDisabled = () => {
+    if (finance.paso <= 2) {
+      return isAcceptable1;
+    } else if (finance.paso === 4) {
+      return isAcceptable4;
+    } else if (loading) {
+      return false;
+    }
   };
 
   const [dataAceptar] = useState([{ label: "Si acepto", value: "Si" }]);
@@ -518,15 +577,16 @@ const DefinirCredito = ({ navigation }) => {
         </View>
 
         <View>
-          <View
+          {/*<View
             style={{
               paddingHorizontal: 10,
               flexDirection: finance.paso === 1 ? "column" : "row",
               justifyContent: "center",
               alignItems: "center",
             }}
-          >
-            {/* Botones de Atrás y Continuar */}
+          >*/}
+          {/* Botones de Atrás y Continuar */}
+          {/*
             {finance.paso !== 1 && (
               <TouchableOpacity
                 style={[
@@ -555,34 +615,58 @@ const DefinirCredito = ({ navigation }) => {
                   Atrás
                 </Text>
               </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[
-                styles.botonContinuar,
-                {
-                  flex: 1,
-                  marginLeft: finance.paso === 1 ? 0 : 5,
-                  width: finance.paso === 1 && "80%",
-                  backgroundColor: getButtonBackgroundColor(),
-                },
-              ]}
-              onPress={handleAccept}
-              disabled={finance.paso === 4 ? !isAcceptablePaso4 : !isAcceptable}
+            )}*/}
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor: getButtonBackgroundColor(),
+              },
+            ]}
+            onPress={handleAccept}
+            disabled={!handleDisabled()}
+          >
+            <Text
+              style={[styles.textoBotonContinuar, { color: getTextColor() }]}
             >
-              <Text
-                style={[styles.textoBotonContinuar, { color: getTextColor() }]}
+              Continuar
+            </Text>
+          </TouchableOpacity>
+          {/*</View>*/}
+          {finance.paso <= 2 && (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                alignSelf: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{ marginTop: 10, marginRight: 7.5 }}
+                onPress={() => [
+                  setFinance({ ...finance, condiciones: !finance.condiciones }),
+                ]}
               >
-                Continuar
+                <Feather
+                  name={finance.condiciones ? "check-square" : "square"}
+                  size={24}
+                  color="#060B4D"
+                />
+              </TouchableOpacity>
+              <Text style={styles.textCondiciones}>
+                Al continuar usted está aceptando{" "}
+                <Text style={{ fontFamily: "opensansbold" }}>
+                  Términos y Condiciones
+                </Text>
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          )}
           <TouchableOpacity
             style={[
               styles.botonContinuar,
               {
                 backgroundColor: "white",
                 marginBottom: 30,
-                width: "76.5%",
               },
             ]}
             onPress={() => {
@@ -596,6 +680,23 @@ const DefinirCredito = ({ navigation }) => {
         </View>
         <ModalCotizadorCredito />
       </ScrollView>
+      {finance.paso === 2 && (
+        <ModalEstatus
+          titulo={"¡Atención!"}
+          texto={
+            "Una vez aceptada la cotización, no podrás modificarla. ¿Deseas continuar?"
+          }
+          imagen={"Alert"}
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onAccept={() => [setModalVisible(false), createCredit()]}
+        />
+      )}
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -681,12 +782,18 @@ const styles = StyleSheet.create({
     alignSelf: "baseline",
     fontSize: 14,
   },
-  /*inputNombre: {
-    marginTop: 5,
-    fontSize: 16,
+  textCondiciones: {
     color: "#060B4D",
     fontFamily: "opensans",
-  },*/
+    fontSize: 12,
+    marginTop: 10,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default DefinirCredito;

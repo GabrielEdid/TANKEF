@@ -28,7 +28,7 @@ const widthHalf = screenWidth / 2;
 
 const InfoGeneral = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
   const { finance, setFinance } = useContext(FinanceContext);
   const [focus, setFocus] = useState("General");
@@ -64,8 +64,6 @@ const InfoGeneral = ({ navigation }) => {
       finance.telCasa !== "" &&
       finance.telTrabajo !== "" &&
       finance.celular !== "" &&
-      finance.cuenta_bancaria !== "" &&
-      finance.cuenta_bancaria.length === 16 &&
       finance.descripcion !== "";
     //emailValido; // Utiliza la variable local para la validación
     setDisabled(!camposLlenos);
@@ -75,7 +73,6 @@ const InfoGeneral = ({ navigation }) => {
     finance.telCasa,
     finance.telTrabajo,
     finance.celular,
-    finance.cuenta_bancaria,
     finance.descripcion,
   ]);
 
@@ -375,21 +372,6 @@ const InfoGeneral = ({ navigation }) => {
                     placeholder="10 dígitos"
                   />
                 </View>
-                <View style={styles.separacion} />
-
-                <Text style={styles.tituloCampo}>
-                  Cuenta bancaria a depositar fondos
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(value) =>
-                    setFinance({ ...finance, cuenta_bancaria: value })
-                  }
-                  value={finance.cuenta_bancaria}
-                  placeholder="16 dígitos"
-                  maxLength={16}
-                  keyboardType="numeric"
-                />
                 <View style={styles.separacion} />
 
                 <View style={styles.separacion} />
