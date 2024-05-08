@@ -9,8 +9,7 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
