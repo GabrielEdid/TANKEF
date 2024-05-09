@@ -181,7 +181,7 @@ const DefinirCredito = ({ navigation }) => {
     );
 
     const cancelar = async () => {
-      if (finance.paso < 2) {
+      if (finance.paso <= 2) {
         resetFinance();
         navigation.navigate("Inicio");
       } else {
