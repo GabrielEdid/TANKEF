@@ -38,7 +38,7 @@ const DefinirCredito = ({ navigation }) => {
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [focus, setFocus] = useState("Mi Red");
+  //const [focus, setFocus] = useState("Mi Red");
 
   const imageMap = {
     "1de4": require("../../../assets/images/1de4.png"),
@@ -83,7 +83,7 @@ const DefinirCredito = ({ navigation }) => {
   }, [finance.plazo, finance.montoNumeric]);
 
   // Función para cambiar el focus de la pantalla
-  const handleFocus = (tab) => {
+  /*const handleFocus = (tab) => {
     if (tab === focus) return;
     if (finance.paso === 1) {
       setFocus(tab);
@@ -104,45 +104,25 @@ const DefinirCredito = ({ navigation }) => {
         { cancelable: true }
       );
     }
-  };
+  };*/
 
   const handleAccept = () => {
-    if (focus === "Mi Red") {
-      if (finance.paso === 1) {
-        setFinance({
-          ...finance,
-          modalCotizadorVisible: true,
-        });
-      } else if (finance.paso === 2) {
-        setModalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
-      } else if (finance.paso === 3) {
-        navigation.navigate("InfoGeneral", { flujo: flujo });
-      } else if (finance.paso === 4) {
-        navigation.navigate("MiTankef");
-      } else {
-        setFinance({
-          ...finance,
-          paso: finance.paso + 1,
-        });
-      }
-    } else if (focus === "Comite") {
-      if (finance.paso === 1) {
-        setFinance({
-          ...finance,
-          modalCotizadorVisible: true,
-        });
-      } else if (finance.paso === 2) {
-        createCredit();
-      } else if (finance.paso === 3) {
-        resetFinance();
-        setFocus("Mi Red");
-        navigation.navigate("MiTankef");
-      } else {
-        setFinance({
-          ...finance,
-          paso: finance.paso + 1,
-        });
-      }
+    if (finance.paso === 1) {
+      setFinance({
+        ...finance,
+        modalCotizadorVisible: true,
+      });
+    } else if (finance.paso === 2) {
+      setModalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
+    } else if (finance.paso === 3) {
+      navigation.navigate("InfoGeneral", { flujo: flujo });
+    } else if (finance.paso === 4) {
+      navigation.navigate("MiTankef");
+    } else {
+      setFinance({
+        ...finance,
+        paso: finance.paso + 1,
+      });
     }
   };
 
@@ -430,11 +410,11 @@ const DefinirCredito = ({ navigation }) => {
               ]}
             >
               {finance.paso === 1
-                ? "Solicitud de crédito por Mi Red"
+                ? "Solicitud del crédito"
                 : finance.paso === 2
                 ? "Revisión de Cotización"
                 : finance.paso === 3
-                ? "Obligados solidarios"
+                ? "Proporciona información general"
                 : "Revisión y Validación de información"}
             </Text>
           </View>
