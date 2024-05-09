@@ -148,9 +148,25 @@ const DefinirCredito = ({ navigation }) => {
     if (response.error) {
       setLoading(false);
       console.error("Error al crear el crédito:", response.error);
-      const errorMessages = response.error.errors
-        ? Object.values(response.error.errors).flat().join(". ")
-        : response.error;
+
+      // Function to extract error messages recursively
+      const extractErrorMessages = (errors) => {
+        if (typeof errors === "string") {
+          return errors; // Base case: return the string
+        } else if (Array.isArray(errors)) {
+          return errors.map((e) => extractErrorMessages(e)).join(". "); // Process each element in the array
+        } else if (typeof errors === "object" && errors !== null) {
+          return Object.values(errors)
+            .map((e) => extractErrorMessages(e))
+            .join(". "); // Recurse into each value of the object
+        }
+        return "Unknown error"; // Fallback for unknown structures
+      };
+
+      const errorMessages = extractErrorMessages(
+        response.error.errors || response.error
+      );
+
       Alert.alert("Error al crear el crédito", errorMessages);
     } else {
       setLoading(false);

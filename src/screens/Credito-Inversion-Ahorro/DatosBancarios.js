@@ -528,12 +528,7 @@ const DatosBancarios = ({ navigation }) => {
               marginBottom: 0,
             },
           ]}
-          onPress={() =>
-            /*handlePress()*/ navigation.navigate("DefinirCredito", {
-              flujo: flujo,
-              idInversion: idInversion,
-            })
-          }
+          onPress={() => handlePress()}
           disabled={disabled}
         >
           <Text
