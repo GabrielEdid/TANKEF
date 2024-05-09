@@ -182,22 +182,56 @@ const DefinirCredito = ({ navigation }) => {
     }
   };
 
+  // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
     Alert.alert(
-      "¿Deseas cancelar el Crédito?",
-      "Si cancelas el Crédito, perderás la información ingresada hasta el momento.",
+      `¿Deseas cancelar la ${flujo}`,
+      `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
       [
         {
-          text: "Si",
-          onPress: () => [navigation.navigate("Inicio"), resetFinance()],
+          text: `Si`,
+          onPress: () => [cancelar()],
           style: "destructive",
         },
         {
-          text: "No",
+          text: `No`,
         },
       ],
       { cancelable: true }
     );
+
+    const cancelar = async () => {
+      if (finance.paso < 2) {
+        resetFinance();
+        navigation.navigate("Inicio");
+      } else {
+        setLoading(true);
+        const url = `/api/v1/credits/${idInversion}/cancel`;
+        const data = "";
+
+        const response = await APIPost(url, data);
+        if (response.error) {
+          // Manejar el error
+          setLoading(false);
+          console.error(
+            "Error al eliminar la caja de ahorro o inversion:",
+            response.error
+          );
+          Alert.alert(
+            "Error",
+            `No se pudo eliminar la ${flujo}. Intente nuevamente.`
+          );
+        } else {
+          setLoading(false);
+          console.log(
+            "Caja de ahorro o Inversión eliminada exitosamente:",
+            response
+          );
+          navigation.navigate("Inicio");
+          resetFinance();
+        }
+      }
+    };
   };
 
   useEffect(() => {

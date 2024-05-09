@@ -133,13 +133,7 @@ const InfoGeneral = ({ navigation }) => {
 
     const cancelar = async () => {
       setLoading(true);
-      const url = `/api/v1/${
-        flujo === "Inversión"
-          ? "investments"
-          : flujo === "Crédito"
-          ? "credits"
-          : "box_savings"
-      }/${idInversion}/cancel`;
+      const url = `/api/v1/credits/${idInversion}/cancel`;
       const data = "";
 
       const response = await APIPost(url, data);
