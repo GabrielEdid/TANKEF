@@ -190,9 +190,9 @@ const InfoGeneral = ({ navigation }) => {
     if (setter === "Casa") {
       setFinance({ ...finance, telCasa: formatted });
     } else if (setter === "Trabajo") {
-      setFinance({ ...finance, telTrabajo: text });
+      setFinance({ ...finance, telTrabajo: formatted });
     } else if (setter === "Celular") {
-      setFinance({ ...finance, celular: text });
+      setFinance({ ...finance, celular: formatted });
     }
   };
 
