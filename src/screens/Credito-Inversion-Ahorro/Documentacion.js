@@ -68,7 +68,7 @@ const Documentacion = ({ navigation }) => {
     }
   };
 
-  const sendDocuments = async () => {
+  const sendDocuments = async (tipo = null) => {
     setDisabled(true);
     setLoading(true);
     console.log("Agregando los documentos a la inversión o caja de ahorro...");
@@ -95,16 +95,30 @@ const Documentacion = ({ navigation }) => {
 
       if (documentsLoaded) {
         console.log("Documentos ya cargados, enviando JSON...");
-        // Sending JSON data
-        body = {
-          [key]: {
-            accept_documentation_1:
-              finance.actuoComo === "Actúo a nombre y por cuenta propia.",
-            accept_documentation_2:
-              finance.actuoComo ===
-              "Actúo a nombre y por cuenta de un tercero.",
-          },
-        };
+
+        if (flujo === "Crédito" || tipo === "credito") {
+          body = {
+            credits: {
+              accept_documentation_1:
+                finance.actuoComo === "Actúo a nombre y por cuenta propia.",
+              accept_documentation_2:
+                finance.actuoComo ===
+                "Actúo a nombre y por cuenta de un tercero.",
+              research_credit_bureau: finance.aceptarSIC,
+            },
+          };
+        } else {
+          // Sending JSON data
+          body = {
+            [key]: {
+              accept_documentation_1:
+                finance.actuoComo === "Actúo a nombre y por cuenta propia.",
+              accept_documentation_2:
+                finance.actuoComo ===
+                "Actúo a nombre y por cuenta de un tercero.",
+            },
+          };
+        }
       } else {
         console.log("Documentos no cargados, enviando FormData...");
         // Sending FormData
@@ -141,9 +155,18 @@ const Documentacion = ({ navigation }) => {
             ? "true"
             : "false"
         );
+        {
+          flujo === "Crédito" &&
+            formData.append(
+              `${key}[research_credit_bureau]`,
+              finance.aceptarSIC
+            );
+        }
 
         body = formData;
       }
+
+      console.log("Datos a enviar:", body);
 
       const response = await APIPut(url, body);
 
@@ -259,37 +282,74 @@ const Documentacion = ({ navigation }) => {
     };
   };
 
-  // Efecto para deshabilitar el botón si algún campo está vacío
+  // Efecto para deshabilitar el botón si algún campo está vacío, maneja todos los casos posibles
   useEffect(() => {
     let camposLlenos = false;
-    if (finance.accounts.length > 0) {
-      camposLlenos =
-        (finance.CURP &&
-          finance.situacionFiscal &&
-          finance.comprobanteDomicilio &&
-          finance.identificacion &&
-          finance.actuoComo &&
-          finance.accountID) ||
-        (finance.isThereIdentificacion &&
-          finance.isThereCURP &&
-          finance.isThereSituacionFiscal &&
-          finance.isThereComprobanteDomicilio &&
-          finance.actuoComo &&
-          finance.accountID);
+    // Checar si el flujo es "Crédito" para manejar el aceptar SIC
+    if (flujo === "Crédito") {
+      if (finance.accounts.length > 0) {
+        camposLlenos =
+          (finance.CURP &&
+            finance.situacionFiscal &&
+            finance.comprobanteDomicilio &&
+            finance.identificacion &&
+            finance.actuoComo &&
+            finance.accountID &&
+            finance.aceptarSIC) ||
+          (finance.isThereIdentificacion &&
+            finance.isThereCURP &&
+            finance.isThereSituacionFiscal &&
+            finance.isThereComprobanteDomicilio &&
+            finance.actuoComo &&
+            finance.accountID &&
+            finance.aceptarSIC);
+      } else {
+        camposLlenos =
+          (finance.CURP &&
+            finance.situacionFiscal &&
+            finance.comprobanteDomicilio &&
+            finance.identificacion &&
+            finance.actuoComo &&
+            addAccount &&
+            finance.aceptarSIC) ||
+          (finance.isThereIdentificacion &&
+            finance.isThereCURP &&
+            finance.isThereSituacionFiscal &&
+            finance.isThereComprobanteDomicilio &&
+            finance.actuoComo &&
+            addAccount &&
+            finance.aceptarSIC);
+      }
     } else {
-      camposLlenos =
-        (finance.CURP &&
-          finance.situacionFiscal &&
-          finance.comprobanteDomicilio &&
-          finance.identificacion &&
-          finance.actuoComo &&
-          addAccount) ||
-        (finance.isThereIdentificacion &&
-          finance.isThereCURP &&
-          finance.isThereSituacionFiscal &&
-          finance.isThereComprobanteDomicilio &&
-          finance.actuoComo &&
-          addAccount);
+      if (finance.accounts.length > 0) {
+        camposLlenos =
+          (finance.CURP &&
+            finance.situacionFiscal &&
+            finance.comprobanteDomicilio &&
+            finance.identificacion &&
+            finance.actuoComo &&
+            finance.accountID) ||
+          (finance.isThereIdentificacion &&
+            finance.isThereCURP &&
+            finance.isThereSituacionFiscal &&
+            finance.isThereComprobanteDomicilio &&
+            finance.actuoComo &&
+            finance.accountID);
+      } else {
+        camposLlenos =
+          (finance.CURP &&
+            finance.situacionFiscal &&
+            finance.comprobanteDomicilio &&
+            finance.identificacion &&
+            finance.actuoComo &&
+            addAccount) ||
+          (finance.isThereIdentificacion &&
+            finance.isThereCURP &&
+            finance.isThereSituacionFiscal &&
+            finance.isThereComprobanteDomicilio &&
+            finance.actuoComo &&
+            addAccount);
+      }
     }
     setDisabled(!camposLlenos);
   }, [
@@ -298,10 +358,12 @@ const Documentacion = ({ navigation }) => {
     finance.comprobanteDomicilio,
     finance.identificacion,
     finance.actuoComo,
+    finance.accountID,
     finance.isThereIdentificacion,
     finance.isThereCURP,
     finance.isThereSituacionFiscal,
     finance.isThereComprobanteDomicilio,
+    finance.aceptarSIC,
   ]);
 
   // Función para obtener la existencia de documentos de la inversión o caja de ahorro
@@ -537,6 +599,8 @@ const Documentacion = ({ navigation }) => {
       console.log("Operación cancelada o no se seleccionó ninguna imagen");
     }
   };
+
+  const [dataAceptar] = useState([{ label: "Si acepto", value: "true" }]);
 
   // Datos para el radio button
   const [dataActuo] = useState([
@@ -972,6 +1036,36 @@ const Documentacion = ({ navigation }) => {
               )}
             </View>
             <View style={styles.contenedores}>
+              {flujo === "Crédito" && (
+                <>
+                  <Text style={styles.subTexto}>
+                    Acepto se me investigue en la Sociedad de Información
+                    Crediticia (SIC)
+                  </Text>
+                  <RadioForm
+                    key={finance.aceptarSIC}
+                    radio_props={dataAceptar}
+                    initial={-1}
+                    onPress={(value) =>
+                      setFinance({
+                        ...finance,
+                        aceptarSIC: value,
+                      })
+                    }
+                    buttonColor={"#060B4D"}
+                    buttonSize={10}
+                    selectedButtonColor={"#060B4D"}
+                    labelStyle={{
+                      fontSize: 16,
+                      color: "#060B4D",
+                      fontFamily: "opensanssemibold",
+                    }}
+                    animation={false}
+                    style={{ alignSelf: "baseline", marginTop: 10 }}
+                  />
+                  <View style={[styles.separacion, { marginVertical: 10 }]} />
+                </>
+              )}
               <Text style={styles.subTexto}>
                 Declaro que soy el propietario real de los recursos y/o
                 beneficiario de la inversión, por lo que el origen procedencia

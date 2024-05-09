@@ -44,7 +44,7 @@ const DatosBancarios = ({ navigation }) => {
     setDisabled(true);
 
     console.log("Enviando documentos desde Datos Bancarios");
-    await sendDocuments();
+    await sendDocuments("credito");
     console.log("Se termino de enviar documentos desde Datos Bancarios");
 
     const url = `/api/v1/${

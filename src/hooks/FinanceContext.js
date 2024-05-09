@@ -54,7 +54,7 @@ const initialState = {
   celular: "",
   cuenta_bancaria: "",
   descripcion: "",
-  aceptarSIC: "",
+  aceptarSIC: false,
   actuoComo: "",
   paso: 1,
   focus: "",
