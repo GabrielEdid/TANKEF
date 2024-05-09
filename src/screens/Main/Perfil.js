@@ -194,13 +194,14 @@ const Perfil = () => {
         </View>
 
         {/* View de LogIn Gradual */}
+        {/*
         <TouchableOpacity
           style={styles.cuadroLoginProgresivo}
           onPress={() => {
             navigation.navigate("LoginProgresivo");
           }}
         >
-          {/* Texto Incentivo del Recuadro */}
+          {/* Texto Incentivo del Recuadro 
           <Text style={styles.texto}>
             Termina tu{" "}
             <Text style={{ fontFamily: "opensansbold" }}>registro</Text> para
@@ -211,7 +212,7 @@ const Perfil = () => {
             !
           </Text>
           <ProgressBar progress={0.7} />
-          {/* Boton del Recuadro */}
+          {/* Boton del Recuadro 
           <View style={styles.botonCompletar}>
             <Text
               style={{
@@ -223,7 +224,7 @@ const Perfil = () => {
               Completar Perfil
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Posts del usuario, se maneja la carga y si hay post o no para mostar un mensaje si no hay */}
         {!isLoading &&
