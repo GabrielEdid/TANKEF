@@ -145,7 +145,6 @@ const ModalCotizadorCredito = () => {
                   if (finance.paso === 1) {
                     setFinance({
                       ...finance,
-                      paso: finance.paso + 1,
                       modalCotizadorVisible: false,
                     });
                   }

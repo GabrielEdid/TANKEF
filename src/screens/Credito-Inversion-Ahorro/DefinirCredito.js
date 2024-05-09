@@ -214,7 +214,7 @@ const DefinirCredito = ({ navigation }) => {
     };
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (finance.obligados_solidarios.length === 0 && finance.paso >= 3) {
       Alert.alert(
         "¡Atención!",
@@ -223,7 +223,7 @@ const DefinirCredito = ({ navigation }) => {
       setFinance({ ...finance, paso: 2 });
       navigation.navigate("ObligadosSolidarios", { flujo: flujo });
     }
-  }, [finance.obligados_solidarios]);
+  }, [finance.obligados_solidarios]);*/
 
   const isAcceptable1 =
     finance.montoNumeric >= 10000 && finance.plazo && finance.condiciones;
@@ -436,7 +436,8 @@ const DefinirCredito = ({ navigation }) => {
 
           {finance.paso >= 3 && (
             <>
-              {finance.obligados_solidarios.map((obligado, index) => (
+              {/* Mapeo de los obligados solidarios, por si se desea mostrar */}
+              {/* {finance.obligados_solidarios.map((obligado, index) => (
                 <>
                   <ObligadoSolidario
                     key={index}
@@ -449,9 +450,9 @@ const DefinirCredito = ({ navigation }) => {
                     button={true}
                   />
                 </>
-              ))}
+              ))} */}
 
-              <TouchableOpacity
+              {/*<TouchableOpacity
                 onPress={() => [
                   navigation.navigate("ObligadosSolidarios", {
                     flujo: flujo,
@@ -464,7 +465,7 @@ const DefinirCredito = ({ navigation }) => {
                   imagen={imageMap["AddSign"]}
                   button={false}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity>*/}
               {finance.paso >= 4 && (
                 <>
                   <DatosGeneralesCredito />

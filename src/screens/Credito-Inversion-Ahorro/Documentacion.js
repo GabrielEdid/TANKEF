@@ -96,6 +96,7 @@ const Documentacion = ({ navigation }) => {
       if (documentsLoaded) {
         console.log("Documentos ya cargados, enviando JSON...");
 
+        // Si el flujo es crédito, se envía la investigación del SIC
         if (flujo === "Crédito" || tipo === "credito") {
           body = {
             credits: {
@@ -107,8 +108,8 @@ const Documentacion = ({ navigation }) => {
               research_credit_bureau: finance.aceptarSIC,
             },
           };
+          // Si el flujo es inversión o caja, se envía sin la investigación del SIC
         } else {
-          // Sending JSON data
           body = {
             [key]: {
               accept_documentation_1:
@@ -365,6 +366,15 @@ const Documentacion = ({ navigation }) => {
     finance.isThereComprobanteDomicilio,
     finance.aceptarSIC,
   ]);
+  const disabledAgregar =
+    finance.accounts.length > 0 &&
+    !addAccount &&
+    finance.CURP &&
+    finance.situacionFiscal &&
+    finance.comprobanteDomicilio &&
+    finance.identificacion &&
+    finance.actuoComo &&
+    (finance.aceptarSIC || flujo !== "Crédito");
 
   // Función para obtener la existencia de documentos de la inversión o caja de ahorro
   const fetchDocuments = async () => {
@@ -484,7 +494,7 @@ const Documentacion = ({ navigation }) => {
 
   // Función para agregar una cuenta bancaria
   const handleAgregar = () => {
-    if (disabled) {
+    if (!disabledAgregar) {
       Alert.alert(
         "Campos Faltantes",
         "Por favor, completa la información solicitada para poder agregar una cuenta bancaria nueva."
@@ -1179,11 +1189,25 @@ const Documentacion = ({ navigation }) => {
         }
         imagen={"Alert"}
         visible={modalVisible}
-        onAccept={() => [
-          setModalVisible(false),
-          resetFinance(),
-          navigation.navigate("MiTankef"),
-        ]}
+        onAccept={() =>
+          flujo === "Inversión" || flujo === "Caja de Ahorro"
+            ? [
+                setModalVisible(false),
+                resetFinance(),
+                navigation.navigate("MiTankef"),
+              ]
+            : [
+                setModalVisible(false),
+                navigation.navigate("DefinirCredito", {
+                  flujo: flujo,
+                  idInversion: idInversion,
+                }),
+                setFinance({
+                  ...finance,
+                  paso: finance.paso + 1,
+                }),
+              ]
+        }
       />
     </View>
   );

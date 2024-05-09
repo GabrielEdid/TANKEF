@@ -95,14 +95,10 @@ const InfoGeneral = ({ navigation }) => {
         );
       } else {
         console.log("Informacion general agregada exitosamente:", response);
-        setFinance({
-          ...finance,
-          paso: finance.paso + 1,
-        }),
-          navigation.navigate("Documentacion", {
-            flujo: flujo,
-            idInversion: idInversion,
-          });
+        navigation.navigate("Documentacion", {
+          flujo: flujo,
+          idInversion: idInversion,
+        });
       }
     } catch (error) {
       console.error("Error en la petición:", error);

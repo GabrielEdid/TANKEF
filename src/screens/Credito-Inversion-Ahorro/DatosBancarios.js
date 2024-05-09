@@ -98,9 +98,21 @@ const DatosBancarios = ({ navigation }) => {
       } else {
         setLoading(false);
         console.log("Datos de cuenta bancaria guardados con éxito");
-        resetFinance();
-        navigation.navigate("MiTankef");
-        setModalVisible(true);
+        if (flujo === "Inversión" || flujo === "Caja de Ahorro") {
+          resetFinance();
+          navigation.navigate("MiTankef");
+          setModalVisible(true);
+        } else if (flujo === "Crédito") {
+          navigation.navigate("DefinirCredito", {
+            flujo: flujo,
+            idInversion: idInversion,
+          });
+          setFinance({
+            ...finance,
+            paso: finance.paso + 1,
+          }),
+            setModalVisible(true);
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -516,7 +528,12 @@ const DatosBancarios = ({ navigation }) => {
               marginBottom: 0,
             },
           ]}
-          onPress={() => handlePress()}
+          onPress={() =>
+            /*handlePress()*/ navigation.navigate("DefinirCredito", {
+              flujo: flujo,
+              idInversion: idInversion,
+            })
+          }
           disabled={disabled}
         >
           <Text
