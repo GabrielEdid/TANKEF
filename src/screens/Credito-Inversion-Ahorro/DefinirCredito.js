@@ -153,13 +153,13 @@ const DefinirCredito = ({ navigation }) => {
       finance.montoNumeric,
       finance.plazo,
       finance.condiciones,
-      focus
+      finance.focus
     );
     const data = {
       credit: {
         amount: finance.montoNumeric,
         term: finance.plazo,
-        approval: focus === "Mi Red" ? "network" : "committee",
+        approval: finance.focus,
         term_and_conditions: finance.condiciones,
       },
     };
@@ -334,8 +334,8 @@ const DefinirCredito = ({ navigation }) => {
                 onChangeText={(text) => setNombreInversion(text)}
               />
             </View>*/}
-          <View style={styles.tabsContainer}>
-            {/* Boton Tab Mi Red */}
+          {/* <View style={styles.tabsContainer}>
+            {/* Boton Tab Mi Red 
             <TouchableOpacity
               style={styles.tabButton}
               onPress={() => handleFocus("Mi Red")}
@@ -355,7 +355,7 @@ const DefinirCredito = ({ navigation }) => {
               {focus === "Mi Red" ? <View style={styles.focusLine} /> : null}
             </TouchableOpacity>
 
-            {/* Boton Tab Comité */}
+            {/* Boton Tab Comité 
             <TouchableOpacity
               style={styles.tabButton}
               onPress={() => handleFocus("Comite")}
@@ -374,40 +374,40 @@ const DefinirCredito = ({ navigation }) => {
               </Text>
               {focus === "Comite" ? <View style={styles.focusLine} /> : null}
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           {/* Flujo de Mi Red */}
-          {focus === "Mi Red" && (
-            <>
-              <View
-                style={[
-                  styles.contenedores,
-                  { flexDirection: "row", justifyContent: "center" },
-                ]}
-              >
-                <Image
-                  source={imageMap[`${finance.paso}de4`]}
-                  style={{ height: 50, width: 50 }}
-                />
-                <Text
-                  style={[
-                    styles.texto,
-                    { fontFamily: "opensansbold", marginLeft: 10 },
-                  ]}
-                >
-                  {finance.paso === 1
-                    ? "Solicitud de crédito por Mi Red"
-                    : finance.paso === 2
-                    ? "Revisión de Cotización"
-                    : finance.paso === 3
-                    ? "Obligados solidarios"
-                    : "Revisión y Validación de información"}
-                </Text>
-              </View>
+          {/* {focus === "Mi Red" && ( */}
 
-              <MontoyPlazoCredito />
+          <View
+            style={[
+              styles.contenedores,
+              { flexDirection: "row", justifyContent: "center" },
+            ]}
+          >
+            <Image
+              source={imageMap[`${finance.paso}de4`]}
+              style={{ height: 50, width: 50 }}
+            />
+            <Text
+              style={[
+                styles.texto,
+                { fontFamily: "opensansbold", marginLeft: 10 },
+              ]}
+            >
+              {finance.paso === 1
+                ? "Solicitud de crédito por Mi Red"
+                : finance.paso === 2
+                ? "Revisión de Cotización"
+                : finance.paso === 3
+                ? "Obligados solidarios"
+                : "Revisión y Validación de información"}
+            </Text>
+          </View>
 
-              {/* {finance.paso === 1 && (
+          <MontoyPlazoCredito />
+
+          {/* {finance.paso === 1 && (
               <View style={styles.contenedores}>
                 <Text style={styles.texto}>
                   Invita a tus amigos a unirse a tu red financiera. Cuantos más
@@ -418,117 +418,109 @@ const DefinirCredito = ({ navigation }) => {
               </View>
             )} */}
 
-              {finance.paso >= 2 && <DatosCotizadorCredito />}
+          {finance.paso >= 2 && <DatosCotizadorCredito />}
 
-              {finance.paso >= 3 && (
+          {finance.paso >= 3 && (
+            <>
+              {finance.obligados_solidarios.map((obligado, index) => (
                 <>
-                  {finance.obligados_solidarios.map((obligado, index) => (
-                    <>
-                      <ObligadoSolidario
-                        key={index}
-                        userID={obligado.userID}
-                        nombre={obligado.nombre}
-                        imagen={
-                          obligado.imagen ? obligado.imagen : imageMap["Blank"]
-                        }
-                        select={false}
-                        button={true}
-                      />
-                    </>
-                  ))}
+                  <ObligadoSolidario
+                    key={index}
+                    userID={obligado.userID}
+                    nombre={obligado.nombre}
+                    imagen={
+                      obligado.imagen ? obligado.imagen : imageMap["Blank"]
+                    }
+                    select={false}
+                    button={true}
+                  />
+                </>
+              ))}
 
-                  <TouchableOpacity
-                    onPress={() => [
-                      navigation.navigate("ObligadosSolidarios", {
-                        flujo: flujo,
-                      }),
-                      setFinance({ ...finance, paso: 2 }),
-                    ]}
-                  >
-                    <ObligadoSolidario
-                      nombre={"Agregar obligado solidario"}
-                      imagen={imageMap["AddSign"]}
-                      button={false}
+              <TouchableOpacity
+                onPress={() => [
+                  navigation.navigate("ObligadosSolidarios", {
+                    flujo: flujo,
+                  }),
+                  setFinance({ ...finance, paso: 2 }),
+                ]}
+              >
+                <ObligadoSolidario
+                  nombre={"Agregar obligado solidario"}
+                  imagen={imageMap["AddSign"]}
+                  button={false}
+                />
+              </TouchableOpacity>
+              {finance.paso >= 4 && (
+                <>
+                  <DatosGeneralesCredito />
+                  <View style={styles.contenedores}>
+                    <Text style={styles.subTexto}>
+                      Acepto se me investigue en la Sociedad de Información
+                      Crediticia (SIC)
+                    </Text>
+                    <RadioForm
+                      key={finance.aceptarSIC}
+                      radio_props={dataAceptar}
+                      initial={finance.aceptarSIC === "" ? -1 : 0}
+                      onPress={(value) =>
+                        setFinance({
+                          ...finance,
+                          aceptarSIC: value === finance.aceptarSIC ? "" : value,
+                        })
+                      }
+                      buttonColor={"#060B4D"}
+                      buttonSize={10}
+                      selectedButtonColor={"#060B4D"}
+                      labelStyle={{
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensanssemibold",
+                      }}
+                      animation={false}
+                      style={{ alignSelf: "baseline", marginTop: 10 }}
                     />
-                  </TouchableOpacity>
-                  {finance.paso >= 4 && (
-                    <>
-                      <DatosGeneralesCredito />
-                      <View style={styles.contenedores}>
-                        <Text style={styles.subTexto}>
-                          Acepto se me investigue en la Sociedad de Información
-                          Crediticia (SIC)
-                        </Text>
-                        <RadioForm
-                          key={finance.aceptarSIC}
-                          radio_props={dataAceptar}
-                          initial={finance.aceptarSIC === "" ? -1 : 0}
-                          onPress={(value) =>
-                            setFinance({
-                              ...finance,
-                              aceptarSIC:
-                                value === finance.aceptarSIC ? "" : value,
-                            })
-                          }
-                          buttonColor={"#060B4D"}
-                          buttonSize={10}
-                          selectedButtonColor={"#060B4D"}
-                          labelStyle={{
-                            fontSize: 16,
-                            color: "#060B4D",
-                            fontFamily: "opensanssemibold",
-                          }}
-                          animation={false}
-                          style={{ alignSelf: "baseline", marginTop: 10 }}
-                        />
-                        <View
-                          style={[styles.separacion, { marginVertical: 10 }]}
-                        />
-                        <Text style={styles.subTexto}>
-                          Declaro que soy el propietario real de los recursos
-                          y/o beneficiario del crédito, por lo que el origen
-                          procedencia de los recursos que Tu Kapital en
-                          Evolución, SAPI de CV, SOFOM, ENR, recibirá respecto
-                          de los servicios que solicitep proceden de fuentes
-                          lícitas y son de mi propiedad. Por lo que declaro que:
-                        </Text>
-                        <RadioForm
-                          radio_props={dataActuo}
-                          initial={-1}
-                          onPress={(value) =>
-                            setFinance({ ...finance, actuoComo: value })
-                          }
-                          buttonColor={"#060B4D"}
-                          buttonSize={10}
-                          selectedButtonColor={"#060B4D"}
-                          labelStyle={{
-                            fontSize: 16,
-                            color: "#060B4D",
-                            fontFamily: "opensanssemibold",
-                            marginBottom: 10,
-                          }}
-                          animation={false}
-                          style={{ alignSelf: "baseline", marginTop: 10 }}
-                        />
-                        <Text
-                          style={[
-                            styles.subTexto,
-                            { fontSize: 12, marginTop: 10 },
-                          ]}
-                        >
-                          (*) En caso de actuar a nombre de un tercero, es
-                          necesario la siguiente información: Identificación
-                          oficial vigente, datos generales y comprobante de
-                          domicilio recientes.
-                        </Text>
-                      </View>
-                    </>
-                  )}
+                    <View style={[styles.separacion, { marginVertical: 10 }]} />
+                    <Text style={styles.subTexto}>
+                      Declaro que soy el propietario real de los recursos y/o
+                      beneficiario del crédito, por lo que el origen procedencia
+                      de los recursos que Tu Kapital en Evolución, SAPI de CV,
+                      SOFOM, ENR, recibirá respecto de los servicios que
+                      solicitep proceden de fuentes lícitas y son de mi
+                      propiedad. Por lo que declaro que:
+                    </Text>
+                    <RadioForm
+                      radio_props={dataActuo}
+                      initial={-1}
+                      onPress={(value) =>
+                        setFinance({ ...finance, actuoComo: value })
+                      }
+                      buttonColor={"#060B4D"}
+                      buttonSize={10}
+                      selectedButtonColor={"#060B4D"}
+                      labelStyle={{
+                        fontSize: 16,
+                        color: "#060B4D",
+                        fontFamily: "opensanssemibold",
+                        marginBottom: 10,
+                      }}
+                      animation={false}
+                      style={{ alignSelf: "baseline", marginTop: 10 }}
+                    />
+                    <Text
+                      style={[styles.subTexto, { fontSize: 12, marginTop: 10 }]}
+                    >
+                      (*) En caso de actuar a nombre de un tercero, es necesario
+                      la siguiente información: Identificación oficial vigente,
+                      datos generales y comprobante de domicilio recientes.
+                    </Text>
+                  </View>
                 </>
               )}
             </>
           )}
-          {focus === "Comite" && (
+          {/*} )} */}
+          {/* {focus === "Comite" && (
             <>
               <View
                 style={[
@@ -566,14 +558,14 @@ const DefinirCredito = ({ navigation }) => {
               </View>
             )} */}
 
-              {finance.paso >= 2 && (
+          {/*} {finance.paso >= 2 && (
                 <>
                   <DatosCotizadorCredito />
                   {finance.paso >= 3 && <DatosGeneralesCredito />}
                 </>
               )}
             </>
-          )}
+          )} */}
         </View>
 
         <View>

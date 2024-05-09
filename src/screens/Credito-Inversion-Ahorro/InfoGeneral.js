@@ -46,19 +46,26 @@ const InfoGeneral = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const [dataDomicilio] = useState([
-    { label: "Propio", value: "Propio" },
-    { label: "Rentado", value: "Rentado" },
+    { label: "Propio", value: "own" },
+    { label: "Rentado", value: "rented" },
   ]);
 
   const [dataPolitico] = useState([
-    { label: "Si", value: "Si" },
-    { label: "No", value: "No" },
+    { label: "Si", value: "true" },
+    { label: "No", value: "false" },
   ]);
 
   const sendInfo = async () => {
     setDisabled(true);
     setLoading(true);
-    console.log("Agregando la info general al credito...");
+    console.log(
+      "Agregando la info general al credito..." + finance.domicilio,
+      finance.politico,
+      removeSpaces(finance.telCasa),
+      removeSpaces(finance.telTrabajo),
+      removeSpaces(finance.celular),
+      finance.descripcion
+    );
 
     // Ahora si se mandan los documentos
     const url = `/api/v1/credits/${idInversion}`;
@@ -68,10 +75,10 @@ const InfoGeneral = ({ navigation }) => {
         credit: {
           home_situation: finance.domicilio,
           held_political_position: finance.politico,
-          home_phone: finance.telCasa,
-          office_phone: finance.telTrabajo,
-          cell_phone: finance.celular,
-          descripcion: finance.descripcion,
+          home_phone: removeSpaces(finance.telCasa),
+          office_phone: removeSpaces(finance.telTrabajo),
+          cell_phone: removeSpaces(finance.celular),
+          description: finance.descripcion,
         },
       };
 
@@ -187,12 +194,16 @@ const InfoGeneral = ({ navigation }) => {
     const formatter = new AsYouType(country);
     const formatted = formatter.input(text);
     if (setter === "Casa") {
-      setFinance({ ...finance, telCasa: text, telCasaShow: formatted });
+      setFinance({ ...finance, telCasa: formatted });
     } else if (setter === "Trabajo") {
-      setFinance({ ...finance, telTrabajo: text, telTrabajoShow: formatted });
+      setFinance({ ...finance, telTrabajo: text });
     } else if (setter === "Celular") {
-      setFinance({ ...finance, celular: text, celularShow: formatted });
+      setFinance({ ...finance, celular: text });
     }
+  };
+
+  const removeSpaces = (inputString) => {
+    return inputString.replace(/ /g, "");
   };
 
   // Function to validate email
@@ -391,7 +402,7 @@ const InfoGeneral = ({ navigation }) => {
                     onChangeText={(text) =>
                       formatPhoneNumber(text, countryCode3, "Casa")
                     }
-                    value={finance.telCasaShow}
+                    value={finance.telCasa}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
                   />
@@ -434,7 +445,7 @@ const InfoGeneral = ({ navigation }) => {
                     onChangeText={(text) =>
                       formatPhoneNumber(text, countryCode2, "Trabajo")
                     }
-                    value={finance.telTrabajoShow}
+                    value={finance.telTrabajo}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
                   />
@@ -473,7 +484,7 @@ const InfoGeneral = ({ navigation }) => {
                     onChangeText={(text) =>
                       formatPhoneNumber(text, countryCode, "Celular")
                     }
-                    value={finance.celularShow}
+                    value={finance.celular}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
                   />

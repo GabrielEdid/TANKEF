@@ -11,7 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Contextos
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { UserContext } from "../hooks/UserContext";
 import { FinanceContext } from "../hooks/FinanceContext";
 
@@ -250,6 +250,69 @@ const MontoyPlazoCredito = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <View style={styles.contenedores}>
+        <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
+          ¿A quién deseas solicitar tu crédito?
+        </Text>
+        <TouchableOpacity
+          style={styles.buttonFocus}
+          onPress={() => [setFinance({ ...finance, focus: "committee" })]}
+          disabled={finance.paso > 2}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={styles.texto2}>Comité</Text>
+            <Text style={styles.texto3}>
+              El crédito es solicitado a Tankef, requiere revisión en Buró de
+              Crédito.
+            </Text>
+          </View>
+          {finance.focus === "committee" ? (
+            <MaterialCommunityIcons
+              name="radiobox-marked"
+              size={32}
+              color="#060B4D"
+              style={{ marginTop: 12, marginLeft: 30 }}
+            />
+          ) : (
+            <Entypo
+              name="circle"
+              size={28}
+              color="#060B4D"
+              style={{ marginTop: 13, marginLeft: 30 }}
+            />
+          )}
+        </TouchableOpacity>
+
+        {/* Boton Mis Conexiones */}
+        <TouchableOpacity
+          style={styles.buttonFocus}
+          onPress={() => [setFinance({ ...finance, focus: "network" })]}
+          disabled={finance.paso > 2}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={styles.texto2}>Por Red Social</Text>
+            <Text style={styles.texto3}>
+              El crédito es solicitado a las personas que selecciones como tus
+              obligados solidarios.
+            </Text>
+          </View>
+          {finance.focus === "network" ? (
+            <MaterialCommunityIcons
+              name="radiobox-marked"
+              size={32}
+              color="#060B4D"
+              style={{ marginTop: 12, marginLeft: 30 }}
+            />
+          ) : (
+            <Entypo
+              name="circle"
+              size={28}
+              color="#060B4D"
+              style={{ marginTop: 13, marginLeft: 30 }}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -320,6 +383,25 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
     backgroundColor: "#cecfdb",
+  },
+  texto2: {
+    marginTop: 2,
+    fontSize: 18,
+    fontFamily: "opensansbold",
+    paddingTop: 1,
+    color: "#060B4D",
+  },
+  texto3: {
+    marginTop: 2,
+    fontSize: 14,
+    paddingTop: 1,
+    fontFamily: "opensans",
+    color: "#060B4D",
+  },
+  buttonFocus: {
+    flexDirection: "row",
+    borderRadius: 20,
+    marginVertical: 5,
   },
 });
 

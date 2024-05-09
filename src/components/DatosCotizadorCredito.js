@@ -47,9 +47,9 @@ const DatosCotizadorCredito = () => {
         </Text>
         <Text style={styles.monto}>{finance.total_a_pagar}</Text>
       </View> */}
-      <View style={[styles.contenedores, { flexDirection: "row" }]}>
+      <View style={[styles.contenedores]}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Comisión por{"\n"}apertura</Text>
+          <Text style={styles.concepto}>Comisión por apertura</Text>
           <Text style={styles.valorConcepto}>
             {finance.comision_por_apertura}
           </Text>
@@ -61,17 +61,14 @@ const DatosCotizadorCredito = () => {
           style={styles.line}
         />
         <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Tasa de{"\n"}operación</Text>
+          <Text style={styles.concepto}>Tasa de operación</Text>
           <Text style={styles.valorConcepto}>{finance.tasa_de_operacion}</Text>
         </View>
-        <Ionicons
-          name="remove-outline"
-          size={30}
-          color="#e1e2ebff"
-          style={styles.line}
-        />
+      </View>
+
+      <View style={styles.contenedores}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Pago{"\n"}mensual</Text>
+          <Text style={styles.concepto}>Pago mensual</Text>
           <Text style={styles.valorConcepto}>{finance.pago_mensual}</Text>
         </View>
         <Ionicons
@@ -81,7 +78,7 @@ const DatosCotizadorCredito = () => {
           style={styles.line}
         />
         <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Total a{"\n"}pagar</Text>
+          <Text style={styles.concepto}>Total a pagar</Text>
           <Text style={styles.valorConcepto}>{finance.total_a_pagar}</Text>
         </View>
       </View>
@@ -93,14 +90,14 @@ const DatosCotizadorCredito = () => {
 const styles = StyleSheet.create({
   contenedores: {
     backgroundColor: "white",
-    paddingHorizontal: 12,
-    paddingVertical: 15,
+    paddingVertical: 7.5,
     alignItems: "center",
     marginTop: 3,
+    flexDirection: "row",
   },
   concepto: {
     fontFamily: "opensans",
-    fontSize: 12,
+    fontSize: 13,
     color: "#060B4D",
     textAlign: "center",
   },
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
   },
   valorConcepto: {
     fontFamily: "opensanssemibold",
-    fontSize: 14,
+    fontSize: 15,
     color: "#060B4D",
     textAlign: "center",
   },

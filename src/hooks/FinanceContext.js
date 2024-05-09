@@ -50,16 +50,14 @@ const initialState = {
   politico: "",
   domicilio: "",
   telCasa: "",
-  telCasaShow: "",
   telTrabajo: "",
-  telTrabajoShow: "",
-  celularShow: "",
   celular: "",
   cuenta_bancaria: "",
   descripcion: "",
   aceptarSIC: "",
   actuoComo: "",
   paso: 1,
+  focus: "",
   // Variables para el modal
   modalCotizadorVisible: false,
 };
