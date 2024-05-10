@@ -99,7 +99,7 @@ const Documentacion = ({ navigation }) => {
         // Si el flujo es crédito, se envía la investigación del SIC
         if (flujo === "Crédito" || tipo === "credito") {
           body = {
-            credits: {
+            credit: {
               accept_documentation_1:
                 finance.actuoComo === "Actúo a nombre y por cuenta propia.",
               accept_documentation_2:

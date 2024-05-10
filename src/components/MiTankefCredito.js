@@ -16,7 +16,6 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
-import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -52,7 +51,6 @@ const MiTankefCredito = (props) => {
   const [totalPagar, setTotalPagar] = useState(null); //Total a pagar
   const [montoSolicitado, setMontoSolicitado] = useState(null); //Monto solicitado
   const [aprovacion, setAprovacion] = useState(null); //Aprovacion de la inversion
-  const [investmentState, setInvestmentState] = useState(null); //Estado de la inversion
   const [modalVisible, setModalVisible] = useState(false); //Modal de inversion
   const [effectTrigger, setEffectTrigger] = useState(false); //Trigger para efectos
 
@@ -76,7 +74,7 @@ const MiTankefCredito = (props) => {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de los creditos:", filteredResults);
       setCreditState(filteredResults[0].aasm_state);
-      handleCreditStateChange(result.data.data.aasm_state);
+      handleCreditStateChange(filteredResults[0].aasm_state);
       setComisionApertura(filteredResults[0].commision_for_oppening);
       setPlazo(filteredResults[0].term);
       setFolio(filteredResults[0].invoice_number);

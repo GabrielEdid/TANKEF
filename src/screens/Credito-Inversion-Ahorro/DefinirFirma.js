@@ -40,7 +40,11 @@ const DefinirFirma = ({ navigation }) => {
     setLoading(true);
     setModalPresencial(false);
     const url = `/api/v1/${
-      flujo === "Inversión" ? "investments" : "box_savings"
+      flujo === "Inversión"
+        ? "investments"
+        : flujo === "Crédito"
+        ? "credits"
+        : "box_savings"
     }/${idInversion}/mailaddress`;
     const data = {
       mailaddress: {
