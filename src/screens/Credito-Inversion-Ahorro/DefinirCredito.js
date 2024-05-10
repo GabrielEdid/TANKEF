@@ -33,7 +33,7 @@ const widthFourth = screenWidth / 4 - 15;
 
 const DefinirCredito = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -115,7 +115,8 @@ const DefinirCredito = ({ navigation }) => {
     } else if (finance.paso === 2) {
       setModalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
     } else if (finance.paso === 3) {
-      navigation.navigate("InfoGeneral", { flujo: flujo });
+      navigation.navigate("MiTankef");
+      resetFinance();
     } else if (finance.paso === 4) {
       navigation.navigate("MiTankef");
     } else {
@@ -253,6 +254,8 @@ const DefinirCredito = ({ navigation }) => {
       return isAcceptable4 ? "#060B4D" : "#D5D5D5";
     } else if (loading) {
       return "#D5D5D5";
+    } else if (finance.paso === 3) {
+      return "#060B4D";
     }
   };
 
@@ -264,6 +267,8 @@ const DefinirCredito = ({ navigation }) => {
       return isAcceptable4 ? "white" : "grey";
     } else if (loading) {
       return "grey";
+    } else if (finance.paso === 3) {
+      return "white";
     }
   };
 
@@ -274,6 +279,8 @@ const DefinirCredito = ({ navigation }) => {
       return isAcceptable4;
     } else if (loading) {
       return false;
+    } else if (finance.paso === 3) {
+      return true;
     }
   };
 
@@ -416,7 +423,7 @@ const DefinirCredito = ({ navigation }) => {
             ]}
           >
             <Image
-              source={imageMap[`${finance.paso}de4`]}
+              source={imageMap[`${finance.paso}de3`]}
               style={{ height: 50, width: 50 }}
             />
             <Text
@@ -425,13 +432,19 @@ const DefinirCredito = ({ navigation }) => {
                 { fontFamily: "opensansbold", marginLeft: 10 },
               ]}
             >
-              {finance.paso === 1
+              {/* {finance.paso === 1
                 ? "Solicitud del crédito"
                 : finance.paso === 2
                 ? "Revisión de Cotización"
                 : finance.paso === 3
                 ? "Proporciona información general"
-                : "Revisión y Validación de información"}
+                : "Revisión y Validación de información"} */}
+
+              {finance.paso === 1
+                ? "Solicitud del crédito"
+                : finance.paso === 2
+                ? "Revisión de Cotización"
+                : "Revisión del crédito"}
             </Text>
           </View>
 
@@ -452,6 +465,8 @@ const DefinirCredito = ({ navigation }) => {
 
           {finance.paso >= 3 && (
             <>
+              <DatosGeneralesCredito />
+
               {/* Mapeo de los obligados solidarios, por si se desea mostrar */}
               {/* {finance.obligados_solidarios.map((obligado, index) => (
                 <>

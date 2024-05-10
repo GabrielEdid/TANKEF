@@ -500,7 +500,7 @@ const Documentacion = ({ navigation }) => {
         "Por favor, completa la información solicitada para poder agregar una cuenta bancaria nueva."
       );
     } else {
-      setFinance({ ...finance, accountID: "" });
+      setFinance({ ...finance, accountID: "", alias: "" });
       navigation.navigate("DatosBancarios", {
         flujo: flujo,
         idInversion: idInversion,
@@ -1001,10 +1001,23 @@ const Documentacion = ({ navigation }) => {
                       value: account.id,
                     }))}
                     initial={initial}
-                    onPress={(value) => [
-                      setFinance({ ...finance, accountID: value }),
-                      console.log(value),
-                    ]}
+                    onPress={(value) => {
+                      const selectedAccount = finance.accounts.find(
+                        (account) => account.id === value
+                      );
+
+                      setFinance({
+                        ...finance,
+                        accountID: value,
+                        alias: selectedAccount.short_name,
+                      });
+
+                      console.log(
+                        "Selected:",
+                        value,
+                        selectedAccount.short_name
+                      );
+                    }}
                     buttonColor={"#060B4D"}
                     buttonSize={10}
                     selectedButtonColor={"#060B4D"}

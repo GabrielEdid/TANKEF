@@ -75,7 +75,7 @@ const DatosGeneralesCredito = () => {
         <Text style={styles.tituloCampo}>
           Cuenta bancaria a depositar fondos
         </Text>
-        <Text style={styles.bodyCampo}>{finance.cuenta_bancaria}</Text>
+        <Text style={styles.bodyCampo}>{finance.alias}</Text>
         <View style={styles.separacion} />
 
         <View style={styles.Description}>
@@ -92,27 +92,31 @@ const DatosGeneralesCredito = () => {
             {finance.descripcion}
           </Text>
         </View>
-        {/*<View style={{ alignSelf: "center", marginTop: 15, marginBottom: -5 }}>
-          <TouchableOpacity
-            style={{
-              alignSelf: "center",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-            onPress={() => [
-              setFinance({ ...finance, paso: 2 }),
-              navigation.navigate("InfoGeneral", { flujo: "Crédito" }),
-            ]}
+        {/* {finance.paso === 3 && (
+          <View
+            style={{ alignSelf: "center", marginTop: 15, marginBottom: -5 }}
           >
-            <Image
-              style={{ width: 23, height: 22, marginBottom: 10 }}
-              source={require("../../assets/images/Sliders.png")}
-            />
-            <Text style={[styles.bodyCampo, { paddingLeft: 5 }]}>
-              Editar información general
-            </Text>
-          </TouchableOpacity>
-          </View>*/}
+            <TouchableOpacity
+              style={{
+                alignSelf: "center",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+              onPress={() => [
+                setFinance({ ...finance, paso: 2 }),
+                navigation.navigate("InfoGeneral", { flujo: "Crédito" }),
+              ]}
+            >
+              <Image
+                style={{ width: 23, height: 22, marginBottom: 10 }}
+                source={require("../../assets/images/Sliders.png")}
+              />
+              <Text style={[styles.bodyCampo, { paddingLeft: 5 }]}>
+                Editar información general
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )} */}
       </View>
     </>
   );
