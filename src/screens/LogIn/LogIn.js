@@ -171,7 +171,7 @@ const LogIn = ({ navigation }) => {
             onPress={() => navigation.navigate("NumeroTelefonico")}
           >
             <Text style={[styles.buttonText, { color: "#060B4D" }]}>
-              Registrate
+              Regístrate
             </Text>
           </TouchableOpacity>
           <View

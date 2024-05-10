@@ -1116,7 +1116,7 @@ const Documentacion = ({ navigation }) => {
               />
               <Text style={[styles.subTexto, { fontSize: 12, marginTop: 10 }]}>
                 (*) En caso de actuar a nombre de un tercero, es necesario la
-                siguiente información: Identificación oficila vigente, datos
+                siguiente información: Identificación oficial vigente, datos
                 generales y comprobante de domicilio recientes.
               </Text>
             </View>
