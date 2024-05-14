@@ -62,6 +62,8 @@ const LogIn = ({ navigation }) => {
         apellidoMaterno: titleCase(userData.second_last_name),
         CURP: userData.curp,
         email: userData.email,
+        conexiones: userData.count_conections,
+        valorRed: userData.network_invested_amount,
       });
       navigation.navigate("SetPinPad");
     } else if (response.error) {

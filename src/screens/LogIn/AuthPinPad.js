@@ -54,6 +54,7 @@ const AuthPinPad = ({ navigation, route }) => {
         fechaNacimiento: result.data.data.dob,
         avatar: result.data.data.avatar,
         conexiones: result.data.data.count_conections,
+        valorRed: result.data.data.network_invested_amount,
       });
       console.log("Datos del perfil:", result.data);
       setIsLoading(false);
