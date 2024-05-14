@@ -101,218 +101,122 @@ const MontoyPlazoCredito = () => {
   // Componente visual
   return (
     <>
-      {/*<View style={[styles.contenedores, { flexDirection: "row" }]}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
-          <Text style={styles.valorConcepto}>$120K</Text>
-        </View>
-        <Ionicons
-          name="remove-outline"
-          size={30}
-          color="#e1e2ebff"
-          style={styles.line}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
-          <Text style={styles.valorConcepto}>$10K</Text>
-        </View>
-        <Ionicons
-          name="remove-outline"
-          size={30}
-          color="#e1e2ebff"
-          style={styles.line}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
-          <Text style={styles.valorConcepto}>$1M</Text>
-        </View>
-      </View>*/}
-      <View style={[styles.contenedores, { paddingBottom: 0 }]}>
-        <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-          Monto a solicitar
-        </Text>
-        <View style={styles.inputWrapper}>
-          <Text
-            style={[
-              styles.dollarSign,
-              { color: finance.monto ? "#060B4D" : "#b3b5c9ff" },
-            ]}
-          >
-            $
-          </Text>
-          <TextInput
-            style={styles.inputMonto}
-            value={finance.montoShow}
-            keyboardType="numeric"
-            maxLength={20}
-            placeholderTextColor={"#b3b5c9ff"}
-            onChangeText={handleChangeText}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            placeholder="10,000.00"
-            editable={finance.paso < 2}
-          />
-          <Text
-            style={[
-              styles.dollarSign,
-              {
-                color: finance.monto ? "#060B4D" : "#b3b5c9ff",
-                marginLeft: 5,
-              },
-            ]}
-          >
-            MXN
-          </Text>
-        </View>
-        <View style={styles.separacion} />
-        <Text style={[styles.concepto, { marginBottom: 15, fontSize: 12 }]}>
-          {`Monto mínimo $10,000.00, valor de la red ${user.valorRed.toLocaleString(
-            "es-MX",
-            {
-              style: "currency",
-              currency: "MXN",
-            }
-          )}MXN.`}
-        </Text>
-        {/*<Slider
-          style={{ width: "90%" }}
-          minimumValue={10000}
-          maximumValue={1000000}
-          step={100}
-          value={finance.montoNumeric}
-          onValueChange={handleSliderChange}
-          thumbTintColor="#2FF690"
-          minimumTrackTintColor="#2FF690"
-          maximumTrackTintColor="#F2F2F2"
-          //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el slider
-          />*/}
-      </View>
-
-      <View style={styles.contenedores}>
-        <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-          ¿A quién deseas solicitar tu crédito?
-        </Text>
-        <TouchableOpacity
-          style={styles.buttonFocus}
-          onPress={() => [setFinance({ ...finance, focus: "committee" })]}
-          disabled={finance.paso > 2}
-        >
-          <View style={{ flex: 1 }}>
-            <Text style={styles.texto2}>Comité</Text>
-            <Text style={styles.texto3}>
-              El crédito es solicitado a Tankef, requiere revisión en Buró de
-              Crédito.
+      {finance.paso <= 2 && (
+        <>
+          <View style={[styles.contenedores, { paddingBottom: 0 }]}>
+            <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
+              Monto a solicitar
+            </Text>
+            <View style={styles.inputWrapper}>
+              <Text
+                style={[
+                  styles.dollarSign,
+                  { color: finance.monto ? "#060B4D" : "#b3b5c9ff" },
+                ]}
+              >
+                $
+              </Text>
+              <TextInput
+                style={styles.inputMonto}
+                value={finance.montoShow}
+                keyboardType="numeric"
+                maxLength={20}
+                placeholderTextColor={"#b3b5c9ff"}
+                onChangeText={handleChangeText}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                placeholder="10,000.00"
+                editable={finance.paso < 2}
+              />
+              <Text
+                style={[
+                  styles.dollarSign,
+                  {
+                    color: finance.monto ? "#060B4D" : "#b3b5c9ff",
+                    marginLeft: 5,
+                  },
+                ]}
+              >
+                MXN
+              </Text>
+            </View>
+            <View style={styles.separacion} />
+            <Text style={[styles.concepto, { marginBottom: 15, fontSize: 12 }]}>
+              {`Monto mínimo $10,000.00, valor de la red ${user.valorRed.toLocaleString(
+                "es-MX",
+                {
+                  style: "currency",
+                  currency: "MXN",
+                }
+              )}MXN.`}
             </Text>
           </View>
-          {finance.focus === "committee" ? (
-            <MaterialCommunityIcons
-              name="radiobox-marked"
-              size={32}
-              color="#060B4D"
-              style={{ marginTop: 12, marginLeft: 30 }}
-            />
-          ) : (
-            <Entypo
-              name="circle"
-              size={28}
-              color="#060B4D"
-              style={{ marginTop: 13, marginLeft: 30 }}
-            />
-          )}
-        </TouchableOpacity>
 
-        {/* Boton Mis Conexiones */}
-        <TouchableOpacity
-          style={styles.buttonFocus}
-          onPress={() => [setFinance({ ...finance, focus: "network" })]}
-          disabled={finance.paso > 2}
-        >
-          <View style={{ flex: 1 }}>
-            <Text style={styles.texto2}>Por Red Social</Text>
-            <Text style={styles.texto3}>
-              El crédito es solicitado a las personas que selecciones como tus
-              obligados solidarios.
+          <View style={styles.contenedores}>
+            <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
+              ¿A quién deseas solicitar tu crédito?
             </Text>
+            <TouchableOpacity
+              style={styles.buttonFocus}
+              onPress={() => [setFinance({ ...finance, focus: "committee" })]}
+              disabled={finance.paso > 2}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.texto2}>Comité</Text>
+                <Text style={styles.texto3}>
+                  El crédito es solicitado a Tankef, requiere revisión en Buró
+                  de Crédito.
+                </Text>
+              </View>
+              {finance.focus === "committee" ? (
+                <MaterialCommunityIcons
+                  name="radiobox-marked"
+                  size={32}
+                  color="#060B4D"
+                  style={{ marginTop: 12, marginLeft: 30 }}
+                />
+              ) : (
+                <Entypo
+                  name="circle"
+                  size={28}
+                  color="#060B4D"
+                  style={{ marginTop: 13, marginLeft: 30 }}
+                />
+              )}
+            </TouchableOpacity>
+
+            {/* Boton Mis Conexiones */}
+            <TouchableOpacity
+              style={styles.buttonFocus}
+              onPress={() => [setFinance({ ...finance, focus: "network" })]}
+              disabled={finance.paso > 2}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.texto2}>Por Red Social</Text>
+                <Text style={styles.texto3}>
+                  El crédito es solicitado a las personas que selecciones como
+                  tus obligados solidarios.
+                </Text>
+              </View>
+              {finance.focus === "network" ? (
+                <MaterialCommunityIcons
+                  name="radiobox-marked"
+                  size={32}
+                  color="#060B4D"
+                  style={{ marginTop: 12, marginLeft: 30 }}
+                />
+              ) : (
+                <Entypo
+                  name="circle"
+                  size={28}
+                  color="#060B4D"
+                  style={{ marginTop: 13, marginLeft: 30 }}
+                />
+              )}
+            </TouchableOpacity>
           </View>
-          {finance.focus === "network" ? (
-            <MaterialCommunityIcons
-              name="radiobox-marked"
-              size={32}
-              color="#060B4D"
-              style={{ marginTop: 12, marginLeft: 30 }}
-            />
-          ) : (
-            <Entypo
-              name="circle"
-              size={28}
-              color="#060B4D"
-              style={{ marginTop: 13, marginLeft: 30 }}
-            />
-          )}
-        </TouchableOpacity>
-      </View>
-      <View style={styles.contenedores}>
-        <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-          ¿A qué plazo quieres pagarlo?
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            marginLeft: -5,
-            alignSelf: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 6 ? "#2FF690" : "#F3F3F3",
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 6 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>6</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 12 ? "#2FF690" : "#F3F3F3",
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 12 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>12</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 18 ? "#2FF690" : "#F3F3F3",
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 18 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>18</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 24 ? "#2FF690" : "#F3F3F3",
-                marginRight: 0,
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 24 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>24</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </>
+      )}
     </>
   );
 };
@@ -406,3 +310,44 @@ const styles = StyleSheet.create({
 });
 
 export default MontoyPlazoCredito;
+
+// Diseños viejos
+/*<View style={[styles.contenedores, { flexDirection: "row" }]}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Valor de{"\n"}tu red</Text>
+          <Text style={styles.valorConcepto}>$120K</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Monto{"\n"}mínimo</Text>
+          <Text style={styles.valorConcepto}>$10K</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Monto{"\n"}máximo</Text>
+          <Text style={styles.valorConcepto}>$1M</Text>
+        </View>
+      </View>*/
+
+/*<Slider
+          style={{ width: "90%" }}
+          minimumValue={10000}
+          maximumValue={1000000}
+          step={100}
+          value={finance.montoNumeric}
+          onValueChange={handleSliderChange}
+          thumbTintColor="#2FF690"
+          minimumTrackTintColor="#2FF690"
+          maximumTrackTintColor="#F2F2F2"
+          //disabled={finance.paso === 1 ? false : true} // Para deshabilitar el slider
+          />*/

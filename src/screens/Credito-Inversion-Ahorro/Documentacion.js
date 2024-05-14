@@ -610,7 +610,12 @@ const Documentacion = ({ navigation }) => {
     }
   };
 
-  const [dataAceptar] = useState([{ label: "Si acepto", value: "true" }]);
+  const [dataAceptar] = useState([
+    {
+      label: `Si acepto${finance.focus === "network" ? "(*)" : ""}`,
+      value: "true",
+    },
+  ]);
 
   // Datos para el radio button
   const [dataActuo] = useState([
@@ -619,7 +624,9 @@ const Documentacion = ({ navigation }) => {
       value: "Actúo a nombre y por cuenta propia.",
     },
     {
-      label: "Actúo a nombre y por cuenta de un tercero(*).",
+      label: `Actúo a nombre y por cuenta de un tercero${
+        finance.focus === "network" ? "(**)" : "(*)"
+      }.`,
       value: "Actúo a nombre y por cuenta de un tercero.",
     },
   ]);
@@ -1114,10 +1121,19 @@ const Documentacion = ({ navigation }) => {
                 animation={false}
                 style={{ alignSelf: "baseline", marginTop: 20 }}
               />
+              {finance.focus === "network" && (
+                <Text
+                  style={[styles.subTexto, { fontSize: 12, marginTop: 10 }]}
+                >
+                  (*) Unicamente se llevará acabo si se decide realizar el
+                  crédito por comité
+                </Text>
+              )}
               <Text style={[styles.subTexto, { fontSize: 12, marginTop: 10 }]}>
-                (*) En caso de actuar a nombre de un tercero, es necesario la
-                siguiente información: Identificación oficial vigente, datos
-                generales y comprobante de domicilio recientes.
+                {finance.focus === "network" ? "(**)" : "(*)"} En caso de actuar
+                a nombre de un tercero, es necesario la siguiente información:
+                Identificación oficial vigente, datos generales y comprobante de
+                domicilio recientes.
               </Text>
             </View>
           </View>
