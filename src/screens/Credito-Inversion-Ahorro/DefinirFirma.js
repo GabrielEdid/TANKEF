@@ -76,6 +76,26 @@ const DefinirFirma = ({ navigation }) => {
     }
   };
 
+  const handleRegresar = () => {
+    Alert.alert(
+      `¿Deseas regresar a Mi Tankef`,
+      `Regresar no cancelará ${
+        flujo === "Crédito" ? `el ${flujo}` : `la ${flujo}`
+      }.`,
+      [
+        {
+          text: `Si`,
+          onPress: () => [navigation.navigate("MiTankef")],
+          style: "destructive",
+        },
+        {
+          text: `No`,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   // Función para manejar el botón de Aceptar
   const handleSiguiente = () => {
     if (focus === "Presencial") {
@@ -225,12 +245,31 @@ const DefinirFirma = ({ navigation }) => {
         {/* Boton de Aceptar */}
         <View>
           <TouchableOpacity
-            style={styles.botonContinuar}
+            style={[styles.botonContinuar, { marginBottom: 0 }]}
             onPress={() => handleSiguiente()}
           >
             <Text style={styles.textoBotonContinuar}>Aceptar</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor: "white",
+                marginBottom: 30,
+                borderColor: "#060B4D",
+                borderWidth: 1,
+              },
+            ]}
+            onPress={() => {
+              handleRegresar();
+            }}
+          >
+            <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
+              Regresar
+            </Text>
+          </TouchableOpacity>
         </View>
+
         <Modal
           animationType="slide"
           transparent={true}

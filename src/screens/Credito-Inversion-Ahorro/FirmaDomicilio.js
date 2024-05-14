@@ -163,6 +163,26 @@ const FirmaDomicilio = ({ navigation }) => {
     }
   }, [estado]);
 
+  const handleRegresar = () => {
+    Alert.alert(
+      `¿Deseas regresar a Mi Tankef`,
+      `Regresar no cancelará ${
+        flujo === "Crédito" ? `el ${flujo}` : `la ${flujo}`
+      }.`,
+      [
+        {
+          text: `Si`,
+          onPress: () => [navigation.navigate("MiTankef")],
+          style: "destructive",
+        },
+        {
+          text: `No`,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   // Componente Visual
   return (
     <View style={{ flex: 1 }}>
@@ -400,7 +420,7 @@ const FirmaDomicilio = ({ navigation }) => {
           </View>
         </View>
         {/* Botones de Continuar y Agregar o Eliminar Beneficiario */}
-        <View style={{ marginBottom: 20, zIndex: -1 }}>
+        <View style={{ marginBottom: 30, zIndex: -1 }}>
           <TouchableOpacity
             style={[
               styles.botonContinuar,
@@ -416,6 +436,23 @@ const FirmaDomicilio = ({ navigation }) => {
               ]}
             >
               Aceptar
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.botonContinuar,
+              {
+                backgroundColor: "white",
+                borderColor: "#060B4D",
+                borderWidth: 1,
+              },
+            ]}
+            onPress={() => {
+              handleRegresar();
+            }}
+          >
+            <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
+              Regresar
             </Text>
           </TouchableOpacity>
         </View>

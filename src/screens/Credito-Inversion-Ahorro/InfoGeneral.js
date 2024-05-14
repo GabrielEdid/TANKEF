@@ -112,8 +112,8 @@ const InfoGeneral = ({ navigation }) => {
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
     Alert.alert(
-      `¿Deseas cancelar la ${flujo}`,
-      `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
+      `¿Deseas cancelar el ${flujo}`,
+      `Si cancelas el ${flujo}, perderás la información ingresada hasta el momento.`,
       [
         {
           text: `Si`,
