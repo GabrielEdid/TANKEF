@@ -251,7 +251,10 @@ const DefinirCredito = ({ navigation }) => {
   }, [finance.obligados_solidarios]);*/
 
   const isAcceptable1 =
-    finance.montoNumeric >= 10000 && finance.plazo && finance.condiciones;
+    finance.montoNumeric >= 10000 &&
+    finance.plazo &&
+    finance.condiciones &&
+    finance.focus;
   const isAcceptable4 = finance.aceptarSIC && finance.actuoComo;
 
   // Function to determine button's background color

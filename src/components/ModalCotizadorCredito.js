@@ -61,7 +61,7 @@ const ModalCotizadorCredito = () => {
                 styles.contenedores,
                 {
                   flexDirection: "row",
-                  marginTop: 5,
+                  marginTop: 20,
                   paddingHorizontal: 0,
                   paddingVertical: 0,
                 },
@@ -69,7 +69,7 @@ const ModalCotizadorCredito = () => {
             >
               <View style={{ flex: 1 }}>
                 <Text style={[styles.concepto, { fontSize: 13 }]}>
-                  Comisión por{"\n"}apertura
+                  Comisión por apertura
                 </Text>
                 <Text style={styles.valorConcepto}>
                   {finance.comision_por_apertura}
@@ -83,10 +83,30 @@ const ModalCotizadorCredito = () => {
               />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.concepto, { fontSize: 13 }]}>
-                  Tasa de{"\n"}operación
+                  Tasa de operación
                 </Text>
                 <Text style={styles.valorConcepto}>
                   {finance.tasa_de_operacion}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={[
+                styles.contenedores,
+                {
+                  flexDirection: "row",
+                  marginTop: 20,
+                  paddingHorizontal: 0,
+                  paddingVertical: 0,
+                },
+              ]}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.concepto, { fontSize: 13 }]}>
+                  Pago mensual
+                </Text>
+                <Text style={[styles.valorConcepto]}>
+                  {finance.pago_mensual}
                 </Text>
               </View>
               <Ionicons
@@ -97,10 +117,10 @@ const ModalCotizadorCredito = () => {
               />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.concepto, { fontSize: 13 }]}>
-                  Pago{"\n"}mensual
+                  Total a pagar
                 </Text>
                 <Text style={[styles.valorConcepto]}>
-                  {finance.pago_mensual}
+                  {finance.total_a_pagar}
                 </Text>
               </View>
             </View>
@@ -251,7 +271,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalTextBody: {
-    marginTop: 10,
+    marginTop: 20,
     fontSize: 12,
     color: "#060B4D",
     fontFamily: "opensans",
