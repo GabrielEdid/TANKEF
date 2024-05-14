@@ -51,13 +51,15 @@ const LogIn = ({ navigation }) => {
       // Continuar en caso de éxito
       const userData = response.data.data;
       setToken(response.data.token);
+      console.log("Inicio de sesión exitoso:", userData);
+      console.log("Nombre:", titleCase(userData.name));
       setUser({
         ...user,
         userID: userData.id,
         telefono: userData.phone,
         nombre: titleCase(userData.name),
-        apellidoPaterno: titleCase(userData.last_name_1),
-        apellidoMaterno: titleCase(userData.last_name_2),
+        apellidoPaterno: titleCase(userData.first_last_name),
+        apellidoMaterno: titleCase(userData.second_last_name),
         CURP: userData.curp,
         email: userData.email,
       });
