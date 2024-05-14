@@ -190,68 +190,6 @@ const MontoyPlazoCredito = () => {
 
       <View style={styles.contenedores}>
         <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-          ¿A qué plazo quieres pagarlo?
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            marginLeft: -5,
-            alignSelf: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 6 ? "#2FF690" : "#F3F3F3",
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 6 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>6</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 12 ? "#2FF690" : "#F3F3F3",
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 12 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>12</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 18 ? "#2FF690" : "#F3F3F3",
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 18 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>18</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              {
-                backgroundColor: finance.plazo === 24 ? "#2FF690" : "#F3F3F3",
-                marginRight: 0,
-              },
-            ]}
-            onPress={() => [setFinance({ ...finance, plazo: 24 })]}
-            disabled={finance.paso > 2}
-          >
-            <Text style={styles.textoTab}>24</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.contenedores}>
-        <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
           ¿A quién deseas solicitar tu crédito?
         </Text>
         <TouchableOpacity
@@ -312,6 +250,68 @@ const MontoyPlazoCredito = () => {
             />
           )}
         </TouchableOpacity>
+      </View>
+      <View style={styles.contenedores}>
+        <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
+          ¿A qué plazo quieres pagarlo?
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            marginLeft: -5,
+            alignSelf: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              {
+                backgroundColor: finance.plazo === 6 ? "#2FF690" : "#F3F3F3",
+              },
+            ]}
+            onPress={() => [setFinance({ ...finance, plazo: 6 })]}
+            disabled={finance.paso > 2}
+          >
+            <Text style={styles.textoTab}>6</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              {
+                backgroundColor: finance.plazo === 12 ? "#2FF690" : "#F3F3F3",
+              },
+            ]}
+            onPress={() => [setFinance({ ...finance, plazo: 12 })]}
+            disabled={finance.paso > 2}
+          >
+            <Text style={styles.textoTab}>12</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              {
+                backgroundColor: finance.plazo === 18 ? "#2FF690" : "#F3F3F3",
+              },
+            ]}
+            onPress={() => [setFinance({ ...finance, plazo: 18 })]}
+            disabled={finance.paso > 2}
+          >
+            <Text style={styles.textoTab}>18</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              {
+                backgroundColor: finance.plazo === 24 ? "#2FF690" : "#F3F3F3",
+                marginRight: 0,
+              },
+            ]}
+            onPress={() => [setFinance({ ...finance, plazo: 24 })]}
+            disabled={finance.paso > 2}
+          >
+            <Text style={styles.textoTab}>24</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   );
