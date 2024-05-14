@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect } from "@react-navigation/native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import RadioForm from "react-native-simple-radio-button";
 import { ActivityIndicator } from "react-native-paper";
@@ -51,6 +52,13 @@ const DefinirCredito = ({ navigation }) => {
     Blank: require("../../../assets/images/blankAvatar.jpg"),
     AddSign: require("../../../assets/images/AddSign.png"),
   };
+
+  // Función para encender el modal de fraude al cargar la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      setModalVisible(true);
+    }, [])
+  );
 
   // Función para hacer la cotizacion al API
   useEffect(() => {
@@ -728,6 +736,17 @@ const DefinirCredito = ({ navigation }) => {
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           onAccept={() => [setModalVisible(false), createCredit()]}
+        />
+      )}
+      {finance.paso === 1 && (
+        <ModalEstatus
+          titulo={"¡Importante!"}
+          texto={
+            "Nosotros nunca solicitamos pagos anticipados para autorizar o entregar nuestros préstamos. Ten cuidado con grupos fraudulentos que se hacen pasar por nosotros y piden dinero por seguros de vida, comisiones, entre otros, para estafar a las personas.\nNO TE DEJES ENGAÑAR."
+          }
+          imagen={"Alert"}
+          visible={modalVisible}
+          onAccept={() => setModalVisible(false)}
         />
       )}
       {loading && (
