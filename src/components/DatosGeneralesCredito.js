@@ -53,11 +53,15 @@ const DatosGeneralesCredito = () => {
         <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
           ¿Ha desempeñado algún cargo político?
         </Text>
-        <Text style={styles.bodyCampo}>{finance.politico}</Text>
+        <Text style={styles.bodyCampo}>
+          {finance.politico === true ? Sí : No}
+        </Text>
         <View style={styles.separacion} />
 
         <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
-        <Text style={styles.bodyCampo}>{finance.domicilio}</Text>
+        <Text style={styles.bodyCampo}>
+          {finance.domicilio === "own" ? "Propio" : "Rentado"}
+        </Text>
         <View style={styles.separacion} />
 
         <Text style={styles.tituloCampo}>Teléfono Casa</Text>
