@@ -189,7 +189,13 @@ const Perfil = () => {
           </View>
           <View>
             <Text style={styles.textoConcepto}>Valor de Red</Text>
-            <Text style={styles.textoValor}>$120,000.00</Text>
+            <Text style={styles.textoValor}>
+              {user.valorRed.toLocaleString("es-MX", {
+                style: "currency",
+                currency: "MXN",
+              })}
+              MXN
+            </Text>
           </View>
         </View>
 
