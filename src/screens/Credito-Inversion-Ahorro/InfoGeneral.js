@@ -395,6 +395,7 @@ const InfoGeneral = ({ navigation }) => {
                     value={finance.telCasa}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
+                    maxLength={12}
                   />
                 </View>
                 <View style={styles.separacion} />
@@ -438,6 +439,7 @@ const InfoGeneral = ({ navigation }) => {
                     value={finance.telTrabajo}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
+                    maxLength={12}
                   />
                 </View>
                 <View style={styles.separacion} />
@@ -477,6 +479,7 @@ const InfoGeneral = ({ navigation }) => {
                     value={finance.celular}
                     keyboardType="phone-pad"
                     placeholder="10 dígitos"
+                    maxLength={12}
                   />
                 </View>
                 <View style={styles.separacion} />
