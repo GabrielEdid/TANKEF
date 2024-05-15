@@ -215,7 +215,18 @@ const Documentacion = ({ navigation }) => {
             "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
           );
         } else {
-          setModalVisible(true);
+          if (flujo === "Crédito") {
+            navigation.navigate("DefinirCredito", {
+              flujo: flujo,
+              idInversion: idInversion,
+            });
+            setFinance({
+              ...finance,
+              paso: finance.paso + 1,
+            });
+          } else {
+            setModalVisible(true);
+          }
           setLoading(false);
           console.log("Datos de cuenta bancaria guardados con éxito");
         }
@@ -368,15 +379,24 @@ const Documentacion = ({ navigation }) => {
     finance.isThereComprobanteDomicilio,
     finance.aceptarSIC,
   ]);
+
   const disabledAgregar =
-    finance.accounts.length > 0 &&
-    !addAccount &&
-    finance.CURP &&
-    finance.situacionFiscal &&
-    finance.comprobanteDomicilio &&
-    finance.identificacion &&
-    finance.actuoComo &&
-    (finance.aceptarSIC || flujo !== "Crédito");
+    (finance.accounts.length > 0 &&
+      !addAccount &&
+      finance.isThereCURP &&
+      finance.isThereComprobanteDomicilio &&
+      finance.isThereIdentificacion &&
+      finance.isThereSituacionFiscal &&
+      finance.actuoComo &&
+      (finance.aceptarSIC || flujo !== "Crédito")) ||
+    (finance.accounts.length > 0 &&
+      !addAccount &&
+      finance.CURP &&
+      finance.comprobanteDomicilio &&
+      finance.identificacion &&
+      finance.situacionFiscal &&
+      finance.actuoComo &&
+      (finance.aceptarSIC || flujo !== "Crédito"));
 
   // Función para obtener la existencia de documentos de la inversión o caja de ahorro
   const fetchDocuments = async () => {
@@ -496,6 +516,7 @@ const Documentacion = ({ navigation }) => {
 
   // Función para agregar una cuenta bancaria
   const handleAgregar = () => {
+    console.log(finance.CURP);
     if (!disabledAgregar) {
       Alert.alert(
         "Campos Faltantes",
@@ -1220,25 +1241,11 @@ const Documentacion = ({ navigation }) => {
         }
         imagen={"Alert"}
         visible={modalVisible}
-        onAccept={() =>
-          flujo === "Inversión" || flujo === "Caja de Ahorro"
-            ? [
-                setModalVisible(false),
-                resetFinance(),
-                navigation.navigate("MiTankef"),
-              ]
-            : [
-                setModalVisible(false),
-                navigation.navigate("DefinirCredito", {
-                  flujo: flujo,
-                  idInversion: idInversion,
-                }),
-                setFinance({
-                  ...finance,
-                  paso: finance.paso + 1,
-                }),
-              ]
-        }
+        onAccept={() => [
+          setModalVisible(false),
+          resetFinance(),
+          navigation.navigate("MiTankef"),
+        ]}
       />
     </View>
   );

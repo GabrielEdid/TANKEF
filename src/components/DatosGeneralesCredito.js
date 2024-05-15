@@ -54,7 +54,7 @@ const DatosGeneralesCredito = () => {
           ¿Ha desempeñado algún cargo político?
         </Text>
         <Text style={styles.bodyCampo}>
-          {finance.politico === true ? Sí : No}
+          {finance.politico === true ? "Sí" : "No"}
         </Text>
         <View style={styles.separacion} />
 

@@ -26,6 +26,7 @@ import DatosCotizadorCredito from "../../components/DatosCotizadorCredito";
 import ModalCotizadorCredito from "../../components/ModalCotizadorCredito";
 import ObligadoSolidario from "../../components/ObligadoSolidario";
 import ModalEstatus from "../../components/ModalEstatus";
+import { fi } from "date-fns/locale";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -123,8 +124,7 @@ const DefinirCredito = ({ navigation }) => {
     } else if (finance.paso === 2) {
       setModalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
     } else if (finance.paso === 3) {
-      navigation.navigate("MiTankef");
-      resetFinance();
+      setModalVisible(true);
     } else if (finance.paso === 4) {
       navigation.navigate("MiTankef");
     } else {
@@ -750,6 +750,21 @@ const DefinirCredito = ({ navigation }) => {
           imagen={"Alert"}
           visible={modalVisible}
           onAccept={() => setModalVisible(false)}
+        />
+      )}
+      {finance.paso === 3 && (
+        <ModalEstatus
+          titulo={"¡Atención!"}
+          texto={
+            "Tu documentación ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+          }
+          imagen={"Alert"}
+          visible={modalVisible}
+          onAccept={() => [
+            setModalVisible(false),
+            resetFinance(),
+            navigation.navigate("MiTankef"),
+          ]}
         />
       )}
       {loading && (
