@@ -172,8 +172,8 @@ const MontoyPlazoCredito = () => {
                 <MaterialCommunityIcons
                   name="radiobox-marked"
                   size={32}
-                  color="#060B4D"
-                  style={{ marginTop: 12, marginLeft: 30 }}
+                  color="#2FF690"
+                  style={{ marginTop: 12, marginLeft: 30, left: 2 }}
                 />
               ) : (
                 <Entypo
@@ -202,8 +202,8 @@ const MontoyPlazoCredito = () => {
                 <MaterialCommunityIcons
                   name="radiobox-marked"
                   size={32}
-                  color="#060B4D"
-                  style={{ marginTop: 12, marginLeft: 30 }}
+                  color="#2FF690"
+                  style={{ marginTop: 12, marginLeft: 30, left: 2 }}
                 />
               ) : (
                 <Entypo
