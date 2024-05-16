@@ -47,7 +47,9 @@ const DatosCotizadorCredito = () => {
         </Text>
         <Text style={styles.monto}>{finance.total_a_pagar}</Text>
       </View> */}
-      <View style={[styles.contenedores]}>
+      <View
+        style={[styles.contenedores, { marginTop: finance.paso > 2 ? 0 : 3 }]}
+      >
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Comisión por apertura</Text>
           <Text style={styles.valorConcepto}>
@@ -66,7 +68,15 @@ const DatosCotizadorCredito = () => {
         </View>
       </View>
 
-      <View style={styles.contenedores}>
+      <View
+        style={[
+          styles.contenedores,
+          {
+            backgroundColor: finance.paso > 2 ? "#2FF690" : "white",
+            marginTop: finance.paso > 2 ? 0 : 3,
+          },
+        ]}
+      >
         <View style={{ flex: 1 }}>
           <Text style={styles.concepto}>Pago mensual</Text>
           <Text style={styles.valorConcepto}>{finance.pago_mensual}</Text>
@@ -90,14 +100,15 @@ const DatosCotizadorCredito = () => {
 const styles = StyleSheet.create({
   contenedores: {
     backgroundColor: "white",
-    paddingVertical: 7.5,
+    paddingHorizontal: 12,
+    paddingVertical: 15,
     alignItems: "center",
     marginTop: 3,
     flexDirection: "row",
   },
   concepto: {
     fontFamily: "opensans",
-    fontSize: 13,
+    fontSize: 14,
     color: "#060B4D",
     textAlign: "center",
   },
@@ -110,8 +121,8 @@ const styles = StyleSheet.create({
     fontFamily: "opensanssemibold",
   },
   valorConcepto: {
-    fontFamily: "opensanssemibold",
-    fontSize: 15,
+    fontFamily: "opensansbold",
+    fontSize: 16,
     color: "#060B4D",
     textAlign: "center",
   },

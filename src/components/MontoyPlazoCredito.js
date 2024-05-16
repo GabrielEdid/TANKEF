@@ -98,6 +98,15 @@ const MontoyPlazoCredito = () => {
     return isNaN(numericValue) ? "" : numericValue.toLocaleString();
   };
 
+  // Formatea un monto a pesos mexicanos
+  const formatAmount = (amount) => {
+    const number = parseFloat(amount);
+    return `${number.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    })}`;
+  };
+
   // Componente visual
   return (
     <>
@@ -283,7 +292,29 @@ const MontoyPlazoCredito = () => {
           </View>
         </>
       )}
-      {finance.paso > 2 && <View></View>}
+
+      {finance.paso > 2 && (
+        <>
+          <View style={[styles.contenedores, { flexDirection: "row" }]}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Monto a solicitar</Text>
+              <Text style={styles.valorConcepto}>
+                {formatAmount(finance.montoNumeric)}
+              </Text>
+            </View>
+            <Ionicons
+              name="remove-outline"
+              size={30}
+              color="#e1e2ebff"
+              style={styles.line}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.concepto}>Plazo del crédito</Text>
+              <Text style={styles.valorConcepto}>{finance.plazo} meses</Text>
+            </View>
+          </View>
+        </>
+      )}
     </>
   );
 };
@@ -304,7 +335,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   valorConcepto: {
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensansbold",
     fontSize: 16,
     color: "#060B4D",
     textAlign: "center",
