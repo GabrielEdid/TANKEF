@@ -162,11 +162,12 @@ const Inicio = () => {
           editable={false}
         />
         <Ionicons
-          name="ios-image"
+          name="image"
           size={30}
           color="#060B4D"
           style={{
             transform: [{ scaleX: -1 }],
+            alignSelf: "center",
           }}
         />
       </TouchableOpacity>
