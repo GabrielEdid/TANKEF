@@ -57,7 +57,9 @@ const DefinirCredito = ({ navigation }) => {
   // Función para encender el modal de fraude al cargar la pantalla
   useFocusEffect(
     useCallback(() => {
-      setModalVisible(true);
+      if (finance.paso === 1) {
+        setModalVisible(true);
+      }
     }, [])
   );
 

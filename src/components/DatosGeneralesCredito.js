@@ -41,92 +41,13 @@ const DatosGeneralesCredito = () => {
   // Componente visual
   return (
     <>
-      <View
-        style={[
-          styles.contenedores,
-          {
-            paddingHorizontal: 0,
-            paddingVertical: 10,
-            alignItems: "baseline",
-          },
-        ]}
-      >
-        <Text style={[styles.tituloCampo, { marginTop: 0 }]}>
-          ¿Ha desempeñado algún cargo político?
-        </Text>
-        <Text style={styles.bodyCampo}>
-          {finance.politico === true ? "Sí" : "No"}
-        </Text>
-        <View style={styles.separacion} />
-
-        <Text style={styles.tituloCampo}>Tipo de Domicilio</Text>
-        <Text style={styles.bodyCampo}>
-          {finance.domicilio === "own" ? "Propio" : "Rentado"}
-        </Text>
-        <View style={styles.separacion} />
-
-        <Text style={styles.tituloCampo}>Teléfono Casa</Text>
-        <Text style={styles.bodyCampo}>{finance.telCasa}</Text>
-        <View style={styles.separacion} />
-
-        <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
-        <Text style={styles.bodyCampo}>{finance.telTrabajo}</Text>
-        <View style={styles.separacion} />
-
-        <Text style={styles.tituloCampo}>Celular</Text>
-        <Text style={styles.bodyCampo}>{finance.celular}</Text>
-        <View style={styles.separacion} />
-
-        <Text style={styles.tituloCampo}>
-          Cuenta bancaria a depositar fondos
-        </Text>
-        <Text style={styles.bodyCampo}>{finance.alias}</Text>
-        <View style={styles.separacion} />
-
-        <View style={styles.Description}>
-          <Text
-            style={[
-              styles.bodyCampo,
-              {
-                padding: 10,
-                marginBottom: 0,
-                color: "#878787",
-              },
-            ]}
-          >
-            {finance.descripcion}
-          </Text>
-        </View>
-        {/* {finance.paso === 3 && (
-          <View
-            style={{ alignSelf: "center", marginTop: 15, marginBottom: -5 }}
-          >
-            <TouchableOpacity
-              style={{
-                alignSelf: "center",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={() => [
-                setFinance({ ...finance, paso: 2 }),
-                navigation.navigate("InfoGeneral", { flujo: "Crédito" }),
-              ]}
-            >
-              <Image
-                style={{ width: 23, height: 22, marginBottom: 10 }}
-                source={require("../../assets/images/Sliders.png")}
-              />
-              <Text style={[styles.bodyCampo, { paddingLeft: 5 }]}>
-                Editar información general
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )} */}
-      </View>
+      <Text style={styles.texto}>Información General</Text>
       <View style={[styles.contenedores, { flexDirection: "row" }]}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Monto a solicitar</Text>
-          <Text style={styles.valorConcepto}>finance.montoNumeric</Text>
+          <Text style={styles.concepto}>Cargo politico</Text>
+          <Text style={styles.valorConcepto}>
+            {finance.politico === true ? "Sí" : "No"}
+          </Text>
         </View>
         <Ionicons
           name="remove-outline"
@@ -135,8 +56,62 @@ const DatosGeneralesCredito = () => {
           style={styles.line}
         />
         <View style={{ flex: 1 }}>
-          <Text style={styles.concepto}>Plazo del crédito</Text>
-          <Text style={styles.valorConcepto}>{finance.plazo} meses</Text>
+          <Text style={styles.concepto}>Tipo de domicilio</Text>
+          <Text style={styles.valorConcepto}>
+            {finance.domicilio === "own" ? "Propio" : "Rentado"}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={[styles.contenedores, { flexDirection: "row", marginTop: 0 }]}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Tel. Casa</Text>
+          <Text style={styles.valorConcepto}>{finance.telCasa}</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Tel. Trabajo</Text>
+          <Text style={styles.valorConcepto}>{finance.telTrabajo}</Text>
+        </View>
+      </View>
+      <View
+        style={[styles.contenedores, { flexDirection: "row", marginTop: 0 }]}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Celular</Text>
+          <Text style={styles.valorConcepto}>{finance.celular}</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Cuenta Bancaria</Text>
+          <Text style={styles.valorConcepto}>{finance.alias}</Text>
+        </View>
+      </View>
+      <View style={{ backgroundColor: "white", marginTop: 3 }}>
+        <View style={styles.description}>
+          <Text
+            style={[
+              styles.bodyCampo,
+              {
+                padding: 10,
+                marginBottom: 0,
+                color: "#060B4D",
+              },
+            ]}
+          >
+            {finance.descripcion}
+          </Text>
         </View>
       </View>
     </>
@@ -147,10 +122,10 @@ const DatosGeneralesCredito = () => {
 const styles = StyleSheet.create({
   contenedores: {
     backgroundColor: "white",
+    paddingHorizontal: 12,
+    paddingVertical: 15,
+    alignItems: "center",
     marginTop: 3,
-    paddingHorizontal: 0,
-    paddingVertical: 10,
-    alignItems: "baseline",
   },
   tituloCampo: {
     marginTop: 5,
@@ -167,16 +142,39 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     marginBottom: 10,
   },
-  Description: {
+  texto: {
+    marginVertical: 25,
+    textAlign: "center",
+    fontSize: 18,
+    fontFamily: "opensansbold",
+    paddingTop: 1,
+    color: "#060B4D",
+  },
+  concepto: {
+    fontFamily: "opensans",
+    fontSize: 14,
+    color: "#060B4D",
+    textAlign: "center",
+  },
+  valorConcepto: {
+    fontFamily: "opensansbold",
+    fontSize: 16,
+    color: "#060B4D",
+    textAlign: "center",
+  },
+  line: {
+    transform: [{ rotate: "90deg" }],
+  },
+  description: {
     borderRadius: 10,
     borderColor: "#afb0c4ff",
     borderWidth: 1,
-    backgroundColor: "#F7F7F7",
+    backgroundColor: "#E9E9E9",
     flex: 1,
     width: "93%",
     color: "#060B4D",
     alignSelf: "center",
-    marginTop: 10,
+    marginVertical: 10,
   },
   separacion: {
     height: 1,
