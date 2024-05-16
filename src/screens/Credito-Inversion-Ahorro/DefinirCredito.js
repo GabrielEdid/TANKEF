@@ -472,7 +472,50 @@ const DefinirCredito = ({ navigation }) => {
               </View>
             )} */}
 
-          {finance.paso >= 2 && <DatosCotizadorCredito />}
+          {finance.paso >= 2 && (
+            <>
+              <DatosCotizadorCredito />
+
+              {/* En el resumen del crédito se añade aquí a quien se solicito para facilitar el orden de las pantallas y no modificar la arquitectura */}
+              {finance.paso > 2 && (
+                <View style={{ marginTop: 25 }}>
+                  <Text
+                    style={[
+                      styles.texto2,
+                      { marginBottom: 25, textAlign: "center" },
+                    ]}
+                  >
+                    ¿De que forma deseas solicitar tu crédito?
+                  </Text>
+                  <View style={styles.contenedores}>
+                    {finance.focus === "committee" && (
+                      <View>
+                        <Text style={styles.texto2}>Comité</Text>
+                        <Text style={styles.texto3}>
+                          Para solicitar un crédito con Tankef, es necesario
+                          presentar la solicitud al comité y someterse a una
+                          revisión en el{" "}
+                          <Text style={{ fontFamily: "opensansbold" }}>
+                            Buró de Crédito
+                          </Text>
+                          .
+                        </Text>
+                      </View>
+                    )}
+                    {finance.focus === "network" && (
+                      <View>
+                        <Text style={styles.texto2}>Por Red Social</Text>
+                        <Text style={styles.texto3}>
+                          El crédito es solicitado a las personas que
+                          selecciones como tus obligados solidarios.
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              )}
+            </>
+          )}
 
           {finance.paso >= 3 && (
             <>
@@ -850,6 +893,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "opensans",
     fontSize: 16,
+  },
+  texto2: {
+    marginTop: 2,
+    fontSize: 18,
+    fontFamily: "opensansbold",
+    paddingTop: 1,
+    color: "#060B4D",
+  },
+  texto3: {
+    marginTop: 2,
+    fontSize: 14,
+    paddingTop: 1,
+    fontFamily: "opensans",
+    color: "#060B4D",
   },
   subTexto: {
     color: "#060B4D",
