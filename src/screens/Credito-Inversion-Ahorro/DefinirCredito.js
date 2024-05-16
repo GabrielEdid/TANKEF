@@ -325,7 +325,7 @@ const DefinirCredito = ({ navigation }) => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>Crédito</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => console.log("Hola")}>
           <Feather
             name="bell"
             size={25}

@@ -11,6 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
 import { FinanceContext } from "../hooks/FinanceContext";
+import { Ionicons } from "@expo/vector-icons";
 
 /**
  * `Conexion` es un componente que muestra información de una conexión específica,
@@ -121,6 +122,22 @@ const DatosGeneralesCredito = () => {
             </TouchableOpacity>
           </View>
         )} */}
+      </View>
+      <View style={[styles.contenedores, { flexDirection: "row" }]}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Monto a solicitar</Text>
+          <Text style={styles.valorConcepto}>finance.montoNumeric</Text>
+        </View>
+        <Ionicons
+          name="remove-outline"
+          size={30}
+          color="#e1e2ebff"
+          style={styles.line}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.concepto}>Plazo del crédito</Text>
+          <Text style={styles.valorConcepto}>{finance.plazo} meses</Text>
+        </View>
       </View>
     </>
   );

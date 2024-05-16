@@ -100,11 +100,13 @@ const MontoyPlazoCredito = () => {
 
   // Formatea un monto a pesos mexicanos
   const formatAmount = (amount) => {
-    const number = parseFloat(amount);
-    return `${number.toLocaleString("es-MX", {
+    const sanitizedAmount = amount.replace(/,/g, "");
+    const number = parseFloat(sanitizedAmount);
+
+    return number.toLocaleString("es-MX", {
       style: "currency",
       currency: "MXN",
-    })}`;
+    });
   };
 
   // Componente visual
@@ -299,7 +301,7 @@ const MontoyPlazoCredito = () => {
             <View style={{ flex: 1 }}>
               <Text style={styles.concepto}>Monto a solicitar</Text>
               <Text style={styles.valorConcepto}>
-                {formatAmount(finance.montoNumeric)}
+                {formatAmount(finance.monto)}
               </Text>
             </View>
             <Ionicons
