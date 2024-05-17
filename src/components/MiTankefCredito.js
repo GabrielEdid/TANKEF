@@ -403,18 +403,12 @@ const MiTankefCredito = (props) => {
             <ModalEstatus
               titulo={"¡Atención!"}
               texto={
-                "Tu documentación ha sido rechazada, por favor revisa que coincidan con lo que se solicita y que sean vigentes antes de volver a enviarlos.\n¡Gracias por tu preferencia!"
+                "Se encontraron inconsistencias en tu proceso, la solicitud ha sido rechazada."
               }
               imagen={"RedAlert"}
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
-              onAccept={() => [
-                setModalVisible(false),
-                navigation.navigate("Crear", {
-                  screen: "Documentacion",
-                  params: { flujo: "Crédito", idInversion: currentID },
-                }),
-              ]}
+              onAccept={() => [setModalVisible(false)]}
             />
           )}
 
