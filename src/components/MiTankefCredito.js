@@ -75,6 +75,8 @@ const MiTankefCredito = (props) => {
     } else {
       const filteredResults = result.data.data.sort((a, b) => b.id - a.id);
       console.log("Resultados de los creditos:", filteredResults);
+      setCredits(filteredResults);
+      fetchCredit(filteredResults[0].id);
       setCreditState(filteredResults[0].aasm_state);
       handleCreditStateChange(filteredResults[0].aasm_state);
       setComisionApertura(filteredResults[0].commision_for_oppening);
@@ -84,11 +86,9 @@ const MiTankefCredito = (props) => {
       setTasaOperacion(filteredResults[0].rate_operation);
       setTotalPagar(filteredResults[0].total_to_pay);
       setFecha(filteredResults[0].created_at);
-      setCredits(filteredResults);
       setCurrentID(filteredResults[0].id);
       setAprovacion(filteredResults[0].type_approval);
-      //setTasaInteres(filteredResults[0].rate_operation);
-      //fetchCredit(filteredResults[0].id);
+      setTasaInteres(filteredResults[0].rate_operation);
     }
   };
 
@@ -103,9 +103,16 @@ const MiTankefCredito = (props) => {
     } else {
       console.log("Resultado del credito:", result.data.data);
       setCreditState(result.data.data.aasm_state);
-      handleInvestmentStateChange(result.data.data.aasm_state);
+      handleCreditStateChange(result.data.data.aasm_state);
+      setComisionApertura(result.data.data.commision_for_oppening);
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
+      setPagoMensual(result.data.data.monthly_payment);
+      setTasaOperacion(result.data.data.rate_operation);
+      setTotalPagar(result.data.data.total_to_pay);
+      setFecha(result.data.data.created_at);
+      setCurrentID(result.data.data.id);
+      setAprovacion(result.data.data.type_approval);
     }
   };
 
@@ -154,7 +161,7 @@ const MiTankefCredito = (props) => {
   // Componente visual
   return (
     <View>
-      {/* Vista de las distintas inversiones */}
+      {/* Vista de los distintos créditos */}
       {credits.length === 0 && (
         <TouchableOpacity
           onPress={() =>
@@ -180,62 +187,51 @@ const MiTankefCredito = (props) => {
           </Text>
         </TouchableOpacity>
       )}
+
       {credits.length > 0 ? (
         <>
-          <View style={{ flexDirection: "row", marginBottom: 5 }}>
-            {/* Opcion para tener boton de "Nuevo Crédito" */}
-            {/*<TouchableOpacity
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginLeft: 10,
-            backgroundColor: "white",
-            paddingHorizontal: 17.5,
-            paddingVertical: 5,
-            width: 120,
-            borderRadius: 10,
-          }}
-        >
-          <Entypo name="plus" size={30} color="black" />
-          <Text
+          <ScrollView
             style={{
-              color: "#060B4D",
-              fontFamily: "opensansbold",
-              textAlign: "center",
-              fontSize: 12,
-              marginTop: -5,
+              marginBottom: 5,
             }}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
           >
-            Nuevo{"\n"}Crédito
-          </Text>
-          </TouchableOpacity>*/}
-
             {/* Componente repetible */}
-            <TouchableOpacity
-              style={{
-                alignItems: "center",
-                marginLeft: 10,
-                paddingVertical: 5,
-                paddingHorizontal: 10,
-                borderRadius: 10,
-                width: 120,
-                backgroundColor: "#2FF690",
-              }}
-            >
-              <FontAwesome name="credit-card" size={24} color="#060B4D" />
-              <Text
-                style={{
-                  color: "#060B4D",
-                  fontFamily: "opensanssemibold",
-                  textAlign: "center",
-                  fontSize: 12,
-                }}
-              >
-                Crédito{"\n"}
-                {formatDate(fecha)}
-              </Text>
-            </TouchableOpacity>
-          </View>
+
+            {credits &&
+              credits.length > 0 &&
+              credits.map((credit, index) => (
+                <TouchableOpacity
+                  key={credit.id || index}
+                  style={[
+                    styles.creditNameContainer,
+                    {
+                      backgroundColor:
+                        currentID === credit.id ? "#2FF690" : "white",
+                    },
+                  ]}
+                  onPress={() => [
+                    fetchCredit(credit.id),
+                    setCurrentID(credit.id),
+                  ]}
+                >
+                  <FontAwesome name="credit-card" size={24} color="#060B4D" />
+                  <Text
+                    style={{
+                      color: "#060B4D",
+                      fontFamily: "opensanssemibold",
+                      textAlign: "center",
+                      fontSize: 12,
+                    }}
+                  >
+                    Crédito{"\n"}
+                    {formatDate(credit.created_at)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+          </ScrollView>
+
           <View style={styles.tabsContainer}>
             {/* Boton Tab Balance */}
             <TouchableOpacity
@@ -567,6 +563,15 @@ const styles = StyleSheet.create({
     width: widthHalf,
     marginTop: 12,
     backgroundColor: "#060B4D",
+  },
+  creditNameContainer: {
+    alignItems: "center",
+    marginLeft: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    width: 120,
+    backgroundColor: "#2FF690",
   },
   container: {
     backgroundColor: "white",
