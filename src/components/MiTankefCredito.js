@@ -10,12 +10,14 @@ import {
   ScrollView,
 } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { DateTime } from "luxon";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
+import { applyActionCode } from "firebase/auth";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -45,11 +47,11 @@ const MiTankefCredito = (props) => {
   const [creditState, setCreditState] = useState(null); //Estado de la inversion
   const [plazo, setPlazo] = useState(null); //Plazo de la inversion
   const [folio, setFolio] = useState(null); //Folio de la inversion
-  const [tasaInteres, setTasaInteres] = useState(null); //Tasa de interes
+  const [tasaOperacion, setTasaOperacion] = useState(null); //Tasa de interes
   const [comisionApertura, setComisionApertura] = useState(null); //Comision de apertura
   const [pagoMensual, setPagoMensual] = useState(null); //Pago mensual
   const [totalPagar, setTotalPagar] = useState(null); //Total a pagar
-  const [montoSolicitado, setMontoSolicitado] = useState(null); //Monto solicitado
+  const [fecha, setFecha] = useState(null); //Fecha de creación
   const [aprovacion, setAprovacion] = useState(null); //Aprovacion de la inversion
   const [modalVisible, setModalVisible] = useState(false); //Modal de inversion
   const [effectTrigger, setEffectTrigger] = useState(false); //Trigger para efectos
@@ -79,12 +81,12 @@ const MiTankefCredito = (props) => {
       setPlazo(filteredResults[0].term);
       setFolio(filteredResults[0].invoice_number);
       setPagoMensual(filteredResults[0].monthly_payment);
-      setTasaInteres(filteredResults[0].rate_adjuted_monthly);
+      setTasaOperacion(filteredResults[0].rate_operation);
       setTotalPagar(filteredResults[0].total_to_pay);
-      setMontoSolicitado(filteredResults[0].amount);
+      setFecha(filteredResults[0].created_at);
       setCredits(filteredResults);
       setCurrentID(filteredResults[0].id);
-      setAprovacion(filteredResults[0].approval);
+      setAprovacion(filteredResults[0].type_approval);
       //setTasaInteres(filteredResults[0].rate_operation);
       //fetchCredit(filteredResults[0].id);
     }
@@ -121,6 +123,11 @@ const MiTankefCredito = (props) => {
       style: "currency",
       currency: "MXN",
     })}`;
+  };
+
+  const formatDate = (isoDateString) => {
+    const date = DateTime.fromISO(isoDateString);
+    return date.toFormat("dd.MM.yyyy");
   };
 
   useEffect(() => {
@@ -224,7 +231,8 @@ const MiTankefCredito = (props) => {
                   fontSize: 12,
                 }}
               >
-                Crédito {aprovacion === "committee" ? "por comité" : "por red"}
+                Crédito{"\n"}
+                {formatDate(fecha)}
               </Text>
             </TouchableOpacity>
           </View>
@@ -286,8 +294,10 @@ const MiTankefCredito = (props) => {
                   marginTop: 3,
                 }}
               >
-                <Text style={styles.tituloMonto}>Total a pagar</Text>
-                <Text style={styles.monto}>{formatAmount(totalPagar)} MXN</Text>
+                <Text style={styles.tituloMonto}>Pago mensual</Text>
+                <Text style={styles.monto}>
+                  {formatAmount(pagoMensual)} MXN
+                </Text>
               </View>
 
               <View style={styles.container}>
@@ -302,7 +312,36 @@ const MiTankefCredito = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Plazo de{"\n"}crédito</Text>
+                  <Text style={styles.concepto}>Tasa de{"\n"}operación</Text>
+                  <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Total a{"\n"}pagar</Text>
+                  <Text style={styles.valorConcepto}>
+                    {formatAmount(totalPagar)}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de{"\n"}creación</Text>
+                  <Text style={styles.valorConcepto}>{formatDate(fecha)}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Plazo del{"\n"}crédito</Text>
                   <Text style={styles.valorConcepto}>{plazo} meses</Text>
                 </View>
                 <Ionicons
@@ -312,43 +351,8 @@ const MiTankefCredito = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>
-                    Comisión por{"\n"}apertura
-                  </Text>
-                  <Text style={styles.valorConcepto}>
-                    {formatAmount(comisionApertura)}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Monto{"\n"}solicitado</Text>
-                  <Text style={styles.valorConcepto}>
-                    {formatAmount(montoSolicitado)}
-                  </Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-                  <Text style={styles.valorConcepto}>{tasaInteres}%</Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Pago{"\n"}mensual</Text>
-                  <Text style={styles.valorConcepto}>
-                    {formatAmount(pagoMensual)}
-                  </Text>
+                  <Text style={styles.concepto}>Tipo de{"\n"}crédito</Text>
+                  <Text style={styles.valorConcepto}>{aprovacion}</Text>
                 </View>
               </View>
             </>
