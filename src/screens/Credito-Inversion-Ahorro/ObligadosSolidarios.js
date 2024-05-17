@@ -5,16 +5,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from "react-native";
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
-import { APIGet } from "../../API/APIService";
+import { APIGet, APIPut } from "../../API/APIService";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import ObligadoSolidario from "../../components/ObligadoSolidario";
+import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -23,11 +26,76 @@ const widthHalf = screenWidth / 2;
 
 const ObligadosSolidarios = ({ navigation }) => {
   const route = useRoute();
-  const { flujo } = route.params;
+  const { flujo, idInversion } = route.params;
   // Estados y Contexto
-  const { finance, setFinance } = useContext(FinanceContext);
+  const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [network, setNetwork] = useState([]);
   const [disabled, setDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const sendObligados = async () => {
+    setDisabled(true);
+    setLoading(true);
+    console.log(
+      "Agregando los obligados solidarios" + finance.obligados_solidarios
+    );
+
+    // Ahora si se mandan los obligados
+    const url = `/api/v1/credits/${idInversion}`;
+
+    try {
+      const body = {
+        credit: {
+          authorizer_ids: finance.obligados_solidarios,
+        },
+      };
+
+      const response = await APIPut(url, body);
+
+      if (response.error) {
+        console.error(
+          "Error al agregar los obligados soldarios:",
+          response.error
+        );
+        const errorMessages = response.error.errors
+          ? Object.values(response.error.errors).flat().join(". ")
+          : response.error;
+        setLoading(false);
+        console.error("Error al guardar la cuenta bancaria:", response.error);
+        Alert.alert("Error", errorMessages);
+      } else {
+        console.log("Obligados Solidarios agregados exitosamente:", response);
+        setModalVisible(true);
+      }
+    } catch (error) {
+      console.error("Error en la petición:", error);
+      Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
+    } finally {
+      setDisabled(false);
+      setLoading(false);
+    }
+  };
+
+  const handleRegresar = () => {
+    Alert.alert(
+      `¿Deseas regresar a Mi Tankef`,
+      `Regresar no cancelará ${
+        flujo === "Crédito" ? `el ${flujo}` : `la ${flujo}`
+      }.`,
+      [
+        {
+          text: `Si`,
+          onPress: () => [navigation.navigate("MiTankef")],
+          style: "destructive",
+        },
+        {
+          text: `No`,
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   // Funcion para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -121,65 +189,53 @@ const ObligadosSolidarios = ({ navigation }) => {
           ))}
         </View>
         {/* Boton de Continuar */}
-        <View
-          style={{
-            paddingHorizontal: 10,
-            marginBottom: 20,
-            flexDirection: finance.paso === 1 ? "column" : "row",
-            justifyContent: "center",
-            alignItems: "center",
+
+        {/* Botones de Atrás y Continuar */}
+
+        <TouchableOpacity
+          style={[styles.botonContinuar, { marginBottom: 0 }]}
+          onPress={() => sendObligados()}
+          disabled={disabled}
+        >
+          <Text style={styles.textoBotonContinuar}>Aceptar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.botonContinuar,
+            {
+              backgroundColor: "white",
+              marginBottom: 30,
+              borderColor: "#060B4D",
+              borderWidth: 1,
+            },
+          ]}
+          onPress={() => {
+            handleRegresar();
           }}
         >
-          {/* Botones de Atrás y Continuar */}
-          {finance.paso !== 1 && (
-            <TouchableOpacity
-              style={[
-                styles.botonContinuar,
-                {
-                  marginRight: 5,
-                  flex: 1,
-                  backgroundColor: "white",
-                  borderColor: "#060B4D",
-                  borderWidth: 1,
-                },
-              ]}
-              onPress={() => [
-                navigation.navigate("DefinirCredito", { flujo: "Crédito" }),
-                setFinance({ ...finance, paso: 2 }),
-              ]}
-            >
-              <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
-                Cancelar
-              </Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            style={[
-              styles.botonContinuar,
-              {
-                flex: 1,
-                marginLeft: finance.paso === 1 ? 0 : 5,
-                width: finance.paso === 1 && "80%",
-                backgroundColor: disabled ? "#D5D5D5" : "#060B4D",
-              },
-            ]}
-            onPress={() => [
-              navigation.navigate("DefinirCredito", { flujo: "Crédito" }),
-              setFinance({ ...finance, paso: finance.paso + 1 }),
-            ]}
-            disabled={disabled}
-          >
-            <Text
-              style={[
-                styles.textoBotonContinuar,
-                { color: disabled ? "grey" : "white" },
-              ]}
-            >
-              Continuar
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
+            Regresar
+          </Text>
+        </TouchableOpacity>
       </KeyboardAwareScrollView>
+      <ModalEstatus
+        titulo={"¡Atención!"}
+        texto={
+          "Se ha enviado la invitacion a los obligados solidarios seleccionados. Espera su respuesta para continuar."
+        }
+        imagen={"Alert"}
+        visible={modalVisible}
+        onAccept={() => [
+          setModalVisible(false),
+          resetFinance(),
+          navigation.navigate("MiTankef"),
+        ]}
+      />
+      {loading && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size={75} color="#060B4D" />
+        </View>
+      )}
     </View>
   );
 };
@@ -289,18 +345,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#cecfdbff",
   },
   botonContinuar: {
+    marginTop: 15,
+    marginBottom: 20,
     backgroundColor: "#060B4D",
-    marginBottom: 30,
     width: "80%",
     alignSelf: "center",
     borderRadius: 5,
   },
   textoBotonContinuar: {
-    alignSelf: "center",
     color: "white",
+    alignSelf: "center",
     padding: 10,
     fontFamily: "opensanssemibold",
     fontSize: 16,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
