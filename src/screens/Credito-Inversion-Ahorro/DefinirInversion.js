@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  Linking,
 } from "react-native";
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -118,6 +119,13 @@ const DefinirInversion = ({ navigation }) => {
         },
       ],
       { cancelable: true }
+    );
+  };
+
+  const visitTerms = () => {
+    const url = "https://www.google.com";
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err)
     );
   };
 
@@ -429,11 +437,21 @@ const DefinirInversion = ({ navigation }) => {
                 color="#060B4D"
               />
             </TouchableOpacity>
-            <Text style={styles.subTexto}>
+            <Text style={styles.textCondiciones}>
               Al continuar usted está aceptando{" "}
-              <Text style={{ fontFamily: "opensansbold" }}>
-                Términos y Condiciones
-              </Text>
+              <TouchableOpacity
+                style={{ marginTop: -2.5 }}
+                onPress={() => visitTerms()}
+              >
+                <Text
+                  style={[
+                    styles.textCondiciones,
+                    { fontFamily: "opensansbold", marginTop: 0 },
+                  ]}
+                >
+                  Términos y Condiciones
+                </Text>
+              </TouchableOpacity>
             </Text>
           </View>
 
@@ -608,6 +626,12 @@ const styles = StyleSheet.create({
   },
   line: {
     transform: [{ rotate: "90deg" }],
+  },
+  textCondiciones: {
+    color: "#060B4D",
+    fontFamily: "opensans",
+    fontSize: 12,
+    marginTop: 10,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

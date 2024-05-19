@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TextInput,
+  Linking,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
@@ -83,6 +84,20 @@ const LogIn = ({ navigation }) => {
     }
 
     setIsLoading(false);
+  };
+
+  const visitPage = (which) => {
+    if (which === "terms") {
+      const url = "https://www.google.com";
+      Linking.openURL(url).catch((err) =>
+        console.error("Couldn't load page", err)
+      );
+    } else if (which === "privacy") {
+      const url = "https://www.google.com";
+      Linking.openURL(url).catch((err) =>
+        console.error("Couldn't load page", err)
+      );
+    }
   };
 
   const disabled = email && password && condiciones;
@@ -181,12 +196,11 @@ const LogIn = ({ navigation }) => {
           <View
             style={{
               flexDirection: "row",
-              alignSelf: "center",
               marginTop: 5,
             }}
           >
             <TouchableOpacity
-              style={{ marginTop: 10, marginRight: 7.5 }}
+              style={{ marginTop: 10, alignSelf: "center", marginRight: 7.5 }}
               onPress={() => setCondiciones(!condiciones)}
             >
               <Feather
@@ -197,14 +211,41 @@ const LogIn = ({ navigation }) => {
             </TouchableOpacity>
             <Text style={styles.textoTerminos}>
               Al iniciar sesión estás aceptando{" "}
-              <Text style={{ fontFamily: "opensansbold", color: "#2ef095" }}>
-                Términos y Condiciones
-              </Text>{" "}
-              así como
-              <Text style={{ fontFamily: "opensansbold", color: "#2ef095" }}>
-                {" "}
-                Políticas de Privacidad
-              </Text>
+              <TouchableOpacity
+                style={{ marginTop: -2.5 }}
+                onPress={() => visitPage("terms")}
+              >
+                <Text
+                  style={[
+                    styles.textoTerminos,
+                    {
+                      fontFamily: "opensansbold",
+                      color: "#2ef095",
+                      marginTop: 0,
+                    },
+                  ]}
+                >
+                  Términos y Condiciones
+                </Text>
+              </TouchableOpacity>
+              así como{" "}
+              <TouchableOpacity
+                style={{ marginTop: -2.5 }}
+                onPress={() => visitPage("privacy")}
+              >
+                <Text
+                  style={[
+                    styles.textoTerminos,
+                    {
+                      fontFamily: "opensansbold",
+                      color: "#2ef095",
+                      marginTop: 0,
+                    },
+                  ]}
+                >
+                  Políticas de Privacidad
+                </Text>
+              </TouchableOpacity>
             </Text>
           </View>
         </View>
@@ -272,6 +313,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textoTerminos: {
+    fontSize: 12,
     color: "#060B4D",
     fontFamily: "opensans",
     marginTop: 10,

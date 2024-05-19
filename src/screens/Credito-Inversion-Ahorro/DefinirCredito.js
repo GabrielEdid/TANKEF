@@ -8,6 +8,7 @@ import {
   Dimensions,
   Alert,
   Image,
+  Linking,
 } from "react-native";
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -240,6 +241,13 @@ const DefinirCredito = ({ navigation }) => {
         }
       }
     };
+  };
+
+  const visitTerms = () => {
+    const url = "https://www.google.com";
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err)
+    );
   };
 
   /*useEffect(() => {
@@ -750,9 +758,19 @@ const DefinirCredito = ({ navigation }) => {
               </TouchableOpacity>
               <Text style={styles.textCondiciones}>
                 Al continuar usted está aceptando{" "}
-                <Text style={{ fontFamily: "opensansbold" }}>
-                  Términos y Condiciones
-                </Text>
+                <TouchableOpacity
+                  style={{ marginTop: -2.5 }}
+                  onPress={() => visitTerms()}
+                >
+                  <Text
+                    style={[
+                      styles.textCondiciones,
+                      { fontFamily: "opensansbold", marginTop: 0 },
+                    ]}
+                  >
+                    Términos y Condiciones
+                  </Text>
+                </TouchableOpacity>
               </Text>
             </View>
           )}

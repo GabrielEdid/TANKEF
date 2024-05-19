@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  Linking,
 } from "react-native";
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -176,6 +177,13 @@ const DefinirCajaAhorro = ({ navigation }) => {
         },
       ],
       { cancelable: true }
+    );
+  };
+
+  const visitTerms = () => {
+    const url = "https://www.google.com";
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err)
     );
   };
 
@@ -373,11 +381,21 @@ const DefinirCajaAhorro = ({ navigation }) => {
                 color="#060B4D"
               />
             </TouchableOpacity>
-            <Text style={styles.subTexto}>
+            <Text style={styles.textCondiciones}>
               Al continuar usted está aceptando{" "}
-              <Text style={{ fontFamily: "opensansbold" }}>
-                Términos y Condiciones
-              </Text>
+              <TouchableOpacity
+                style={{ marginTop: -2.5 }}
+                onPress={() => visitTerms()}
+              >
+                <Text
+                  style={[
+                    styles.textCondiciones,
+                    { fontFamily: "opensansbold", marginTop: 0 },
+                  ]}
+                >
+                  Términos y Condiciones
+                </Text>
+              </TouchableOpacity>
             </Text>
           </View>
 
@@ -443,6 +461,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingBottom: 10,
   },
+
   titulo: {
     fontFamily: "montserrat",
     letterSpacing: -4,
@@ -582,6 +601,12 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
+  },
+  textCondiciones: {
+    color: "#060B4D",
+    fontFamily: "opensans",
+    fontSize: 12,
+    marginTop: 10,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
