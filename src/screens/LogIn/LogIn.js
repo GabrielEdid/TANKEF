@@ -17,6 +17,7 @@ import { UserContext } from "../../hooks/UserContext"; // Contexto para manejar 
 import SpecialInput from "../../components/SpecialInput"; // Componente para entradas de texto especializadas
 import { setToken, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { set } from "date-fns";
 
 // Componente de pantalla inicial
 const LogIn = ({ navigation }) => {
@@ -66,6 +67,9 @@ const LogIn = ({ navigation }) => {
         conexiones: userData.count_conections,
         valorRed: userData.network_invested_amount,
       });
+      setEmail("");
+      setPassword("");
+      setCondiciones(false);
       navigation.navigate("SetPinPad");
     } else if (response.error) {
       // Manejar el error
