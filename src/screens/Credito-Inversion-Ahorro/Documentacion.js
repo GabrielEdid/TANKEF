@@ -33,6 +33,8 @@ import { APIPut, APIGet, APIPost } from "../../API/APIService";
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 const Documentacion = ({ navigation }) => {
   const route = useRoute();
@@ -562,6 +564,14 @@ const Documentacion = ({ navigation }) => {
     let result = await DocumentPicker.getDocumentAsync({});
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
+
+      if (selectedDocument.size > MAX_FILE_SIZE_BYTES) {
+        Alert.alert("Error", "El documento excede el tamaño máximo de 10MB.");
+        return;
+      }
+
+      console.log("Documento seleccionado:", selectedDocument);
+
       if (setType === "fiscal") {
         setFinance({
           ...finance,
@@ -603,6 +613,14 @@ const Documentacion = ({ navigation }) => {
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
+
+      if (selectedImage.fileSize > MAX_FILE_SIZE_BYTES) {
+        Alert.alert("Error", "La imagen excede el tamaño máximo de 10MB.");
+        return;
+      }
+
+      console.log("Imagen seleccionada:", selectedImage);
+
       if (setType === "fiscal") {
         setFinance({
           ...finance,
@@ -1109,7 +1127,7 @@ const Documentacion = ({ navigation }) => {
                     buttonSize={10}
                     selectedButtonColor={"#060B4D"}
                     labelStyle={{
-                      fontSize: 16,
+                      fontSize: 15,
                       color: "#060B4D",
                       fontFamily: "opensanssemibold",
                     }}
@@ -1136,7 +1154,7 @@ const Documentacion = ({ navigation }) => {
                 buttonSize={10}
                 selectedButtonColor={"#060B4D"}
                 labelStyle={{
-                  fontSize: 16,
+                  fontSize: 15,
                   color: "#060B4D",
                   fontFamily: "opensanssemibold",
                   marginBottom: 10,
