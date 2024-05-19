@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
 import { APIPost, APIDelete, APIGet } from "../API/APIService";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
 /**
  * `Post` es un componente que representa una publicación individual dentro de la aplicación.
@@ -61,6 +62,7 @@ const Post = (props) => {
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
   const [like, setLike] = useState(props["liked"]);
+  const [likes, setLikes] = useState(props["reacciones"]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const { user, setUser } = useContext(UserContext); // Contexto de Usuario
@@ -87,6 +89,7 @@ const Post = (props) => {
         const response = await APIPost(urlGiveLike, data);
         if (!response.error) {
           setLike(true); // Actualiza el estado para reflejar el like dado
+          setLikes(likes + 1); // Actualiza la cantidad de likes
         }
       } catch (error) {
         console.error("Error al dar Like:", error);
@@ -115,6 +118,7 @@ const Post = (props) => {
             if (!deleteResponse.error) {
               console.log("Like eliminado");
               setLike(false); // Actualiza el estado para reflejar la eliminación del like
+              setLikes(likes - 1); // Actualiza la cantidad de likes
             }
           }
         }
@@ -148,6 +152,24 @@ const Post = (props) => {
     const date = parseISO(timestamp);
     const timeAgo = formatDistanceToNow(date, { addSuffix: true, locale: es });
     return timeAgo;
+  };
+
+  // Función para navegar a la pantalla de ver publicación completa, se le pasan todos los props
+  const verPost = () => {
+    navigation.navigate("VerPosts", {
+      postId: props.postId,
+      tipo: props.tipo,
+      nombre: props.nombre,
+      tiempo: getTiempo(),
+      foto: props.foto,
+      body: parseTextForLinks(displayedText),
+      imagen: props.imagen,
+      comentarios: props.comentarios,
+      reacciones: props.reacciones,
+      personal: props.personal,
+      liked: props.liked,
+      remove: setIsVisible,
+    });
   };
 
   // Componente para manejar los enlaces en el texto
@@ -258,84 +280,85 @@ const Post = (props) => {
       )}
 
       {/* Cuadro con boton de Like, icono de comments y cantidad de comments */}
-      <View style={styles.linea}></View>
       <View style={styles.interactionContainer}>
-        <View style={{ flex: 1, flexDirection: "row" }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+          }}
+        >
           {/* Boton para dar like a la publicación */}
-          <TouchableOpacity onPress={() => handleReaction()}>
-            <Image
-              source={imageMap["Like"]}
+          <TouchableOpacity
+            style={{ flexDirection: "row" }}
+            onPress={() => handleReaction()}
+          >
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: like ? "#21B6D5" : "#5f5f61",
+                  fontFamily: "opensans",
+                }}
+              >
+                {likes} likes
+              </Text>
+              <AntDesign
+                name="like2"
+                size={30}
+                color={like ? "#21B6D5" : "#5f5f61"}
+              />
+            </View>
+            <Text
               style={{
-                width: 28,
-                height: 24,
-                tintColor: like ? "#21B6D5" : "#060B4D",
+                fontSize: 15,
+                color: like ? "#21B6D5" : "#5f5f61",
+                marginLeft: 5,
+                marginTop: 10,
+                alignSelf: "center",
+                fontFamily: "opensans",
               }}
-            />
+            >
+              Like
+            </Text>
           </TouchableOpacity>
 
           {/* Para navegar a ver la publicación completa al presionar el icono de comments */}
           <TouchableOpacity
-            style={{ marginLeft: 10 }}
-            onPress={() =>
-              navigation.navigate("VerPosts", {
-                postId: props.postId,
-                tipo: props.tipo,
-                nombre: props.nombre,
-                tiempo: getTiempo(),
-                foto: props.foto,
-                body: parseTextForLinks(displayedText),
-                imagen: props.imagen,
-                comentarios: props.comentarios,
-                reacciones: props.reacciones,
-                personal: props.personal,
-                liked: props.liked,
-                remove: setIsVisible,
-              })
-            }
+            onPress={() => verPost()}
+            style={{ flexDirection: "row", marginLeft: 70 }}
           >
-            <Image
-              source={imageMap["Comment"]}
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: "#5f5f61",
+                  fontFamily: "opensans",
+                }}
+              >
+                {props.comentarios} comentarios
+              </Text>
+              <FontAwesome
+                name="comment-o"
+                size={30}
+                color="#5f5f61"
+                style={{ transform: [{ scaleX: -1 }] }}
+              />
+            </View>
+            <Text
               style={{
-                width: 28,
-                height: 23,
-                tintColor: "#060B4D",
+                fontSize: 15,
+                color: "#5f5f61",
+                fontFamily: "opensans",
+                alignSelf: "center",
+                marginTop: 10,
               }}
-            />
+            >
+              Comentar
+            </Text>
           </TouchableOpacity>
         </View>
-
-        {/* Para navegar a ver la publicación completa al presionar el numero de comments */}
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("VerPosts", {
-              key: props.key,
-              postId: props.postId,
-              tipo: props.tipo,
-              nombre: props.nombre,
-              tiempo: getTiempo(),
-              foto: props.foto,
-              body: parseTextForLinks(displayedText),
-              imagen: props.imagen,
-              comentarios: props.comentarios,
-              reacciones: props.reacciones,
-              personal: props.personal,
-              liked: props.liked,
-              remove: setIsVisible,
-            })
-          }
-        >
-          <Text
-            style={{
-              fontSize: 13,
-              color: "#060B4D",
-              marginRight: 23,
-              fontFamily: "opensans",
-            }}
-          >
-            {props.comentarios} comentarios
-          </Text>
-        </TouchableOpacity>
       </View>
+      <View style={styles.linea} />
 
       {/* Modal y Tres puntos para eliminar o reportar publicación */}
       <TouchableOpacity
@@ -387,10 +410,9 @@ const Post = (props) => {
 // Estilos del Componente
 const styles = StyleSheet.create({
   Cuadro: {
+    marginTop: 10,
     width: "100%",
-    marginBottom: 10,
     flex: 1,
-    paddingVertical: 15,
   },
   header: {
     flexDirection: "row",
@@ -456,7 +478,7 @@ const styles = StyleSheet.create({
   linea: {
     backgroundColor: "#F2F2F2",
     height: 3,
-    top: 60,
+    marginTop: 10,
     width: "100%",
     alignSelf: "center",
   },
@@ -464,7 +486,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingTop: 10,
-    paddingLeft: 22,
+    paddingHorizontal: 15,
   },
   // Estilos para el Modal que aparece si se presionan los 3 puntos
   fullScreenButton: {

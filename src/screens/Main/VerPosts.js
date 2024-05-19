@@ -446,7 +446,7 @@ const VerPosts = ({ route, navigation }) => {
                   fontFamily: "opensans",
                 }}
               >
-                {likeCount} reacciones
+                {likeCount} likes
               </Text>
             </View>
 

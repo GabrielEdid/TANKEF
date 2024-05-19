@@ -39,6 +39,7 @@ const DefinirCredito = ({ navigation }) => {
   // Estados y Contexto
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalFinalVisible, setModalFinalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   //const [focus, setFocus] = useState("Mi Red");
 
@@ -124,9 +125,9 @@ const DefinirCredito = ({ navigation }) => {
         modalCotizadorVisible: true,
       });
     } else if (finance.paso === 2) {
-      setModalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
+      setModalFinalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
     } else if (finance.paso === 3) {
-      setModalVisible(true);
+      setModalFinalVisible(true);
     } else if (finance.paso === 4) {
       navigation.navigate("MiTankef");
     } else {
@@ -797,21 +798,21 @@ const DefinirCredito = ({ navigation }) => {
           onAccept={() => setModalVisible(false)}
         />
       )}
-      {finance.paso === 3 && (
-        <ModalEstatus
-          titulo={"¡Atención!"}
-          texto={
-            "Tu documentación ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
-          }
-          imagen={"Alert"}
-          visible={modalVisible}
-          onAccept={() => [
-            setModalVisible(false),
-            resetFinance(),
-            navigation.navigate("MiTankef"),
-          ]}
-        />
-      )}
+      <ModalEstatus
+        titulo={"¡Atención!"}
+        texto={
+          "Tu documentación ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
+        }
+        imagen={"Alert"}
+        visible={modalFinalVisible}
+        onAccept={() => [
+          setModalFinalVisible(false),
+          resetFinance(),
+          navigation.navigate("MiTankef"),
+        ]}
+        onClose={() => setModalFinalVisible(false)}
+      />
+
       {loading && (
         <View style={styles.overlay}>
           <ActivityIndicator size={75} color="#060B4D" />
