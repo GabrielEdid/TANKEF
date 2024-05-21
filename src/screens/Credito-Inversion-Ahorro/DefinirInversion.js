@@ -16,6 +16,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { useInactivity } from "../../hooks/InactivityContext";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIGet, APIPost } from "../../API/APIService";
 import ModalAmortizacion from "../../components/ModalAmortizacion";
@@ -29,6 +30,7 @@ const DefinirInversion = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [totalInversion, setTotalInversion] = useState("");
   const [tasa, setTasa] = useState("");
@@ -68,6 +70,7 @@ const DefinirInversion = ({ navigation }) => {
   }, [finance.montoNumeric, finance.plazo]);
 
   const handlePress = async () => {
+    resetTimeout();
     setLoading(true);
     const url = "/api/v1/investments";
     console.log(finance.nombreFinance, finance.montoNumeric, finance.plazo);
@@ -101,6 +104,7 @@ const DefinirInversion = ({ navigation }) => {
 
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
+    resetTimeout();
     Alert.alert(
       "¿Deseas cancelar la Inversión?",
       "Si cancelas la Inversión, perderás la información ingresada hasta el momento.",
@@ -123,6 +127,7 @@ const DefinirInversion = ({ navigation }) => {
   };
 
   const visitTerms = () => {
+    resetTimeout();
     const url = "https://www.google.com";
     Linking.openURL(url).catch((err) =>
       console.error("Couldn't load page", err)
@@ -131,6 +136,7 @@ const DefinirInversion = ({ navigation }) => {
 
   // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
+    resetTimeout();
     const cleanedInput = inputText.replace(/[^0-9.]/g, ""); // Remove all non-numeric characters except dot
     if ((cleanedInput.match(/\./g) || []).length > 1) {
       // Ensure only one dot
@@ -220,6 +226,8 @@ const DefinirInversion = ({ navigation }) => {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
+        onScroll={() => resetTimeout()}
+        scrollEventThrottle={400}
       >
         <View style={{ flex: 1 }}>
           <View style={[styles.contenedores, { marginTop: 3 }]}>
@@ -242,9 +250,10 @@ const DefinirInversion = ({ navigation }) => {
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
               placeholder="Mi inversión"
-              onChangeText={(text) =>
-                setFinance({ ...finance, nombreFinance: text })
-              }
+              onChangeText={(text) => [
+                setFinance({ ...finance, nombreFinance: text }),
+                resetTimeout(),
+              ]}
             />
             <View style={styles.separacion} />
           </View>
@@ -306,6 +315,7 @@ const DefinirInversion = ({ navigation }) => {
                 onPress={() => [
                   setFocusTab("6"),
                   setFinance({ ...finance, plazo: 6 }),
+                  resetTimeout(),
                 ]}
               >
                 <Text style={styles.textoTab}>6</Text>
@@ -320,6 +330,7 @@ const DefinirInversion = ({ navigation }) => {
                 onPress={() => [
                   setFocusTab("12"),
                   setFinance({ ...finance, plazo: 12 }),
+                  resetTimeout(),
                 ]}
               >
                 <Text style={styles.textoTab}>12</Text>
@@ -334,6 +345,7 @@ const DefinirInversion = ({ navigation }) => {
                 onPress={() => [
                   setFocusTab("18"),
                   setFinance({ ...finance, plazo: 18 }),
+                  resetTimeout(),
                 ]}
               >
                 <Text style={styles.textoTab}>18</Text>
@@ -349,6 +361,7 @@ const DefinirInversion = ({ navigation }) => {
                 onPress={() => [
                   setFocusTab("24"),
                   setFinance({ ...finance, plazo: 24 }),
+                  resetTimeout(),
                 ]}
               >
                 <Text style={styles.textoTab}>24</Text>
@@ -427,9 +440,10 @@ const DefinirInversion = ({ navigation }) => {
           >
             <TouchableOpacity
               style={{ marginTop: 10, marginRight: 7.5 }}
-              onPress={() =>
-                setFinance({ ...finance, condiciones: !finance.condiciones })
-              }
+              onPress={() => [
+                setFinance({ ...finance, condiciones: !finance.condiciones }),
+                resetTimeout(),
+              ]}
             >
               <Feather
                 name={finance.condiciones ? "check-square" : "square"}
@@ -461,7 +475,7 @@ const DefinirInversion = ({ navigation }) => {
               { backgroundColor: isTable ? "white" : "#D5D5D5" },
             ]}
             onPress={() => {
-              setModalAmortizacionVisible(true);
+              [setModalAmortizacionVisible(true), resetTimeout()];
             }}
             disabled={!isTable}
           >

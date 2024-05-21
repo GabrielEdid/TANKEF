@@ -19,6 +19,7 @@ import { AsYouType } from "libphonenumber-js";
 import { useRoute } from "@react-navigation/native";
 import RadioForm from "react-native-simple-radio-button";
 // Importaciones de Componentes y Hooks
+import { useInactivity } from "../../hooks/InactivityContext";
 import { APIPut, APIPost } from "../../API/APIService";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
@@ -31,6 +32,7 @@ const InfoGeneral = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [focus, setFocus] = useState("General");
   const [disabled, setDisabled] = useState(true);
@@ -56,6 +58,7 @@ const InfoGeneral = ({ navigation }) => {
   ]);
 
   const sendInfo = async () => {
+    resetTimeout();
     setDisabled(true);
     setLoading(true);
     console.log(
@@ -111,6 +114,7 @@ const InfoGeneral = ({ navigation }) => {
 
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas cancelar el ${flujo}`,
       `Si cancelas el ${flujo}, perderás la información ingresada hasta el momento.`,
@@ -181,6 +185,7 @@ const InfoGeneral = ({ navigation }) => {
 
   // Function to format the phone number as user types
   const formatPhoneNumber = (text, country, setter) => {
+    resetTimeout();
     const formatter = new AsYouType(country);
     const formatted = formatter.input(text);
     if (setter === "Casa") {
@@ -285,6 +290,8 @@ const InfoGeneral = ({ navigation }) => {
             style={styles.scrollV}
             keyboardShouldPersistTaps="handled"
             enableAutomaticScroll={true}
+            onScroll={() => resetTimeout()}
+            scrollEventThrottle={400}
           >
             <View style={styles.seccion}>
               <Text style={styles.tituloSeccion}>Información General</Text>
@@ -315,9 +322,10 @@ const InfoGeneral = ({ navigation }) => {
                         ? 1
                         : -1
                     }
-                    onPress={(value) =>
-                      setFinance({ ...finance, politico: value })
-                    }
+                    onPress={(value) => [
+                      setFinance({ ...finance, politico: value }),
+                      resetTimeout(),
+                    ]}
                     buttonColor={"#060B4D"}
                     buttonSize={10}
                     selectedButtonColor={"#060B4D"}
@@ -343,9 +351,10 @@ const InfoGeneral = ({ navigation }) => {
                         ? 1
                         : -1
                     }
-                    onPress={(value) =>
-                      setFinance({ ...finance, domicilio: value })
-                    }
+                    onPress={(value) => [
+                      setFinance({ ...finance, domicilio: value }),
+                      resetTimeout(),
+                    ]}
                     buttonColor={"#060B4D"}
                     buttonSize={10}
                     selectedButtonColor={"#060B4D"}
@@ -362,7 +371,9 @@ const InfoGeneral = ({ navigation }) => {
 
                 <Text style={styles.tituloCampo}>Teléfono Casa</Text>
                 <View style={styles.vistaTelefonos}>
-                  <TouchableOpacity onPress={() => setPickerVisible3(true)}>
+                  <TouchableOpacity
+                    onPress={() => [setPickerVisible3(true), resetTimeout()]}
+                  >
                     <Entypo
                       name="chevron-thin-down"
                       size={15}
@@ -380,6 +391,7 @@ const InfoGeneral = ({ navigation }) => {
                       setCountryCode3(cca2);
                       setCallingCode3(callingCode[0]);
                       setFinance({ ...finance, telCasa: "", telCasaShow: "" });
+                      resetTimeout();
                     }}
                     visible={pickerVisible3}
                     onClose={() => setPickerVisible3(false)}
@@ -402,7 +414,9 @@ const InfoGeneral = ({ navigation }) => {
 
                 <Text style={styles.tituloCampo}>Teléfono Trabajo</Text>
                 <View style={styles.vistaTelefonos}>
-                  <TouchableOpacity onPress={() => setPickerVisible2(true)}>
+                  <TouchableOpacity
+                    onPress={() => [setPickerVisible2(true), resetTimeout()]}
+                  >
                     <Entypo
                       name="chevron-thin-down"
                       size={15}
@@ -424,6 +438,7 @@ const InfoGeneral = ({ navigation }) => {
                         telTrabajo: "",
                         telTrabajoShow: "",
                       });
+                      resetTimeout();
                     }}
                     visible={pickerVisible2}
                     onClose={() => setPickerVisible2(false)}
@@ -446,7 +461,9 @@ const InfoGeneral = ({ navigation }) => {
 
                 <Text style={styles.tituloCampo}>Celular</Text>
                 <View style={styles.vistaTelefonos}>
-                  <TouchableOpacity onPress={() => setPickerVisible(true)}>
+                  <TouchableOpacity
+                    onPress={() => [setPickerVisible(true), resetTimeout()]}
+                  >
                     <Entypo
                       name="chevron-thin-down"
                       size={15}
@@ -464,6 +481,7 @@ const InfoGeneral = ({ navigation }) => {
                       setCountryCode(cca2);
                       setCallingCode(callingCode[0]);
                       setFinance({ ...finance, celular: "", celularShow: "" });
+                      resetTimeout();
                     }}
                     visible={pickerVisible}
                     onClose={() => setPickerVisible(false)}
@@ -494,9 +512,10 @@ const InfoGeneral = ({ navigation }) => {
                 <View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
                   <TextInput
                     style={styles.inputDescription}
-                    onChangeText={(value) =>
-                      setFinance({ ...finance, descripcion: value })
-                    }
+                    onChangeText={(value) => [
+                      setFinance({ ...finance, descripcion: value }),
+                      resetTimeout(),
+                    ]}
                     value={finance.descripcion}
                     placeholder="Breve descripción de las necesidades del crédito"
                     multiline={true}

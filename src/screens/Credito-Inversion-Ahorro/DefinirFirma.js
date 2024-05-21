@@ -11,7 +11,7 @@ import {
   Alert,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
@@ -22,6 +22,7 @@ import {
   MaterialCommunityIcons,
   FontAwesome,
 } from "@expo/vector-icons";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { APIPost } from "../../API/APIService";
 
 // Se mide la pantalla para determinar medidas
@@ -32,11 +33,13 @@ const DefinirFirma = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const [focus, setFocus] = useState("Firma");
   const [modalPresencial, setModalPresencial] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handlePresencial = async () => {
+    resetTimeout();
     setLoading(true);
     setModalPresencial(false);
     const url = `/api/v1/${
@@ -77,6 +80,7 @@ const DefinirFirma = ({ navigation }) => {
   };
 
   const handleRegresar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas regresar a Mi Tankef`,
       `Regresar no cancelará ${
@@ -98,6 +102,7 @@ const DefinirFirma = ({ navigation }) => {
 
   // Función para manejar el botón de Aceptar
   const handleSiguiente = () => {
+    resetTimeout();
     if (focus === "Presencial") {
       setModalPresencial(true);
     } else if (focus === "Enviar") {
@@ -163,7 +168,7 @@ const DefinirFirma = ({ navigation }) => {
           {/* Firma Digital */}
           <TouchableOpacity
             style={styles.container}
-            onPress={() => setFocus("Firma")}
+            onPress={() => [setFocus("Firma"), resetTimeout()]}
           >
             <View
               style={[
@@ -189,7 +194,7 @@ const DefinirFirma = ({ navigation }) => {
           {/* Presencial */}
           <TouchableOpacity
             style={styles.container}
-            onPress={() => setFocus("Presencial")}
+            onPress={() => [setFocus("Presencial"), resetTimeout()]}
           >
             <View
               style={[
@@ -218,7 +223,7 @@ const DefinirFirma = ({ navigation }) => {
           {/* Enviar a Domicilio */}
           <TouchableOpacity
             style={styles.container}
-            onPress={() => setFocus("Enviar")}
+            onPress={() => [setFocus("Enviar"), resetTimeout()]}
           >
             <View
               style={[
@@ -299,7 +304,7 @@ const DefinirFirma = ({ navigation }) => {
                       borderWidth: 1,
                     },
                   ]}
-                  onPress={() => [setModalPresencial(false)]}
+                  onPress={() => [setModalPresencial(false), resetTimeout()]}
                 >
                   <Text
                     style={[styles.textoBotonContinuar, { color: "#060B4D" }]}

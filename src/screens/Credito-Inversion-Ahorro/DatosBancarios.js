@@ -21,6 +21,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { FinanceContext } from "../../hooks/FinanceContext";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { APIPost, APIGet } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
@@ -33,6 +34,7 @@ const DatosBancarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion, sendDocuments, addAccount } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -40,6 +42,7 @@ const DatosBancarios = ({ navigation }) => {
 
   // Funcion para guardar los datos de la cuenta bancaria
   const handlePress = async () => {
+    resetTimeout();
     setLoading(true);
     setDisabled(true);
 
@@ -129,6 +132,7 @@ const DatosBancarios = ({ navigation }) => {
 
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas cancelar ${flujo === "Crédito" ? `el ${flujo}` : `la ${flujo}`}`,
       `Si cancelas ${
@@ -244,6 +248,7 @@ const DatosBancarios = ({ navigation }) => {
   ]);
 
   const showUploadOptions = () => {
+    resetTimeout();
     Alert.alert(
       "Seleccionar Documento",
       "Elige de donde deseas subir tu documento:",
@@ -352,6 +357,8 @@ const DatosBancarios = ({ navigation }) => {
           style={styles.scrollV}
           keyboardShouldPersistTaps="handled"
           extraScrollHeight={100}
+          onScroll={() => resetTimeout()}
+          scrollEventThrottle={400}
         >
           <View style={{ flex: 1 }}>
             <View style={styles.seccion}>
@@ -373,9 +380,10 @@ const DatosBancarios = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Alias Cuenta</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) =>
-                  setFinance({ ...finance, alias: value })
-                }
+                onChangeText={(value) => [
+                  setFinance({ ...finance, alias: value }),
+                  resetTimeout(),
+                ]}
                 value={finance.alias}
                 placeholder="Eje. Raúl G. Torres"
               />
@@ -383,9 +391,10 @@ const DatosBancarios = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) =>
-                  setFinance({ ...finance, clabe: value })
-                }
+                onChangeText={(value) => [
+                  setFinance({ ...finance, clabe: value }),
+                  resetTimeout(),
+                ]}
                 value={finance.clabe}
                 placeholder="18 dígitos"
                 maxLength={18}
@@ -447,6 +456,7 @@ const DatosBancarios = ({ navigation }) => {
                           comprobanteNCuenta: "",
                           nombreComprobante: "",
                         }),
+                        resetTimeout(),
                       ]}
                     >
                       <FontAwesome
@@ -464,9 +474,10 @@ const DatosBancarios = ({ navigation }) => {
               <Text style={styles.tituloCampo}>No. Cuenta</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) =>
-                  setFinance({ ...finance, NCuenta: value })
-                }
+                onChangeText={(value) => [
+                  setFinance({ ...finance, NCuenta: value }),
+                  resetTimeout(),
+                ]}
                 value={finance.NCuenta}
                 placeholder="8-11 dígitos"
                 maxLength={11}
@@ -478,9 +489,10 @@ const DatosBancarios = ({ navigation }) => {
               </Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) =>
-                  setFinance({ ...finance, banco: value })
-                }
+                onChangeText={(value) => [
+                  setFinance({ ...finance, banco: value }),
+                  resetTimeout(),
+                ]}
                 value={finance.banco}
                 placeholder="Autorrelleno"
                 editable={false}
@@ -490,9 +502,10 @@ const DatosBancarios = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Nombre(s) y Apellidos</Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={(value) =>
-                    setFinance({ ...finance, nombreCuentahabiente: value })
-                  }
+                  onChangeText={(value) => [
+                    setFinance({ ...finance, nombreCuentahabiente: value }),
+                    resetTimeout(),
+                  ]}
                   value={finance.nombreCuentahabiente}
                   placeholder="Nombre Cuentahabiente"
                 />
@@ -514,7 +527,7 @@ const DatosBancarios = ({ navigation }) => {
                 marginBottom: 0,
               },
             ]}
-            onPress={() => navigation.goBack()}
+            onPress={() => [navigation.goBack(), resetTimeout()]}
           >
             <Text style={[styles.textoBotonContinuar, { color: "#060B4D" }]}>
               Regresar

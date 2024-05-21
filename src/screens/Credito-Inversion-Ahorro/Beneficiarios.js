@@ -21,7 +21,7 @@ import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIPut, APIPost } from "../../API/APIService";
-import BulletPointText from "../../components/BulletPointText";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
 
 // Se mide la pantalla para determinar medidas
@@ -32,6 +32,7 @@ const Beneficiarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity(); // Hook para el tiempo de inactividad
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [focus, setFocus] = useState("Beneficiarios");
   const [segundoBeneficiaro, setSegundoBeneficiaro] = useState(false);
@@ -73,6 +74,7 @@ const Beneficiarios = ({ navigation }) => {
   ]);
 
   const handlePress = async () => {
+    resetTimeout();
     setLoading(true);
     setDisabled(true);
     console.log("Agregando beneficiarios a la inversión...");
@@ -127,6 +129,7 @@ const Beneficiarios = ({ navigation }) => {
 
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas cancelar la ${flujo}`,
       `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
@@ -227,6 +230,7 @@ const Beneficiarios = ({ navigation }) => {
 
   // Función para manejar el cambio en el porcentaje
   const handlePorcentajeChange = (value) => {
+    resetTimeout();
     let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
     numericValue = Math.min(Math.max(numericValue, 1), 100); // Ensure value is between 1 and 100
     setFinance((prevState) => {
@@ -241,6 +245,7 @@ const Beneficiarios = ({ navigation }) => {
 
   // Función para manejar el cambio en el porcentaje del segundo beneficiario
   const handlePorcentaje2Change = (value) => {
+    resetTimeout();
     let numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
     numericValue = Math.min(Math.max(numericValue, 1), 100); // Ensure value is between 1 and 100
     setFinance((prevState) => {
@@ -358,6 +363,8 @@ const Beneficiarios = ({ navigation }) => {
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"
             enableAutomaticScroll={true}
+            onScroll={() => resetTimeout()}
+            scrollEventThrottle={400}
           >
             <View style={styles.seccion}>
               <Text style={styles.tituloSeccion}>Beneficiarios</Text>
@@ -392,9 +399,10 @@ const Beneficiarios = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Nombre(s)</Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={(text) =>
-                    setFinance({ ...finance, nombre: text })
-                  }
+                  onChangeText={(text) => [
+                    setFinance({ ...finance, nombre: text }),
+                    resetTimeout(),
+                  ]}
                   value={finance.nombre}
                   placeholder="Eje. Humberto Arturo"
                 />
@@ -403,9 +411,10 @@ const Beneficiarios = ({ navigation }) => {
                 <Text style={styles.tituloCampo}>Apellidos</Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={(text) =>
-                    setFinance({ ...finance, apellidos: text })
-                  }
+                  onChangeText={(text) => [
+                    setFinance({ ...finance, apellidos: text }),
+                    resetTimeout(),
+                  ]}
                   value={finance.apellidos}
                   placeholder="Eje. Flores Guillán"
                 />
@@ -542,9 +551,10 @@ const Beneficiarios = ({ navigation }) => {
                     <Text style={styles.tituloCampo}>Nombre(s)</Text>
                     <TextInput
                       style={styles.input}
-                      onChangeText={(text) =>
-                        setFinance({ ...finance, nombre2: text })
-                      }
+                      onChangeText={(text) => [
+                        setFinance({ ...finance, nombre2: text }),
+                        resetTimeout(),
+                      ]}
                       value={finance.nombre2}
                       placeholder="Eje. Humberto Arturo"
                     />
@@ -553,9 +563,10 @@ const Beneficiarios = ({ navigation }) => {
                     <Text style={styles.tituloCampo}>Apellidos</Text>
                     <TextInput
                       style={styles.input}
-                      onChangeText={(text) =>
-                        setFinance({ ...finance, apellidos2: text })
-                      }
+                      onChangeText={(text) => [
+                        setFinance({ ...finance, apellidos2: text }),
+                        resetTimeout(),
+                      ]}
                       value={finance.apellidos2}
                       placeholder="Eje. Flores Guillán"
                     />
@@ -679,7 +690,7 @@ const Beneficiarios = ({ navigation }) => {
             <View style={{ marginBottom: 20, zIndex: -1 }}>
               <TouchableOpacity
                 style={[styles.botonContinuar, { backgroundColor: "#E1E1E1" }]}
-                onPress={() =>
+                onPress={() => [
                   segundoBeneficiaro
                     ? handleCancelBeneficiario()
                     : [
@@ -689,8 +700,9 @@ const Beneficiarios = ({ navigation }) => {
                           porcentaje: "50",
                           porcentaje2: "50",
                         }),
-                      ]
-                }
+                      ],
+                  resetTimeout(),
+                ]}
               >
                 <Text
                   style={[

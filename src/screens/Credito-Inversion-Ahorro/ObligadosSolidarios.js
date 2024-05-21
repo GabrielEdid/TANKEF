@@ -15,6 +15,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet, APIPut } from "../../API/APIService";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import ObligadoSolidario from "../../components/ObligadoSolidario";
 import ModalEstatus from "../../components/ModalEstatus";
@@ -28,6 +29,7 @@ const ObligadosSolidarios = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [network, setNetwork] = useState([]);
   const [disabled, setDisabled] = useState(true);
@@ -35,6 +37,7 @@ const ObligadosSolidarios = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const sendObligados = async () => {
+    resetTimeout();
     setDisabled(true);
     setLoading(true);
     console.log(
@@ -78,6 +81,7 @@ const ObligadosSolidarios = ({ navigation }) => {
   };
 
   const handleRegresar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas regresar a Mi Tankef`,
       `Regresar no cancelará ${
@@ -167,6 +171,8 @@ const ObligadosSolidarios = ({ navigation }) => {
         style={styles.scrollV}
         keyboardShouldPersistTaps="handled"
         enableAutomaticScroll={true}
+        onScroll={() => resetTimeout()}
+        scrollEventThrottle={400}
       >
         <View style={styles.seccion}>
           <Text style={styles.tituloSeccion}>Obligados Solidarios</Text>

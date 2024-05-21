@@ -5,13 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
   TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
   Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -20,10 +17,10 @@ import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 // Importaciones de Componentes y Hooks
+import { useInactivity } from "../../hooks/InactivityContext";
 import { APIPost } from "../../API/APIService";
 import ModalEstatus from "../../components/ModalEstatus";
 import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
-import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -33,6 +30,7 @@ const FirmaDomicilio = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const [nombre, setNombre] = useState("");
   const [calle, setCalle] = useState("");
   const [numeroExterior, setNumeroExterior] = useState("");
@@ -53,6 +51,7 @@ const FirmaDomicilio = ({ navigation }) => {
 
   // Función para guardar los datos del domicilio
   const handlePress = async () => {
+    resetTimeout();
     setLoading(true);
     setDisabled(true);
     const url = `/api/v1/${
@@ -164,6 +163,7 @@ const FirmaDomicilio = ({ navigation }) => {
   }, [estado]);
 
   const handleRegresar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas regresar a Mi Tankef`,
       `Regresar no cancelará ${
@@ -229,6 +229,8 @@ const FirmaDomicilio = ({ navigation }) => {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
         enableAutomaticScroll={true}
+        onScroll={() => resetTimeout()}
+        scrollEventThrottle={400}
       >
         <View style={styles.seccion}>
           <Text style={styles.tituloSeccion}>Firma de Contrato</Text>
@@ -249,7 +251,7 @@ const FirmaDomicilio = ({ navigation }) => {
             </Text>
             <TextInput
               style={styles.input}
-              onChangeText={setNombre}
+              onChangeText={(text) => [setNombre(text), resetTimeout()]}
               value={nombre}
               placeholder="Eje. Raúl Guizar Torres"
             />
@@ -258,7 +260,7 @@ const FirmaDomicilio = ({ navigation }) => {
             <Text style={styles.tituloCampo}>Nombre de la Calle</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setCalle}
+              onChangeText={(text) => [setCalle(text), resetTimeout()]}
               value={calle}
               placeholder="Eje. Acueducto de las Fuentes"
             />
@@ -267,7 +269,7 @@ const FirmaDomicilio = ({ navigation }) => {
             <Text style={styles.tituloCampo}>Número Exterior</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setNumeroExterior}
+              onChangeText={(text) => [setNumeroExterior(text), resetTimeout()]}
               value={numeroExterior}
               placeholder="Eje. 22"
             />
@@ -276,7 +278,7 @@ const FirmaDomicilio = ({ navigation }) => {
             <Text style={styles.tituloCampo}>Número Interior</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setNumeroInterior}
+              onChangeText={(text) => [setNumeroInterior(text), resetTimeout()]}
               value={numeroInterior}
               placeholder="Eje. 4B"
             />
@@ -285,7 +287,7 @@ const FirmaDomicilio = ({ navigation }) => {
             <Text style={styles.tituloCampo}>Código Postal</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setCodigoPostal}
+              onChangeText={(text) => [setCodigoPostal(text), resetTimeout()]}
               value={codigoPostal}
               keyboardType="numeric"
               placeholder="Eje. 53290"
@@ -325,7 +327,7 @@ const FirmaDomicilio = ({ navigation }) => {
               setOpen={setOpenEstado}
               setValue={setEstado}
               onSelectItem={(selection) => {
-                setEstado(selection.value);
+                [setEstado(selection.value), resetTimeout()];
               }}
               style={styles.DropDownPicker}
               arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
@@ -341,7 +343,7 @@ const FirmaDomicilio = ({ navigation }) => {
             <Text style={styles.tituloCampo}>Ciudad</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setCiudad}
+              onChangeText={(text) => [setCiudad(text), resetTimeout()]}
               value={ciudad}
               placeholder="Villahermosa"
             />
@@ -393,7 +395,7 @@ const FirmaDomicilio = ({ navigation }) => {
               }
               setOpen={setOpenMunicipio}
               setValue={setMunicipio}
-              onChangeValue={(value) => setMunicipio(value)}
+              onChangeValue={(value) => [setMunicipio(value), resetTimeout()]}
               style={styles.DropDownPicker}
               arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
               placeholderStyle={{
@@ -412,7 +414,7 @@ const FirmaDomicilio = ({ navigation }) => {
             <Text style={styles.tituloCampo}>Colonia</Text>
             <TextInput
               style={styles.input}
-              onChangeText={setColonia}
+              onChangeText={(text) => [setColonia(text), resetTimeout()]}
               value={colonia}
               placeholder="Eje. Vista del Valle"
             />

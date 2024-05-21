@@ -19,6 +19,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet, APIPost } from "../../API/APIService";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import MontoyPlazoCredito from "../../components/MontoyPlazoCredito";
@@ -27,7 +28,6 @@ import DatosCotizadorCredito from "../../components/DatosCotizadorCredito";
 import ModalCotizadorCredito from "../../components/ModalCotizadorCredito";
 import ObligadoSolidario from "../../components/ObligadoSolidario";
 import ModalEstatus from "../../components/ModalEstatus";
-import { fi } from "date-fns/locale";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -38,6 +38,7 @@ const DefinirCredito = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalFinalVisible, setModalFinalVisible] = useState(false);
@@ -120,6 +121,7 @@ const DefinirCredito = ({ navigation }) => {
   };*/
 
   const handleAccept = () => {
+    resetTimeout();
     if (finance.paso === 1) {
       setFinance({
         ...finance,
@@ -140,6 +142,7 @@ const DefinirCredito = ({ navigation }) => {
   };
 
   const createCredit = async () => {
+    resetTimeout();
     setLoading(true);
     const url = "/api/v1/credits";
     console.log(
@@ -193,6 +196,7 @@ const DefinirCredito = ({ navigation }) => {
 
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas cancelar la ${flujo}`,
       `Si cancelas la ${flujo}, perderás la información ingresada hasta el momento.`,
@@ -244,6 +248,7 @@ const DefinirCredito = ({ navigation }) => {
   };
 
   const visitTerms = () => {
+    resetTimeout();
     const url = "https://www.google.com";
     Linking.openURL(url).catch((err) =>
       console.error("Couldn't load page", err)
@@ -350,6 +355,8 @@ const DefinirCredito = ({ navigation }) => {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
+        onScroll={() => resetTimeout()}
+        scrollEventThrottle={400}
       >
         <View style={{ flex: 1 }}>
           {finance.paso === 1 && (
@@ -747,7 +754,13 @@ const DefinirCredito = ({ navigation }) => {
               <TouchableOpacity
                 style={{ marginTop: 10, marginRight: 7.5 }}
                 onPress={() => [
-                  setFinance({ ...finance, condiciones: !finance.condiciones }),
+                  [
+                    setFinance({
+                      ...finance,
+                      condiciones: !finance.condiciones,
+                    }),
+                    resetTimeout(),
+                  ],
                 ]}
               >
                 <Feather

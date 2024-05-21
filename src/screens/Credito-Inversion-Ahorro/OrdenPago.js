@@ -12,15 +12,12 @@ import {
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import * as DocumentPicker from "expo-document-picker";
-import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../../API/APIService";
-import ModalEstatus from "../../components/ModalEstatus";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { set } from "date-fns";
 
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
@@ -30,6 +27,7 @@ const OrdenPago = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const [beneficiario, setBeneficiario] = useState(false);
   const [institucion, setInstitucion] = useState(false);
   const [cuentaClabe, setCuentaClabe] = useState(false);
@@ -133,6 +131,8 @@ const OrdenPago = ({ navigation }) => {
           style={styles.scrollV}
           keyboardShouldPersistTaps="handled"
           extraScrollHeight={100}
+          onScroll={() => resetTimeout()}
+          scrollEventThrottle={400}
         >
           <View style={{ flex: 1 }}>
             <View style={styles.seccion}>
@@ -175,7 +175,7 @@ const OrdenPago = ({ navigation }) => {
         {/* Boton de Aceptar */}
         <TouchableOpacity
           style={styles.botonContinuar}
-          onPress={() => navigation.navigate("MiTankef")}
+          onPress={() => [navigation.navigate("MiTankef"), resetTimeout()]}
         >
           <Text style={styles.textoBotonContinuar}>Aceptar</Text>
         </TouchableOpacity>

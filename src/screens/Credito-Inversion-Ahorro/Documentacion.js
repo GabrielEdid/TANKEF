@@ -21,6 +21,7 @@ import { useRoute } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import ModalEstatus from "../../components/ModalEstatus";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import {
   Feather,
@@ -40,6 +41,7 @@ const Documentacion = ({ navigation }) => {
   const route = useRoute();
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   //const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -52,6 +54,7 @@ const Documentacion = ({ navigation }) => {
   // Función para subir la documentación
 
   const handlePress = async () => {
+    resetTimeout();
     if (addAccount) {
       navigation.navigate("DatosBancarios", {
         flujo: flujo,
@@ -71,6 +74,7 @@ const Documentacion = ({ navigation }) => {
   };
 
   const sendDocuments = async (tipo = null) => {
+    resetTimeout();
     setDisabled(true);
     setLoading(true);
     console.log("Agregando los documentos a la inversión o caja de ahorro...");
@@ -245,6 +249,7 @@ const Documentacion = ({ navigation }) => {
 
   // Funcion para manejar el boton de cancelar
   const handleCancelar = () => {
+    resetTimeout();
     Alert.alert(
       `¿Deseas cancelar ${flujo === "Crédito" ? `el ${flujo}` : `la ${flujo}`}`,
       `Si cancelas ${
@@ -445,6 +450,7 @@ const Documentacion = ({ navigation }) => {
 
   // Function to update document statuses based on their order
   const updateDocumentStatuses = (documents) => {
+    resetTimeout();
     const statusKeys = [
       "isThereIdentificacion",
       "isThereCURP",
@@ -518,6 +524,7 @@ const Documentacion = ({ navigation }) => {
 
   // Función para agregar una cuenta bancaria
   const handleAgregar = () => {
+    resetTimeout();
     console.log(finance.CURP);
     if (!disabledAgregar) {
       Alert.alert(
@@ -537,6 +544,7 @@ const Documentacion = ({ navigation }) => {
 
   // Función para mostrar las opciones de subida de documentos
   const showUploadOptions = (setType) => {
+    resetTimeout();
     Alert.alert(
       "Seleccionar Documento",
       "Elige de donde deseas subir tu documento:",
@@ -561,6 +569,7 @@ const Documentacion = ({ navigation }) => {
 
   // Función para seleccionar un documento
   const pickDocument = async (setType) => {
+    resetTimeout();
     let result = await DocumentPicker.getDocumentAsync({});
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
@@ -604,6 +613,7 @@ const Documentacion = ({ navigation }) => {
 
   // Función para seleccionar una imagen
   const pickImage = async (setType) => {
+    resetTimeout();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -716,6 +726,8 @@ const Documentacion = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
+          onScroll={() => resetTimeout()}
+          scrollEventThrottle={400}
         >
           <View style={{ flex: 1 }}>
             <View style={styles.seccion}>
@@ -776,6 +788,7 @@ const Documentacion = ({ navigation }) => {
                             identificacion: "",
                             nombreIdentificacion: "",
                           }),
+                          resetTimeout(),
                         ]}
                       >
                         <FontAwesome
@@ -848,6 +861,7 @@ const Documentacion = ({ navigation }) => {
                       <TouchableOpacity
                         onPress={() => [
                           setFinance({ ...finance, CURP: "", nombreCURP: "" }),
+                          resetTimeout(),
                         ]}
                       >
                         <FontAwesome
@@ -927,6 +941,7 @@ const Documentacion = ({ navigation }) => {
                             situacionFiscal: "",
                             nombreSituacionFiscal: "",
                           }),
+                          resetTimeout(),
                         ]}
                       >
                         <FontAwesome
@@ -1006,6 +1021,7 @@ const Documentacion = ({ navigation }) => {
                             comprobanteDomicilio: "",
                             nombreComprobanteDomicilio: "",
                           }),
+                          resetTimeout(),
                         ]}
                       >
                         <FontAwesome
@@ -1053,13 +1069,12 @@ const Documentacion = ({ navigation }) => {
                       const selectedAccount = finance.accounts.find(
                         (account) => account.id === value
                       );
-
                       setFinance({
                         ...finance,
                         accountID: value,
                         alias: selectedAccount.short_name,
                       });
-
+                      resetTimeout();
                       console.log(
                         "Selected:",
                         value,
@@ -1117,12 +1132,13 @@ const Documentacion = ({ navigation }) => {
                     key={finance.aceptarSIC}
                     radio_props={dataAceptar}
                     initial={-1}
-                    onPress={(value) =>
+                    onPress={(value) => [
                       setFinance({
                         ...finance,
                         aceptarSIC: value,
-                      })
-                    }
+                      }),
+                      resetTimeout(),
+                    ]}
                     buttonColor={"#060B4D"}
                     buttonSize={10}
                     selectedButtonColor={"#060B4D"}

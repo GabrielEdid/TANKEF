@@ -15,10 +15,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
-import Slider from "@react-native-community/slider";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes y Hooks
 import ModalAmortizacion from "../../components/ModalAmortizacion";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIGet, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -31,6 +31,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
   const [open, setOpen] = useState(false);
   const [retornoNeto, setRetornoNeto] = useState("");
@@ -132,6 +133,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   }, [finance.monto]);
 
   const handlePress = async () => {
+    resetTimeout();
     setLoading(true);
     const url = "/api/v1/box_savings";
     const data = {
@@ -163,6 +165,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   };
 
   const handleCancelar = () => {
+    resetTimeout();
     Alert.alert(
       "¿Deseas cancelar la Caja de Ahorro?",
       "Si cancelas la Caja de Ahorro, perderás la información ingresada hasta el momento.",
@@ -181,6 +184,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   };
 
   const visitTerms = () => {
+    resetTimeout();
     const url = "https://www.google.com";
     Linking.openURL(url).catch((err) =>
       console.error("Couldn't load page", err)
@@ -230,6 +234,8 @@ const DefinirCajaAhorro = ({ navigation }) => {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
+        onScroll={() => resetTimeout()}
+        scrollEventThrottle={400}
       >
         <View style={{ flex: 1 }}>
           <View
@@ -257,9 +263,10 @@ const DefinirCajaAhorro = ({ navigation }) => {
               maxLength={20}
               placeholderTextColor={"#b3b5c9ff"}
               placeholder="Mi Caja de Ahorro"
-              onChangeText={(text) =>
-                setFinance({ ...finance, nombreFinance: text })
-              }
+              onChangeText={(text) => [
+                setFinance({ ...finance, nombreFinance: text }),
+                resetTimeout(),
+              ]}
             />
             <View style={styles.separacion} />
           </View>
@@ -278,12 +285,15 @@ const DefinirCajaAhorro = ({ navigation }) => {
                   animationType: "slide",
                 }}
                 setValue={(callback) => {
-                  setFinance((prevState) => ({
-                    ...prevState,
-                    monto: callback(prevState.monto),
-                    montoNumeric: callback(prevState.montoNumeric),
-                    plazo: 36,
-                  }));
+                  [
+                    setFinance((prevState) => ({
+                      ...prevState,
+                      monto: callback(prevState.monto),
+                      montoNumeric: callback(prevState.montoNumeric),
+                      plazo: 36,
+                    })),
+                    resetTimeout(),
+                  ];
                 }}
                 onChangeValue={(value) =>
                   setFinance({
@@ -371,9 +381,10 @@ const DefinirCajaAhorro = ({ navigation }) => {
           >
             <TouchableOpacity
               style={{ marginTop: 10, marginRight: 7.5 }}
-              onPress={() =>
-                setFinance({ ...finance, condiciones: !finance.condiciones })
-              }
+              onPress={() => [
+                setFinance({ ...finance, condiciones: !finance.condiciones }),
+                resetTimeout(),
+              ]}
             >
               <Feather
                 name={finance.condiciones ? "check-square" : "square"}
@@ -405,7 +416,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
               { backgroundColor: isTable ? "white" : "#D5D5D5" },
             ]}
             onPress={() => {
-              setModalAmortizacionVisible(true);
+              [setModalAmortizacionVisible(true), resetTimeout()];
             }}
             disabled={!isTable}
           >
