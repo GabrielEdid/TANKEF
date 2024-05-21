@@ -6,7 +6,6 @@ const useInactivityTimer = (timeoutDuration, onTimeout) => {
   const appState = useRef(AppState.currentState);
 
   const resetTimeout = useCallback(() => {
-    console.log("Resetting timeout");
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
