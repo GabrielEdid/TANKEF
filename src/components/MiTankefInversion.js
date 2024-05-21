@@ -170,7 +170,7 @@ const MiTankefInversion = (props) => {
   // Componente visual
   return (
     <View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flexGrow: 1 }}>
         {/* Vista de las distintas inversiones */}
         <ScrollView
           style={{
@@ -425,15 +425,11 @@ const MiTankefInversion = (props) => {
           </>
         )}
       </View>
-
-      <TouchableOpacity
-        style={[styles.botonAbonar, {}]}
-        onPress={() => {
-          handlePress();
-        }}
-      >
-        <Text style={[styles.textoBotonAbonar, {}]}>Aceptar</Text>
-      </TouchableOpacity>
+      {investmentState !== "generating_profit" && (
+        <TouchableOpacity style={[styles.botonAbonar, {}]} onPress={() => {}}>
+          <Text style={[styles.textoBotonAbonar, {}]}>Abonar</Text>
+        </TouchableOpacity>
+      )}
       {
         <>
           {investmentState === "reviewing_documentation" && (
@@ -647,8 +643,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   botonAbonar: {
-    marginVertical: 5,
+    alignSelf: "flex-end",
     width: "80%",
+    marginTop: 30,
+    marginBottom: 20,
     alignSelf: "center",
     borderRadius: 5,
     backgroundColor: "#060B4D",
