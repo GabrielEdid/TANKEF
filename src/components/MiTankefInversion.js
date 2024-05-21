@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { parseISO, format } from "date-fns";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
 import { useInactivity } from "../hooks/InactivityContext";
@@ -46,8 +47,16 @@ const MiTankefInversion = (props) => {
   const [folio, setFolio] = useState("");
   const [plazo, setPlazo] = useState("");
   const [inversionInicial, setInversionInicial] = useState("");
-  const [tasaInteres, setTasaInteres] = useState("");
-  const [retornoNeto, setRetornoNeto] = useState("");
+  const [tasaOperacion, setTasaOperacion] = useState("");
+  const [estatus, setEstatus] = useState("");
+  const [abono, setAbono] = useState("");
+  const [retornoInversion, setRetornoInversion] = useState("");
+  const [montoInicial, setMontoInicial] = useState("");
+  const [montoAcumulado, setMontoAcumulado] = useState("");
+  const [cuenta, setCuenta] = useState("");
+  const [fechaCreacion, setFechaCreacion] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
   const [investmentState, setInvestmentState] = useState("");
   const [effectTrigger, setEffectTrigger] = useState(false);
   const [currentID, setCurrentID] = useState(0);
@@ -75,7 +84,7 @@ const MiTankefInversion = (props) => {
       console.log("Resultados de las inversiones:", filteredResults);
       setInvestments(filteredResults);
       setCurrentID(filteredResults[0].id);
-      setTasaInteres(filteredResults[0].rate_operation);
+      setTasaOperacion(filteredResults[0].rate_operation);
       fetchInvestment(filteredResults[0].id);
     }
   };
@@ -93,10 +102,17 @@ const MiTankefInversion = (props) => {
       console.log("Resultados de la inversion:", result.data.data);
       setInvestmentState(result.data.data.aasm_state);
       handleInvestmentStateChange(result.data.data.aasm_state);
+      setEstatus(result.data.data.current_state);
+      setAbono("Falta");
+      setMontoInicial(formatAmount(result.data.data.amount));
+      setRetornoInversion("Falta");
       setPlazo(result.data.data.term);
+      setMontoAcumulado("Falta");
       setFolio(result.data.data.invoice_number);
-      setInversionInicial(formatAmount(result.data.data.amount));
-      setRetornoNeto("Falta");
+      setCuenta(result.data.data.bank_account.short_name);
+      setFechaCreacion(formatDate(result.data.data.created_at));
+      setFechaInicio("Falta");
+      setFechaFin("Falta");
     }
   };
 
@@ -116,18 +132,23 @@ const MiTankefInversion = (props) => {
     })}`;
   };
 
-  useEffect(() => {
-    if (
-      investmentState === "reviewing_documentation" ||
-      investmentState === "rejected_documentation" ||
-      investmentState === "signing_contract" ||
-      investmentState === "sign_contract" ||
-      investmentState === "request_payment" ||
-      investmentState === "reviewing_payment"
-    ) {
-      setModalVisible(true);
-    }
-  }, [investmentState, effectTrigger]);
+  const formatDate = (isoString) => {
+    const date = parseISO(isoString);
+    return format(date, "dd/MM/yyyy hh:mm aa");
+  };
+
+  // useEffect(() => {
+  //   if (
+  //     investmentState === "reviewing_documentation" ||
+  //     investmentState === "rejected_documentation" ||
+  //     investmentState === "signing_contract" ||
+  //     investmentState === "sign_contract" ||
+  //     investmentState === "request_payment" ||
+  //     investmentState === "reviewing_payment"
+  //   ) {
+  //     setModalVisible(true);
+  //   }
+  // }, [investmentState, effectTrigger]);
 
   const handleInvestmentStateChange = (newState) => {
     if (investmentState === newState) {
@@ -169,7 +190,7 @@ const MiTankefInversion = (props) => {
               marginBottom: 5,
             }}
           >
-            Nueva{"\n"}Inversión
+            Nueva Inversión
           </Text>
         </TouchableOpacity>
 
@@ -189,7 +210,7 @@ const MiTankefInversion = (props) => {
               onPress={() => [
                 fetchInvestment(investment.id),
                 setCurrentID(investment.id),
-                setTasaInteres(investment.rate_operation),
+                setTasaOperacion(investment.rate_operation),
               ]}
             >
               <Image source={imageMap["Bill"]} style={styles.bill} />
@@ -254,17 +275,10 @@ const MiTankefInversion = (props) => {
           {/* Vista de la información total de las inversiónes */}
           {focus === "Balance" && (
             <>
-              <View style={styles.containerBalance}>
-                <Text style={styles.tituloMonto}>
-                  Retorno de inversión neto
-                </Text>
-                <Text style={styles.monto}>{retornoNeto}</Text>
-              </View>
-
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Folio de{"\n"}inversión</Text>
-                  <Text style={styles.valorConcepto}>{folio}</Text>
+                  <Text style={styles.concepto}>Estatus</Text>
+                  <Text style={styles.valorConcepto}>{estatus}</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -273,15 +287,49 @@ const MiTankefInversion = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Plazo de{"\n"}inversión</Text>
+                  <Text style={styles.concepto}>Abono</Text>
+                  <Text style={styles.valorConcepto}>{abono}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Monto inversión</Text>
+                  <Text style={styles.valorConcepto}>{montoInicial}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Retorno de inversión</Text>
+                  <Text style={styles.valorConcepto}>{retornoInversion}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Plazo de inversión</Text>
                   <Text style={styles.valorConcepto}>{plazo} meses</Text>
                 </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Tasa de operación</Text>
+                  <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
+                </View>
               </View>
 
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Inversión{"\n"}inicial</Text>
-                  <Text style={styles.valorConcepto}>{inversionInicial}</Text>
+                  <Text style={styles.concepto}>montoAcumulado</Text>
+                  <Text style={styles.valorConcepto}>{montoAcumulado}</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -290,8 +338,42 @@ const MiTankefInversion = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Tasa de{"\n"}interés</Text>
-                  <Text style={styles.valorConcepto}>{tasaInteres}</Text>
+                  <Text style={styles.concepto}>Folio</Text>
+                  <Text style={styles.valorConcepto}>{folio}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Cuenta</Text>
+                  <Text style={styles.valorConcepto}>{cuenta}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de creación</Text>
+                  <Text style={styles.valorConcepto}>{fechaCreacion}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de inicio</Text>
+                  <Text style={styles.valorConcepto}>{fechaInicio}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de finalización</Text>
+                  <Text style={styles.valorConcepto}>{fechaFin}</Text>
                 </View>
               </View>
             </>
@@ -524,7 +606,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     flexDirection: "row",
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   containerBalance: {
     justifyContent: "space-between",
@@ -541,7 +623,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   valorConcepto: {
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensansbold",
     fontSize: 16,
     color: "#060B4D",
     textAlign: "center",
