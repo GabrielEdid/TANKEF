@@ -58,6 +58,7 @@ const AuthPinPad = ({ navigation, route }) => {
       });
       console.log("Datos del perfil:", result.data);
       setIsLoading(false);
+      setPin("");
       navigation.navigate("MainFlow", {
         screen: "Perfil",
       });

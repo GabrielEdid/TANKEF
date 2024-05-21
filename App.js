@@ -11,6 +11,8 @@ import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "./src/hooks/UserContext";
 import { FinanceProvider } from "./src/hooks/FinanceContext";
+import { InactivityProvider } from "./src/hooks/InactivityContext";
+import MainView from "./src/hooks/MainView";
 import { setToken, getToken } from "./src/API/APIService";
 // Importar pantallas de la aplicación
 import LogIn from "./src/screens/LogIn/LogIn";
@@ -167,28 +169,35 @@ function InicioStack() {
 
 function CrearStack() {
   return (
-    <FinanceProvider>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        options={{ gestureEnabled: false }}
-      >
-        <Stack.Screen name="Placeholder" component={Placeholder} />
-        <Stack.Screen name="DefinirInversion" component={DefinirInversion} />
-        <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
-        <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
-        <Stack.Screen name="OrdenPago" component={OrdenPago} />
-        <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
-        <Stack.Screen name="FirmaDomicilio" component={FirmaDomicilio} />
-        <Stack.Screen name="DefinirCredito" component={DefinirCredito} />
-        <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
-        <Stack.Screen name="DefinirCajaAhorro" component={DefinirCajaAhorro} />
-        <Stack.Screen name="Documentacion" component={Documentacion} />
-        <Stack.Screen
-          name="ObligadosSolidarios"
-          component={ObligadosSolidarios}
-        />
-      </Stack.Navigator>
-    </FinanceProvider>
+    <InactivityProvider>
+      {/* <MainView> */}
+      <FinanceProvider>
+        <Stack.Navigator
+          screenOptions={{ headerShown: false }}
+          options={{ gestureEnabled: false }}
+        >
+          <Stack.Screen name="Placeholder" component={Placeholder} />
+          <Stack.Screen name="DefinirInversion" component={DefinirInversion} />
+          <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
+          <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
+          <Stack.Screen name="OrdenPago" component={OrdenPago} />
+          <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
+          <Stack.Screen name="FirmaDomicilio" component={FirmaDomicilio} />
+          <Stack.Screen name="DefinirCredito" component={DefinirCredito} />
+          <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
+          <Stack.Screen
+            name="DefinirCajaAhorro"
+            component={DefinirCajaAhorro}
+          />
+          <Stack.Screen name="Documentacion" component={Documentacion} />
+          <Stack.Screen
+            name="ObligadosSolidarios"
+            component={ObligadosSolidarios}
+          />
+        </Stack.Navigator>
+      </FinanceProvider>
+      {/* </MainView> */}
+    </InactivityProvider>
   );
 }
 
@@ -237,101 +246,105 @@ function MainFlow() {
 
   return (
     <>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            shadowOffset: { width: 0, height: -2 },
-            shadowOpacity: 0.3,
-            shadowRadius: 4,
-            elevation: 5,
-            shadowColor: "#000000",
-            borderTopColor: "transparent",
-          },
-          tabBarVisible: shouldTabBarBeVisible(route),
-        })}
-      >
-        <Tab.Screen
-          name="Inicio"
-          component={InicioStack}
-          listeners={{
-            tabPress: (e) => handleTabPress(e, "Inicio"),
-          }}
-          options={createTabScreenOptions(
-            require("./assets/images/Inicio.png"),
-            "Inicio",
-            customFocusedTab,
-            27,
-            27
-          )}
-        />
-        <Tab.Screen
-          name="Mi Red"
-          component={MiRedStackScreen}
-          listeners={{
-            tabPress: (e) => handleTabPress(e, "Mi Red"),
-          }}
-          options={createTabScreenOptions(
-            require("./assets/images/MiRed.png"),
-            "Mi Red",
-            customFocusedTab,
-            35,
-            28
-          )}
-        />
-        <Tab.Screen
-          name="Crear"
-          component={CrearStack}
-          listeners={{
-            tabPress: (e) => handleTabPress(e, "Crear"),
-          }}
-          options={createTabScreenOptions(
-            require("./assets/images/Crear1.png"),
-            "Crear",
-            customFocusedTab,
-            28,
-            28
-          )}
-        />
-        <Tab.Screen
-          name="MiTankef"
-          component={MiTankef}
-          listeners={{
-            tabPress: (e) => handleTabPress(e, "MiTankef"),
-          }}
-          options={createTabScreenOptions(
-            require("./assets/images/Graph.png"),
-            "MiTankef",
-            customFocusedTab,
-            32,
-            28
-          )}
-        />
-        <Tab.Screen
-          name="Perfil"
-          component={PerfilLoginProgresivo}
-          listeners={{
-            tabPress: (e) => handleTabPress(e, "Perfil"),
-          }}
-          options={createTabScreenOptions(
-            require("./assets/images/Perfil.png"),
-            "Perfil",
-            customFocusedTab,
-            28,
-            28
-          )}
-        />
-      </Tab.Navigator>
-      {isModalVisible ? (
-        <CrearModal
-          isVisible={isModalVisible}
-          onClose={() => {
-            setIsModalVisible(false);
-            setCustomFocusedTab(previousActiveTab);
-            setPreviousActiveTab("");
-          }}
-        />
-      ) : null}
+      <InactivityProvider>
+        {/* <MainView> */}
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarShowLabel: false,
+            tabBarStyle: {
+              shadowOffset: { width: 0, height: -2 },
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+              elevation: 5,
+              shadowColor: "#000000",
+              borderTopColor: "transparent",
+            },
+            tabBarVisible: shouldTabBarBeVisible(route),
+          })}
+        >
+          <Tab.Screen
+            name="Inicio"
+            component={InicioStack}
+            listeners={{
+              tabPress: (e) => handleTabPress(e, "Inicio"),
+            }}
+            options={createTabScreenOptions(
+              require("./assets/images/Inicio.png"),
+              "Inicio",
+              customFocusedTab,
+              27,
+              27
+            )}
+          />
+          <Tab.Screen
+            name="Mi Red"
+            component={MiRedStackScreen}
+            listeners={{
+              tabPress: (e) => handleTabPress(e, "Mi Red"),
+            }}
+            options={createTabScreenOptions(
+              require("./assets/images/MiRed.png"),
+              "Mi Red",
+              customFocusedTab,
+              35,
+              28
+            )}
+          />
+          <Tab.Screen
+            name="Crear"
+            component={CrearStack}
+            listeners={{
+              tabPress: (e) => handleTabPress(e, "Crear"),
+            }}
+            options={createTabScreenOptions(
+              require("./assets/images/Crear1.png"),
+              "Crear",
+              customFocusedTab,
+              28,
+              28
+            )}
+          />
+          <Tab.Screen
+            name="MiTankef"
+            component={MiTankef}
+            listeners={{
+              tabPress: (e) => handleTabPress(e, "MiTankef"),
+            }}
+            options={createTabScreenOptions(
+              require("./assets/images/Graph.png"),
+              "MiTankef",
+              customFocusedTab,
+              32,
+              28
+            )}
+          />
+          <Tab.Screen
+            name="Perfil"
+            component={PerfilLoginProgresivo}
+            listeners={{
+              tabPress: (e) => handleTabPress(e, "Perfil"),
+            }}
+            options={createTabScreenOptions(
+              require("./assets/images/Perfil.png"),
+              "Perfil",
+              customFocusedTab,
+              28,
+              28
+            )}
+          />
+        </Tab.Navigator>
+        {isModalVisible ? (
+          <CrearModal
+            isVisible={isModalVisible}
+            onClose={() => {
+              setIsModalVisible(false);
+              setCustomFocusedTab(previousActiveTab);
+              setPreviousActiveTab("");
+            }}
+          />
+        ) : null}
+        {/* </MainView> */}
+      </InactivityProvider>
     </>
   );
 }
