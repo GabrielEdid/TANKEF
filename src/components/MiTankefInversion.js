@@ -169,8 +169,8 @@ const MiTankefInversion = (props) => {
 
   // Componente visual
   return (
-    <View>
-      <View style={{ flexGrow: 1 }}>
+    <>
+      <View style={{ flex: 1 }}>
         {/* Vista de las distintas inversiones */}
         <ScrollView
           style={{
@@ -425,7 +425,7 @@ const MiTankefInversion = (props) => {
           </>
         )}
       </View>
-      {investmentState !== "generating_profit" && (
+      {investmentState === "generating_profit" && (
         <TouchableOpacity style={[styles.botonAbonar, {}]} onPress={() => {}}>
           <Text style={[styles.textoBotonAbonar, {}]}>Abonar</Text>
         </TouchableOpacity>
@@ -541,7 +541,7 @@ const MiTankefInversion = (props) => {
           )}
         </>
       }
-    </View>
+    </>
   );
 };
 
