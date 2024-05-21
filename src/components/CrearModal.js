@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
+import { useInactivity } from "../hooks/InactivityContext";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 // Este "componente" es un modal que se muestra en la parte inferior de la pantalla como la "pantalla" de crear.
@@ -18,10 +19,12 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 const CrearModal = ({ isVisible, onClose }) => {
   const navigation = useNavigation();
   // Animación para el modal
+  const { resetTimeout } = useInactivity();
   const [modalY] = useState(new Animated.Value(300));
 
   // Función para cerrar el modal
   const handleClose = () => {
+    resetTimeout();
     Animated.timing(modalY, {
       toValue: 300,
       duration: 500,

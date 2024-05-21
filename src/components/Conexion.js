@@ -11,6 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Componentes
+import { useInactivity } from "../hooks/InactivityContext";
 import { APIDelete } from "../API/APIService";
 
 /**
@@ -36,12 +37,14 @@ import { APIDelete } from "../API/APIService";
 const Conexion = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Para cuando se desee eliminar una conexión
   const deleteConection = async () => {
+    resetTimeout();
     setIsLoading(true);
     const url = `/api/v1/friendship_request/destroy`;
     const data = {
@@ -78,9 +81,10 @@ const Conexion = (props) => {
     // Lo hace un boton
     <TouchableOpacity
       style={styles.container}
-      onPress={() =>
-        navigation.navigate("VerPerfiles", { userID: props.userID })
-      }
+      onPress={() => [
+        navigation.navigate("VerPerfiles", { userID: props.userID }),
+        resetTimeout(),
+      ]}
       disabled={isLoading}
     >
       <View style={{ flexDirection: "row", flex: 1 }}>
@@ -90,7 +94,7 @@ const Conexion = (props) => {
       {/* Para Mostrar Boton de Eliminar */}
       <TouchableOpacity
         style={styles.botonElim}
-        onPress={() => setModalVisible(true)}
+        onPress={() => [setModalVisible(true), resetTimeout()]}
       >
         <Text style={styles.tresPuntos}>...</Text>
       </TouchableOpacity>
@@ -100,12 +104,12 @@ const Conexion = (props) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => [setModalVisible(false), resetTimeout()]}
       >
         <TouchableOpacity
           style={styles.fullScreenButton}
           activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
+          onPress={() => [setModalVisible(false), resetTimeout()]}
         >
           <View style={styles.modalView}>
             <Text style={{ fontSize: 13 }}>
@@ -119,7 +123,7 @@ const Conexion = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ marginTop: 10 }}
-              onPress={() => setModalVisible(false)}
+              onPress={() => [setModalVisible(false), resetTimeout()]}
             >
               <Text>Cancelar</Text>
             </TouchableOpacity>

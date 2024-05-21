@@ -9,6 +9,7 @@ import {
   Modal,
 } from "react-native";
 // Importaciones de Componentes
+import { useInactivity } from "../hooks/InactivityContext";
 import { APIDelete } from "../API/APIService";
 
 /**
@@ -41,6 +42,7 @@ import { APIDelete } from "../API/APIService";
 
 const Comment = (props) => {
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -64,6 +66,7 @@ const Comment = (props) => {
 
   // Para cuando se desee eliminar el Comment
   const deleteComment = async () => {
+    resetTimeout();
     setIsVisible(false);
     const url = `/api/v1/comments/${deleteId}`;
 
@@ -114,7 +117,11 @@ const Comment = (props) => {
               </View>
               <TouchableOpacity
                 style={{ alignItems: "center", justifyContent: "center" }}
-                onPress={() => [setModalVisible(true), setDeleteId(reply.id)]}
+                onPress={() => [
+                  setModalVisible(true),
+                  setDeleteId(reply.id),
+                  resetTimeout(),
+                ]}
               >
                 <Text style={styles.tresPuntos}>...</Text>
               </TouchableOpacity>
@@ -140,6 +147,7 @@ const Comment = (props) => {
             onPress={() => [
               setModalVisible(true),
               setDeleteId(props.commentId),
+              resetTimeout(),
             ]}
           >
             <Text style={styles.tresPuntos}>...</Text>
@@ -147,7 +155,9 @@ const Comment = (props) => {
         </View>
       </View>
       <View style={{ marginLeft: 50 }}>
-        <TouchableOpacity onPress={() => props.onReply(props.nombre)}>
+        <TouchableOpacity
+          onPress={() => [props.onReply(props.nombre), resetTimeout()]}
+        >
           <Text style={[styles.textoBody, { color: "grey", marginTop: 3 }]}>
             Contestar
           </Text>
@@ -167,7 +177,7 @@ const Comment = (props) => {
         <TouchableOpacity
           style={styles.fullScreenButton}
           activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
+          onPress={() => [setModalVisible(false), resetTimeout()]}
         >
           <View style={styles.modalView}>
             {props.personal ? (
@@ -183,14 +193,17 @@ const Comment = (props) => {
             {!props.personal ? (
               <TouchableOpacity
                 style={styles.buttonModal}
-                onPress={() => console.log("Implementación de Reportar")}
+                onPress={() => [
+                  console.log("Implementación de Reportar"),
+                  resetTimeout(),
+                ]}
               >
                 <Text style={{ color: "red" }}>Reportar Comentario</Text>
               </TouchableOpacity>
             ) : null}
             <TouchableOpacity
               style={{ marginTop: 10 }}
-              onPress={() => setModalVisible(false)}
+              onPress={() => [setModalVisible(false), resetTimeout()]}
             >
               <Text>Cancelar</Text>
             </TouchableOpacity>
