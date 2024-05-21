@@ -15,7 +15,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../hooks/UserContext";
 import { APIPut } from "../../API/APIService";
 // Importaciones de Componentes
-import DropDown from "../../components/Componentes Olvidaos/DropDown";
+import DropDown from "../../components/Componentes Olvidados/DropDown";
 import SpecialInput from "../../components/Componentes Olvidados/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
