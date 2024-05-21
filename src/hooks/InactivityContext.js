@@ -10,7 +10,7 @@ export const InactivityProvider = ({ children }) => {
 
   const handleTimeout = () => {
     setIsInactive(true);
-    navigation.navigate("AuthPinPad"); // Reemplaza 'NombreDeLaPantalla' por la pantalla deseada
+    navigation.navigate("AuthPinPad", { modal: true });
   };
 
   const resetTimeout = useInactivityTimer(300000, handleTimeout); // 300000 ms = 5 minutos

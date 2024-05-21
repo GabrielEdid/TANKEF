@@ -6,17 +6,23 @@ import { ActivityIndicator } from "react-native-paper";
 import { APIGet, setToken } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import PinPad from "../../components/PinPad";
+import ModalEstatus from "../../components/ModalEstatus";
 
 const AuthPinPad = ({ navigation, route }) => {
   // Estado local y el pin obtenido del AsyncStorage
-  const { userPin, userLoggedIn } = route.params; // Se obtiene el pin del AsyncStorage
+  const { userPin, userLoggedIn, modal } = route.params; // Se obtiene el pin del AsyncStorage
   const { user, setUser } = useContext(UserContext);
+  const [modalVisible, setModalVisible] = useState(modal);
   const [pin, setPin] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAuthenticationSuccess = () => {
     fetchProfileData(); // Llama a fetchProfileData después de la autenticación exitosa
   };
+
+  useEffect(() => {
+    setModalVisible(modal);
+  }, [modal]);
 
   // Función para convertir la primera letra de cada palabra en mayúscula
   function titleCase(str) {
@@ -109,6 +115,17 @@ const AuthPinPad = ({ navigation, route }) => {
             Estamos recuperando tus datos{"\n"}Por favor espera...
           </Text>
         </View>
+      )}
+      {modal && (
+        <ModalEstatus
+          titulo={"¡Atención!"}
+          texto={
+            "Debido a tu inactividad, se ha cerrado tu sesión por seguridad. Por favor, vuelve a iniciar sesión."
+          }
+          imagen={"Alert"}
+          visible={modalVisible}
+          onAccept={() => setModalVisible(false)}
+        />
       )}
     </View>
   );
