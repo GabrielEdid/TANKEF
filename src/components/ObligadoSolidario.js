@@ -11,8 +11,8 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { FinanceContext } from "../hooks/FinanceContext";
 // Importaciones de Componentes
+import { useInactivity } from "../hooks/InactivityContext";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import { fi } from "date-fns/locale";
 
 /**
  * `ObligadoSolidario` es un componente que muestra información de un posible obligado solidario.
@@ -36,6 +36,7 @@ import { fi } from "date-fns/locale";
 const ObligadoSolidario = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance } = useContext(FinanceContext);
   const [selected, setSelected] = useState(false);
 
@@ -48,6 +49,7 @@ const ObligadoSolidario = (props) => {
   }
 
   const handlePress = () => {
+    resetTimeout();
     // Si se trata de seleccionar un obligado solidario
     if (props.button && props.select) {
       const isSelected = finance.obligados_solidarios.includes(props.userID);

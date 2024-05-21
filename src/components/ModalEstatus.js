@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
+import { useInactivity } from "../hooks/InactivityContext";
 import { AntDesign } from "@expo/vector-icons";
 
 /**
@@ -41,6 +42,8 @@ import { AntDesign } from "@expo/vector-icons";
 const ModalEstatus = (props) => {
   const navigation = useNavigation();
   // Contexto de crédito
+  const { resetTimeout } = useInactivity();
+
   const imageMap = {
     Alert: require("../../assets/images/Alert.png"),
     RedAlert: require("../../assets/images/RedAlert.png"),
@@ -56,7 +59,7 @@ const ModalEstatus = (props) => {
           {props.onClose && (
             <TouchableOpacity
               style={{ position: "absolute", top: 50, right: 20 }}
-              onPress={() => props.onClose()}
+              onPress={() => [props.onClose(), resetTimeout()]}
             >
               <AntDesign name="closecircleo" size={30} color="white" />
             </TouchableOpacity>
@@ -72,7 +75,7 @@ const ModalEstatus = (props) => {
               <TouchableOpacity
                 style={styles.botonContinuar}
                 onPress={() => {
-                  props.onAccept();
+                  [props.onAccept(), resetTimeout()];
                 }}
               >
                 <Text style={styles.textoBotonContinuar}>Aceptar</Text>

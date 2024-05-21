@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,

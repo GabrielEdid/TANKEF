@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -11,10 +11,12 @@ import {
 // Importaciones de Componentes y Hooks
 import { FinanceContext } from "../hooks/FinanceContext";
 import { APIGet } from "../API/APIService";
+import { useInactivity } from "../hooks/InactivityContext";
 import { AntDesign } from "@expo/vector-icons";
 
 const TablaAmortizacion = (props) => {
   const { finance } = useContext(FinanceContext);
+  const { resetTimeout } = useInactivity();
   const [tablaData, setTablaData] = useState([]);
 
   useEffect(() => {
@@ -72,7 +74,7 @@ const TablaAmortizacion = (props) => {
       visible={props.visible}
     >
       <View style={styles.tituloContainer}>
-        <TouchableOpacity onPress={() => props.onClose()}>
+        <TouchableOpacity onPress={() => [props.onClose(), resetTimeout()]}>
           <AntDesign
             name="close"
             size={30}
@@ -84,9 +86,18 @@ const TablaAmortizacion = (props) => {
       </View>
       <View style={{ height: 3, backgroundColor: "#F5F5F5" }} />
       <View style={styles.container}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          onScroll={() => resetTimeout()}
+          scrollEventThrottle={400}
+        >
           <View>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              onScroll={() => resetTimeout()}
+              scrollEventThrottle={400}
+            >
               <View style={styles.tableHeader}>
                 {[
                   "Cuota",

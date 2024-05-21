@@ -9,9 +9,9 @@ import {
   TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Slider from "@react-native-community/slider";
 // Importaciones de Componentes y Contextos
 import { Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useInactivity } from "../hooks/InactivityContext";
 import { UserContext } from "../hooks/UserContext";
 import { FinanceContext } from "../hooks/FinanceContext";
 
@@ -43,11 +43,13 @@ const widthFourth = screenWidth / 4 - 15;
 const MontoyPlazoCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
+  const { resetTimeout } = useInactivity();
   const { user } = useContext(UserContext);
   const { finance, setFinance } = useContext(FinanceContext);
 
   // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
+    resetTimeout();
     const cleanedInput = inputText.replace(/[^0-9.]/g, ""); // Remove all non-numeric characters except dot
     if ((cleanedInput.match(/\./g) || []).length > 1) {
       // Ensure only one dot
@@ -94,6 +96,7 @@ const MontoyPlazoCredito = () => {
 
   // Helper function to format the numeric input on blur
   const formatInput = (text) => {
+    resetTimeout();
     const numericValue = parseFloat(text.replace(/,/g, ""));
     return isNaN(numericValue) ? "" : numericValue.toLocaleString();
   };
@@ -169,7 +172,10 @@ const MontoyPlazoCredito = () => {
             </Text>
             <TouchableOpacity
               style={styles.buttonFocus}
-              onPress={() => [setFinance({ ...finance, focus: "committee" })]}
+              onPress={() => [
+                setFinance({ ...finance, focus: "committee" }),
+                resetTimeout(),
+              ]}
               disabled={finance.paso > 2}
             >
               <View style={{ flex: 1 }}>
@@ -199,7 +205,10 @@ const MontoyPlazoCredito = () => {
             {/* Boton Mis Conexiones */}
             <TouchableOpacity
               style={styles.buttonFocus}
-              onPress={() => [setFinance({ ...finance, focus: "network" })]}
+              onPress={() => [
+                setFinance({ ...finance, focus: "network" }),
+                resetTimeout(),
+              ]}
               disabled={finance.paso > 2}
             >
               <View style={{ flex: 1 }}>
@@ -245,7 +254,10 @@ const MontoyPlazoCredito = () => {
                       finance.plazo === 6 ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFinance({ ...finance, plazo: 6 })]}
+                onPress={() => [
+                  setFinance({ ...finance, plazo: 6 }),
+                  resetTimeout(),
+                ]}
                 disabled={finance.paso > 2}
               >
                 <Text style={styles.textoTab}>6</Text>
@@ -258,7 +270,10 @@ const MontoyPlazoCredito = () => {
                       finance.plazo === 12 ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFinance({ ...finance, plazo: 12 })]}
+                onPress={() => [
+                  setFinance({ ...finance, plazo: 12 }),
+                  resetTimeout(),
+                ]}
                 disabled={finance.paso > 2}
               >
                 <Text style={styles.textoTab}>12</Text>
@@ -271,7 +286,10 @@ const MontoyPlazoCredito = () => {
                       finance.plazo === 18 ? "#2FF690" : "#F3F3F3",
                   },
                 ]}
-                onPress={() => [setFinance({ ...finance, plazo: 18 })]}
+                onPress={() => [
+                  setFinance({ ...finance, plazo: 18 }),
+                  resetTimeout(),
+                ]}
                 disabled={finance.paso > 2}
               >
                 <Text style={styles.textoTab}>18</Text>
@@ -285,7 +303,10 @@ const MontoyPlazoCredito = () => {
                     marginRight: 0,
                   },
                 ]}
-                onPress={() => [setFinance({ ...finance, plazo: 24 })]}
+                onPress={() => [
+                  setFinance({ ...finance, plazo: 24 }),
+                  resetTimeout(),
+                ]}
                 disabled={finance.paso > 2}
               >
                 <Text style={styles.textoTab}>24</Text>

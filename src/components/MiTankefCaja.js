@@ -14,6 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
+import { useInactivity } from "../hooks/InactivityContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
@@ -39,6 +40,7 @@ const widthHalf = screenWidth / 2;
 const MiTankefCaja = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext);
   const [focus, setFocus] = useState("Balance");
   const [boxes, setBoxes] = useState([]);
@@ -74,6 +76,7 @@ const MiTankefCaja = (props) => {
 
   // Funcion para obtener una caja de ahorro en especifico
   const fetchBox = async (id) => {
+    resetTimeout();
     const url = `/api/v1/box_savings/${id}`;
 
     const result = await APIGet(url);
@@ -136,15 +139,18 @@ const MiTankefCaja = (props) => {
         }}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
+        onScroll={() => resetTimeout()}
+        scrollEventThrottle={400}
       >
         <TouchableOpacity
           style={styles.botonNuevaCaja}
-          onPress={() =>
+          onPress={() => [
             navigation.navigate("Crear", {
               screen: "DefinirCajaAhorro",
               params: { flujo: "Caja de ahorro" },
-            })
-          }
+            }),
+            resetTimeout(),
+          ]}
         >
           <Entypo name="plus" size={30} color="black" />
           <Text
@@ -201,7 +207,7 @@ const MiTankefCaja = (props) => {
             {/* Boton Tab Balance */}
             <TouchableOpacity
               style={styles.tabButton}
-              onPress={() => setFocus("Balance")}
+              onPress={() => [setFocus("Balance"), resetTimeout()]}
             >
               <Text
                 style={[
@@ -221,7 +227,7 @@ const MiTankefCaja = (props) => {
             {/* Boton Tab Movimientos */}
             <TouchableOpacity
               style={styles.tabButton}
-              onPress={() => setFocus("Movimientos")}
+              onPress={() => [setFocus("Movimientos"), resetTimeout()]}
             >
               <Text
                 style={[

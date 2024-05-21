@@ -13,6 +13,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
 import { APIPost, APIDelete } from "../API/APIService";
+import { useInactivity } from "../hooks/InactivityContext";
 import { UserContext } from "../hooks/UserContext";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 
@@ -42,6 +43,7 @@ import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 const Invitaciones = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -49,6 +51,7 @@ const Invitaciones = (props) => {
 
   // Para cuando se desee eliminar una Invitacion
   const postReject = async () => {
+    resetTimeout();
     setIsLoading(true);
     const url = `/api/v1/friendship_request/reject`;
     const data = {
@@ -74,6 +77,7 @@ const Invitaciones = (props) => {
 
   // Para cuando se desee aceptar una Invitacion
   const postAccept = async () => {
+    resetTimeout();
     setIsLoading(true);
     const url = "/api/v1/friendship_request/accept";
     const data = {
@@ -119,7 +123,7 @@ const Invitaciones = (props) => {
         <Text style={styles.textoNombre}>{props.nombre}</Text>
       </View>
       {/* Boton de Eliminar */}
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
+      <TouchableOpacity onPress={() => [setModalVisible(true), resetTimeout()]}>
         <MaterialIcons
           name="highlight-remove"
           size={42}
@@ -142,12 +146,12 @@ const Invitaciones = (props) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => [setModalVisible(false), resetTimeout()]}
       >
         <TouchableOpacity
           style={styles.fullScreenButton}
           activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
+          onPressOut={() => [setModalVisible(false), resetTimeout()]}
         >
           <View style={styles.modalView}>
             <Text style={{ fontSize: 13 }}>
@@ -161,7 +165,7 @@ const Invitaciones = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ marginTop: 10 }}
-              onPress={() => setModalVisible(false)}
+              onPress={() => [setModalVisible(false), resetTimeout()]}
             >
               <Text>Cancelar</Text>
             </TouchableOpacity>

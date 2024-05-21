@@ -17,6 +17,7 @@ import { es } from "date-fns/locale";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
+import { useInactivity } from "../hooks/InactivityContext";
 import { APIPost, APIDelete, APIGet } from "../API/APIService";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
@@ -58,6 +59,7 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 const Post = (props) => {
   const navigation = useNavigation();
   // Estados del Componente
+  const { resetTimeout } = useInactivity();
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
@@ -77,6 +79,7 @@ const Post = (props) => {
 
   // Función para manejar la reacción de "me gusta" en una publicación, la elimina o crea
   const handleReaction = async () => {
+    resetTimeout();
     if (!like) {
       // Intentar dar like
       const urlGiveLike = "/api/v1/reactions";
@@ -131,6 +134,7 @@ const Post = (props) => {
 
   // Función para eliminar una publicación
   const deletePost = async () => {
+    resetTimeout();
     const url = `/api/v1/posts/${props.postId}`;
     const response = await APIDelete(url);
     if (response.error) {
@@ -156,6 +160,7 @@ const Post = (props) => {
 
   // Función para navegar a la pantalla de ver publicación completa, se le pasan todos los props
   const verPost = () => {
+    resetTimeout();
     navigation.navigate("VerPosts", {
       postId: props.postId,
       tipo: props.tipo,
@@ -228,6 +233,7 @@ const Post = (props) => {
 
   // Funcion para mostrar el texto completo con Ver Más
   const toggleShowFullText = () => {
+    resetTimeout();
     setShowFullText(!showFullText);
   };
 
@@ -381,7 +387,7 @@ const Post = (props) => {
       {/* Modal y Tres puntos para eliminar o reportar publicación */}
       <TouchableOpacity
         style={styles.opciones}
-        onPress={() => setModalVisible(true)}
+        onPress={() => [setModalVisible(true), resetTimeout()]}
       >
         <Text style={styles.tresPuntos}>...</Text>
       </TouchableOpacity>
@@ -389,12 +395,12 @@ const Post = (props) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => [setModalVisible(false), resetTimeout()]}
       >
         <TouchableOpacity
           style={styles.fullScreenButton}
           activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
+          onPressOut={() => [setModalVisible(false), resetTimeout()]}
         >
           <View style={styles.modalView}>
             {props.personal ? (
@@ -407,14 +413,17 @@ const Post = (props) => {
             ) : (
               <TouchableOpacity
                 style={styles.buttonModal}
-                onPress={() => console.log("Implementación de Reportar")}
+                onPress={() => [
+                  console.log("Implementación de Reportar"),
+                  resetTimeout(),
+                ]}
               >
                 <Text style={{ color: "red" }}>Reportar Publicación</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
               style={{ marginTop: 10 }}
-              onPress={() => setModalVisible(false)}
+              onPress={() => [setModalVisible(false), resetTimeout()]}
             >
               <Text>Cancelar</Text>
             </TouchableOpacity>

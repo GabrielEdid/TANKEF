@@ -16,6 +16,7 @@ import React, { useState, useContext, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 // Importaciones de Hooks y Componentes
 import { APIPost } from "../API/APIService";
+import { useInactivity } from "../hooks/InactivityContext";
 import { UserContext } from "../hooks/UserContext";
 import {
   Entypo,
@@ -32,6 +33,7 @@ import {
 
 const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext);
   const [text, setText] = useState("");
   const [modalQuien, setModalQuien] = useState(false);
@@ -49,6 +51,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
 
   // Función para publicar el post
   const postData = async () => {
+    resetTimeout();
     if (!text.trim() && !image) {
       Alert.alert("Error", "No puedes publicar un post vacío.");
       return;
@@ -100,6 +103,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
 
   // Función para seleccionar una imagen del carrete
   const pickImage = async () => {
+    resetTimeout();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -125,6 +129,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
 
   // Función para cerrar el modal
   const handleModalClose = () => {
+    resetTimeout();
     setIsModalVisible(false);
   };
 
@@ -217,7 +222,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
 
           {/* Vista con el boton de a quien compartir */}
           <TouchableOpacity
-            onPress={() => setModalQuien(true)}
+            onPress={() => [setModalQuien(true), resetTimeout()]}
             style={{
               paddingVertical: 10,
               backgroundColor: "white",
@@ -277,7 +282,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
             style={styles.input}
             placeholder=" ¿De que quieres hablar?"
             placeholderTextColor="#9B9DB6"
-            onChangeText={setText}
+            onChangeText={(text) => [setText(text), resetTimeout()]}
             multiline={true}
             value={text}
             maxLength={500}
@@ -317,7 +322,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                 justifyContent: "space-between",
                 marginBottom: 20,
               }}
-              onPress={() => setImage(null)}
+              onPress={() => [setImage(null), resetTimeout()]}
             >
               <FontAwesome name="trash-o" size={30} color="#F95C5C" />
               <Text style={styles.textoImagen}>Eliminar Imagen</Text>
@@ -329,10 +334,12 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
             <TouchableOpacity
               style={styles.fullScreenButton}
               activeOpacity={1}
-              onPress={() => setModalQuien(false)}
+              onPress={() => [setModalQuien(false), resetTimeout()]}
             >
               <View style={styles.modalQuienView}>
-                <TouchableOpacity onPress={() => setModalQuien(false)}>
+                <TouchableOpacity
+                  onPress={() => [setModalQuien(false), resetTimeout()]}
+                >
                   <View
                     style={{
                       height: 10,
@@ -350,6 +357,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   onPress={() => [
                     setModalQuien(false),
                     setQuien("Toda la Red"),
+                    resetTimeout(),
                   ]}
                 >
                   <Entypo name="globe" size={35} color="#060B4D" />
@@ -382,6 +390,7 @@ const ModalPost = ({ isModalVisible, setIsModalVisible }) => {
                   onPress={() => [
                     setModalQuien(false),
                     setQuien("Mis Conexiones"),
+                    resetTimeout(),
                   ]}
                 >
                   <Image style={styles.miRed} source={imageMap["MiRed"]} />

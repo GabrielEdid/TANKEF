@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
+import { useInactivity } from "../hooks/InactivityContext";
 import { FinanceContext } from "../hooks/FinanceContext";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -36,6 +37,7 @@ import { Ionicons } from "@expo/vector-icons";
 const ModalCotizadorCredito = () => {
   const navigation = useNavigation();
   // Contexto de crédito
+  const { resetTimeout } = useInactivity();
   const { finance, setFinance } = useContext(FinanceContext);
 
   // Componente visual
@@ -141,9 +143,10 @@ const ModalCotizadorCredito = () => {
                     borderWidth: 1,
                   },
                 ]}
-                onPress={() =>
-                  setFinance({ ...finance, modalCotizadorVisible: false })
-                }
+                onPress={() => [
+                  setFinance({ ...finance, modalCotizadorVisible: false }),
+                  resetTimeout(),
+                ]}
               >
                 <Text
                   style={[styles.textoBotonContinuar, { color: "#060B4D" }]}
@@ -163,11 +166,14 @@ const ModalCotizadorCredito = () => {
                 ]}
                 onPress={() => {
                   if (finance.paso === 1) {
-                    setFinance({
-                      ...finance,
-                      paso: finance.paso + 1,
-                      modalCotizadorVisible: false,
-                    });
+                    [
+                      setFinance({
+                        ...finance,
+                        paso: finance.paso + 1,
+                        modalCotizadorVisible: false,
+                      }),
+                      resetTimeout(),
+                    ];
                   }
                 }}
               >

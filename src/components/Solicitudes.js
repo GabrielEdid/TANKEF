@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
 import { FontAwesome } from "@expo/vector-icons";
+import { useInactivity } from "../hooks/InactivityContext";
 import { APIDelete } from "../API/APIService";
 
 /**
@@ -39,12 +40,14 @@ import { APIDelete } from "../API/APIService";
 const Solicitudes = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const [isVisible, setIsVisible] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Para cuando se desee eliminar una Solicitud pendiente
   const deleteSolicitud = async () => {
+    resetTimeout();
     setIsLoading(true);
     const url = `/api/v1/friendship_request/cancel`;
     const data = {
@@ -82,16 +85,17 @@ const Solicitudes = (props) => {
     <TouchableOpacity
       style={styles.container}
       disabled={isLoading}
-      onPress={() =>
-        navigation.navigate("VerPerfiles", { userID: props.userID })
-      }
+      onPress={() => [
+        navigation.navigate("VerPerfiles", { userID: props.userID }),
+        resetTimeout(),
+      ]}
     >
       <View style={{ flexDirection: "row", flex: 1 }}>
         <Image source={imageSource} style={styles.icon} />
         <Text style={styles.textoNombre}>{props.nombre}</Text>
       </View>
       {/* Para Mostrar Boton de Eliminar la Solicitud */}
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
+      <TouchableOpacity onPress={() => [setModalVisible(true), resetTimeout()]}>
         <FontAwesome
           name="trash-o"
           size={30}
@@ -105,12 +109,12 @@ const Solicitudes = (props) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => [setModalVisible(false), resetTimeout()]}
       >
         <TouchableOpacity
           style={styles.fullScreenButton}
           activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
+          onPressOut={() => [setModalVisible(false), resetTimeout()]}
         >
           <View style={styles.modalView}>
             <Text style={{ fontSize: 13 }}>
@@ -124,7 +128,7 @@ const Solicitudes = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ marginTop: 10 }}
-              onPress={() => setModalVisible(false)}
+              onPress={() => [setModalVisible(false), resetTimeout()]}
             >
               <Text>Cancelar</Text>
             </TouchableOpacity>

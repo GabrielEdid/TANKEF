@@ -11,16 +11,19 @@ import {
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // Importaciones de Hooks
+import { useInactivity } from "../hooks/InactivityContext";
 import { UserContext } from "../hooks/UserContext";
 
 const SettingsDrawer = ({ navigation }) => {
   // Estado global
+  const { resetTimeout } = useInactivity();
   const { user, setUser, resetUser } = useContext(UserContext);
   const [aboutText, setAboutText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const fadeAnim = new Animated.Value(0); // Inicialmente invisible
 
   useEffect(() => {
+    resetTimeout();
     const fetchAboutInfo = async () => {
       const url =
         "https://market-web-pr477-x6cn34axca-uc.a.run.app/api/v1/about";
@@ -36,6 +39,7 @@ const SettingsDrawer = ({ navigation }) => {
   }, []);
 
   const toggleModal = () => {
+    resetTimeout();
     if (!modalVisible) {
       setModalVisible(true);
       Animated.timing(fadeAnim, {
@@ -56,6 +60,7 @@ const SettingsDrawer = ({ navigation }) => {
 
   // Función para salir de la sesión
   const cerrarSesion = async () => {
+    resetTimeout();
     resetUser();
     // Espera a que el estado se actualice antes de guardar en AsyncStorage
     await AsyncStorage.setItem("userInfo", JSON.stringify(user));
@@ -69,7 +74,7 @@ const SettingsDrawer = ({ navigation }) => {
       <Text style={styles.titulo}>Configuración</Text>
       <TouchableOpacity
         style={{ marginTop: 325 }}
-        onPress={() => navigation.navigate("EditarPerfil")}
+        onPress={() => [navigation.navigate("EditarPerfil"), resetTimeout()]}
       >
         <Text style={styles.texto}>Datos del Perfil</Text>
       </TouchableOpacity>
@@ -80,10 +85,10 @@ const SettingsDrawer = ({ navigation }) => {
       >
         <Text style={styles.texto}>About</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={() => resetTimeout()}>
         <Text style={styles.texto}>FAQs</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={() => resetTimeout()}>
         <Text style={styles.texto}>Help</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => cerrarSesion()}>

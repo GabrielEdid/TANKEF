@@ -13,6 +13,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { DateTime } from "luxon";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
+import { useInactivity } from "../hooks/InactivityContext";
 import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
@@ -40,6 +41,7 @@ const widthHalf = screenWidth / 2;
 const MiTankefCredito = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext); //Contexto de usuario
   const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
   const [credits, setCredits] = useState([]); //Inversiones del usuario
@@ -94,6 +96,7 @@ const MiTankefCredito = (props) => {
 
   // Funcion para obtener una inversion en especifico
   const fetchCredit = async (id) => {
+    resetTimeout();
     const url = `/api/v1/credits/${id}`;
 
     const result = await APIGet(url);
@@ -164,12 +167,13 @@ const MiTankefCredito = (props) => {
       {/* Vista de los distintos créditos */}
       {credits.length === 0 && (
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => [
             navigation.navigate("Crear", {
               screen: "DefinirCredito",
               params: { flujo: "Crédito" },
-            })
-          }
+            }),
+            resetTimeout(),
+          ]}
           style={styles.botonNuevoCredito}
         >
           <Entypo name="plus" size={30} color="black" />
@@ -196,6 +200,8 @@ const MiTankefCredito = (props) => {
             }}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
+            onScroll={() => resetTimeout()}
+            scrollEventThrottle={400}
           >
             {/* Componente repetible */}
 
@@ -236,7 +242,7 @@ const MiTankefCredito = (props) => {
             {/* Boton Tab Balance */}
             <TouchableOpacity
               style={styles.tabButton}
-              onPress={() => setFocus("Balance")}
+              onPress={() => [setFocus("Balance"), resetTimeout()]}
             >
               <Text
                 style={[
@@ -256,7 +262,7 @@ const MiTankefCredito = (props) => {
             {/* Boton Tab Movimientos */}
             <TouchableOpacity
               style={styles.tabButton}
-              onPress={() => setFocus("Movimientos")}
+              onPress={() => [setFocus("Movimientos"), resetTimeout()]}
             >
               <Text
                 style={[

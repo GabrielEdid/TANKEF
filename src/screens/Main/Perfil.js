@@ -18,7 +18,6 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import { useInactivity } from "../../hooks/InactivityContext";
-import ProgressBar from "../../components/ProgressBar";
 import { Feather } from "@expo/vector-icons";
 import Post from "../../components/Post";
 

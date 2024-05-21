@@ -12,6 +12,7 @@ import {
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
+import { useInactivity } from "../hooks/InactivityContext";
 import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
@@ -38,6 +39,7 @@ const widthHalf = screenWidth / 2;
 const MiTankefInversion = (props) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext);
   const [focus, setFocus] = useState("Balance");
   const [investments, setInvestments] = useState([]);
@@ -80,6 +82,7 @@ const MiTankefInversion = (props) => {
 
   // Funcion para obtener una inversion en especifico
   const fetchInvestment = async (id) => {
+    resetTimeout();
     const url = `/api/v1/investments/${id}`;
 
     const result = await APIGet(url);
@@ -143,14 +146,16 @@ const MiTankefInversion = (props) => {
         }}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
+        onScroll={() => resetTimeout()}
       >
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => [
             navigation.navigate("Crear", {
               screen: "DefinirInversion",
               params: { flujo: "Inversión" },
-            })
-          }
+            }),
+            resetTimeout(),
+          ]}
           style={styles.botonNuevaInversion}
         >
           <Entypo name="plus" size={30} color="black" />
@@ -205,7 +210,7 @@ const MiTankefInversion = (props) => {
             {/* Boton Tab Balance */}
             <TouchableOpacity
               style={styles.tabButton}
-              onPress={() => setFocus("Balance")}
+              onPress={() => [setFocus("Balance"), resetTimeout()]}
             >
               <Text
                 style={[
@@ -225,7 +230,7 @@ const MiTankefInversion = (props) => {
             {/* Boton Tab Movimientos */}
             <TouchableOpacity
               style={styles.tabButton}
-              onPress={() => setFocus("Movimientos")}
+              onPress={() => [setFocus("Movimientos"), resetTimeout()]}
             >
               <Text
                 style={[

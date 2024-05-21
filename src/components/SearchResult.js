@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes
+import { useInactivity } from "../hooks/InactivityContext";
 
 /**
  * `SearchResult` es un componente que muestra información de una busqueda de usuarios específica,
@@ -33,12 +34,16 @@ import { useNavigation } from "@react-navigation/native";
 const SearchResult = ({ nombre, imagen, userID }) => {
   const navigation = useNavigation();
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
 
   return (
     //Lo hace boton y maneja la navegacion
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate("VerPerfiles", { userID: userID })}
+      onPress={() => [
+        navigation.navigate("VerPerfiles", { userID: userID }),
+        resetTimeout(),
+      ]}
     >
       {/* Datos del usuario a mostrar */}
       <View style={{ flexDirection: "row", flex: 1 }}>

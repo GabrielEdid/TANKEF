@@ -1,9 +1,10 @@
 // Importaciones de React Native y React
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useContext } from "react";
 import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 // Importaciones de Componentes y Hooks
+import { useInactivity } from "../hooks/InactivityContext";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import { APIGet } from "../API/APIService";
 
@@ -32,6 +33,7 @@ const borderSize = 2;
 const StackedImages = () => {
   const navigation = useNavigation();
   // Estados locales
+  const { resetTimeout } = useInactivity();
   const [images, setImages] = useState([]);
 
   // Mapeo de imágenes
@@ -76,7 +78,7 @@ const StackedImages = () => {
         <View style={styles.addButtonContainer}>
           <TouchableOpacity
             style={styles.addButton}
-            onPress={() => navigation.navigate("MiRedMain")}
+            onPress={() => [navigation.navigate("MiRedMain"), resetTimeout()]}
           >
             <MaterialCommunityIcons
               name="account-plus"
