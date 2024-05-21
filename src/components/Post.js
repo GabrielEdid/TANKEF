@@ -18,7 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../hooks/UserContext";
 import { APIPost, APIDelete, APIGet } from "../API/APIService";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 /**
  * `Post` es un componente que representa una publicación individual dentro de la aplicación.
@@ -285,60 +285,78 @@ const Post = (props) => {
           style={{
             flex: 1,
             flexDirection: "row",
+            paddingHorizontal: 20,
           }}
         >
-          {/* Boton para dar like a la publicación */}
-          <TouchableOpacity
-            style={{ flexDirection: "row" }}
-            onPress={() => handleReaction()}
+          <Text
+            style={{
+              flex: 1,
+              fontSize: 12,
+              color: like ? "#21B6D5" : "#5f5f61",
+              fontFamily: "opensans",
+            }}
           >
-            <View style={{ alignItems: "center" }}>
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: like ? "#21B6D5" : "#5f5f61",
-                  fontFamily: "opensans",
-                }}
-              >
-                {likes} likes
-              </Text>
+            {likes} likes
+          </Text>
+          <Text
+            style={{
+              fontSize: 12,
+              color: "#5f5f61",
+              fontFamily: "opensans",
+            }}
+          >
+            {props.comentarios} comentarios
+          </Text>
+        </View>
+        <View style={styles.linea} />
+
+        {/* Boton para dar like a la publicación */}
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                width: 80,
+              }}
+              onPress={() => handleReaction()}
+            >
               <AntDesign
                 name="like2"
                 size={30}
                 color={like ? "#21B6D5" : "#5f5f61"}
               />
-            </View>
-            <Text
-              style={{
-                fontSize: 15,
-                color: like ? "#21B6D5" : "#5f5f61",
-                marginLeft: 5,
-                marginTop: 10,
-                alignSelf: "center",
-                fontFamily: "opensans",
-              }}
-            >
-              Like
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: like ? "#21B6D5" : "#5f5f61",
+                  marginLeft: 5,
+                  alignSelf: "center",
+                  fontFamily: "opensans",
+                }}
+              >
+                Like
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           {/* Para navegar a ver la publicación completa al presionar el icono de comments */}
           <TouchableOpacity
             onPress={() => verPost()}
-            style={{ flexDirection: "row", marginLeft: 70 }}
+            style={{ flexDirection: "row" }}
           >
             <View style={{ alignItems: "center" }}>
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: "#5f5f61",
-                  fontFamily: "opensans",
-                }}
-              >
-                {props.comentarios} comentarios
-              </Text>
-              <FontAwesome
-                name="comment-o"
+              <Ionicons
+                name="chatbubble-outline"
                 size={30}
                 color="#5f5f61"
                 style={{ transform: [{ scaleX: -1 }] }}
@@ -350,7 +368,7 @@ const Post = (props) => {
                 color: "#5f5f61",
                 fontFamily: "opensans",
                 alignSelf: "center",
-                marginTop: 10,
+                marginLeft: 5,
               }}
             >
               Comentar
@@ -358,7 +376,7 @@ const Post = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.linea} />
+      <View style={styles.postLine} />
 
       {/* Modal y Tres puntos para eliminar o reportar publicación */}
       <TouchableOpacity
@@ -477,16 +495,22 @@ const styles = StyleSheet.create({
   },
   linea: {
     backgroundColor: "#F2F2F2",
+    height: 2,
+    marginTop: 7.5,
+    marginBottom: 5,
+    width: "100%",
+    alignSelf: "center",
+  },
+  postLine: {
+    backgroundColor: "#F2F2F2",
     height: 3,
     marginTop: 10,
     width: "100%",
     alignSelf: "center",
   },
   interactionContainer: {
-    flexDirection: "row",
     alignItems: "center",
     paddingTop: 10,
-    paddingHorizontal: 15,
   },
   // Estilos para el Modal que aparece si se presionan los 3 puntos
   fullScreenButton: {
