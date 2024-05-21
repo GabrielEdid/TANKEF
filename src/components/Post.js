@@ -505,8 +505,7 @@ const styles = StyleSheet.create({
   linea: {
     backgroundColor: "#F2F2F2",
     height: 2,
-    marginTop: 7.5,
-    marginBottom: 5,
+    marginVertical: 5,
     width: "100%",
     alignSelf: "center",
   },
