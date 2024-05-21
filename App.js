@@ -12,7 +12,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "./src/hooks/UserContext";
 import { FinanceProvider } from "./src/hooks/FinanceContext";
 import { InactivityProvider } from "./src/hooks/InactivityContext";
-import MainView from "./src/hooks/MainView";
 import { setToken, getToken } from "./src/API/APIService";
 // Importar pantallas de la aplicación
 import LogIn from "./src/screens/LogIn/LogIn";
@@ -170,7 +169,6 @@ function InicioStack() {
 function CrearStack() {
   return (
     <InactivityProvider>
-      {/* <MainView> */}
       <FinanceProvider>
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
@@ -196,7 +194,6 @@ function CrearStack() {
           />
         </Stack.Navigator>
       </FinanceProvider>
-      {/* </MainView> */}
     </InactivityProvider>
   );
 }
@@ -247,7 +244,6 @@ function MainFlow() {
   return (
     <>
       <InactivityProvider>
-        {/* <MainView> */}
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarShowLabel: false,
@@ -343,7 +339,6 @@ function MainFlow() {
             }}
           />
         ) : null}
-        {/* </MainView> */}
       </InactivityProvider>
     </>
   );
