@@ -19,6 +19,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import { Ionicons, Feather, AntDesign, Foundation } from "@expo/vector-icons";
+import { useInactivity } from "../../hooks/InactivityContext";
 import Conexion from "../../components/Conexion";
 import Solicitudes from "../../components/Solicitudes";
 import Invitaciones from "../../components/Invitaciones";
@@ -29,6 +30,7 @@ const widthThird = screenWidth / 3;
 
 const MiRed = () => {
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const [text, setText] = useState("");
   const [focus, setFocus] = useState("MiRed");
   const [isSearching, setIsSearching] = useState(false);
@@ -187,6 +189,7 @@ const MiRed = () => {
             placeholder="Buscar"
             placeholderTextColor="#060B4D"
             onChangeText={(text) => {
+              resetTimeout();
               setText(text);
               if (text.length > 0) {
                 const focus = focus;
@@ -220,7 +223,10 @@ const MiRed = () => {
         {/* Vista para mostarr los Resultados de la busqueda si se empieza a buscar */}
         {isSearching && (
           <View style={styles.searchResultsContainer}>
-            <ScrollView>
+            <ScrollView
+              onScroll={() => resetTimeout()}
+              scrollEventThrottle={400}
+            >
               {/* Se mapean los resultados de la API y se muestran con su componente */}
               {searchResults.map((search, index) => (
                 <SearchResult
@@ -242,7 +248,11 @@ const MiRed = () => {
             {/* Boton Mi Red */}
             <TouchableOpacity
               style={styles.tab}
-              onPress={() => [setFocus("MiRed"), fetchNetwork()]}
+              onPress={() => [
+                setFocus("MiRed"),
+                fetchNetwork(),
+                resetTimeout(),
+              ]}
             >
               <Text
                 style={[
@@ -258,7 +268,11 @@ const MiRed = () => {
             {/* Boton Solicitudes */}
             <TouchableOpacity
               style={styles.tab}
-              onPress={() => [setFocus("Solicitudes"), fetchPending()]}
+              onPress={() => [
+                setFocus("Solicitudes"),
+                fetchPending(),
+                resetTimeout(),
+              ]}
             >
               <Text
                 style={[
@@ -276,7 +290,11 @@ const MiRed = () => {
             {/* Boton Invitaciones */}
             <TouchableOpacity
               style={styles.tab}
-              onPress={() => [setFocus("Invitaciones"), fetchInvitations()]}
+              onPress={() => [
+                setFocus("Invitaciones"),
+                fetchInvitations(),
+                resetTimeout(),
+              ]}
             >
               <Text
                 style={[
@@ -307,6 +325,8 @@ const MiRed = () => {
             {focus === "MiRed" && (
               <ScrollView
                 style={{ flex: 1 }}
+                onScroll={() => resetTimeout()}
+                scrollEventThrottle={400}
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}
@@ -351,6 +371,8 @@ const MiRed = () => {
             {focus === "Solicitudes" && (
               <ScrollView
                 style={{ flex: 1 }}
+                onScroll={() => resetTimeout()}
+                scrollEventThrottle={400}
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}
@@ -395,6 +417,8 @@ const MiRed = () => {
             {focus === "Invitaciones" && (
               <ScrollView
                 style={{ flex: 1 }}
+                onScroll={() => resetTimeout()}
+                scrollEventThrottle={400}
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}

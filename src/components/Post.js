@@ -332,7 +332,7 @@ const Post = (props) => {
             >
               <AntDesign
                 name="like2"
-                size={30}
+                size={25}
                 color={like ? "#21B6D5" : "#5f5f61"}
               />
               <Text
@@ -357,7 +357,7 @@ const Post = (props) => {
             <View style={{ alignItems: "center" }}>
               <Ionicons
                 name="chatbubble-outline"
-                size={30}
+                size={25}
                 color="#5f5f61"
                 style={{ transform: [{ scaleX: -1 }] }}
               />

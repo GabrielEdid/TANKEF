@@ -15,6 +15,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { UserContext } from "../../hooks/UserContext";
 import { APIGet } from "../../API/APIService";
 import { Feather } from "@expo/vector-icons";
+import { useInactivity } from "../../hooks/InactivityContext";
 import StackedImages from "../../components/StackedImages";
 import MiTankefCredito from "../../components/MiTankefCredito";
 import MiTankefInversion from "../../components/MiTankefInversion";
@@ -27,6 +28,7 @@ const widthHalf = screenWidth / 2;
 
 const MiTankef = () => {
   // Estados y Contexto
+  const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext);
   const [focus, setFocus] = useState("Credito");
   const [dashboard, setDashboard] = useState({});
@@ -106,7 +108,7 @@ const MiTankef = () => {
             styles.tabButton,
             { backgroundColor: focus === "Credito" ? "#2FF690" : "#F3F3F3" },
           ]}
-          onPress={() => setFocus("Credito")}
+          onPress={() => [setFocus("Credito"), resetTimeout()]}
         >
           <Text
             style={[
@@ -124,7 +126,7 @@ const MiTankef = () => {
             styles.tabButton,
             { backgroundColor: focus === "Inversion" ? "#2FF690" : "#F3F3F3" },
           ]}
-          onPress={() => setFocus("Inversion")}
+          onPress={() => [setFocus("Inversion"), resetTimeout()]}
         >
           <Text
             style={[
@@ -142,7 +144,7 @@ const MiTankef = () => {
             styles.tabButton,
             { backgroundColor: focus === "Caja" ? "#2FF690" : "#F3F3F3" },
           ]}
-          onPress={() => setFocus("Caja")}
+          onPress={() => [setFocus("Caja"), resetTimeout()]}
         >
           <Text
             style={[
@@ -160,7 +162,7 @@ const MiTankef = () => {
             styles.tabButton,
             { backgroundColor: focus === "Obligado" ? "#2FF690" : "#F3F3F3" },
           ]}
-          onPress={() => setFocus("Obligado")}
+          onPress={() => [setFocus("Obligado"), resetTimeout()]}
         >
           <Text
             style={[
@@ -174,7 +176,11 @@ const MiTankef = () => {
       </View>
 
       {/* Se llaman los respectivos componentes segun los estados de los dos tabs anteriores */}
-      <ScrollView style={{ marginTop: 5 }}>
+      <ScrollView
+        style={{ marginTop: 5 }}
+        onScroll={() => resetTimeout()}
+        scrollEventThrottle={400}
+      >
         {focus === "Credito" && secondFocus === "Detalle" && (
           <MiTankefCredito />
         )}

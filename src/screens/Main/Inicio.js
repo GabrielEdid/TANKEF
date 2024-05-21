@@ -19,12 +19,14 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import Post from "../../components/Post";
 import ModalPost from "../../components/ModalPost";
 
 const Inicio = () => {
   // Estados y Contexto
+  const { resetTimeout } = useInactivity(); // Hook para el tiempo de inactividad
   const { user, setUser } = useContext(UserContext); // Contexto de Usuario
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -107,6 +109,7 @@ const Inicio = () => {
 
   // Función para manejar el foco del input para crear un post
   const handleFocus = () => {
+    resetTimeout();
     setIsModalVisible(true);
   };
 
@@ -179,6 +182,7 @@ const Inicio = () => {
             if (isCloseToBottom(nativeEvent)) {
               handleLoadMore();
             }
+            resetTimeout();
           }}
           scrollEventThrottle={400}
           refreshControl={

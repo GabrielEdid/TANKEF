@@ -19,11 +19,13 @@ import { ActivityIndicator } from "react-native-paper";
 import { Feather, EvilIcons } from "@expo/vector-icons";
 import { APIGet, APIPost, APIDelete } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
+import { useInactivity } from "../../hooks/InactivityContext";
 import Post from "../../components/Post";
 
 const VerPerfiles = ({ route }) => {
   // Estados locales y contexto
   const { userID } = route.params;
+  const { resetTimeout } = useInactivity();
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
@@ -245,6 +247,7 @@ const VerPerfiles = ({ route }) => {
           if (isCloseToBottom(nativeEvent)) {
             handleLoadMore();
           }
+          resetTimeout();
         }}
         scrollEventThrottle={400}
         refreshControl={
@@ -290,7 +293,7 @@ const VerPerfiles = ({ route }) => {
             {estado === "inicial" && (
               <TouchableOpacity
                 style={styles.botonConf}
-                onPress={() => postRequest()}
+                onPress={() => [postRequest(), resetTimeout()]}
               >
                 <Text style={styles.textoBoton}>Conectar</Text>
               </TouchableOpacity>
@@ -298,7 +301,7 @@ const VerPerfiles = ({ route }) => {
             {estado === "solicitudEnviada" && (
               <TouchableOpacity
                 style={styles.botonConectado}
-                onPress={() => setModalVisible(true)}
+                onPress={() => [setModalVisible(true), resetTimeout()]}
               >
                 <Text style={[styles.textoBoton, { color: "grey" }]}>
                   Solicitud Enviada
@@ -400,13 +403,13 @@ const VerPerfiles = ({ route }) => {
             </Text>
             <TouchableOpacity
               style={styles.buttonModal}
-              onPress={() => deleteRequest()}
+              onPress={() => [deleteRequest(), resetTimeout()]}
             >
               <Text style={{ color: "red" }}>Eliminar Solicitud</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{ marginTop: 10 }}
-              onPress={() => setModalVisible(false)}
+              onPress={() => [setModalVisible(false), resetTimeout()]}
             >
               <Text>Cancelar</Text>
             </TouchableOpacity>

@@ -9,54 +9,42 @@ import {
 } from "react-native";
 import { useInactivity } from "./InactivityContext"; // Asegúrate de que la ruta sea correcta
 
-const InactivityMeasure = ({
-  children,
-  onPress,
-  onScroll,
-  onChangeText,
-  ...props
-}) => {
+const InactivityWrapper = ({ children, ...props }) => {
   const { resetTimeout } = useInactivity();
 
   const handlePress = (event) => {
-    console.log("Pressing");
     resetTimeout();
-    if (onPress) {
-      onPress(event);
+    if (props.onPress) {
+      props.onPress(event);
     }
   };
 
   const handleScroll = (event) => {
-    console.log("Scrolling");
     resetTimeout();
-    if (onScroll) {
-      onScroll(event);
+    if (props.onScroll) {
+      props.onScroll(event);
     }
   };
 
   const handleChangeText = (text) => {
-    console.log("Changing text");
     resetTimeout();
-    if (onChangeText) {
-      onChangeText(text);
+    if (props.onChangeText) {
+      props.onChangeText(text);
     }
   };
 
-  return (
-    <View {...props}>
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          return React.cloneElement(child, {
-            onPress: handlePress,
-            onScroll: handleScroll,
-            onChangeText: handleChangeText,
-            ...child.props,
-          });
-        }
-        return child;
-      })}
-    </View>
-  );
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, {
+        onPress: handlePress,
+        onScroll: handleScroll,
+        onChangeText: handleChangeText,
+      });
+    }
+    return child;
+  });
+
+  return <View {...props}>{childrenWithProps}</View>;
 };
 
-export default InactivityMeasure;
+export default InactivityWrapper;

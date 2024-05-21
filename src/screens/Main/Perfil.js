@@ -17,13 +17,14 @@ import MaskedView from "@react-native-masked-view/masked-view";
 // Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
+import { useInactivity } from "../../hooks/InactivityContext";
 import ProgressBar from "../../components/ProgressBar";
 import { Feather } from "@expo/vector-icons";
 import Post from "../../components/Post";
-import ModalEstatus from "../../components/ModalEstatus";
 
 const Perfil = () => {
   // Estados y contexto
+  const { resetTimeout } = useInactivity();
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -130,7 +131,9 @@ const Perfil = () => {
           />
         </TouchableOpacity>
         {/* Botón de sliders para abrir el Drawer */}
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <TouchableOpacity
+          onPress={() => [navigation.openDrawer(), resetTimeout()]}
+        >
           <Image style={styles.sliders} source={imageMap["Sliders"]} />
         </TouchableOpacity>
       </View>
@@ -142,6 +145,7 @@ const Perfil = () => {
           if (isCloseToBottom(nativeEvent)) {
             handleLoadMore();
           }
+          resetTimeout();
         }}
         scrollEventThrottle={400}
         refreshControl={
@@ -292,14 +296,6 @@ const Perfil = () => {
           </View>
         )}
       </ScrollView>
-      {/* VISUALIZACION DE MODAL DE ATENCIÓN
-      <ModalEstatus
-        titulo={"¡Atención!"}
-        texto={
-          "Tu información ha sido recibida, estamos en proceso de validación, te notificaremos para proceder con el siguiente paso.\n¡Gracias por tu paciencia!"
-        }
-        imagen={"Alert"}
-      />*/}
     </>
   );
 };

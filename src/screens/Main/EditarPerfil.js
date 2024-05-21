@@ -16,11 +16,13 @@ import * as ImagePicker from "expo-image-picker";
 import { v4 as uuidv4 } from "uuid";
 // Importaciones de Componentes y Hooks
 import { APIPut } from "../../API/APIService";
+import { useInactivity } from "../../hooks/InactivityContext";
 import { UserContext } from "../../hooks/UserContext";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 
 const EditarPerfil = ({ navigation }) => {
   // Estados locales
+  const { resetTimeout } = useInactivity(); // Hook para el tiempo de inactividad
   const { user, setUser } = useContext(UserContext); //Contexo del Usuario
   const [imageUri, setImageUri] = useState(user.avatar);
   const [imageKey, setImageKey] = useState(Date.now());
@@ -144,7 +146,7 @@ const EditarPerfil = ({ navigation }) => {
             <View>
               <TouchableOpacity
                 style={styles.botonImagen}
-                onPress={() => pickImage()}
+                onPress={() => [pickImage(), resetTimeout()]}
               >
                 <FontAwesome name="camera" size={24} color="#060B4D" />
                 <Text style={styles.textoBotonImagen}>Editar Foto</Text>

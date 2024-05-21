@@ -27,6 +27,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
+import { useInactivity } from "../../hooks/InactivityContext";
 import Comment from "../../components/Comment";
 import { APIDelete, APIPost, APIGet } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -48,6 +49,7 @@ const VerPosts = ({ route, navigation }) => {
     remove,
   } = route.params;
   // Estados de la pantalla
+  const { resetTimeout } = useInactivity();
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
@@ -136,6 +138,7 @@ const VerPosts = ({ route, navigation }) => {
 
   // Funcion para manejar la carga de más comments
   const handleLoadMore = () => {
+    resetTimeout();
     if (!isFetchingMore) {
       setIsFetchingMore(true);
       const nextPage = page + 1;
@@ -225,6 +228,7 @@ const VerPosts = ({ route, navigation }) => {
 
   // Funcion para manejar las reacciones de los usuarios, se verifica si existe la reacción del usuario, si existe se elimina, si no se crea.
   const handleReaction = async () => {
+    resetTimeout();
     if (!like) {
       // Intentar dar like
       const urlGiveLike = "/api/v1/reactions";
@@ -323,6 +327,7 @@ const VerPosts = ({ route, navigation }) => {
 
   // Funcion para mostrar el texto completo con boton de Ver Más
   const toggleShowFullText = () => {
+    resetTimeout();
     setShowFullText(!showFullText);
   };
 
@@ -378,6 +383,7 @@ const VerPosts = ({ route, navigation }) => {
             if (isCloseToBottom(nativeEvent)) {
               handleLoadMore();
             }
+            resetTimeout();
           }}
           scrollEventThrottle={400}
           refreshControl={
@@ -552,9 +558,10 @@ const VerPosts = ({ route, navigation }) => {
             />
             <TouchableOpacity
               style={styles.sendIcon}
-              onPress={() =>
-                replyingTo && replyingToId ? postCommentReply() : postComment()
-              }
+              onPress={() => [
+                replyingTo && replyingToId ? postCommentReply() : postComment(),
+                resetTimeout(),
+              ]}
             >
               <Ionicons
                 name="send"
@@ -567,7 +574,7 @@ const VerPosts = ({ route, navigation }) => {
           {/* Modal y Tres puntos para eliminar o reportar publicación  */}
           <TouchableOpacity
             style={styles.opciones}
-            onPress={() => setModalVisible(true)}
+            onPress={() => [setModalVisible(true), resetTimeout()]}
           >
             <Text style={styles.tresPuntos}>...</Text>
           </TouchableOpacity>
@@ -587,7 +594,7 @@ const VerPosts = ({ route, navigation }) => {
                 {personal ? (
                   <TouchableOpacity
                     style={styles.buttonModal}
-                    onPress={() => deletePost()}
+                    onPress={() => [deletePost(), resetTimeout()]}
                   >
                     <Text style={{ color: "red" }}>Eliminar Publicación</Text>
                   </TouchableOpacity>
@@ -595,7 +602,10 @@ const VerPosts = ({ route, navigation }) => {
                 {!personal ? (
                   <TouchableOpacity
                     style={styles.buttonModal}
-                    onPress={() => console.log("Implementación de Reportar")}
+                    onPress={() => [
+                      console.log("Implementación de Reportar"),
+                      resetTimeout(),
+                    ]}
                   >
                     <Text style={{ color: "red" }}>Reportar Publicación</Text>
                   </TouchableOpacity>
