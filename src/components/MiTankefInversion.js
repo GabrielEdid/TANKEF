@@ -109,7 +109,7 @@ const MiTankefInversion = (props) => {
       setPlazo(result.data.data.term);
       setMontoAcumulado("Falta");
       setFolio(result.data.data.invoice_number);
-      setCuenta(result.data.data.bank_account.short_name);
+      setCuenta(formatBankAccount(result.data.data.bank_account));
       setFechaCreacion(formatDate(result.data.data.created_at));
       setFechaInicio("Falta");
       setFechaFin("Falta");
@@ -137,18 +137,28 @@ const MiTankefInversion = (props) => {
     return format(date, "dd/MM/yyyy hh:mm aa");
   };
 
-  // useEffect(() => {
-  //   if (
-  //     investmentState === "reviewing_documentation" ||
-  //     investmentState === "rejected_documentation" ||
-  //     investmentState === "signing_contract" ||
-  //     investmentState === "sign_contract" ||
-  //     investmentState === "request_payment" ||
-  //     investmentState === "reviewing_payment"
-  //   ) {
-  //     setModalVisible(true);
-  //   }
-  // }, [investmentState, effectTrigger]);
+  const formatBankAccount = (bankAccount) => {
+    const { short_name, account } = bankAccount;
+    if (!account || account.length < 4) {
+      throw new Error("Invalid account number");
+    }
+    const maskedAccount =
+      account.slice(0, -4).replace(/./g, "*") + account.slice(-4);
+    return `${short_name} ${maskedAccount}`;
+  };
+
+  useEffect(() => {
+    if (
+      investmentState === "reviewing_documentation" ||
+      investmentState === "rejected_documentation" ||
+      investmentState === "signing_contract" ||
+      investmentState === "sign_contract" ||
+      investmentState === "request_payment" ||
+      investmentState === "reviewing_payment"
+    ) {
+      setModalVisible(true);
+    }
+  }, [investmentState, effectTrigger]);
 
   const handleInvestmentStateChange = (newState) => {
     if (investmentState === newState) {
@@ -160,256 +170,270 @@ const MiTankefInversion = (props) => {
   // Componente visual
   return (
     <View>
-      {/* Vista de las distintas inversiones */}
-      <ScrollView
-        style={{
-          marginBottom: 5,
-        }}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        onScroll={() => resetTimeout()}
-      >
-        <TouchableOpacity
-          onPress={() => [
-            navigation.navigate("Crear", {
-              screen: "DefinirInversion",
-              params: { flujo: "Inversión" },
-            }),
-            resetTimeout(),
-          ]}
-          style={styles.botonNuevaInversion}
+      <View style={{ flex: 1 }}>
+        {/* Vista de las distintas inversiones */}
+        <ScrollView
+          style={{
+            marginBottom: 5,
+          }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          onScroll={() => resetTimeout()}
         >
-          <Entypo name="plus" size={30} color="black" />
-          <Text
-            style={{
-              color: "#060B4D",
-              fontFamily: "opensansbold",
-              textAlign: "center",
-              fontSize: 12,
-              marginTop: -5,
-              marginBottom: 5,
-            }}
+          <TouchableOpacity
+            onPress={() => [
+              navigation.navigate("Crear", {
+                screen: "DefinirInversion",
+                params: { flujo: "Inversión" },
+              }),
+              resetTimeout(),
+            ]}
+            style={styles.botonNuevaInversion}
           >
-            Nueva Inversión
-          </Text>
-        </TouchableOpacity>
-
-        {/* Componente repetible */}
-        {investments &&
-          investments.length > 0 &&
-          investments.map((investment, index) => (
-            <TouchableOpacity
-              key={investment.id || index}
-              style={[
-                styles.investmentNameContainer,
-                {
-                  backgroundColor:
-                    currentID === investment.id ? "#2FF690" : "white",
-                },
-              ]}
-              onPress={() => [
-                fetchInvestment(investment.id),
-                setCurrentID(investment.id),
-                setTasaOperacion(investment.rate_operation),
-              ]}
+            <Entypo name="plus" size={30} color="black" />
+            <Text
+              style={{
+                color: "#060B4D",
+                fontFamily: "opensansbold",
+                textAlign: "center",
+                fontSize: 12,
+                marginTop: -5,
+                marginBottom: 5,
+              }}
             >
-              <Image source={imageMap["Bill"]} style={styles.bill} />
-              <Text
-                style={styles.investmentName}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {investment.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-      </ScrollView>
+              Nueva Inversión
+            </Text>
+          </TouchableOpacity>
 
-      {investments && investments.length > 0 ? (
-        <>
-          <View style={styles.tabsContainer}>
-            {/* Boton Tab Balance */}
-            <TouchableOpacity
-              style={styles.tabButton}
-              onPress={() => [setFocus("Balance"), resetTimeout()]}
-            >
-              <Text
+          {/* Componente repetible */}
+          {investments &&
+            investments.length > 0 &&
+            investments.map((investment, index) => (
+              <TouchableOpacity
+                key={investment.id || index}
                 style={[
-                  styles.tabText,
+                  styles.investmentNameContainer,
                   {
-                    color: focus === "Balance" ? "#060B4D" : "#9596AF",
-                    fontFamily:
-                      focus === "Balance" ? "opensansbold" : "opensanssemibold",
+                    backgroundColor:
+                      currentID === investment.id ? "#2FF690" : "white",
                   },
                 ]}
-              >
-                Balance General
-              </Text>
-              {focus === "Balance" ? <View style={styles.focusLine} /> : null}
-            </TouchableOpacity>
-
-            {/* Boton Tab Movimientos */}
-            <TouchableOpacity
-              style={styles.tabButton}
-              onPress={() => [setFocus("Movimientos"), resetTimeout()]}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  {
-                    color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
-                    fontFamily:
-                      focus === "Movimientos"
-                        ? "opensansbold"
-                        : "opensanssemibold",
-                  },
+                onPress={() => [
+                  fetchInvestment(investment.id),
+                  setCurrentID(investment.id),
+                  setTasaOperacion(investment.rate_operation),
                 ]}
               >
-                Movimientos
-              </Text>
-              {focus === "Movimientos" ? (
-                <View style={styles.focusLine} />
-              ) : null}
-            </TouchableOpacity>
-          </View>
-          {/* Vista de la información total de las inversiónes */}
-          {focus === "Balance" && (
-            <>
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Estatus</Text>
-                  <Text style={styles.valorConcepto}>{estatus}</Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Abono</Text>
-                  <Text style={styles.valorConcepto}>{abono}</Text>
-                </View>
-              </View>
+                <Image source={imageMap["Bill"]} style={styles.bill} />
+                <Text
+                  style={styles.investmentName}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {investment.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+        </ScrollView>
 
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Monto inversión</Text>
-                  <Text style={styles.valorConcepto}>{montoInicial}</Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Retorno de inversión</Text>
-                  <Text style={styles.valorConcepto}>{retornoInversion}</Text>
-                </View>
-              </View>
+        {investments && investments.length > 0 ? (
+          <>
+            <View style={styles.tabsContainer}>
+              {/* Boton Tab Balance */}
+              <TouchableOpacity
+                style={styles.tabButton}
+                onPress={() => [setFocus("Balance"), resetTimeout()]}
+              >
+                <Text
+                  style={[
+                    styles.tabText,
+                    {
+                      color: focus === "Balance" ? "#060B4D" : "#9596AF",
+                      fontFamily:
+                        focus === "Balance"
+                          ? "opensansbold"
+                          : "opensanssemibold",
+                    },
+                  ]}
+                >
+                  Balance General
+                </Text>
+                {focus === "Balance" ? <View style={styles.focusLine} /> : null}
+              </TouchableOpacity>
 
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Plazo de inversión</Text>
-                  <Text style={styles.valorConcepto}>{plazo} meses</Text>
+              {/* Boton Tab Movimientos */}
+              <TouchableOpacity
+                style={styles.tabButton}
+                onPress={() => [setFocus("Movimientos"), resetTimeout()]}
+              >
+                <Text
+                  style={[
+                    styles.tabText,
+                    {
+                      color: focus === "Movimientos" ? "#060B4D" : "#9596AF",
+                      fontFamily:
+                        focus === "Movimientos"
+                          ? "opensansbold"
+                          : "opensanssemibold",
+                    },
+                  ]}
+                >
+                  Movimientos
+                </Text>
+                {focus === "Movimientos" ? (
+                  <View style={styles.focusLine} />
+                ) : null}
+              </TouchableOpacity>
+            </View>
+            {/* Vista de la información total de las inversiónes */}
+            {focus === "Balance" && (
+              <>
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Estatus</Text>
+                    <Text style={styles.valorConcepto}>{estatus}</Text>
+                  </View>
+                  <Ionicons
+                    name="remove-outline"
+                    size={30}
+                    color="#e1e2ebff"
+                    style={styles.line}
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Abono</Text>
+                    <Text style={styles.valorConcepto}>{abono}</Text>
+                  </View>
                 </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Tasa de operación</Text>
-                  <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
-                </View>
-              </View>
 
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>montoAcumulado</Text>
-                  <Text style={styles.valorConcepto}>{montoAcumulado}</Text>
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Monto inversión</Text>
+                    <Text style={styles.valorConcepto}>{montoInicial}</Text>
+                  </View>
+                  <Ionicons
+                    name="remove-outline"
+                    size={30}
+                    color="#e1e2ebff"
+                    style={styles.line}
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Retorno de inversión</Text>
+                    <Text style={styles.valorConcepto}>{retornoInversion}</Text>
+                  </View>
                 </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Folio</Text>
-                  <Text style={styles.valorConcepto}>{folio}</Text>
-                </View>
-              </View>
 
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Cuenta</Text>
-                  <Text style={styles.valorConcepto}>{cuenta}</Text>
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Plazo de inversión</Text>
+                    <Text style={styles.valorConcepto}>{plazo} meses</Text>
+                  </View>
+                  <Ionicons
+                    name="remove-outline"
+                    size={30}
+                    color="#e1e2ebff"
+                    style={styles.line}
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Tasa de operación</Text>
+                    <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
+                  </View>
                 </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Fecha de creación</Text>
-                  <Text style={styles.valorConcepto}>{fechaCreacion}</Text>
-                </View>
-              </View>
 
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Fecha de inicio</Text>
-                  <Text style={styles.valorConcepto}>{fechaInicio}</Text>
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>montoAcumulado</Text>
+                    <Text style={styles.valorConcepto}>{montoAcumulado}</Text>
+                  </View>
+                  <Ionicons
+                    name="remove-outline"
+                    size={30}
+                    color="#e1e2ebff"
+                    style={styles.line}
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Folio</Text>
+                    <Text style={styles.valorConcepto}>{folio}</Text>
+                  </View>
                 </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Fecha de finalización</Text>
-                  <Text style={styles.valorConcepto}>{fechaFin}</Text>
+
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Cuenta</Text>
+                    <Text style={styles.valorConcepto}>{cuenta}</Text>
+                  </View>
+                  <Ionicons
+                    name="remove-outline"
+                    size={30}
+                    color="#e1e2ebff"
+                    style={styles.line}
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Fecha de creación</Text>
+                    <Text style={styles.valorConcepto}>{fechaCreacion}</Text>
+                  </View>
                 </View>
-              </View>
-            </>
-          )}
 
-          {focus === "Movimientos" && (
-            <>
-              <View>
-                <Movimiento
-                  movimiento={"Inicio Inversión"}
-                  fecha={"10.ENE.2024"}
-                  monto={"$10,000.00 MXN"}
-                  positive={true}
-                />
-                <Movimiento
-                  movimiento={"Abono"}
-                  fecha={"10.FEB.2024"}
-                  monto={"$5,000.00 MXN"}
-                  positive={true}
-                />
-              </View>
-            </>
-          )}
-        </>
-      ) : (
-        <>
-          <Text style={styles.noInvestment}>No tienes Inversiones activas</Text>
-          <Entypo
-            name="emoji-sad"
-            size={35}
-            color="#060B4D"
-            style={{ alignSelf: "center", marginTop: 10 }}
-          />
-        </>
-      )}
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Fecha de inicio</Text>
+                    <Text style={styles.valorConcepto}>{fechaInicio}</Text>
+                  </View>
+                  <Ionicons
+                    name="remove-outline"
+                    size={30}
+                    color="#e1e2ebff"
+                    style={styles.line}
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.concepto}>Fecha de finalización</Text>
+                    <Text style={styles.valorConcepto}>{fechaFin}</Text>
+                  </View>
+                </View>
+              </>
+            )}
 
+            {focus === "Movimientos" && (
+              <>
+                <View>
+                  <Movimiento
+                    movimiento={"Inicio Inversión"}
+                    fecha={"10.ENE.2024"}
+                    monto={"$10,000.00 MXN"}
+                    positive={true}
+                  />
+                  <Movimiento
+                    movimiento={"Abono"}
+                    fecha={"10.FEB.2024"}
+                    monto={"$5,000.00 MXN"}
+                    positive={true}
+                  />
+                </View>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <Text style={styles.noInvestment}>
+              No tienes Inversiones activas
+            </Text>
+            <Entypo
+              name="emoji-sad"
+              size={35}
+              color="#060B4D"
+              style={{ alignSelf: "center", marginTop: 10 }}
+            />
+          </>
+        )}
+      </View>
+
+      <TouchableOpacity
+        style={[styles.botonAbonar, {}]}
+        onPress={() => {
+          handlePress();
+        }}
+      >
+        <Text style={[styles.textoBotonAbonar, {}]}>Aceptar</Text>
+      </TouchableOpacity>
       {
         <>
           {investmentState === "reviewing_documentation" && (
@@ -621,6 +645,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#060B4D",
     textAlign: "center",
+  },
+  botonAbonar: {
+    marginVertical: 5,
+    width: "80%",
+    alignSelf: "center",
+    borderRadius: 5,
+    backgroundColor: "#060B4D",
+  },
+  textoBotonAbonar: {
+    alignSelf: "center",
+    padding: 10,
+    color: "white",
+    fontFamily: "opensanssemibold",
+    fontSize: 16,
   },
   valorConcepto: {
     fontFamily: "opensansbold",

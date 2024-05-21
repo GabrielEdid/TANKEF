@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
+import { parseISO, format } from "date-fns";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
 import { UserContext } from "../hooks/UserContext";
@@ -47,10 +48,18 @@ const MiTankefCaja = (props) => {
   const [currentID, setCurrentID] = useState(null);
   const [boxState, setBoxState] = useState("");
   const [effectTrigger, setEffectTrigger] = useState(false);
-  const [plazo, setPlazo] = useState(null);
-  const [folio, setFolio] = useState(null);
-  const [montoAcumulado, setMontoAcumulado] = useState(null);
-  const [tasaInteres, setTasaInteres] = useState(null);
+  const [estatus, setEstatus] = useState("");
+  const [abono, setAbono] = useState("");
+  const [montoInicial, setMontoInicial] = useState("");
+  const [retornoInversion, setRetornoInversion] = useState("");
+  const [cuenta, setCuenta] = useState("");
+  const [fechaCreacion, setFechaCreacion] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+  const [plazo, setPlazo] = useState("");
+  const [folio, setFolio] = useState("");
+  const [montoAcumulado, setMontoAcumulado] = useState("");
+  const [tasaOperacion, setTasaOperacion] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   // Funcion para obtener las cajas de ahorro del usuario
@@ -69,7 +78,7 @@ const MiTankefCaja = (props) => {
       console.log("Resultados de las cajas de ahorro:", filteredResults);
       setBoxes(filteredResults);
       setCurrentID(filteredResults[0].id);
-      setTasaInteres(filteredResults[0].rate_operation);
+      setTasaOperacion(filteredResults[0].rate_operation);
       fetchBox(filteredResults[0].id);
     }
   };
@@ -87,9 +96,17 @@ const MiTankefCaja = (props) => {
       console.log("Resultados de la caja de ahorro:", result.data.data);
       setBoxState(result.data.data.aasm_state);
       handleBoxStateChange(result.data.data.aasm_state);
+      setEstatus(result.data.data.current_state);
+      setAbono("Falta");
+      setMontoInicial(formatAmount(result.data.data.amount));
+      setRetornoInversion("Falta");
       setPlazo(result.data.data.term);
+      setMontoAcumulado("Falta");
       setFolio(result.data.data.invoice_number);
-      setMontoAcumulado(formatAmount(result.data.data.amount));
+      setCuenta(formatBankAccount(result.data.data.bank_account));
+      setFechaCreacion(formatDate(result.data.data.created_at));
+      setFechaInicio("Falta");
+      setFechaFin("Falta");
     }
   };
 
@@ -107,6 +124,21 @@ const MiTankefCaja = (props) => {
       style: "currency",
       currency: "MXN",
     })}`;
+  };
+
+  const formatDate = (isoString) => {
+    const date = parseISO(isoString);
+    return format(date, "dd/MM/yyyy hh:mm aa");
+  };
+
+  const formatBankAccount = (bankAccount) => {
+    const { short_name, account } = bankAccount;
+    if (!account || account.length < 4) {
+      throw new Error("Invalid account number");
+    }
+    const maskedAccount =
+      account.slice(0, -4).replace(/./g, "*") + account.slice(-4);
+    return `${short_name} ${maskedAccount}`;
   };
 
   useEffect(() => {
@@ -181,7 +213,7 @@ const MiTankefCaja = (props) => {
               onPress={() => [
                 fetchBox(box.id),
                 setCurrentID(box.id),
-                setTasaInteres(box.rate_operation),
+                setTasaOperacion(box.rate_operation),
               ]}
             >
               <FontAwesome5
@@ -251,15 +283,10 @@ const MiTankefCaja = (props) => {
           {/* Vista de la información total de las inversiónes */}
           {focus === "Balance" && (
             <>
-              <View style={styles.containerBalance}>
-                <Text style={styles.tituloMonto}>Monto acumulado</Text>
-                <Text style={styles.monto}>{montoAcumulado} MXN</Text>
-              </View>
-
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Folio</Text>
-                  <Text style={styles.valorConcepto}>{folio}</Text>
+                  <Text style={styles.concepto}>Estatus</Text>
+                  <Text style={styles.valorConcepto}>{estatus}</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -268,7 +295,31 @@ const MiTankefCaja = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Plazo de ahorro</Text>
+                  <Text style={styles.concepto}>Abono</Text>
+                  <Text style={styles.valorConcepto}>{abono}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Monto inversión</Text>
+                  <Text style={styles.valorConcepto}>{montoInicial}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Retorno de inversión</Text>
+                  <Text style={styles.valorConcepto}>{retornoInversion}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Plazo de inversión</Text>
                   <Text style={styles.valorConcepto}>{plazo} meses</Text>
                 </View>
                 <Ionicons
@@ -278,8 +329,59 @@ const MiTankefCaja = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Tasa de interés</Text>
-                  <Text style={styles.valorConcepto}>{tasaInteres}</Text>
+                  <Text style={styles.concepto}>Tasa de operación</Text>
+                  <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>montoAcumulado</Text>
+                  <Text style={styles.valorConcepto}>{montoAcumulado}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Folio</Text>
+                  <Text style={styles.valorConcepto}>{folio}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Cuenta</Text>
+                  <Text style={styles.valorConcepto}>{cuenta}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de creación</Text>
+                  <Text style={styles.valorConcepto}>{fechaCreacion}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de inicio</Text>
+                  <Text style={styles.valorConcepto}>{fechaInicio}</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de finalización</Text>
+                  <Text style={styles.valorConcepto}>{fechaFin}</Text>
                 </View>
               </View>
             </>
@@ -482,7 +584,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     flexDirection: "row",
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   boxNameContainer: {
     alignItems: "center",
@@ -521,10 +623,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#060B4D",
     textAlign: "center",
-    marginBottom: 5,
   },
   valorConcepto: {
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensansbold",
     fontSize: 16,
     color: "#060B4D",
     textAlign: "center",
