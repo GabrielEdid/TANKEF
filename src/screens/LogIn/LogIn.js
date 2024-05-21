@@ -14,10 +14,8 @@ import {
 import React, { useState, useContext } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { UserContext } from "../../hooks/UserContext"; // Contexto para manejar el estado del usuario
-import SpecialInput from "../../components/SpecialInput"; // Componente para entradas de texto especializadas
 import { setToken, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { set } from "date-fns";
 
 // Componente de pantalla inicial
 const LogIn = ({ navigation }) => {

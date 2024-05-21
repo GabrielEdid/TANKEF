@@ -16,7 +16,7 @@ import { UserContext } from "../../hooks/UserContext";
 import { APIPut } from "../../API/APIService";
 // Importaciones de Componentes
 import DropDown from "../../components/DropDown";
-import SpecialInput from "../../components/SpecialInput";
+import SpecialInput from "../../components/Componentes Olvidados/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
 const LoginProgresivo2 = ({ navigation }) => {

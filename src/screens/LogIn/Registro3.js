@@ -14,7 +14,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../hooks/UserContext";
 import { ChecarCURP } from "../../hooks/ChecarCURP";
 // Importaciones de Componentes
-import SpecialInput from "../../components/SpecialInput";
+import SpecialInput from "../../components/Componentes Olvidados/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
 const Registro3 = ({ navigation }) => {
