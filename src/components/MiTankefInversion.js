@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, set } from "date-fns";
 // Importaciones de Componentes y Hooks
 import { APIGet } from "../API/APIService";
 import { useInactivity } from "../hooks/InactivityContext";
@@ -103,16 +103,21 @@ const MiTankefInversion = (props) => {
       setInvestmentState(result.data.data.aasm_state);
       handleInvestmentStateChange(result.data.data.aasm_state);
       setEstatus(result.data.data.current_state);
-      setAbono("Falta");
+      // setAbono("Falta");
+      setAbono(formatAmount(result.data.data.amount));
       setMontoInicial(formatAmount(result.data.data.amount));
-      setRetornoInversion("Falta");
+      // setRetornoInversion("Falta");
+      setRetornoInversion(formatAmount(result.data.data.amount * 1.2));
       setPlazo(result.data.data.term);
-      setMontoAcumulado("Falta");
+      // setMontoAcumulado("Falta");
+      setMontoAcumulado(formatAmount(result.data.data.amount * 0.2));
       setFolio(result.data.data.invoice_number);
       setCuenta(formatBankAccount(result.data.data.bank_account));
       setFechaCreacion(formatDate(result.data.data.created_at));
-      setFechaInicio("Falta");
-      setFechaFin("Falta");
+      // setFechaInicio("Falta");
+      setFechaInicio(formatDate(result.data.data.created_at));
+      // setFechaFin("Falta");
+      setFechaFin(formatDate(result.data.data.created_at));
     }
   };
 
