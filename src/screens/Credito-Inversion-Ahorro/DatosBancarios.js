@@ -311,6 +311,13 @@ const DatosBancarios = ({ navigation }) => {
     }
   };
 
+  // Funcion para cambiar el texto de la clabe
+  const parseClabe = (text) => {
+    const parsedText = text.replace(/\s+/g, "").slice(0, 18);
+    setFinance({ ...finance, clabe: parsedText });
+    resetTimeout();
+  };
+
   // Componente Visual
   return (
     <View style={{ flex: 1 }}>
@@ -391,13 +398,10 @@ const DatosBancarios = ({ navigation }) => {
               <Text style={styles.tituloCampo}>Clabe Interbancaria</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={(value) => [
-                  setFinance({ ...finance, clabe: value }),
-                  resetTimeout(),
-                ]}
+                onChangeText={(value) => [parseClabe(value)]}
                 value={finance.clabe}
                 placeholder="18 dígitos"
-                maxLength={18}
+                maxLength={22}
                 keyboardType="numeric"
               />
               <View style={styles.separacion} />
