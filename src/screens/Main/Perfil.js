@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   textoNombre: {
     color: "#060B4D",
     fontFamily: "opensansbold",
-    fontSize: 24,
+    fontSize: 18,
   },
   textoMail: {
     color: "#060B4D",

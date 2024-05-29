@@ -263,7 +263,11 @@ const VerPerfiles = ({ route }) => {
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <Image style={styles.fotoPerfil} source={{ uri: userInfo.avatar }} />
           <View style={{ marginTop: 5, alignSelf: "center" }}>
-            <Text style={styles.textoNombre}>
+            <Text
+              style={styles.textoNombre}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {userInfo.nombre +
                 " " +
                 userInfo.apellidoPaterno +
@@ -476,7 +480,7 @@ const styles = StyleSheet.create({
   textoNombre: {
     color: "#060B4D",
     fontFamily: "opensansbold",
-    fontSize: 24,
+    fontSize: 18,
   },
   textoMail: {
     color: "#060B4D",
