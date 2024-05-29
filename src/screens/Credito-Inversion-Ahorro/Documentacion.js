@@ -36,6 +36,7 @@ const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+const ALLOWED_EXTENSIONS = ["pdf", "jpg", "jpeg", "png", "bmp"];
 
 const Documentacion = ({ navigation }) => {
   const route = useRoute();
@@ -574,6 +575,17 @@ const Documentacion = ({ navigation }) => {
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
 
+      // Get the file extension
+      const extension = selectedDocument.name.split(".").pop().toLowerCase();
+
+      if (!ALLOWED_EXTENSIONS.includes(extension)) {
+        Alert.alert(
+          "Error",
+          "Formato de archivo no permitido. Solo se permiten PDF, JPG, JPEG, PNG o BMP."
+        );
+        return;
+      }
+
       if (selectedDocument.size > MAX_FILE_SIZE_BYTES) {
         Alert.alert("Error", "El documento excede el tamaño máximo de 10MB.");
         return;
@@ -623,6 +635,17 @@ const Documentacion = ({ navigation }) => {
 
     if (!result.canceled) {
       const selectedImage = result.assets[0];
+
+      // Get the file extension
+      const extension = selectedImage.uri.split(".").pop().toLowerCase();
+
+      if (!ALLOWED_EXTENSIONS.includes(extension)) {
+        Alert.alert(
+          "Error",
+          "Formato de archivo no permitido. Solo se permiten PDF, JPG, JPEG, PNG o BMP."
+        );
+        return;
+      }
 
       if (selectedImage.fileSize > MAX_FILE_SIZE_BYTES) {
         Alert.alert("Error", "La imagen excede el tamaño máximo de 10MB.");

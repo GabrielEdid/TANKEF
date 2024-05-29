@@ -29,6 +29,9 @@ import { Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 // Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
 const widthHalf = screenWidth / 2;
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+const ALLOWED_EXTENSIONS = ["pdf", "jpg", "jpeg", "png", "bmp"];
 
 const DatosBancarios = ({ navigation }) => {
   const route = useRoute();
@@ -277,10 +280,28 @@ const DatosBancarios = ({ navigation }) => {
     );
   };
 
+  // Funcion para seleccionar un documento
   const pickDocument = async () => {
+    resetTimeout();
     let result = await DocumentPicker.getDocumentAsync({});
     if (!result.canceled && result.assets) {
       const selectedDocument = result.assets[0];
+
+      const extension = selectedDocument.name.split(".").pop().toLowerCase();
+
+      if (!ALLOWED_EXTENSIONS.includes(extension)) {
+        Alert.alert(
+          "Error",
+          "Formato de archivo no permitido. Solo se permiten PDF, JPG, JPEG, PNG o BMP."
+        );
+        return;
+      }
+
+      if (selectedDocument.size > MAX_FILE_SIZE_BYTES) {
+        Alert.alert("Error", "El documento excede el tamaño máximo de 10MB.");
+        return;
+      }
+
       setFinance({
         ...finance,
         comprobanteNCuenta: selectedDocument.uri,
@@ -291,16 +312,34 @@ const DatosBancarios = ({ navigation }) => {
     }
   };
 
+  // Funcion para seleccionar una imagen
   const pickImage = async () => {
+    resetTimeout();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.2,
     });
+
     if (!result.canceled) {
       const selectedImage = result.assets[0];
-      console.log(selectedImage.uri);
+
+      const extension = selectedImage.uri.split(".").pop().toLowerCase();
+
+      if (!ALLOWED_EXTENSIONS.includes(extension)) {
+        Alert.alert(
+          "Error",
+          "Formato de archivo no permitido. Solo se permiten PDF, JPG, JPEG, PNG o BMP."
+        );
+        return;
+      }
+
+      if (selectedImage.fileSize > MAX_FILE_SIZE_BYTES) {
+        Alert.alert("Error", "La imagen excede el tamaño máximo de 10MB.");
+        return;
+      }
+
       setFinance({
         ...finance,
         comprobanteNCuenta: selectedImage.uri,
