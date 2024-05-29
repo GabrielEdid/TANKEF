@@ -105,7 +105,7 @@ const ConfirmNumber = ({ navigation, route }) => {
           onPress={() => navigation.goBack()}
           style={styles.back}
         >
-          <AntDesign name="arrowleft" size={40} color="#29364d" />
+          <AntDesign name="arrowleft" size={40} color="#060B4D" />
         </TouchableOpacity>
         <View style={{ marginTop: 140 }}>
           <Image

@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     margin: 5,
+    marginTop: 30,
     borderWidth: 1,
     borderBottomColor: "#6a6d94",
     borderColor: "transparent",
