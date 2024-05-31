@@ -1,47 +1,39 @@
-// Importaciones de React Native y React
+import React, { useState, useContext, useEffect } from "react";
 import {
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
-  Modal,
+  Alert,
   Image,
 } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// Importaciones de Hooks y Componentes
 import { APIGet, getToken } from "../../API/APIService";
 import PinPad from "../../components/PinPad";
 import { UserContext } from "../../hooks/UserContext";
-import { AntDesign } from "@expo/vector-icons";
 
 const ConfirmSetPinPad = ({ navigation, route }) => {
-  // Estados locales y contexto global
   const { user, setUser } = useContext(UserContext);
-  const { pin, onSetPin } = route.params;
+  const { pin } = route.params;
   const [confirmPin, setConfirmPin] = useState("");
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Función para convertir la primera letra de cada palabra en mayúscula
-  function titleCase(str) {
+  const titleCase = (str) => {
     return str
       .toLowerCase()
       .split(" ")
-      .map(function (word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
-  }
+  };
 
-  // Función para guardar valores en el AsyncStorage y
   useEffect(() => {
     if (user && user.loggedIn) {
       const userInfo = {
         pin: user.pin,
         loggedIn: user.loggedIn,
-        userToken: getToken(), // Asegúrate de que getToken() devuelve el valor actualizado
+        userToken: getToken(),
       };
       AsyncStorage.setItem("userInfo", JSON.stringify(userInfo))
         .then(() => console.log("Información guardada con éxito"))
@@ -49,17 +41,14 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
           console.error("Error guardando la información", error)
         );
     }
-  }, [user]); // Se ejecuta cada vez que el estado 'user' cambia
+  }, [user]);
 
-  // Función para obtener los datos del perfil
   const fetchProfileData = async () => {
     const url = "/api/v1/profile";
-
     const result = await APIGet(url);
 
     if (result.error) {
       console.error("Error al obtener datos del perfil:", result.error);
-      // Manejo del error
     } else {
       setUser({
         ...user,
@@ -75,18 +64,19 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         conexiones: result.data.data.count_conections,
         valorRed: result.data.data.network_invested_amount,
       });
-      console.log("Datos del perfil:", result.data);
       setIsProfileLoaded(true);
     }
   };
 
   useEffect(() => {
-    if (confirmPin === pin) {
+    if (confirmPin.length === 6 && confirmPin === pin) {
       fetchProfileData();
+    } else if (confirmPin.length === 6 && confirmPin !== pin) {
+      Alert.alert("Error", "Los Pines no Coinciden");
+      setConfirmPin("");
     }
   }, [confirmPin, pin]);
 
-  // Función para guardar valores en el conexto y navegar a la pantalla siguiente
   const handleConfirmPin = async () => {
     setIsLoading(true);
     if (confirmPin === pin) {
@@ -96,7 +86,6 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
         loggedIn: true,
       });
 
-      // Llamada a la función para obtener los datos del perfil
       await fetchProfileData();
 
       navigation.navigate("MainFlow", {
@@ -104,14 +93,12 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
       });
       setIsLoading(false);
     } else {
-      alert("Los Pines no Coinciden");
+      Alert.alert("Error", "Los Pines no Coinciden");
       setConfirmPin("");
-      navigation.navigate("SetPinPad"); // Se regresa a la pantalla de SetPinPad
       setIsLoading(false);
     }
   };
 
-  // Componente visual
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -174,7 +161,6 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   );
 };
 
-// Estilos de la Pantalla
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -210,7 +196,6 @@ const styles = StyleSheet.create({
     color: "#060B4D",
   },
   button: {
-    backgroundColor: "#060B4D",
     marginHorizontal: 20,
     marginBottom: 40,
     borderRadius: 5,
@@ -219,7 +204,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     padding: 10,
     fontSize: 16,
-    color: "white",
     fontFamily: "opensanssemibold",
   },
   overlay: {

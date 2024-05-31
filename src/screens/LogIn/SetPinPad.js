@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
-import PinPad from "../../components/PinPad"; // Assuming this is correctly imported
-import { UserContext } from "../../hooks/UserContext"; // Assuming context is setup
+import PinPad from "../../components/PinPad";
+import { UserContext } from "../../hooks/UserContext";
 
 const SetPinPad = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
@@ -35,13 +35,11 @@ const SetPinPad = ({ navigation }) => {
           styles.button,
           { backgroundColor: pin.length === 6 ? "#060B4D" : "#F3F3F3" },
         ]}
-        onPress={() => [
+        onPress={() => {
           navigation.navigate("ConfirmSetPinPad", {
             pin: pin,
-            onSetPin: handleSetPin,
-          }),
-          console.log("El pin es: " + pin),
-        ]}
+          });
+        }}
         disabled={pin.length !== 6}
       >
         <Text
@@ -92,7 +90,6 @@ const styles = StyleSheet.create({
     color: "#060B4D",
   },
   button: {
-    backgroundColor: "#060B4D",
     marginHorizontal: 20,
     marginBottom: 40,
     borderRadius: 5,
@@ -101,7 +98,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     padding: 10,
     fontSize: 16,
-    color: "white",
     fontFamily: "opensanssemibold",
   },
 });
