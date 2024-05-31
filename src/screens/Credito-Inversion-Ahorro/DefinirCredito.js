@@ -341,14 +341,6 @@ const DefinirCredito = ({ navigation }) => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>Crédito</Text>
-        <TouchableOpacity onPress={() => console.log("Hola")}>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50 }}
-          />
-        </TouchableOpacity>
       </View>
       <ScrollView
         style={{ flex: 1 }}
@@ -870,7 +862,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginLeft: 15,
+    marginLeft: 5,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

@@ -212,14 +212,6 @@ const DefinirInversion = ({ navigation }) => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>Inversión</Text>
-        <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50 }}
-          />
-        </TouchableOpacity>
       </View>
       <ScrollView
         style={{ flex: 1 }}
@@ -541,6 +533,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 47,
     fontSize: 24,
+    marginRight: 10,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",

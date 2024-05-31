@@ -220,14 +220,6 @@ const DefinirCajaAhorro = ({ navigation }) => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>Caja de ahorro</Text>
-        <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50 }}
-          />
-        </TouchableOpacity>
       </View>
       <ScrollView
         style={{ flex: 1 }}
@@ -482,7 +474,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 35,
+    marginRight: 55,
     fontSize: 20,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

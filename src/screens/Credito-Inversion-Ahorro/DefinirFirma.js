@@ -34,7 +34,7 @@ const DefinirFirma = ({ navigation }) => {
   const { flujo, idInversion } = route.params;
   // Estados y Contexto
   const { resetTimeout } = useInactivity();
-  const [focus, setFocus] = useState("Firma");
+  const [focus, setFocus] = useState("Presencial");
   const [modalPresencial, setModalPresencial] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -139,23 +139,15 @@ const DefinirFirma = ({ navigation }) => {
                 fontSize: flujo === "Caja de ahorro" ? 20 : 24,
                 marginRight:
                   flujo === "Caja de ahorro"
-                    ? 35
+                    ? 55
                     : flujo === "Crédito"
-                    ? -35
-                    : 0,
+                    ? -20
+                    : 10,
               },
             ]}
           >
             {flujo}
           </Text>
-          <TouchableOpacity>
-            <Feather
-              name="bell"
-              size={25}
-              color="#060B4D"
-              style={{ marginTop: 50 }}
-            />
-          </TouchableOpacity>
         </View>
 
         <View style={{ flex: 1 }}>
@@ -166,7 +158,7 @@ const DefinirFirma = ({ navigation }) => {
             </Text>
           </View>
           {/* Firma Digital */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.container}
             onPress={() => [setFocus("Firma"), resetTimeout()]}
           >
@@ -189,7 +181,7 @@ const DefinirFirma = ({ navigation }) => {
                 confidencial para ambas partes.
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Presencial */}
           <TouchableOpacity

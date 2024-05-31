@@ -291,20 +291,12 @@ const Beneficiarios = ({ navigation }) => {
             styles.tituloPantalla,
             {
               fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+              marginRight: flujo === "Caja de ahorro" ? 55 : 10,
             },
           ]}
         >
           {flujo}
         </Text>
-        <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50 }}
-          />
-        </TouchableOpacity>
       </View>
 
       {/*{focus === "Documentacion" && (

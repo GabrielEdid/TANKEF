@@ -107,20 +107,17 @@ const OrdenPago = ({ navigation }) => {
             styles.tituloPantalla,
             {
               fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-              marginRight: flujo === "Caja de ahorro" ? 35 : 0,
+              marginRight:
+                flujo === "Caja de ahorro"
+                  ? 55
+                  : flujo === "Crédito"
+                  ? -20
+                  : 10,
             },
           ]}
         >
           {flujo}
         </Text>
-        <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50 }}
-          />
-        </TouchableOpacity>
       </View>
 
       <View style={{ flex: 1 }}>

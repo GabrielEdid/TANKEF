@@ -154,14 +154,6 @@ const ObligadosSolidarios = ({ navigation }) => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>{flujo}</Text>
-        <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50 }}
-          />
-        </TouchableOpacity>
       </View>
 
       <KeyboardAwareScrollView
@@ -263,7 +255,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 65,
+    marginRight: 85,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
