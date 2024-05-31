@@ -1,3 +1,4 @@
+// Importaciones de React y React Native
 import React, { useState, useContext, useEffect } from "react";
 import {
   Text,
@@ -9,11 +10,13 @@ import {
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// Importaciones de Hooks y Componentes
 import { APIGet, getToken } from "../../API/APIService";
 import PinPad from "../../components/PinPad";
 import { UserContext } from "../../hooks/UserContext";
 
 const ConfirmSetPinPad = ({ navigation, route }) => {
+  // Estados de la pantalla
   const { user, setUser } = useContext(UserContext);
   const { pin } = route.params;
   const [confirmPin, setConfirmPin] = useState("");
@@ -68,14 +71,10 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
     }
   };
 
-  useEffect(() => {
-    if (confirmPin.length === 6 && confirmPin === pin) {
-      fetchProfileData();
-    } else if (confirmPin.length === 6 && confirmPin !== pin) {
-      Alert.alert("Error", "Los Pines no Coinciden");
-      setConfirmPin("");
-    }
-  }, [confirmPin, pin]);
+  const handleIncorrectPin = () => {
+    setConfirmPin("");
+    Alert.alert("Error", "Los Pines no Coinciden");
+  };
 
   const handleConfirmPin = async () => {
     setIsLoading(true);
@@ -91,14 +90,21 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
       navigation.navigate("MainFlow", {
         screen: "PerfilMain",
       });
-      setIsLoading(false);
     } else {
-      Alert.alert("Error", "Los Pines no Coinciden");
-      setConfirmPin("");
-      setIsLoading(false);
+      handleIncorrectPin();
     }
+    setIsLoading(false);
   };
 
+  useEffect(() => {
+    if (confirmPin.length === 6 && confirmPin === pin) {
+      setIsProfileLoaded(true);
+    } else {
+      setIsProfileLoaded(false);
+    }
+  }, [confirmPin, pin]);
+
+  // Se renderiza la pantalla
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -114,7 +120,13 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
           style={styles.logo}
         />
         <Text style={styles.title}>Confirma tu PIN</Text>
-        <PinPad id={false} get={confirmPin} set={setConfirmPin} />
+        <PinPad
+          id={false}
+          get={confirmPin}
+          set={setConfirmPin}
+          userPin={pin}
+          onIncorrectPin={handleIncorrectPin}
+        />
       </View>
 
       <TouchableOpacity
@@ -145,14 +157,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
       {isLoading && (
         <View style={styles.overlay}>
           <ActivityIndicator size={75} color="#060B4D" />
-          <Text
-            style={{
-              fontFamily: "opensanssemibold",
-              marginTop: 15,
-              color: "white",
-              textAlign: "center",
-            }}
-          >
+          <Text style={styles.loadingText}>
             Estamos recuperando tus datos{"\n"}Por favor espera...
           </Text>
         </View>
@@ -161,6 +166,7 @@ const ConfirmSetPinPad = ({ navigation, route }) => {
   );
 };
 
+// Estilos de la pantalla
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -211,6 +217,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
+  },
+  loadingText: {
+    fontFamily: "opensanssemibold",
+    marginTop: 15,
+    color: "white",
+    textAlign: "center",
   },
 });
 

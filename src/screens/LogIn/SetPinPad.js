@@ -1,9 +1,12 @@
+// Importaciones de React y React Native
 import React, { useState, useContext } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
+// Importaciones de Hooks y Componentes
 import PinPad from "../../components/PinPad";
 import { UserContext } from "../../hooks/UserContext";
 
 const SetPinPad = ({ navigation }) => {
+  // Estados de la pantalla
   const { user, setUser } = useContext(UserContext);
   const [pin, setPin] = useState("");
 

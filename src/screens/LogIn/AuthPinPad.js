@@ -1,12 +1,15 @@
+// Importaciones de React y React Native
 import React, { useState, useEffect, useContext } from "react";
 import { Text, View, StyleSheet, Alert, Image } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+// Importaciones de Hooks y Componentes
 import { APIGet } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import PinPad from "../../components/PinPad";
 import ModalEstatus from "../../components/ModalEstatus";
 
 const AuthPinPad = ({ navigation, route }) => {
+  // Estados de la pantalla
   const { userPin, userLoggedIn, modal } = route.params;
   const { user, setUser } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(modal);
