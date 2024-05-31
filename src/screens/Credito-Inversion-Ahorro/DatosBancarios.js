@@ -42,16 +42,51 @@ const DatosBancarios = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [failedRequests, setFailedRequests] = useState({
+    documents: false,
+    bankAccount: false,
+  });
 
-  // Funcion para guardar los datos de la cuenta bancaria
-  const handlePress = async () => {
+  const handleSubmit = async () => {
     resetTimeout();
     setLoading(true);
-    setDisabled(true);
 
-    console.log("Enviando documentos desde Datos Bancarios");
-    await sendDocuments("credito");
-    console.log("Se termino de enviar documentos desde Datos Bancarios");
+    const documentsSuccess = await sendDocuments();
+    const bankAccountSuccess = await sendBankAccount();
+
+    if (documentsSuccess && bankAccountSuccess) {
+      console.log("Documentos y cuenta bancaria enviados exitosamente");
+      if (flujo === "Inversión" || flujo === "Caja de ahorro") {
+        console.log("Inversión o Caja de ahorro");
+        resetFinance();
+        setModalVisible(true);
+        navigation.navigate("MiTankef");
+      } else if (flujo === "Crédito") {
+        setFinance({
+          ...finance,
+          paso: finance.paso + 1,
+        });
+        setModalVisible(true);
+        navigation.navigate("DefinirCredito", {
+          flujo: flujo,
+          idInversion: idInversion,
+        });
+      }
+    } else {
+      console.log("Error al enviar documentos o cuenta bancaria");
+      console.log("failedRequests:", documentsSuccess, bankAccountSuccess);
+      Alert.alert(
+        "Error",
+        "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
+      );
+    }
+
+    setLoading(false);
+  };
+
+  // Funcion para enviar la cuenta bancaria
+  const sendBankAccount = async () => {
+    setLoading(true);
 
     const url = `/api/v1/${
       flujo === "Inversión"
@@ -69,7 +104,6 @@ const DatosBancarios = ({ navigation }) => {
         : "box_saving";
 
     const formData = new FormData();
-
     formData.append(
       `${key}[bank_account_attributes][short_name]`,
       finance.alias
@@ -91,45 +125,28 @@ const DatosBancarios = ({ navigation }) => {
     });
 
     try {
-      console.log("Enviando datos de cuenta bancaria");
       const response = await APIPost(url, formData);
 
       if (response.error) {
         const errorMessages = response.error.errors
           ? Object.values(response.error.errors).flat().join(". ")
           : response.error;
-        setLoading(false);
-        console.error("Error al guardar la cuenta bancaria:", response.error);
+        setFailedRequests((prev) => ({ ...prev, bankAccount: true }));
         Alert.alert("Error", errorMessages);
+        return false;
       } else {
-        setLoading(false);
-        console.log("Datos de cuenta bancaria guardados con éxito");
-        if (flujo === "Inversión" || flujo === "Caja de Ahorro") {
-          resetFinance();
-          navigation.navigate("MiTankef");
-          setModalVisible(true);
-        } else if (flujo === "Crédito") {
-          navigation.navigate("DefinirCredito", {
-            flujo: flujo,
-            idInversion: idInversion,
-          });
-          setFinance({
-            ...finance,
-            paso: finance.paso + 1,
-          }),
-            setModalVisible(true);
-        }
+        setFailedRequests((prev) => ({ ...prev, bankAccount: false }));
+        return true;
       }
     } catch (error) {
-      setLoading(false);
-      console.error("Error al enviar datos (bancarios):", error);
+      setFailedRequests((prev) => ({ ...prev, bankAccount: true }));
       Alert.alert(
         "Error",
         "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
       );
+      return false;
     } finally {
       setLoading(false);
-      setDisabled(false);
     }
   };
 
@@ -586,7 +603,7 @@ const DatosBancarios = ({ navigation }) => {
               marginBottom: 0,
             },
           ]}
-          onPress={() => handlePress()}
+          onPress={() => handleSubmit()}
           disabled={disabled}
         >
           <Text

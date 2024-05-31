@@ -51,36 +51,47 @@ const Documentacion = ({ navigation }) => {
   const [documentsLoaded, setDocumentsLoaded] = useState(false);
   const [addAccount, setAddAccount] = useState(false);
   const [initial, setInitial] = useState(-1);
+  const [failedRequests, setFailedRequests] = useState({
+    documents: false,
+    bankAccount: false,
+  });
 
-  // Función para subir la documentación
-
-  const handlePress = async () => {
+  // Función para manejar el botón de continuar
+  const handleSubmit = async () => {
     resetTimeout();
-    if (addAccount) {
-      navigation.navigate("DatosBancarios", {
-        flujo: flujo,
-        idInversion: idInversion,
-        sendDocuments: sendDocuments.bind(this),
-      });
-      console.log(
-        finance.identificacion,
-        finance.CURP,
-        finance.situacionFiscal,
-        finance.comprobanteDomicilio,
-        finance.actuoComo
-      );
-    } else {
-      sendDocuments();
+    setLoading(true);
+    setDisabled(true);
+
+    await sendDocuments();
+
+    if (addAccount || !finance.accountID) {
+      setLoading(false);
+      return;
     }
+
+    await sendBankAccount();
+
+    if (!failedRequests.documents && !failedRequests.bankAccount) {
+      if (flujo === "Crédito") {
+        navigation.navigate("DefinirCredito", {
+          flujo: flujo,
+          idInversion: idInversion,
+        });
+        setFinance({
+          ...finance,
+          paso: finance.paso + 1,
+        });
+      } else {
+        setModalVisible(true);
+      }
+    }
+
+    setLoading(false);
+    setDisabled(false);
   };
 
-  const sendDocuments = async (tipo = null) => {
-    resetTimeout();
-    setDisabled(true);
-    setLoading(true);
-    console.log("Agregando los documentos a la inversión o caja de ahorro...");
-    console.log("Documentos cargados?:", documentsLoaded);
-
+  // Función para subir la documentación
+  const sendDocuments = async () => {
     const key =
       flujo === "Inversión"
         ? "investment"
@@ -88,7 +99,6 @@ const Documentacion = ({ navigation }) => {
         ? "credit"
         : "box_saving";
 
-    // Ahora si se mandan los documentos
     const url = `/api/v1/${
       flujo === "Inversión"
         ? "investments"
@@ -97,154 +107,122 @@ const Documentacion = ({ navigation }) => {
         : "box_savings"
     }/${idInversion}`;
 
-    try {
-      let body;
+    let body;
 
-      if (documentsLoaded) {
-        console.log("Documentos ya cargados, enviando JSON...");
-
-        // Si el flujo es crédito, se envía la investigación del SIC
-        if (flujo === "Crédito" || tipo === "credito") {
-          body = {
-            credit: {
-              accept_documentation_1:
-                finance.actuoComo === "Actúo a nombre y por cuenta propia.",
-              accept_documentation_2:
-                finance.actuoComo ===
-                "Actúo a nombre y por cuenta de un tercero.",
-              research_credit_bureau: finance.aceptarSIC,
-            },
-          };
-          // Si el flujo es inversión o caja, se envía sin la investigación del SIC
-        } else {
-          body = {
-            [key]: {
-              accept_documentation_1:
-                finance.actuoComo === "Actúo a nombre y por cuenta propia.",
-              accept_documentation_2:
-                finance.actuoComo ===
-                "Actúo a nombre y por cuenta de un tercero.",
-            },
-          };
-        }
-      } else {
-        console.log("Documentos no cargados, enviando FormData...");
-        // Sending FormData
-        const formData = new FormData();
-        formData.append(`${key}[official_identification]`, {
-          uri: finance.identificacion,
-          type: "image/jpeg",
-          name: "identificacion.jpeg",
-        });
-        formData.append(`${key}[curp]`, {
-          uri: finance.CURP,
-          type: "image/jpeg",
-          name: "CURP.jpeg",
-        });
-        formData.append(`${key}[proof_sat]`, {
-          uri: finance.situacionFiscal,
-          type: "image/jpeg",
-          name: "situacionFiscal.jpeg",
-        });
-        formData.append(`${key}[proof_address]`, {
-          uri: finance.comprobanteDomicilio,
-          type: "image/jpeg",
-          name: "comprobanteDomicilio.jpeg",
-        });
-        formData.append(
-          `${key}[accept_documentation_1]`,
-          finance.actuoComo === "Actúo a nombre y por cuenta propia."
-            ? "true"
-            : "false"
-        );
-        formData.append(
-          `${key}[accept_documentation_2]`,
-          finance.actuoComo === "Actúo a nombre y por cuenta de un tercero."
-            ? "true"
-            : "false"
-        );
-        {
-          flujo === "Crédito" &&
-            formData.append(
-              `${key}[research_credit_bureau]`,
-              finance.aceptarSIC
-            );
-        }
-
-        body = formData;
+    if (documentsLoaded) {
+      body = {
+        [key]: {
+          accept_documentation_1:
+            finance.actuoComo === "Actúo a nombre y por cuenta propia.",
+          accept_documentation_2:
+            finance.actuoComo === "Actúo a nombre y por cuenta de un tercero.",
+          ...(flujo === "Crédito" && {
+            research_credit_bureau: finance.aceptarSIC,
+          }),
+        },
+      };
+    } else {
+      const formData = new FormData();
+      formData.append(`${key}[official_identification]`, {
+        uri: finance.identificacion,
+        type: "image/jpeg",
+        name: "identificacion.jpeg",
+      });
+      formData.append(`${key}[curp]`, {
+        uri: finance.CURP,
+        type: "image/jpeg",
+        name: "CURP.jpeg",
+      });
+      formData.append(`${key}[proof_sat]`, {
+        uri: finance.situacionFiscal,
+        type: "image/jpeg",
+        name: "situacionFiscal.jpeg",
+      });
+      formData.append(`${key}[proof_address]`, {
+        uri: finance.comprobanteDomicilio,
+        type: "image/jpeg",
+        name: "comprobanteDomicilio.jpeg",
+      });
+      formData.append(
+        `${key}[accept_documentation_1]`,
+        finance.actuoComo === "Actúo a nombre y por cuenta propia."
+          ? "true"
+          : "false"
+      );
+      formData.append(
+        `${key}[accept_documentation_2]`,
+        finance.actuoComo === "Actúo a nombre y por cuenta de un tercero."
+          ? "true"
+          : "false"
+      );
+      if (flujo === "Crédito") {
+        formData.append(`${key}[research_credit_bureau]`, finance.aceptarSIC);
       }
 
-      console.log("Datos a enviar:", body);
+      body = formData;
+    }
 
+    try {
       const response = await APIPut(url, body);
 
       if (response.error) {
-        console.error("Error al agregar los documentos:", response.error);
+        setFailedRequests((prev) => ({ ...prev, documents: true }));
         Alert.alert(
           "Error",
           "No se pudieron agregar los documentos. Intente nuevamente."
         );
+        return false; // Devuelve falso en caso de error
       } else {
-        console.log("Documentos agregados exitosamente:", response);
+        setFailedRequests((prev) => ({ ...prev, documents: false }));
+        return true; // Devuelve verdadero en caso de éxito
       }
     } catch (error) {
-      console.error("Error en la petición:", error);
+      setFailedRequests((prev) => ({ ...prev, documents: true }));
       Alert.alert("Error", "Ocurrió un error al procesar la solicitud.");
-    } finally {
-      setLoading(false);
+      return false; // Devuelve falso en caso de excepción
     }
+  };
 
-    if (finance.accountID) {
-      setLoading(true);
-      const url = `/api/v1/${
-        flujo === "Inversión"
-          ? "investments"
-          : flujo === "Crédito"
-          ? "credits"
-          : "box_savings"
-      }/${idInversion}/bank_accounts`;
+  const sendBankAccount = async () => {
+    const key =
+      flujo === "Inversión"
+        ? "investment"
+        : flujo === "Crédito"
+        ? "credit"
+        : "box_saving";
 
-      const data = {
-        [key]: {
-          bank_account_id: finance.accountID,
-        },
-      };
+    const url = `/api/v1/${
+      flujo === "Inversión"
+        ? "investments"
+        : flujo === "Crédito"
+        ? "credits"
+        : "box_savings"
+    }/${idInversion}/bank_accounts`;
 
-      try {
-        console.log("Datos de cuenta bancaria a enviar:", data);
-        const response = await APIPost(url, data);
+    const data = {
+      [key]: {
+        bank_account_id: finance.accountID,
+      },
+    };
 
-        if (response.error) {
-          setLoading(false);
-          console.error("Error al guardar la cuenta bancaria:", response.error);
-          Alert.alert(
-            "Error",
-            "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
-          );
-        } else {
-          if (flujo === "Crédito") {
-            navigation.navigate("DefinirCredito", {
-              flujo: flujo,
-              idInversion: idInversion,
-            });
-            setFinance({
-              ...finance,
-              paso: finance.paso + 1,
-            });
-          } else {
-            setModalVisible(true);
-          }
-          setLoading(false);
-          console.log("Datos de cuenta bancaria guardados con éxito");
-        }
-      } catch (error) {
-        setLoading(false);
-        console.error("Error al enviar datos (documentacion):", error);
+    try {
+      const response = await APIPost(url, data);
+
+      if (response.error) {
+        setFailedRequests((prev) => ({ ...prev, bankAccount: true }));
         Alert.alert(
           "Error",
-          "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
+          "No se pudieron guardar los datos de la cuenta bancaria. Intente nuevamente."
         );
+      } else {
+        setFailedRequests((prev) => ({ ...prev, bankAccount: false }));
       }
+    } catch (error) {
+      setFailedRequests((prev) => ({ ...prev, bankAccount: true }));
+      Alert.alert(
+        "Error",
+        "Hubo un problema al enviar los datos. Por favor, intenta de nuevo."
+      );
     }
   };
 
@@ -1226,7 +1204,7 @@ const Documentacion = ({ navigation }) => {
                 marginBottom: 0,
               },
             ]}
-            onPress={() => handlePress()}
+            onPress={() => handleSubmit()}
             disabled={disabled}
           >
             <Text
@@ -1303,6 +1281,7 @@ const Documentacion = ({ navigation }) => {
           resetFinance(),
           navigation.navigate("MiTankef"),
         ]}
+        onClose={() => setModalVisible(false)}
       />
     </View>
   );
