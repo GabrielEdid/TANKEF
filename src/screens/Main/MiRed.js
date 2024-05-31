@@ -172,14 +172,14 @@ const MiRed = () => {
             />
           </MaskedView>
           <Text style={styles.tituloPantalla}>Mi Red</Text>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Feather
               name="bell"
               size={25}
               color="#060B4D"
               style={{ marginTop: 50 }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Barra de Busqueda, input*/}
@@ -210,14 +210,14 @@ const MiRed = () => {
             color="#060B4D"
             style={styles.search}
           />
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Foundation
               name="filter"
               size={30}
               color="#060B4D"
               style={styles.filter}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Vista para mostarr los Resultados de la busqueda si se empieza a buscar */}
@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 50,
+    marginRight: 75,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
@@ -513,17 +513,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: "#D5D5D5",
     borderWidth: 1.5,
-    marginLeft: 10,
     paddingHorizontal: 15,
     flex: 1,
     color: "#060B4D",
     fontSize: 15,
+    paddingVertical: 5,
     fontFamily: "opensans",
   },
   search: {
     position: "absolute",
-    top: 12.5,
-    left: 60,
+    top: 15,
+    left: 50,
   },
   filter: {
     marginTop: 0,

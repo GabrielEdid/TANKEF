@@ -27,8 +27,8 @@ const LoginProgresivo = ({ navigation }) => {
 
   // Mapa para cargar todas las imagenes
   const imageMap = {
-    Tarjeta: require("../../../assets/images/tarjeta.png"),
-    Cara: require("../../../assets/images/fondoCara.png"),
+    Tarjeta: require("../../../../assets/images/tarjeta.png"),
+    Cara: require("../../../../assets/images/fondoCara.png"),
     // ... más imágenes
   };
 

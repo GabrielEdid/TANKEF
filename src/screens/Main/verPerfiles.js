@@ -225,19 +225,11 @@ const VerPerfiles = ({ route }) => {
         >
           <LinearGradient
             colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 0.4, y: 0.4 }}
-            end={{ x: 0, y: 0 }}
+            start={{ x: 0.3, y: 0.3 }}
+            end={{ x: 0.0, y: 0.0 }}
             style={StyleSheet.absoluteFill}
           />
         </MaskedView>
-        <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50, marginRight: 15 }}
-          />
-        </TouchableOpacity>
       </View>
 
       {/* Scroll principal */}
@@ -427,6 +419,7 @@ const VerPerfiles = ({ route }) => {
 // Estilos de la pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
+    height: 90,
     paddingHorizontal: 20,
     flexDirection: "row",
     backgroundColor: "white",

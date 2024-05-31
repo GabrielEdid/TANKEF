@@ -121,14 +121,14 @@ const Perfil = () => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>Perfil</Text>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Feather
             name="bell"
             size={25}
             color="#060B4D"
             style={{ marginTop: 50, marginRight: 15 }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {/* Botón de sliders para abrir el Drawer */}
         <TouchableOpacity
           onPress={() => [navigation.openDrawer(), resetTimeout()]}
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginLeft: 5,
+    marginRight: 35,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

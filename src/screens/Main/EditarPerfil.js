@@ -126,14 +126,14 @@ const EditarPerfil = ({ navigation }) => {
             />
           </MaskedView>
           <Text style={styles.tituloPantalla}>Perfil</Text>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Feather
               name="bell"
               size={25}
               color="#060B4D"
               style={{ marginTop: 50 }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Contenedor Foto de Peril y Boton para editarla */}
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginLeft: -30,
+    marginLeft: -55,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

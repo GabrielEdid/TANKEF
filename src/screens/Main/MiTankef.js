@@ -76,14 +76,14 @@ const MiTankef = () => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>Mi Tankef</Text>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Feather
             name="bell"
             size={25}
             color="#060B4D"
             style={{ marginTop: 50 }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Cuadro con Valor de la Red y las imagenes de los usuarios en la red */}
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
+    marginRight: 112.5,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

@@ -139,14 +139,14 @@ const Inicio = () => {
           />
         </MaskedView>
         <Text style={styles.tituloPantalla}>Inicio</Text>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Feather
             name="bell"
             size={25}
             color="#060B4D"
             style={{ marginTop: 50 }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {/* Contenedor de Crear Post, Parece como un input y mas pero es inactivo */}
       <TouchableOpacity
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 35,
+    marginRight: 60,
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

@@ -353,19 +353,19 @@ const VerPosts = ({ route, navigation }) => {
         >
           <LinearGradient
             colors={["#2FF690", "#21B6D5"]}
-            start={{ x: 0.4, y: 0.4 }}
+            start={{ x: 0.3, y: 0.3 }}
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
         </MaskedView>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Feather
             name="bell"
             size={25}
             color="#060B4D"
             style={{ marginTop: 50 }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Scroll View con el contenido de la pantalla, contiene un refresh control */}
@@ -628,6 +628,7 @@ const VerPosts = ({ route, navigation }) => {
 // Estilos del Componente
 const styles = StyleSheet.create({
   tituloContainer: {
+    height: 90,
     paddingHorizontal: 20,
     flexDirection: "row",
     backgroundColor: "white",
