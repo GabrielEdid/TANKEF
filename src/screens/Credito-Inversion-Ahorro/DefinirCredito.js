@@ -128,16 +128,9 @@ const DefinirCredito = ({ navigation }) => {
         modalCotizadorVisible: true,
       });
     } else if (finance.paso === 2) {
-      setModalFinalVisible(true); // Desde aqui se confirma y se establece la creacion del crédito
+      setModalVisible(true);
     } else if (finance.paso === 3) {
       setModalFinalVisible(true);
-    } else if (finance.paso === 4) {
-      navigation.navigate("MiTankef");
-    } else {
-      setFinance({
-        ...finance,
-        paso: finance.paso + 1,
-      });
     }
   };
 
