@@ -81,7 +81,6 @@ const Post = (props) => {
   const handleReaction = async () => {
     resetTimeout();
     if (!like) {
-      // Intentar dar like
       const urlGiveLike = "/api/v1/reactions";
       const data = {
         reactionable_type: "Post",
@@ -91,37 +90,36 @@ const Post = (props) => {
       try {
         const response = await APIPost(urlGiveLike, data);
         if (!response.error) {
-          setLike(true); // Actualiza el estado para reflejar el like dado
-          setLikes(likes + 1); // Actualiza la cantidad de likes
+          console.log("Like dado");
+          setLike(true);
+          setLikes(likes + 1);
         }
       } catch (error) {
         console.error("Error al dar Like:", error);
         Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
       }
     } else {
-      // Intentar quitar like
       const urlGetReactions = `/api/v1/posts/${props.postId}/reactions`;
 
       try {
         const response = await APIGet(urlGetReactions);
+        console.log(response.data.data);
         if (
           !response.error &&
           response.data &&
           Array.isArray(response.data.data)
         ) {
-          // Buscar la reacción del usuario en la lista de reacciones del post
           const userReaction = response.data.data.find(
             (reaction) => reaction.user_id === user.userID
           );
 
           if (userReaction) {
-            console.log("Intentando quitar like", userReaction.id);
             const urlRemoveLike = `/api/v1/reactions/${userReaction.id}`;
             const deleteResponse = await APIDelete(urlRemoveLike);
             if (!deleteResponse.error) {
               console.log("Like eliminado");
-              setLike(false); // Actualiza el estado para reflejar la eliminación del like
-              setLikes(likes - 1); // Actualiza la cantidad de likes
+              setLike(false);
+              setLikes(likes - 1);
             }
           }
         }
@@ -165,15 +163,19 @@ const Post = (props) => {
       postId: props.postId,
       tipo: props.tipo,
       nombre: props.nombre,
-      tiempo: getTiempo(),
+      tiempo: props.tiempo,
       foto: props.foto,
-      body: parseTextForLinks(displayedText),
+      body: props.body,
       imagen: props.imagen,
       comentarios: props.comentarios,
-      reacciones: props.reacciones,
+      reacciones: likes,
       personal: props.personal,
-      liked: props.liked,
-      remove: setIsVisible,
+      liked: like,
+      remove: props.remove,
+      updateLikes: (newLikes, newLikeStatus) => {
+        setLikes(newLikes);
+        setLike(newLikeStatus);
+      },
     });
   };
 

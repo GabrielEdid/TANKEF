@@ -47,6 +47,7 @@ const VerPosts = ({ route, navigation }) => {
     personal,
     liked,
     remove,
+    updateLikes,
   } = route.params;
   // Estados de la pantalla
   const { resetTimeout } = useInactivity();
@@ -230,7 +231,6 @@ const VerPosts = ({ route, navigation }) => {
   const handleReaction = async () => {
     resetTimeout();
     if (!like) {
-      // Intentar dar like
       const urlGiveLike = "/api/v1/reactions";
       const data = {
         reactionable_type: "Post",
@@ -240,15 +240,16 @@ const VerPosts = ({ route, navigation }) => {
       try {
         const response = await APIPost(urlGiveLike, data);
         if (!response.error) {
-          setLike(true); // Actualiza el estado para reflejar el like dado
-          setLikeCount(likeCount + 1); // Incrementa el contador de likes
+          console.log("Like dado");
+          setLike(true);
+          setLikeCount(likeCount + 1);
+          updateLikes(likeCount + 1, true); // Esta línea es nueva
         }
       } catch (error) {
         console.error("Error al dar Like:", error);
         Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
       }
     } else {
-      // Intentar quitar like
       const urlGetReactions = `/api/v1/posts/${postId}/reactions`;
 
       try {
@@ -258,7 +259,6 @@ const VerPosts = ({ route, navigation }) => {
           response.data &&
           Array.isArray(response.data.data)
         ) {
-          // Buscar la reacción del usuario en la lista de reacciones del post
           const userReaction = response.data.data.find(
             (reaction) => reaction.user_id === user.userID
           );
@@ -267,8 +267,10 @@ const VerPosts = ({ route, navigation }) => {
             const urlRemoveLike = `/api/v1/reactions/${userReaction.id}`;
             const deleteResponse = await APIDelete(urlRemoveLike);
             if (!deleteResponse.error) {
-              setLike(false); // Actualiza el estado para reflejar la eliminación del like
-              setLikeCount(likeCount - 1); // Decrementa el contador de likes
+              console.log("Like eliminado");
+              setLike(false);
+              setLikeCount(likeCount - 1);
+              updateLikes(likeCount - 1, false); // Esta línea es nueva
             }
           }
         }
