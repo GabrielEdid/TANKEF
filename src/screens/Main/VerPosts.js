@@ -17,6 +17,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Alert,
   RefreshControl,
 } from "react-native";
@@ -25,12 +27,14 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
+import { parseISO, formatDistanceToNow, set } from "date-fns";
+import { es } from "date-fns/locale";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import { useInactivity } from "../../hooks/InactivityContext";
 import Comment from "../../components/Comment";
 import { APIDelete, APIPost, APIGet } from "../../API/APIService";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 const VerPosts = ({ route, navigation }) => {
   // Variables pasados de la pantalla anterior
@@ -344,9 +348,16 @@ const VerPosts = ({ route, navigation }) => {
     ? `${bodyText.substring(0, 200)}...`
     : bodyText;
 
+  // Función para obtener el tiempo transcurrido desde la publicación en una notación amigable
+  const getTiempo = (time) => {
+    const date = parseISO(time);
+    const timeAgo = formatDistanceToNow(date, { addSuffix: true, locale: es });
+    return timeAgo;
+  };
+
   // Componente visual
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       {/* Titulo y Boton de Notificaciones */}
       <View style={styles.tituloContainer}>
         <MaskedView
@@ -369,261 +380,250 @@ const VerPosts = ({ route, navigation }) => {
           />
         </TouchableOpacity> */}
       </View>
+      <View style={[styles.linea, { marginTop: 0 }]} />
 
       {/* Scroll View con el contenido de la pantalla, contiene un refresh control */}
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAwareScrollView
-          resetScrollToCoords={{ x: 0, y: 0 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-          scrollEnabled={true}
-          extraScrollHeight={30}
-          enableOnAndroid={true}
-          style={styles.scrollV}
-          keyboardShouldPersistTaps="handled"
-          enableAutomaticScroll={true} // Asegura el scroll automático en iOS
-          onScroll={({ nativeEvent }) => {
-            if (isCloseToBottom(nativeEvent)) {
-              handleLoadMore();
-            }
-            resetTimeout();
-          }}
-          scrollEventThrottle={400}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={onRefresh}
-              tintColor="#060B4D" // Usado en iOS
-              colors={["#060B4D"]} // Usado en Android
-            />
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        scrollEnabled={true}
+        extraScrollHeight={30}
+        enableOnAndroid={true}
+        style={styles.scrollV}
+        keyboardShouldPersistTaps="handled"
+        enableAutomaticScroll={true} // Asegura el scroll automático en iOS
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            handleLoadMore();
           }
-        >
-          {/* Header del Post, Incluye Foto, Nombre y Tiempo */}
-          <View style={styles.header}>
-            <Image source={foto} style={styles.fotoPerfil} />
-            <View style={styles.headerText}>
-              <Text style={styles.textoNombre}>{nombre}</Text>
-              <Text style={styles.textoTiempo}>{tiempo}</Text>
-            </View>
+          resetTimeout();
+        }}
+        scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            tintColor="#060B4D" // Usado en iOS
+            colors={["#060B4D"]} // Usado en Android
+          />
+        }
+      >
+        {/* Header del Post, Incluye Foto, Nombre y Tiempo */}
+        <View style={styles.header}>
+          <Image source={foto} style={styles.fotoPerfil} />
+          <View style={styles.headerText}>
+            <Text style={styles.textoNombre}>{nombre}</Text>
+            <Text style={styles.textoTiempo}>{getTiempo(tiempo)}</Text>
           </View>
+        </View>
 
-          {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto */}
-          {tipo === "compartir" && (
-            <>
-              <Text style={styles.textoBody}>{displayedText}</Text>
-              {needsMoreButton && (
-                <TouchableOpacity onPress={toggleShowFullText}>
-                  <Text style={styles.verMas}>Ver Más</Text>
-                </TouchableOpacity>
-              )}
-              {/* Se evalua si se necesita el espacio para la imagen */}
-              {imagen && (
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={imageSource}
-                    style={{
-                      width: imageSize.width,
-                      height: imageSize.height,
-                    }}
-                    onLoad={onImageLoad}
-                  />
-                </View>
-              )}
-            </>
-          )}
-
-          {/* Cuador con boton de Like, numero de likes y numero de comments */}
-          <View style={styles.interactionContainer}>
-            {/* Vista sobre Likes */}
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <TouchableOpacity onPress={() => handleReaction()}>
-                <Image
-                  source={imageMap["Like"]}
-                  style={{
-                    width: 28,
-                    height: 24,
-                    tintColor: like ? "#21B6D5" : "#060B4D",
-                  }}
-                />
+        {/* Cuerpo del Post, Incluye Texto y posibilidad de Foto */}
+        {tipo === "compartir" && (
+          <>
+            <Text style={styles.textoBody}>{displayedText}</Text>
+            {needsMoreButton && (
+              <TouchableOpacity onPress={toggleShowFullText}>
+                <Text style={styles.verMas}>Ver Más</Text>
               </TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: 13,
-                  color: "#060B4D",
-                  marginLeft: 10,
-                  alignSelf: "center",
-                  fontFamily: "opensans",
-                }}
-              >
-                {likeCount} likes
-              </Text>
-            </View>
-
-            {/* Vista sobre comments */}
-            <View>
-              <Text
-                style={{
-                  fontSize: 13,
-                  color: "#060B4D",
-                  marginRight: 23,
-                  fontFamily: "opensans",
-                }}
-              >
-                {commentCount} comentarios
-              </Text>
-            </View>
-          </View>
-
-          {/* Linea divisoria */}
-          <View style={styles.linea} />
-
-          {/* Contender de los cometarios de la publicación, se maneja si no hay comments */}
-          <View style={styles.commentContainer}>
-            {/* Se mapean los comentarios y se distribuyen en su componente */}
-            {comments.length > 0 ? (
-              comments.map((comment, index) => (
-                <Comment
-                  key={index}
-                  commentId={comment.id}
-                  nombre={
-                    titleCase(comment.user.name) +
-                    " " +
-                    titleCase(comment.user.first_last_name) +
-                    " " +
-                    titleCase(comment.user.second_last_name)
-                  }
-                  body={comment.body}
-                  imagen={comment.user.avatar}
-                  personal={comment.user.id === user.userID}
-                  count={commentCount}
-                  setCount={setCommentCount}
-                  onReply={() => handleReply(comment)}
-                  replies={comment.replies}
+            )}
+            {/* Se evalua si se necesita el espacio para la imagen */}
+            {imagen && (
+              <View style={styles.imageContainer}>
+                <Image
+                  source={imageSource}
+                  style={{
+                    width: imageSize.width,
+                    height: imageSize.height,
+                  }}
+                  onLoad={onImageLoad}
                 />
-              ))
-            ) : (
-              // Si no hay comentarios, se muestra un mensaje
-              <View
-                style={{
-                  marginTop: imagen ? 50 : 150,
-                  alignSelf: "center",
-                }}
-              >
-                <Text style={styles.textoMensaje}>
-                  Esta publicación no tiene comentarios.{"\n"}¡Se el primero en
-                  comentar!
-                </Text>
               </View>
             )}
-          </View>
+          </>
+        )}
 
-          {/* Boton para cargar más comentarios, tambien se muestra un activity indicator */}
-          {isFetchingMore ? (
-            <ActivityIndicator size="small" color="#060B4D" />
-          ) : (
-            <TouchableOpacity
-              onPress={handleLoadMore}
-              style={styles.loadMoreButton}
-            >
-              <Text
-                style={{
-                  fontFamily: "opensans",
-                  color: "#060B4D",
-                  paddingLeft: 15,
-                }}
-              >
-                {comments.length > 0 ? "Cargar más comentarios" : null}
-              </Text>
-            </TouchableOpacity>
-          )}
-
-          {/* Input para escribir un comentario */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              ref={inputRef}
-              style={styles.input}
-              placeholder={
-                replyingTo
-                  ? `Respondiendo a ${replyingTo}...`
-                  : "Escribe un comentario..."
-              }
-              placeholderTextColor="#D5D5D5"
-              multiline={true}
-              onChangeText={(text) => setComentario(text)}
-              value={comentario}
-              maxLength={300}
-              onFocus={() => setIsFetchingMore(false)}
-              onBlur={() => [
-                setIsFetchingMore(true),
-                setReplyingTo(null),
-                setReplyingToId(null),
-              ]}
-            />
-            <TouchableOpacity
-              style={styles.sendIcon}
-              onPress={() => [
-                replyingTo && replyingToId ? postCommentReply() : postComment(),
-                resetTimeout(),
-              ]}
-            >
-              <Ionicons
-                name="send"
-                size={24}
-                color={comentario ? "#060B4D" : "#D5D5D5"}
+        {/* Cuador con boton de Like, numero de likes y numero de comments */}
+        <View style={styles.interactionContainer}>
+          {/* Vista sobre Likes */}
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TouchableOpacity onPress={() => handleReaction()}>
+              <AntDesign
+                name="like2"
+                size={25}
+                color={like ? "#21B6D5" : "#5f5f61"}
               />
             </TouchableOpacity>
+            <Text
+              style={{
+                marginLeft: 5,
+                fontSize: 13,
+                color: "#5f5f61",
+                alignSelf: "center",
+                fontFamily: "opensans",
+              }}
+            >
+              {likeCount} likes
+            </Text>
           </View>
 
-          {/* Modal y Tres puntos para eliminar o reportar publicación  */}
-          <TouchableOpacity
-            style={styles.opciones}
-            onPress={() => [setModalVisible(true), resetTimeout()]}
-          >
-            <Text style={styles.tresPuntos}>...</Text>
-          </TouchableOpacity>
-          {/* Modal para eliminar o reportar publicación, se maneja si el post es propio o no */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <TouchableOpacity
-              style={styles.fullScreenButton}
-              activeOpacity={1}
-              onPressOut={() => setModalVisible(false)}
+          {/* Vista sobre comments */}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Ionicons
+              name="chatbubble-outline"
+              size={25}
+              color="#5f5f61"
+              style={{ transform: [{ scaleX: -1 }] }}
+            />
+            <Text
+              style={{
+                marginLeft: 5,
+                fontSize: 13,
+                color: "#5f5f61",
+                marginRight: 23,
+                fontFamily: "opensans",
+              }}
             >
-              <View style={styles.modalView}>
-                {personal ? (
-                  <TouchableOpacity
-                    style={styles.buttonModal}
-                    onPress={() => [deletePost(), resetTimeout()]}
-                  >
-                    <Text style={{ color: "red" }}>Eliminar Publicación</Text>
-                  </TouchableOpacity>
-                ) : null}
-                {!personal ? (
-                  <TouchableOpacity
-                    style={styles.buttonModal}
-                    onPress={() => [
-                      console.log("Implementación de Reportar"),
-                      resetTimeout(),
-                    ]}
-                  >
-                    <Text style={{ color: "red" }}>Reportar Publicación</Text>
-                  </TouchableOpacity>
-                ) : null}
+              {commentCount} comentarios
+            </Text>
+          </View>
+        </View>
+
+        {/* Linea divisoria */}
+        <View style={styles.linea} />
+
+        {/* Contender de los cometarios de la publicación, se maneja si no hay comments */}
+        <View style={styles.commentContainer}>
+          {/* Se mapean los comentarios y se distribuyen en su componente */}
+          {comments.length > 0 ? (
+            comments.map((comment, index) => (
+              <Comment
+                key={index}
+                commentId={comment.id}
+                nombre={
+                  titleCase(comment.user.name) +
+                  " " +
+                  titleCase(comment.user.first_last_name) +
+                  " " +
+                  titleCase(comment.user.second_last_name)
+                }
+                body={comment.body}
+                imagen={comment.user.avatar}
+                personal={comment.user.id === user.userID}
+                count={commentCount}
+                setCount={setCommentCount}
+                onReply={() => handleReply(comment)}
+                replies={comment.replies}
+              />
+            ))
+          ) : (
+            // Si no hay comentarios, se muestra un mensaje
+            <View
+              style={{
+                marginTop: imagen ? 50 : 150,
+                alignSelf: "center",
+              }}
+            >
+              <Text style={styles.textoMensaje}>
+                Esta publicación no tiene comentarios.{"\n"}¡Se el primero en
+                comentar!
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Boton para cargar más comentarios, tambien se muestra un activity indicator */}
+        {isFetchingMore && <ActivityIndicator size="small" color="#060B4D" />}
+
+        {/* Modal y Tres puntos para eliminar o reportar publicación  */}
+        <TouchableOpacity
+          style={styles.opciones}
+          onPress={() => [setModalVisible(true), resetTimeout()]}
+        >
+          <Text style={styles.tresPuntos}>...</Text>
+        </TouchableOpacity>
+        {/* Modal para eliminar o reportar publicación, se maneja si el post es propio o no */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.fullScreenButton}
+            activeOpacity={1}
+            onPressOut={() => setModalVisible(false)}
+          >
+            <View style={styles.modalView}>
+              {personal ? (
                 <TouchableOpacity
-                  style={{ marginTop: 10 }}
-                  onPress={() => setModalVisible(false)}
+                  style={styles.buttonModal}
+                  onPress={() => [deletePost(), resetTimeout()]}
                 >
-                  <Text>Cancelar</Text>
+                  <Text style={{ color: "red" }}>Eliminar Publicación</Text>
                 </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </Modal>
-        </KeyboardAwareScrollView>
-      </TouchableWithoutFeedback>
-    </>
+              ) : null}
+              {!personal ? (
+                <TouchableOpacity
+                  style={styles.buttonModal}
+                  onPress={() => [
+                    console.log("Implementación de Reportar"),
+                    resetTimeout(),
+                  ]}
+                >
+                  <Text style={{ color: "red" }}>Reportar Publicación</Text>
+                </TouchableOpacity>
+              ) : null}
+              <TouchableOpacity
+                style={{ marginTop: 10 }}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      </KeyboardAwareScrollView>
+      {/* Input para escribir un comentario */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.inputContainer}>
+          <TextInput
+            ref={inputRef}
+            style={styles.input}
+            placeholder={
+              replyingTo
+                ? `Respondiendo a ${replyingTo}...`
+                : "Escribe un comentario..."
+            }
+            placeholderTextColor="#D5D5D5"
+            multiline={true}
+            onChangeText={(text) => setComentario(text)}
+            value={comentario}
+            maxLength={300}
+            onFocus={() => setIsFetchingMore(false)}
+            onBlur={() => [
+              setIsFetchingMore(true),
+              setReplyingTo(null),
+              setReplyingToId(null),
+            ]}
+          />
+          <TouchableOpacity
+            style={styles.sendIcon}
+            onPress={() => [
+              replyingTo && replyingToId ? postCommentReply() : postComment(),
+              resetTimeout(),
+            ]}
+          >
+            <Ionicons
+              name="send"
+              size={24}
+              color={comentario ? "#060B4D" : "#D5D5D5"}
+            />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -739,7 +739,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     margin: 10,
-    marginBottom: 20,
     paddingHorizontal: 15,
     paddingTop: 10,
     paddingBottom: 12,

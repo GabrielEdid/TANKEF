@@ -300,7 +300,7 @@ const Post = (props) => {
             style={{
               flex: 1,
               fontSize: 12,
-              color: like ? "#21B6D5" : "#5f5f61",
+              color: "#5f5f61",
               fontFamily: "opensans",
             }}
           >
