@@ -103,21 +103,16 @@ const MiTankefInversion = (props) => {
       setInvestmentState(result.data.data.aasm_state);
       handleInvestmentStateChange(result.data.data.aasm_state);
       setEstatus(result.data.data.current_state);
-      // setAbono("Falta");
-      setAbono(formatAmount(result.data.data.amount));
+      setAbono("Falta");
       setMontoInicial(formatAmount(result.data.data.amount));
-      // setRetornoInversion("Falta");
-      setRetornoInversion(formatAmount(result.data.data.amount * 1.2));
+      setRetornoInversion("Falta");
       setPlazo(result.data.data.term);
-      // setMontoAcumulado("Falta");
-      setMontoAcumulado(formatAmount(result.data.data.amount * 0.2));
+      setMontoAcumulado("Falta");
       setFolio(result.data.data.invoice_number);
       setCuenta(formatBankAccount(result.data.data.bank_account));
       setFechaCreacion(formatDate(result.data.data.created_at));
-      // setFechaInicio("Falta");
-      setFechaInicio(formatDate(result.data.data.created_at));
-      // setFechaFin("Falta");
-      setFechaFin(formatDate(result.data.data.created_at));
+      setFechaInicio("Falta");
+      setFechaFin("Falta");
     }
   };
 
@@ -143,13 +138,13 @@ const MiTankefInversion = (props) => {
   };
 
   const formatBankAccount = (bankAccount) => {
-    const { short_name, account } = bankAccount;
+    const { account } = bankAccount;
     if (!account || account.length < 4) {
       throw new Error("Invalid account number");
     }
     const maskedAccount =
       account.slice(0, -4).replace(/./g, "*") + account.slice(-4);
-    return `${short_name} ${maskedAccount}`;
+    return `${maskedAccount}`;
   };
 
   useEffect(() => {
