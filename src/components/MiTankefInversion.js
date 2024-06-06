@@ -300,8 +300,8 @@ const MiTankefInversion = (props) => {
                     style={styles.line}
                   />
                   <View style={{ flex: 1 }}>
-                    <Text style={styles.concepto}>Abono</Text>
-                    <Text style={styles.valorConcepto}>{abono}</Text>
+                    <Text style={styles.concepto}>Plazo de inversión</Text>
+                    <Text style={styles.valorConcepto}>{plazo} meses</Text>
                   </View>
                 </View>
 
@@ -317,33 +317,16 @@ const MiTankefInversion = (props) => {
                     style={styles.line}
                   />
                   <View style={{ flex: 1 }}>
-                    <Text style={styles.concepto}>Retorno de inversión</Text>
-                    <Text style={styles.valorConcepto}>{retornoInversion}</Text>
+                    <Text style={styles.concepto}>Monto acumulado</Text>
+                    <Text style={styles.valorConcepto}>{montoAcumulado}</Text>
                   </View>
                 </View>
 
                 <View style={styles.container}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.concepto}>Plazo de inversión</Text>
-                    <Text style={styles.valorConcepto}>{plazo} meses</Text>
-                  </View>
-                  <Ionicons
-                    name="remove-outline"
-                    size={30}
-                    color="#e1e2ebff"
-                    style={styles.line}
-                  />
                   <View style={{ flex: 1 }}>
                     <Text style={styles.concepto}>Tasa de operación</Text>
                     <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
                   </View>
-                </View>
-
-                <View style={styles.container}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.concepto}>montoAcumulado</Text>
-                    <Text style={styles.valorConcepto}>{montoAcumulado}</Text>
-                  </View>
                   <Ionicons
                     name="remove-outline"
                     size={30}
@@ -351,15 +334,15 @@ const MiTankefInversion = (props) => {
                     style={styles.line}
                   />
                   <View style={{ flex: 1 }}>
-                    <Text style={styles.concepto}>Folio</Text>
-                    <Text style={styles.valorConcepto}>{folio}</Text>
+                    <Text style={styles.concepto}>Cuenta</Text>
+                    <Text style={styles.valorConcepto}>{cuenta}</Text>
                   </View>
                 </View>
 
                 <View style={styles.container}>
                   <View style={{ flex: 1 }}>
-                    <Text style={styles.concepto}>Cuenta</Text>
-                    <Text style={styles.valorConcepto}>{cuenta}</Text>
+                    <Text style={styles.concepto}>Folio</Text>
+                    <Text style={styles.valorConcepto}>{folio}</Text>
                   </View>
                   <Ionicons
                     name="remove-outline"

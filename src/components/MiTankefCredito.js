@@ -286,22 +286,6 @@ const MiTankefCredito = (props) => {
           {/* Vista de la información total de las inversiónes */}
           {focus === "Balance" && (
             <>
-              <View
-                style={{
-                  justifyContent: "space-between",
-                  backgroundColor: "white",
-                  paddingHorizontal: 20,
-                  paddingVertical: 10,
-                  alignItems: "center",
-                  marginTop: 3,
-                }}
-              >
-                <Text style={styles.tituloMonto}>Pago mensual</Text>
-                <Text style={styles.monto}>
-                  {formatAmount(pagoMensual)} MXN
-                </Text>
-              </View>
-
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Estatus</Text>
@@ -314,15 +298,17 @@ const MiTankefCredito = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Abono</Text>
-                  <Text style={styles.valorConcepto}>abono</Text>
+                  <Text style={styles.concepto}>Plazo del crédito</Text>
+                  <Text style={styles.valorConcepto}>{plazo} meses</Text>
                 </View>
               </View>
 
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Monto Solicitado</Text>
-                  <Text style={styles.valorConcepto}>monto solicitado</Text>
+                  <Text style={styles.concepto}>Pago mensual</Text>
+                  <Text style={styles.valorConcepto}>
+                    {formatAmount(pagoMensual)}
+                  </Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -332,14 +318,16 @@ const MiTankefCredito = (props) => {
                 />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Total a pagar</Text>
-                  <Text style={styles.valorConcepto}>total a pagar</Text>
+                  <Text style={styles.valorConcepto}>
+                    {formatAmount(totalPagar)}
+                  </Text>
                 </View>
               </View>
 
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Plazo del crédito</Text>
-                  <Text style={styles.valorConcepto}>{plazo} meses</Text>
+                  <Text style={styles.concepto}>Monto Solicitado</Text>
+                  <Text style={styles.valorConcepto}>{totalPagar}</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -347,16 +335,33 @@ const MiTankefCredito = (props) => {
                   color="#e1e2ebff"
                   style={styles.line}
                 />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Tipo de aprobación</Text>
+                  <Text style={styles.valorConcepto}>{aprovacion}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Tasa de operación</Text>
                   <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
                 </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Tasa mensual</Text>
+                  <Text style={styles.valorConcepto}>tasaMensual%</Text>
+                </View>
               </View>
 
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Monto Acumulado</Text>
-                  <Text style={styles.valorConcepto}>monto acumulado</Text>
+                  <Text style={styles.concepto}>Tasa mensual + IVA</Text>
+                  <Text style={styles.valorConcepto}>tasaMensualIVA%</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -364,45 +369,26 @@ const MiTankefCredito = (props) => {
                   color="#e1e2ebff"
                   style={styles.line}
                 />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Comisión apertura + IVA</Text>
+                  <Text style={styles.valorConcepto}>comisionAperturaIVA</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Folio</Text>
                   <Text style={styles.valorConcepto}>{folio}</Text>
                 </View>
-              </View>
-
-              <View style={styles.container}>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Cuenta</Text>
                   <Text style={styles.valorConcepto}>cuenta</Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Fecha de creación</Text>
-                  <Text style={styles.valorConcepto}>fecha creacion</Text>
-                </View>
-              </View>
-
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Fecha de inicio</Text>
-                  <Text style={styles.valorConcepto}>fecha inicio</Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Fecha de finalización</Text>
-                  <Text style={styles.valorConcepto}>
-                    fecha de finalizacion
-                  </Text>
                 </View>
               </View>
 
