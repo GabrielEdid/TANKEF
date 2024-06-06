@@ -65,6 +65,7 @@ const Post = (props) => {
   const [comentario, setComentario] = useState("");
   const [like, setLike] = useState(props["liked"]);
   const [likes, setLikes] = useState(props["reacciones"]);
+  const [available, setAvailable] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const { user, setUser } = useContext(UserContext); // Contexto de Usuario
@@ -79,6 +80,8 @@ const Post = (props) => {
 
   // Función para manejar la reacción de "me gusta" en una publicación, la elimina o crea
   const handleReaction = async () => {
+    if (!available) return;
+    setAvailable(false);
     resetTimeout();
     if (!like) {
       const urlGiveLike = "/api/v1/reactions";
@@ -91,12 +94,14 @@ const Post = (props) => {
         const response = await APIPost(urlGiveLike, data);
         if (!response.error) {
           console.log("Like dado");
+          setAvailable(true);
           setLike(true);
           setLikes(likes + 1);
         }
       } catch (error) {
         console.error("Error al dar Like:", error);
         Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+        setAvailable(true);
       }
     } else {
       const urlGetReactions = `/api/v1/posts/${props.postId}/reactions`;
@@ -118,12 +123,14 @@ const Post = (props) => {
             const deleteResponse = await APIDelete(urlRemoveLike);
             if (!deleteResponse.error) {
               console.log("Like eliminado");
+              setAvailable(true);
               setLike(false);
               setLikes(likes - 1);
             }
           }
         }
       } catch (error) {
+        setAvailable(true);
         console.error("Error al quitar Like:", error);
         Alert.alert("Error", "No se pudo quitar like. Intente nuevamente.");
       }

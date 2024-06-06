@@ -15,8 +15,6 @@ import {
   Dimensions,
   TextInput,
   Modal,
-  TouchableWithoutFeedback,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Alert,
@@ -64,6 +62,7 @@ const VerPosts = ({ route, navigation }) => {
   const [likeCount, setLikeCount] = useState(reacciones);
   const [comments, setComments] = useState([]);
   const [commentCount, setCommentCount] = useState(comentarios);
+  const [available, setAvailable] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -233,6 +232,8 @@ const VerPosts = ({ route, navigation }) => {
 
   // Funcion para manejar las reacciones de los usuarios, se verifica si existe la reacción del usuario, si existe se elimina, si no se crea.
   const handleReaction = async () => {
+    if (!available) return;
+    setAvailable(false);
     resetTimeout();
     if (!like) {
       const urlGiveLike = "/api/v1/reactions";
@@ -245,6 +246,7 @@ const VerPosts = ({ route, navigation }) => {
         const response = await APIPost(urlGiveLike, data);
         if (!response.error) {
           console.log("Like dado");
+          setAvailable(true);
           setLike(true);
           setLikeCount(likeCount + 1);
           updateLikes(likeCount + 1, true); // Esta línea es nueva
@@ -252,6 +254,7 @@ const VerPosts = ({ route, navigation }) => {
       } catch (error) {
         console.error("Error al dar Like:", error);
         Alert.alert("Error", "No se pudo dar like. Intente nuevamente.");
+        setAvailable(true);
       }
     } else {
       const urlGetReactions = `/api/v1/posts/${postId}/reactions`;
@@ -272,6 +275,7 @@ const VerPosts = ({ route, navigation }) => {
             const deleteResponse = await APIDelete(urlRemoveLike);
             if (!deleteResponse.error) {
               console.log("Like eliminado");
+              setAvailable(true);
               setLike(false);
               setLikeCount(likeCount - 1);
               updateLikes(likeCount - 1, false); // Esta línea es nueva
@@ -281,6 +285,7 @@ const VerPosts = ({ route, navigation }) => {
       } catch (error) {
         console.error("Error al quitar Like:", error);
         Alert.alert("Error", "No se pudo quitar like. Intente nuevamente.");
+        setAvailable(true);
       }
     }
   };
