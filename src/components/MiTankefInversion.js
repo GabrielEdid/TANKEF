@@ -168,6 +168,22 @@ const MiTankefInversion = (props) => {
     setInvestmentState(newState);
   };
 
+  const estatusTextColor = () => {
+    if (estatus === "En curso") return "#2ba64e";
+    else if (estatus === "Completado") return "#007af5";
+    else if (estatus === "En espera") return "#6e737a";
+    else if (estatus === "En proceso") return "#fa811e";
+    else if (estatus === "Cancelado") return "#d93840";
+  };
+
+  const estatusBackgroundColor = () => {
+    if (estatus === "En curso") return "#ceedd4";
+    else if (estatus === "Completado") return "#cce6ff";
+    else if (estatus === "En espera") return "#e1e3e6";
+    else if (estatus === "En proceso") return "#ffe6d1";
+    else if (estatus === "Cancelado") return "#f7d7d9";
+  };
+
   // Componente visual
   return (
     <>
@@ -292,7 +308,30 @@ const MiTankefInversion = (props) => {
                 <View style={styles.container}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.concepto}>Estatus</Text>
-                    <Text style={styles.valorConcepto}>{estatus}</Text>
+                    <TouchableOpacity
+                      style={[
+                        styles.estatusContainer,
+                        {
+                          borderColor: estatusTextColor(),
+                          backgroundColor: estatusBackgroundColor(),
+                        },
+                      ]}
+                    >
+                      <AntDesign
+                        name="infocirlce"
+                        size={18}
+                        color={estatusTextColor()}
+                        style={{ marginRight: 5 }}
+                      />
+                      <Text
+                        style={[
+                          styles.valorConcepto,
+                          { color: estatusTextColor() },
+                        ]}
+                      >
+                        {estatus}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                   <Ionicons
                     name="remove-outline"
@@ -610,7 +649,16 @@ const styles = StyleSheet.create({
     marginTop: 3,
     flexDirection: "row",
     paddingHorizontal: 20,
-    paddingVertical: 5,
+    paddingVertical: 7.5,
+  },
+  estatusContainer: {
+    flexDirection: "row",
+    borderRadius: 100,
+    alignSelf: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    alignItems: "center",
+    borderWidth: 1,
   },
   containerBalance: {
     justifyContent: "space-between",
@@ -635,7 +683,7 @@ const styles = StyleSheet.create({
   botonAbonar: {
     alignSelf: "flex-end",
     width: "80%",
-    marginTop: 30,
+    marginTop: 50,
     marginBottom: 20,
     alignSelf: "center",
     borderRadius: 5,
