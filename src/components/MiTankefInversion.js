@@ -109,7 +109,8 @@ const MiTankefInversion = (props) => {
       setPlazo(result.data.data.term);
       setMontoAcumulado("Falta");
       setFolio(result.data.data.invoice_number);
-      setCuenta(formatBankAccount(result.data.data.bank_account));
+      //setCuenta(formatBankAccount(result.data.data.bank_account));
+      setCuenta(result.data.data.bank_account.short_name);
       setFechaCreacion(formatDate(result.data.data.created_at));
       setFechaInicio("Falta");
       setFechaFin("Falta");

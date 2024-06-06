@@ -19,6 +19,7 @@ import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
 import { applyActionCode } from "firebase/auth";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -44,18 +45,23 @@ const MiTankefCredito = (props) => {
   const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext); //Contexto de usuario
   const [focus, setFocus] = useState("Balance"); //Balance o Movimientos
-  const [credits, setCredits] = useState([]); //Inversiones del usuario
-  const [currentID, setCurrentID] = useState(null); //ID de la inversion actual
-  const [creditState, setCreditState] = useState(null); //Estado de la inversion
-  const [plazo, setPlazo] = useState(null); //Plazo de la inversion
-  const [folio, setFolio] = useState(null); //Folio de la inversion
+  const [credits, setCredits] = useState([]); //Créditos del usuario
+  const [currentID, setCurrentID] = useState(null); //ID de la crédito actual
+  const [estatus, setEstatus] = useState(null); //Estatus del crédito
+  const [creditState, setCreditState] = useState(null); //Estado de la crédito
+  const [plazo, setPlazo] = useState(null); //Plazo de la crédito
+  const [folio, setFolio] = useState(null); //Folio de la crédito
+  const [monto, setMonto] = useState(null); //Monto de la crédito
   const [tasaOperacion, setTasaOperacion] = useState(null); //Tasa de interes
+  const [tasaMensual, setTasaMensual] = useState(null); //Tasa mensual
+  const [tasaMensualIVA, setTasaMensualIVA] = useState(null); //Tasa mensual + IVA
   const [comisionApertura, setComisionApertura] = useState(null); //Comision de apertura
   const [pagoMensual, setPagoMensual] = useState(null); //Pago mensual
   const [totalPagar, setTotalPagar] = useState(null); //Total a pagar
+  const [cuenta, setCuenta] = useState(null); //Cuenta de la crédito
   const [fecha, setFecha] = useState(null); //Fecha de creación
-  const [aprovacion, setAprovacion] = useState(null); //Aprovacion de la inversion
-  const [modalVisible, setModalVisible] = useState(false); //Modal de inversion
+  const [aprovacion, setAprovacion] = useState(null); //Aprovacion de la crédito
+  const [modalVisible, setModalVisible] = useState(false); //Modal de crédito
   const [effectTrigger, setEffectTrigger] = useState(false); //Trigger para efectos
 
   // Mapa de imágenes
@@ -81,13 +87,18 @@ const MiTankefCredito = (props) => {
       fetchCredit(filteredResults[0].id);
       setCreditState(filteredResults[0].aasm_state);
       handleCreditStateChange(filteredResults[0].aasm_state);
+      setEstatus(filteredResults[0].current_state);
       setComisionApertura(filteredResults[0].commision_for_oppening);
       setPlazo(filteredResults[0].term);
       setFolio(filteredResults[0].invoice_number);
+      setMonto(filteredResults[0].amount);
       setPagoMensual(filteredResults[0].monthly_payment);
       setTasaOperacion(filteredResults[0].rate_operation);
+      setTasaMensual(filteredResults[0].rate_monthly);
+      setTasaMensualIVA(filteredResults[0].rate_adjuted_monthly);
       setTotalPagar(filteredResults[0].total_to_pay);
       setFecha(filteredResults[0].created_at);
+      setCuenta(filteredResults[0].bank_account);
       setCurrentID(filteredResults[0].id);
       setAprovacion(filteredResults[0].type_approval);
       setTasaInteres(filteredResults[0].rate_operation);
@@ -107,11 +118,15 @@ const MiTankefCredito = (props) => {
       console.log("Resultado del credito:", result.data.data);
       setCreditState(result.data.data.aasm_state);
       handleCreditStateChange(result.data.data.aasm_state);
+      setEstatus(result.data.data.current_state);
+      setMonto(result.data.data.amount);
       setComisionApertura(result.data.data.commision_for_oppening);
       setPlazo(result.data.data.term);
       setFolio(result.data.data.invoice_number);
       setPagoMensual(result.data.data.monthly_payment);
       setTasaOperacion(result.data.data.rate_operation);
+      setTasaMensual(result.data.data.rate_monthly);
+      setTasaMensualIVA(result.data.data.rate_adjuted_monthly);
       setTotalPagar(result.data.data.total_to_pay);
       setFecha(result.data.data.created_at);
       setCurrentID(result.data.data.id);
@@ -138,6 +153,16 @@ const MiTankefCredito = (props) => {
   const formatDate = (isoDateString) => {
     const date = DateTime.fromISO(isoDateString);
     return date.toFormat("dd.MM.yyyy");
+  };
+
+  const formatBankAccount = (bankAccount) => {
+    const { account } = bankAccount;
+    if (!account || account.length < 4) {
+      throw new Error("Invalid account number");
+    }
+    const maskedAccount =
+      account.slice(0, -4).replace(/./g, "*") + account.slice(-4);
+    return `${maskedAccount}`;
   };
 
   useEffect(() => {
@@ -289,7 +314,7 @@ const MiTankefCredito = (props) => {
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Estatus</Text>
-                  <Text style={styles.valorConcepto}>estatus</Text>
+                  <Text style={styles.valorConcepto}>{estatus}</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -327,7 +352,9 @@ const MiTankefCredito = (props) => {
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Monto Solicitado</Text>
-                  <Text style={styles.valorConcepto}>{totalPagar}</Text>
+                  <Text style={styles.valorConcepto}>
+                    {formatAmount(monto)}
+                  </Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -354,14 +381,14 @@ const MiTankefCredito = (props) => {
                 />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Tasa mensual</Text>
-                  <Text style={styles.valorConcepto}>tasaMensual%</Text>
+                  <Text style={styles.valorConcepto}>{tasaMensual}%</Text>
                 </View>
               </View>
 
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Tasa mensual + IVA</Text>
-                  <Text style={styles.valorConcepto}>tasaMensualIVA%</Text>
+                  <Text style={styles.valorConcepto}>{tasaMensualIVA}%</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -370,8 +397,10 @@ const MiTankefCredito = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Comisión apertura + IVA</Text>
-                  <Text style={styles.valorConcepto}>comisionAperturaIVA</Text>
+                  <Text style={styles.concepto}>Comisión apertura</Text>
+                  <Text style={styles.valorConcepto}>
+                    {formatAmount(comisionApertura)}
+                  </Text>
                 </View>
               </View>
 
@@ -388,7 +417,7 @@ const MiTankefCredito = (props) => {
                 />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.concepto}>Cuenta</Text>
-                  <Text style={styles.valorConcepto}>cuenta</Text>
+                  <Text style={styles.valorConcepto}>{cuenta}</Text>
                 </View>
               </View>
 
