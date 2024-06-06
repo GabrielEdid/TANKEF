@@ -291,7 +291,7 @@ const MiTankefCredito = (props) => {
                   justifyContent: "space-between",
                   backgroundColor: "white",
                   paddingHorizontal: 20,
-                  paddingVertical: 15,
+                  paddingVertical: 10,
                   alignItems: "center",
                   marginTop: 3,
                 }}
@@ -304,8 +304,8 @@ const MiTankefCredito = (props) => {
 
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Folio de{"\n"}crédito</Text>
-                  <Text style={styles.valorConcepto}>{folio}</Text>
+                  <Text style={styles.concepto}>Estatus</Text>
+                  <Text style={styles.valorConcepto}>estatus</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -314,27 +314,15 @@ const MiTankefCredito = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Tasa de{"\n"}operación</Text>
-                  <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
-                </View>
-                <Ionicons
-                  name="remove-outline"
-                  size={30}
-                  color="#e1e2ebff"
-                  style={styles.line}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Total a{"\n"}pagar</Text>
-                  <Text style={styles.valorConcepto}>
-                    {formatAmount(totalPagar)}
-                  </Text>
+                  <Text style={styles.concepto}>Abono</Text>
+                  <Text style={styles.valorConcepto}>abono</Text>
                 </View>
               </View>
 
               <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Fecha de{"\n"}creación</Text>
-                  <Text style={styles.valorConcepto}>{formatDate(fecha)}</Text>
+                  <Text style={styles.concepto}>Monto Solicitado</Text>
+                  <Text style={styles.valorConcepto}>monto solicitado</Text>
                 </View>
                 <Ionicons
                   name="remove-outline"
@@ -343,7 +331,14 @@ const MiTankefCredito = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Plazo del{"\n"}crédito</Text>
+                  <Text style={styles.concepto}>Total a pagar</Text>
+                  <Text style={styles.valorConcepto}>total a pagar</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Plazo del crédito</Text>
                   <Text style={styles.valorConcepto}>{plazo} meses</Text>
                 </View>
                 <Ionicons
@@ -353,9 +348,77 @@ const MiTankefCredito = (props) => {
                   style={styles.line}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.concepto}>Tipo de{"\n"}crédito</Text>
-                  <Text style={styles.valorConcepto}>{aprovacion}</Text>
+                  <Text style={styles.concepto}>Tasa de operación</Text>
+                  <Text style={styles.valorConcepto}>{tasaOperacion}%</Text>
                 </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Monto Acumulado</Text>
+                  <Text style={styles.valorConcepto}>monto acumulado</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Folio</Text>
+                  <Text style={styles.valorConcepto}>{folio}</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Cuenta</Text>
+                  <Text style={styles.valorConcepto}>cuenta</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de creación</Text>
+                  <Text style={styles.valorConcepto}>fecha creacion</Text>
+                </View>
+              </View>
+
+              <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de inicio</Text>
+                  <Text style={styles.valorConcepto}>fecha inicio</Text>
+                </View>
+                <Ionicons
+                  name="remove-outline"
+                  size={30}
+                  color="#e1e2ebff"
+                  style={styles.line}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.concepto}>Fecha de finalización</Text>
+                  <Text style={styles.valorConcepto}>
+                    fecha de finalizacion
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  backgroundColor: "white",
+                  marginTop: 3,
+                  paddingVertical: 15,
+                }}
+              >
+                <Text style={styles.concepto}>
+                  No. de Cuenta para realizar pagos{"\n"}Tu Kapital en
+                  Evolución, SAPI de CV SOFOM, ENR.{"\n"}Banco INBURSA{"\n"}No.
+                  de cuenta 5005 7137 181{"\n"}Clabe interbancaria 0361 8050
+                  0571 3718 14
+                </Text>
               </View>
             </>
           )}
@@ -584,7 +647,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     flexDirection: "row",
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   concepto: {
     fontFamily: "opensans",
@@ -593,7 +656,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   valorConcepto: {
-    fontFamily: "opensanssemibold",
+    fontFamily: "opensansbold",
     fontSize: 16,
     color: "#060B4D",
     textAlign: "center",

@@ -642,6 +642,12 @@ const styles = StyleSheet.create({
     color: "#060B4D",
     textAlign: "center",
   },
+  valorConcepto: {
+    fontFamily: "opensansbold",
+    fontSize: 16,
+    color: "#060B4D",
+    textAlign: "center",
+  },
   botonAbonar: {
     alignSelf: "flex-end",
     width: "80%",
@@ -657,12 +663,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "opensanssemibold",
     fontSize: 16,
-  },
-  valorConcepto: {
-    fontFamily: "opensansbold",
-    fontSize: 16,
-    color: "#060B4D",
-    textAlign: "center",
   },
   seperacion: {
     width: "100%",
