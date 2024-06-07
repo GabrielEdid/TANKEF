@@ -59,6 +59,7 @@ const MiTankefCredito = (props) => {
   const [totalPagar, setTotalPagar] = useState(null); //Total a pagar
   const [cuenta, setCuenta] = useState(null); //Cuenta de la crédito
   const [fecha, setFecha] = useState(null); //Fecha de creación
+  const [payments, setPayments] = useState([]); //Pagos de la crédito
   const [aprovacion, setAprovacion] = useState(null); //Aprovacion de la crédito
   const [modalVisible, setModalVisible] = useState(false); //Modal de crédito
   const [effectTrigger, setEffectTrigger] = useState(false); //Trigger para efectos
@@ -130,6 +131,28 @@ const MiTankefCredito = (props) => {
       setFecha(result.data.data.created_at);
       setCurrentID(result.data.data.id);
       setAprovacion(result.data.data.type_approval);
+      fetchPayments(id);
+    }
+  };
+
+  // Funcion para obtener los movimientos de un credito en especifico
+  const fetchPayments = async (id) => {
+    resetTimeout();
+    const url = `/api/v1/credits/${id}/credit_payments`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener los movimientos del crédito:",
+        result.error
+      );
+    } else {
+      console.log("Resultados de los movimientos:", result.data.data);
+      const newPayments = result.data.data.sort(
+        (a, b) => new Date(a.start_date) - new Date(b.start_date)
+      );
+      setPayments(newPayments);
     }
   };
 
@@ -481,20 +504,31 @@ const MiTankefCredito = (props) => {
 
           {focus === "Movimientos" && (
             <>
-              <View>
-                <Movimiento
-                  movimiento={"Inicio Crédito"}
-                  fecha={"10.ENE.2024"}
-                  monto={"$10,000.00 MXN"}
-                  positive={true}
-                />
-                <Movimiento
-                  movimiento={"Pago mensual"}
-                  fecha={"10.FEB.2024"}
-                  monto={"$2,174.20 MXN"}
-                  positive={false}
-                />
-              </View>
+              {payments.length > 0 ? (
+                payments.map((payment, index) => (
+                  <View>
+                    <Movimiento
+                      key={payment.id || index}
+                      movimiento={"Inicio Inversión"}
+                      fecha={"10.ENE.2024"}
+                      monto={"$10,000.00 MXN"}
+                      positive={true}
+                    />
+                  </View>
+                ))
+              ) : (
+                <View>
+                  <Text style={styles.noCredit}>
+                    Todavía no tienes movimientos
+                  </Text>
+                  <Entypo
+                    name="emoji-sad"
+                    size={35}
+                    color="#060B4D"
+                    style={{ alignSelf: "center", marginTop: 10 }}
+                  />
+                </View>
+              )}
             </>
           )}
         </>

@@ -58,6 +58,7 @@ const MiTankefInversion = (props) => {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [investmentState, setInvestmentState] = useState("");
+  const [payments, setPayments] = useState([]);
   const [effectTrigger, setEffectTrigger] = useState(false);
   const [currentID, setCurrentID] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -114,6 +115,28 @@ const MiTankefInversion = (props) => {
       setFechaCreacion(formatDate(result.data.data.created_at));
       setFechaInicio("Falta");
       setFechaFin("Falta");
+      fetchPayments(id);
+    }
+  };
+
+  // Funcion para obtener los movimientos de una inversion en especifico
+  const fetchPayments = async (id) => {
+    resetTimeout();
+    const url = `/api/v1/investments/${id}/investment_payments`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener los movimientos de la inversión:",
+        result.error
+      );
+    } else {
+      console.log("Resultados de los movimientos:", result.data.data);
+      const newPayments = result.data.data.sort(
+        (a, b) => new Date(a.start_date) - new Date(b.start_date)
+      );
+      setPayments(newPayments);
     }
   };
 
@@ -148,18 +171,18 @@ const MiTankefInversion = (props) => {
     return `${maskedAccount}`;
   };
 
-  useEffect(() => {
-    if (
-      investmentState === "reviewing_documentation" ||
-      investmentState === "rejected_documentation" ||
-      investmentState === "signing_contract" ||
-      investmentState === "sign_contract" ||
-      investmentState === "request_payment" ||
-      investmentState === "reviewing_payment"
-    ) {
-      setModalVisible(true);
-    }
-  }, [investmentState, effectTrigger]);
+  // useEffect(() => {
+  //   if (
+  //     investmentState === "reviewing_documentation" ||
+  //     investmentState === "rejected_documentation" ||
+  //     investmentState === "signing_contract" ||
+  //     investmentState === "sign_contract" ||
+  //     investmentState === "request_payment" ||
+  //     investmentState === "reviewing_payment"
+  //   ) {
+  //     setModalVisible(true);
+  //   }
+  // }, [investmentState, effectTrigger]);
 
   const handleInvestmentStateChange = (newState) => {
     if (investmentState === newState) {
@@ -422,20 +445,31 @@ const MiTankefInversion = (props) => {
 
             {focus === "Movimientos" && (
               <>
-                <View>
-                  <Movimiento
-                    movimiento={"Inicio Inversión"}
-                    fecha={"10.ENE.2024"}
-                    monto={"$10,000.00 MXN"}
-                    positive={true}
-                  />
-                  <Movimiento
-                    movimiento={"Abono"}
-                    fecha={"10.FEB.2024"}
-                    monto={"$5,000.00 MXN"}
-                    positive={true}
-                  />
-                </View>
+                {payments.length > 0 ? (
+                  payments.map((payment, index) => (
+                    <View>
+                      <Movimiento
+                        key={payment.id || index}
+                        movimiento={"Inicio Inversión"}
+                        fecha={"10.ENE.2024"}
+                        monto={"$10,000.00 MXN"}
+                        positive={true}
+                      />
+                    </View>
+                  ))
+                ) : (
+                  <View>
+                    <Text style={styles.noInvestment}>
+                      Todavía no tienes movimientos
+                    </Text>
+                    <Entypo
+                      name="emoji-sad"
+                      size={35}
+                      color="#060B4D"
+                      style={{ alignSelf: "center", marginTop: 10 }}
+                    />
+                  </View>
+                )}
               </>
             )}
           </>

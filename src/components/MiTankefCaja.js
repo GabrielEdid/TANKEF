@@ -58,6 +58,7 @@ const MiTankefCaja = (props) => {
   const [fechaFin, setFechaFin] = useState("");
   const [plazo, setPlazo] = useState("");
   const [folio, setFolio] = useState("");
+  const [payments, setPayments] = useState([]);
   const [montoAcumulado, setMontoAcumulado] = useState("");
   const [tasaOperacion, setTasaOperacion] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -108,6 +109,28 @@ const MiTankefCaja = (props) => {
       setFechaCreacion(formatDate(result.data.data.created_at));
       setFechaInicio("Falta");
       setFechaFin("Falta");
+      fetchPayments(id);
+    }
+  };
+
+  // Funcion para obtener los movimientos de una caja en especifico
+  const fetchPayments = async (id) => {
+    resetTimeout();
+    const url = `/api/v1/investments/${id}/box_saving_payments`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener los movimientos de la caja de ahorro:",
+        result.error
+      );
+    } else {
+      console.log("Resultados de los movimientos:", result.data.data);
+      const newPayments = result.data.data.sort(
+        (a, b) => new Date(a.start_date) - new Date(b.start_date)
+      );
+      setPayments(newPayments);
     }
   };
 
@@ -415,20 +438,31 @@ const MiTankefCaja = (props) => {
 
           {focus === "Movimientos" && (
             <>
-              <View>
-                <Movimiento
-                  movimiento={"Inicio Caja"}
-                  fecha={"10.ENE.2024"}
-                  monto={"$10,000.00 MXN"}
-                  positive={true}
-                />
-                <Movimiento
-                  movimiento={"Abono"}
-                  fecha={"10.FEB.2024"}
-                  monto={"$5,000.00 MXN"}
-                  positive={true}
-                />
-              </View>
+              {payments.length > 0 ? (
+                payments.map((payment, index) => (
+                  <View>
+                    <Movimiento
+                      key={payment.id || index}
+                      movimiento={"Inicio Inversión"}
+                      fecha={"10.ENE.2024"}
+                      monto={"$10,000.00 MXN"}
+                      positive={true}
+                    />
+                  </View>
+                ))
+              ) : (
+                <View>
+                  <Text style={styles.noBoxes}>
+                    Todavía no tienes movimientos
+                  </Text>
+                  <Entypo
+                    name="emoji-sad"
+                    size={35}
+                    color="#060B4D"
+                    style={{ alignSelf: "center", marginTop: 10 }}
+                  />
+                </View>
+              )}
             </>
           )}
         </>
