@@ -167,7 +167,8 @@ const MiTankefCaja = (props) => {
     else if (estatus === "Completado") return "#007af5";
     else if (estatus === "En espera") return "#6e737a";
     else if (estatus === "En proceso") return "#fa811e";
-    else if (estatus === "Cancelado") return "#d93840";
+    else if (estatus === "Cancelado" || estatus === "Rechazada")
+      return "#d93840";
   };
 
   const estatusBackgroundColor = () => {
@@ -175,7 +176,8 @@ const MiTankefCaja = (props) => {
     else if (estatus === "Completado") return "#cce6ff";
     else if (estatus === "En espera") return "#e1e3e6";
     else if (estatus === "En proceso") return "#ffe6d1";
-    else if (estatus === "Cancelado") return "#f7d7d9";
+    else if (estatus === "Cancelado" || estatus === "Rechazada")
+      return "#f7d7d9";
   };
 
   // Componente visual
@@ -311,6 +313,7 @@ const MiTankefCaja = (props) => {
                         backgroundColor: estatusBackgroundColor(),
                       },
                     ]}
+                    onPress={() => setModalVisible(true)}
                   >
                     <AntDesign
                       name="infocirlce"
@@ -460,18 +463,12 @@ const MiTankefCaja = (props) => {
             <ModalEstatus
               titulo={"¡Atención!"}
               texto={
-                "Tu documentación ha sido rechazada, por favor revisa que coincidan con lo que se solicita y que sean vigentes antes de volver a enviarlos.\n¡Gracias por tu preferencia!"
+                "Se encontraron inconsistencias en tu proceso, la solicitud ha sido rechazada. Porfavor revisa tu documentación y vuelve a intentarlo.\n¡Gracias!"
               }
               imagen={"RedAlert"}
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
-              onAccept={() => [
-                setModalVisible(false),
-                navigation.navigate("Crear", {
-                  screen: "Documentacion",
-                  params: { flujo: "Caja de ahorro", idInversion: currentID },
-                }),
-              ]}
+              onAccept={() => [setModalVisible(false)]}
             />
           )}
 
@@ -548,6 +545,45 @@ const MiTankefCaja = (props) => {
                   params: { flujo: "Inversión" },
                 }),*/
               ]}
+            />
+          )}
+
+          {boxState === "generating_profit" && (
+            <ModalEstatus
+              titulo={"¡Felicidades!"}
+              texto={
+                "¡Tu caja de ahorro ya esta generando ganancias! Gracias por tu preferencia."
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [setModalVisible(false)]}
+            />
+          )}
+
+          {(boxState === "concluded" || boxState === "completed") && (
+            <ModalEstatus
+              titulo={"¡Terminaste!"}
+              texto={
+                "¡Tu caja de ahorro ha concluido! Gracias por confiar en nosotros."
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [setModalVisible(false)]}
+            />
+          )}
+
+          {boxState === "cancelled" && (
+            <ModalEstatus
+              titulo={"¡Opps!"}
+              texto={
+                "Tu caja de ahorro ha sido cancelada. Por favor, ponte en contacto con nosotros para más información."
+              }
+              imagen={"RedAlert"}
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onAccept={() => [setModalVisible(false)]}
             />
           )}
         </>

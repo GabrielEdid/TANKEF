@@ -18,6 +18,7 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
+import { set } from "date-fns";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -171,7 +172,7 @@ const MiTankefCredito = (props) => {
       creditState === "signing_contract" ||
       creditState === "sign_contract" ||
       creditState === "request_payment" ||
-      creditState === "reviewing_payment"
+      creditState === "proof_payment"
     ) {
       setModalVisible(true);
     }
@@ -189,7 +190,8 @@ const MiTankefCredito = (props) => {
     else if (estatus === "Completado") return "#007af5";
     else if (estatus === "En espera") return "#6e737a";
     else if (estatus === "En proceso") return "#fa811e";
-    else if (estatus === "Cancelado") return "#d93840";
+    else if (estatus === "Cancelado" || estatus === "Rechazada")
+      return "#d93840";
   };
 
   const estatusBackgroundColor = () => {
@@ -197,7 +199,8 @@ const MiTankefCredito = (props) => {
     else if (estatus === "Completado") return "#cce6ff";
     else if (estatus === "En espera") return "#e1e3e6";
     else if (estatus === "En proceso") return "#ffe6d1";
-    else if (estatus === "Cancelado") return "#f7d7d9";
+    else if (estatus === "Cancelado" || estatus === "Rechazada")
+      return "#f7d7d9";
   };
 
   // Componente visual
@@ -336,6 +339,7 @@ const MiTankefCredito = (props) => {
                         backgroundColor: estatusBackgroundColor(),
                       },
                     ]}
+                    onPress={() => setModalVisible(true)}
                   >
                     <AntDesign
                       name="infocirlce"
@@ -515,8 +519,8 @@ const MiTankefCredito = (props) => {
               }
               imagen={"Alert"}
               visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              onAccept={() => setModalVisible(false)}
+              onClose={() => [setModalVisible(false)]}
+              onAccept={() => [setModalVisible(false)]}
             />
           )}
 
@@ -528,7 +532,7 @@ const MiTankefCredito = (props) => {
               }
               imagen={"RedAlert"}
               visible={modalVisible}
-              onClose={() => setModalVisible(false)}
+              onClose={() => [setModalVisible(false)]}
               onAccept={() => [setModalVisible(false)]}
             />
           )}
@@ -541,9 +545,10 @@ const MiTankefCredito = (props) => {
               }
               imagen={"Ready"}
               visible={modalVisible}
-              onClose={() => setModalVisible(false)}
+              onClose={() => [setModalVisible(false)]}
               onAccept={() => [
                 setModalVisible(false),
+                ,
                 navigation.navigate("Crear", {
                   screen: "ObligadosSolidarios",
                   params: { flujo: "Crédito", idInversion: currentID },
@@ -560,9 +565,10 @@ const MiTankefCredito = (props) => {
               }
               imagen={"Ready"}
               visible={modalVisible}
-              onClose={() => setModalVisible(false)}
+              onClose={() => [setModalVisible(false)]}
               onAccept={() => [
                 setModalVisible(false),
+                ,
                 navigation.navigate("Crear", {
                   screen: "DefinirFirma",
                   params: { flujo: "Crédito", idInversion: currentID },
@@ -579,14 +585,8 @@ const MiTankefCredito = (props) => {
               }
               imagen={"RedAlert"}
               visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              onAccept={() => [
-                setModalVisible(false),
-                /*navigation.navigate("Crear", {
-                  screen: "DefinirFirma",
-                  params: { flujo: "Inversión" },
-                }),*/
-              ]}
+              onClose={() => [setModalVisible(false)]}
+              onAccept={() => [setModalVisible(false)]}
             />
           )}
 
@@ -598,7 +598,7 @@ const MiTankefCredito = (props) => {
               }
               imagen={"RedAlert"}
               visible={modalVisible}
-              onClose={() => setModalVisible(false)}
+              onClose={() => [setModalVisible(false)]}
               onAccept={() => [
                 setModalVisible(false),
                 navigation.navigate("Crear", {
@@ -609,7 +609,7 @@ const MiTankefCredito = (props) => {
             />
           )}
 
-          {creditState === "reviewing_payment" && (
+          {creditState === "proof_payment" && (
             <ModalEstatus
               titulo={"¡Depósito exitoso!"}
               texto={
@@ -617,14 +617,47 @@ const MiTankefCredito = (props) => {
               }
               imagen={"Ready"}
               visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              onAccept={() => [
-                setModalVisible(false),
-                /*navigation.navigate("Crear", {
-                  screen: "DefinirFirma",
-                  params: { flujo: "Inversión" },
-                }),*/
-              ]}
+              onClose={() => [setModalVisible(false)]}
+              onAccept={() => [setModalVisible(false)]}
+            />
+          )}
+
+          {creditState === "settle_debt" && (
+            <ModalEstatus
+              titulo={"¡Falta poco!"}
+              texto={
+                "Tu crédito ha sido aprobado, por favor continua realizando los pagos mensuales correspondientes para finalizar el proceso."
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => [setModalVisible(false)]}
+              onAccept={() => [setModalVisible(false)]}
+            />
+          )}
+
+          {creditState === "completed" && (
+            <ModalEstatus
+              titulo={"¡Terminaste!"}
+              texto={
+                "¡Felicidades! Has completado tu crédito exitosamente. ¡Gracias por confiar en nosotros!"
+              }
+              imagen={"Ready"}
+              visible={modalVisible}
+              onClose={() => [setModalVisible(false)]}
+              onAccept={() => [setModalVisible(false)]}
+            />
+          )}
+
+          {creditState === "cancelled" && (
+            <ModalEstatus
+              titulo={"¡Oops!"}
+              texto={
+                "Tu crédito ha sido cancelado. Por favor, ponte en contacto con nosotros para más información."
+              }
+              imagen={"RedAlert"}
+              visible={modalVisible}
+              onClose={() => [setModalVisible(false)]}
+              onAccept={() => [setModalVisible(false)]}
             />
           )}
         </>
