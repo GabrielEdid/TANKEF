@@ -66,6 +66,12 @@ const Documentacion = ({ navigation }) => {
 
     if (addAccount || !finance.accountID) {
       setLoading(false);
+      navigation.navigate("DatosBancarios", {
+        flujo: flujo,
+        idInversion: idInversion,
+        sendDocuments: sendDocuments.bind(this),
+        addAccount: addAccount,
+      });
       return;
     }
 

@@ -50,23 +50,37 @@ const MontoyPlazoCredito = () => {
   // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
     resetTimeout();
-    const cleanedInput = inputText.replace(/[^0-9.]/g, ""); // Remove all non-numeric characters except dot
-    if ((cleanedInput.match(/\./g) || []).length > 1) {
-      // Ensure only one dot
-      cleanedInput = cleanedInput.replace(/\.(?=.*\.)/, "");
+
+    // Remove all non-numeric characters except dot
+    let cleanedInput = inputText.replace(/[^0-9.]/g, "");
+
+    // Ensure only one dot
+    const dotCount = (cleanedInput.match(/\./g) || []).length;
+    if (dotCount > 1) {
+      cleanedInput = cleanedInput.replace(/\.(?=[^.]*$)/, ""); // Keep only the first dot
     }
 
-    const [integer, decimal] = cleanedInput.split(".");
-    const formattedInteger = integer
-      .replace(/^0+/, "")
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Format thousands with comma
-    const formattedDecimal =
-      decimal && decimal.length > 2 ? decimal.substring(0, 2) : decimal; // Limit decimal places to 2
+    // Split the cleaned input into integer and decimal parts
+    const [integerPart, decimalPart] = cleanedInput.split(".");
 
+    // Format the integer part with commas
+    const formattedInteger = integerPart
+      .replace(/^0+/, "") // Remove leading zeros
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas for thousands
+
+    // Limit decimal places to 2
+    const formattedDecimal =
+      decimalPart && decimalPart.length > 2
+        ? decimalPart.substring(0, 2)
+        : decimalPart;
+
+    // Construct the formatted text
     const formattedText =
       formattedDecimal !== undefined
         ? `${formattedInteger}.${formattedDecimal}`
         : formattedInteger;
+
+    // Update the finance state with the formatted text and cleaned input
     setFinance((prevState) => ({
       ...prevState,
       montoShow: formattedText,
@@ -140,7 +154,7 @@ const MontoyPlazoCredito = () => {
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 placeholder="10,000.00"
-                editable={finance.paso < 2}
+                editable={finance.paso <= 2}
               />
               <Text
                 style={[
