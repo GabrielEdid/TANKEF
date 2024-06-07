@@ -31,7 +31,6 @@ const MiTankef = () => {
   const { resetTimeout } = useInactivity();
   const { user, setUser } = useContext(UserContext);
   const [focus, setFocus] = useState("Credito");
-  const [dashboard, setDashboard] = useState({});
   const [secondFocus, setSecondFocus] = useState("Detalle");
 
   // Mapa para cargar todas las imagenes
@@ -41,23 +40,31 @@ const MiTankef = () => {
   };
 
   // Función para obtener el Dashboard, datos generales del usuario
-  const fetchDashboard = async () => {
-    const url = "/api/v1/dashboard";
-    const response = await APIGet(url);
-    if (response.error) {
-      console.error("Error al obtener el Dashboard:", response.error);
-    } else {
-      setDashboard(response.data);
-      setUser({ ...user, valorRed: response.data.data.value_network });
-    }
-  };
+  // const fetchDashboard = async () => {
+  //   const url = "/api/v1/dashboard";
+  //   const response = await APIGet(url);
+  //   if (response.error) {
+  //     console.error("Error al obtener el Dashboard:", response.error);
+  //   } else {
+  //     setUser({ ...user, valorRed: response.data.data.value_network });
+  //   }
+  // };
 
   // Efecto para obtener el Dashboard al cargar la pantalla
-  useFocusEffect(
-    useCallback(() => {
-      fetchDashboard();
-    }, [])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchDashboard();
+  //   }, [])
+  // );
+
+  // Formatea un monto a pesos mexicanos
+  const formatAmount = (amount) => {
+    const number = parseFloat(amount);
+    return `${number.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    })}`;
+  };
 
   // Componente Visual
   return (
@@ -90,10 +97,7 @@ const MiTankef = () => {
       <View style={{ marginTop: 3, backgroundColor: "white" }}>
         <Text style={styles.textoValorRed}>Valor general de tu red</Text>
         <Text style={styles.valorRed}>
-          {user.valorRed.toLocaleString("es-MX", {
-            style: "currency",
-            currency: "MXN",
-          })}
+          {formatAmount(user.valorRed) + " "}
           MXN
         </Text>
         {/* Componente de Imagenes de los usuarios en la red */}

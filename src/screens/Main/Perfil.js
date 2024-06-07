@@ -68,6 +68,15 @@ const Perfil = () => {
     setIsFetchingMore(false);
   };
 
+  // Formatea un monto a pesos mexicanos
+  const formatAmount = (amount) => {
+    const number = parseFloat(amount);
+    return `${number.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    })}`;
+  };
+
   // Efecto para obtener los posts del usuario loggeado
   useFocusEffect(
     useCallback(() => {
@@ -196,13 +205,7 @@ const Perfil = () => {
           </View>
           <View>
             <Text style={styles.textoConcepto}>Valor de Red</Text>
-            <Text style={styles.textoValor}>
-              {user.valorRed.toLocaleString("es-MX", {
-                style: "currency",
-                currency: "MXN",
-              })}
-              MXN
-            </Text>
+            <Text style={styles.textoValor}>{formatAmount(user.valorRed)}</Text>
           </View>
         </View>
 
