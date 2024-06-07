@@ -220,6 +220,7 @@ const Inicio = () => {
                     comentarios={post.count_comments}
                     reacciones={post.count_reactions}
                     personal={post.user.id === user.userID ? true : false}
+                    postUserID={post.user.id}
                     imagen={post.image}
                     liked={post["liked?"]}
                   />

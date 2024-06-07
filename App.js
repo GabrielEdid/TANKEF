@@ -141,7 +141,7 @@ function MiRedStackScreen() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      options={{ gestureEnabled: false }}
+      options={{ gestureEnabled: true }}
     >
       <Stack.Screen name="MiRedMain" component={MiRed} />
       <Stack.Screen
@@ -162,6 +162,7 @@ function InicioStack() {
     >
       <Stack.Screen name="Incio" component={Inicio} />
       <Stack.Screen name="VerPosts" component={VerPosts} />
+      <Stack.Screen name="VerPerfiles" component={VerPerfiles} />
     </Stack.Navigator>
   );
 }

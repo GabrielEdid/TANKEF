@@ -266,6 +266,7 @@ const Perfil = () => {
                   imagen={post.image}
                   comentarios={post.count_comments}
                   reacciones={post.count_reactions}
+                  postUserID={post.user.id}
                   liked={post["liked?"]}
                 />
               </View>

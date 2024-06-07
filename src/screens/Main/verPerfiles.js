@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { useState, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { ActivityIndicator } from "react-native-paper";
@@ -23,6 +24,7 @@ import { useInactivity } from "../../hooks/InactivityContext";
 import Post from "../../components/Post";
 
 const VerPerfiles = ({ route }) => {
+  const navigation = useNavigation();
   // Estados locales y contexto
   const { userID } = route.params;
   const { resetTimeout } = useInactivity();
@@ -334,6 +336,7 @@ const VerPerfiles = ({ route }) => {
                       : imageMap["Blank"]
                   }
                   personal={false}
+                  postUserID={userID}
                   comentarios={post.count_comments}
                 />
               ))}

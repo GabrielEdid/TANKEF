@@ -38,6 +38,7 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
  * - `tipo`: Tipo de publicación, por ejemplo, "compartir", "credito", "invertir".
  * - `comentarios`: Número de comentarios realizados en la publicación.
  * - `reacciones`: Número de reacciones recibidas por la publicación.
+ * - `postUserID`: Identificador del usuario que realizó la publicación.
  * - `personal`: Indica si la publicación pertenece al usuario actual, permitiendo la opción de eliminar.
  *
  * Ejemplo de uso (o ver en Inicio.js o Perfil.js):
@@ -52,7 +53,9 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
  *   tipo="compartir"
  *   comentarios={10}
  *   reacciones={5}
+ *   postUserID="123"
  *   personal={true} // Indica que el usuario actual es el autor de la publicación
+ *
  * />
  */
 
@@ -179,6 +182,7 @@ const Post = (props) => {
       personal: props.personal,
       liked: like,
       remove: props.remove,
+      postUserID: props.postUserID,
       updateLikes: (newLikes, newLikeStatus) => {
         setLikes(newLikes);
         setLike(newLikeStatus);
@@ -263,9 +267,35 @@ const Post = (props) => {
     <View style={styles.Cuadro}>
       {/* Header del Post, Incluye Foto, Nombre y Tiempo */}
       <View style={styles.header}>
-        <Image source={props.foto} style={styles.fotoPerfil} />
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => [
+            resetTimeout(),
+            props.postUserID !== user.userID
+              ? navigation.navigate("Inicio", {
+                  screen: "VerPerfiles",
+                  params: { userID: props.postUserID },
+                })
+              : navigation.navigate("Perfil"),
+          ]}
+        >
+          <Image source={props.foto} style={styles.fotoPerfil} />
+        </TouchableOpacity>
         <View style={styles.headerText}>
-          <Text style={styles.textoNombre}>{props.nombre}</Text>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => [
+              resetTimeout(),
+              props.postUserID !== user.userID
+                ? navigation.navigate("Inicio", {
+                    screen: "VerPerfiles",
+                    params: { userID: props.postUserID },
+                  })
+                : navigation.navigate("Perfil"),
+            ]}
+          >
+            <Text style={styles.textoNombre}>{props.nombre}</Text>
+          </TouchableOpacity>
           <Text style={styles.textoTiempo}>{getTiempo()}</Text>
         </View>
       </View>

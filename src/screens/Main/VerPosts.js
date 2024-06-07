@@ -49,6 +49,7 @@ const VerPosts = ({ route, navigation }) => {
     personal,
     liked,
     remove,
+    postUserID,
     updateLikes,
   } = route.params;
   // Estados de la pantalla
@@ -415,9 +416,35 @@ const VerPosts = ({ route, navigation }) => {
       >
         {/* Header del Post, Incluye Foto, Nombre y Tiempo */}
         <View style={styles.header}>
-          <Image source={foto} style={styles.fotoPerfil} />
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => [
+              resetTimeout(),
+              postUserID !== user.userID
+                ? navigation.navigate("Inicio", {
+                    screen: "VerPerfiles",
+                    params: { userID: postUserID },
+                  })
+                : navigation.navigate("Perfil"),
+            ]}
+          >
+            <Image source={foto} style={styles.fotoPerfil} />
+          </TouchableOpacity>
           <View style={styles.headerText}>
-            <Text style={styles.textoNombre}>{nombre}</Text>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => [
+                resetTimeout(),
+                postUserID !== user.userID
+                  ? navigation.navigate("Inicio", {
+                      screen: "VerPerfiles",
+                      params: { userID: postUserID },
+                    })
+                  : navigation.navigate("Perfil"),
+              ]}
+            >
+              <Text style={styles.textoNombre}>{nombre}</Text>
+            </TouchableOpacity>
             <Text style={styles.textoTiempo}>{getTiempo(tiempo)}</Text>
           </View>
         </View>
