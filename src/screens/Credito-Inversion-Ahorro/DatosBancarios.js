@@ -66,7 +66,7 @@ const DatosBancarios = ({ navigation }) => {
           ...finance,
           paso: finance.paso + 1,
         });
-        setModalVisible(true);
+        //setModalVisible(true);
         navigation.navigate("DefinirCredito", {
           flujo: flujo,
           idInversion: idInversion,
