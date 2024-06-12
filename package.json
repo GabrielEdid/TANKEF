@@ -53,9 +53,11 @@
     "react-native-table-component": "^1.2.2",
     "react-native-ui-lib": "^7.10.0",
     "react-native-webview": "13.8.6",
+    "react-native-wheel-picker-expo": "^0.5.4",
     "react-navigation": "^5.0.0",
     "tamagui": "^1.79.9",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "@react-native-picker/picker": "2.7.5"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"

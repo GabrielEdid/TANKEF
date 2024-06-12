@@ -1,4 +1,4 @@
-// Importaciones de React Native y React
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,100 +9,35 @@ import {
   TextInput,
   Alert,
   Linking,
+  Modal,
 } from "react-native";
-import React, { useState, useCallback, useEffect, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
-import DropDownPicker from "react-native-dropdown-picker";
+import { Picker } from "@react-native-picker/picker";
 import { ActivityIndicator } from "react-native-paper";
-// Importaciones de Componentes y Hooks
 import ModalAmortizacion from "../../components/ModalAmortizacion";
 import { useInactivity } from "../../hooks/InactivityContext";
 import { FinanceContext } from "../../hooks/FinanceContext";
 import { APIGet, APIPost } from "../../API/APIService";
 import { Feather, Ionicons } from "@expo/vector-icons";
 
-// Se mide la pantalla para determinar medidas
 const screenWidth = Dimensions.get("window").width;
 const widthFourth = screenWidth / 4 - 15;
 
 const DefinirCajaAhorro = ({ navigation }) => {
   const route = useRoute();
   const { flujo } = route.params;
-  // Estados y Contexto
   const { resetTimeout } = useInactivity();
   const { finance, setFinance, resetFinance } = useContext(FinanceContext);
-  const [open, setOpen] = useState(false);
   const [retornoNeto, setRetornoNeto] = useState("");
   const [tasa, setTasa] = useState("");
   const [modalAmortizacionVisible, setModalAmortizacionVisible] =
     useState(false);
   const [loading, setLoading] = useState(false);
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState("");
 
-  /* Funcion para manejar el cambio de texto en el input de monto
-  const handleChangeText = (inputText) => {
-    let newText = inputText.replace(/[^0-9.]/g, "");
-    if ((newText.match(/\./g) || []).length > 1) {
-      newText = newText.replace(/\.(?=.*\.)/, "");
-    }
-
-    let [integer, decimal] = newText.split(".");
-    integer = integer.replace(/^0+/, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    if (decimal && decimal.length > 2) {
-      decimal = decimal.substring(0, 2);
-    }
-
-    const formattedText =
-      decimal !== undefined ? `${integer}.${decimal}` : integer;
-    setMontoShow(formattedText); // Display value with formatting
-    setMonto(newText); // Store raw value for further processing
-
-    // Parse the raw input to a float and update montoNumeric for validation
-    const numericValue = parseFloat(newText.replace(/,/g, ""));
-    setMontoNumeric(numericValue || 0); // Update numeric value, defaulting to 0 if NaN
-  };*/
-
-  /* Funcion para manejar el cambio de valor en el slider
-  const handleSliderChange = (value) => {
-    // Actualiza el valor numérico directamente con el valor del slider
-    setMontoNumeric(value);
-
-    // Formatea el valor para mostrarlo adecuadamente en el input
-    const formattedValue = value
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Actualiza el estado del texto del input con el valor formateado
-    setMontoShow(formattedValue);
-  };*/
-
-  /* Funcion para formatear el input de monto
-  const formatInput = (text) => {
-    // Elimina comas para el cálculo
-    const numericValue = parseInt(text.replace(/,/g, ""), 10);
-    if (!isNaN(numericValue)) {
-      // Vuelve a formatear con comas
-      return numericValue.toLocaleString();
-    }
-    return "";
-  };
-
-  // Funcion para manejar el input de monto al seleccionar
-  const handleFocus = () => {
-    const numericValue = finance.monto.replace(/,/g, "");
-    setFinance((prevState) => ({ ...prevState, monto: numericValue }));
-  };
-
-  // Funcion para manejar el input de monto al deseleccionar
-  const handleBlur = () => {
-    setFinance((prevState) => ({
-      ...prevState,
-      monto: formatInput(finance.monto),
-    }));
-  };*/
-
-  // Función para hacer la cotizacion al API
   useEffect(() => {
     const fetchCotizacion = async () => {
       const url = `/api/v1/simulator?term=36&type=box_saving&amount=${finance.monto}`;
@@ -110,7 +45,6 @@ const DefinirCajaAhorro = ({ navigation }) => {
       try {
         const response = await APIGet(url);
         if (response.error) {
-          // Manejar el error
           console.error("Error al cotizar:", response.error);
           Alert.alert(
             "Error",
@@ -139,7 +73,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
     const data = {
       box_saving: {
         name: finance.nombreFinance,
-        amount: finance.monto,
+        amount: finance.montoNumeric,
         term: 36,
         condition: finance.condiciones,
       },
@@ -147,7 +81,6 @@ const DefinirCajaAhorro = ({ navigation }) => {
 
     const response = await APIPost(url, data);
     if (response.error) {
-      // Manejar el error
       setLoading(false);
       console.error("Error al crear la caja de ahorro:", response.error);
       const errorMessages = response.error.errors
@@ -194,6 +127,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   const [dataMonto] = useState([
     { label: "$25,000.00 MXN", value: 25000 },
     { label: "$50,000.00 MXN", value: 50000 },
+    { label: "$100,000.00 MXN", value: 100000 },
   ]);
 
   const isAcceptable =
@@ -203,10 +137,19 @@ const DefinirCajaAhorro = ({ navigation }) => {
 
   const isTable = finance.monto >= 25000;
 
-  // Componente Visual
+  const handleValueChange = (itemValue, itemIndex) => {
+    const selectedItem = dataMonto[itemIndex];
+    setSelectedLabel(selectedItem.label);
+    setFinance({
+      ...finance,
+      monto: selectedItem.label,
+      montoNumeric: itemValue,
+    });
+    setPickerVisible(false);
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      {/* Titulo, Nombre de Pantalla y Campana */}
       <View style={styles.tituloContainer}>
         <MaskedView
           style={{ flex: 0.6 }}
@@ -265,48 +208,49 @@ const DefinirCajaAhorro = ({ navigation }) => {
 
           <View style={[styles.contenedores, { marginTop: -10 }]}>
             <Text style={styles.texto}>Selecciona el monto a ahorrar</Text>
-            <View style={styles.inputWrapper}>
-              <DropDownPicker
-                open={open}
-                value={finance.monto}
-                items={dataMonto}
-                placeholder="Elige una opción"
-                setOpen={setOpen}
-                listMode="MODAL"
-                modalProps={{
-                  animationType: "slide",
-                }}
-                setValue={(callback) => {
-                  [
-                    setFinance((prevState) => ({
-                      ...prevState,
-                      monto: callback(prevState.monto),
-                      montoNumeric: callback(prevState.montoNumeric),
-                      plazo: 36,
-                    })),
-                    resetTimeout(),
-                  ];
-                }}
-                onChangeValue={(value) =>
-                  setFinance({
-                    ...finance,
-                    monto: value,
-                    montoNumeric: value,
-                    plazo: 36,
-                  })
-                }
-                style={styles.DropDownPicker}
-                arrowIconStyle={{ tintColor: "#060B4D", width: 25 }}
-                placeholderStyle={{
-                  color: "#c7c7c9ff",
-                  fontFamily: "opensanssemibold",
-                  textAlign: "center",
-                }}
-                dropDownContainerStyle={styles.DropDownContainer}
-                labelStyle={styles.selectionStyle}
-                textStyle={styles.DropDownText}
-              />
-            </View>
+            <TouchableOpacity onPress={() => setPickerVisible(true)}>
+              <Text style={styles.inputMonto}>
+                {finance.monto ? finance.monto : "Selecciona el monto"}
+              </Text>
+            </TouchableOpacity>
+            <Modal
+              visible={pickerVisible}
+              transparent={true}
+              animationType="slide"
+              onRequestClose={() => setPickerVisible(false)}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                  <Text style={styles.modalTitle}>Selecciona el monto</Text>
+                  <Picker
+                    selectedValue={finance.monto}
+                    style={{ width: "100%", marginVertical: -10 }}
+                    onValueChange={handleValueChange}
+                  >
+                    {dataMonto.map((item) => (
+                      <Picker.Item
+                        key={item.value}
+                        label={item.label}
+                        value={item.value}
+                      />
+                    ))}
+                  </Picker>
+                  <TouchableOpacity
+                    style={[
+                      styles.botonContinuar,
+                      { backgroundColor: "#060B4D" },
+                    ]}
+                    onPress={() => setPickerVisible(false)}
+                  >
+                    <Text
+                      style={[styles.textoBotonContinuar, { color: "white" }]}
+                    >
+                      Cerrar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           </View>
 
           <View
@@ -456,7 +400,6 @@ const DefinirCajaAhorro = ({ navigation }) => {
   );
 };
 
-// Estilos de la pantalla
 const styles = StyleSheet.create({
   tituloContainer: {
     paddingHorizontal: 20,
@@ -464,7 +407,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingBottom: 10,
   },
-
   titulo: {
     fontFamily: "montserrat",
     letterSpacing: -4,
@@ -576,35 +518,6 @@ const styles = StyleSheet.create({
   line: {
     transform: [{ rotate: "90deg" }],
   },
-  DropDownPicker: {
-    borderColor: "transparent",
-    marginTop: 20,
-    backgroundColor: "transparent",
-    alignSelf: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#d3d4de",
-  },
-  DropDownText: {
-    fontSize: 20,
-    fontFamily: "opensanssemibold",
-    color: "#060B4D",
-    alignSelf: "center",
-    textAlign: "left",
-    padding: 5,
-  },
-  DropDownContainer: {
-    marginTop: 10,
-    borderColor: "transparent",
-  },
-  selectionStyle: {
-    fontSize: 35,
-    textAlign: "center",
-    alignSelf: "center",
-    paddingLeft: 15,
-    color: "#060B4D",
-    fontFamily: "opensanssemibold",
-  },
   textCondiciones: {
     color: "#060B4D",
     fontFamily: "opensans",
@@ -616,6 +529,35 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  closeButton: {
+    marginTop: 10,
+    backgroundColor: "#060B4D",
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "white",
+    fontFamily: "opensanssemibold",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: "opensansbold",
+    color: "#060B4D",
+    marginBottom: 10,
   },
 });
 
