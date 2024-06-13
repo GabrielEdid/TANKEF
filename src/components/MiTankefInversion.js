@@ -487,8 +487,16 @@ const MiTankefInversion = (props) => {
           </>
         )}
       </View>
-      {investmentState === "generating_profit" && (
-        <TouchableOpacity style={[styles.botonAbonar, {}]} onPress={() => {}}>
+      {investmentState !== "generating_profit" && (
+        <TouchableOpacity
+          style={[styles.botonAbonar, {}]}
+          onPress={() => {
+            navigation.navigate("Crear", {
+              screen: "Abonar",
+              params: { flujo: "Inversión", idInversion: currentID },
+            });
+          }}
+        >
           <Text style={[styles.textoBotonAbonar, {}]}>Abonar</Text>
         </TouchableOpacity>
       )}

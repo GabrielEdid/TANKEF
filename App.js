@@ -40,6 +40,7 @@ import DefinirInversion from "./src/screens/Credito-Inversion-Ahorro/DefinirInve
 import Beneficiarios from "./src/screens/Credito-Inversion-Ahorro/Beneficiarios";
 import DatosBancarios from "./src/screens/Credito-Inversion-Ahorro/DatosBancarios";
 import OrdenPago from "./src/screens/Credito-Inversion-Ahorro/OrdenPago";
+import Abonar from "./src/screens/Credito-Inversion-Ahorro/Abonar";
 import DefinirFirma from "./src/screens/Credito-Inversion-Ahorro/DefinirFirma";
 import FirmaDomicilio from "./src/screens/Credito-Inversion-Ahorro/FirmaDomicilio";
 import DefinirCredito from "./src/screens/Credito-Inversion-Ahorro/DefinirCredito";
@@ -177,22 +178,23 @@ function CrearStack() {
         >
           <Stack.Screen name="Placeholder" component={Placeholder} />
           <Stack.Screen name="DefinirInversion" component={DefinirInversion} />
-          <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
-          <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
-          <Stack.Screen name="OrdenPago" component={OrdenPago} />
-          <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
-          <Stack.Screen name="FirmaDomicilio" component={FirmaDomicilio} />
           <Stack.Screen name="DefinirCredito" component={DefinirCredito} />
-          <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
           <Stack.Screen
             name="DefinirCajaAhorro"
             component={DefinirCajaAhorro}
           />
+          <Stack.Screen name="Beneficiarios" component={Beneficiarios} />
+          <Stack.Screen name="InfoGeneral" component={InfoGeneral} />
           <Stack.Screen name="Documentacion" component={Documentacion} />
+          <Stack.Screen name="DatosBancarios" component={DatosBancarios} />
           <Stack.Screen
             name="ObligadosSolidarios"
             component={ObligadosSolidarios}
           />
+          <Stack.Screen name="DefinirFirma" component={DefinirFirma} />
+          <Stack.Screen name="FirmaDomicilio" component={FirmaDomicilio} />
+          <Stack.Screen name="OrdenPago" component={OrdenPago} />
+          <Stack.Screen name="Abonar" component={Abonar} />
         </Stack.Navigator>
       </FinanceProvider>
     </InactivityProvider>
