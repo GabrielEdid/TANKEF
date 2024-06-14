@@ -18,7 +18,7 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
-import { set } from "date-fns";
+import ModalAbonar from "./ModalAbonar";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -62,6 +62,7 @@ const MiTankefCredito = (props) => {
   const [payments, setPayments] = useState([]); //Pagos de la crédito
   const [aprovacion, setAprovacion] = useState(null); //Aprovacion de la crédito
   const [modalVisible, setModalVisible] = useState(false); //Modal de crédito
+  const [modalAbonarVisible, setModalAbonarVisible] = useState(false); //Modal de abonar
   const [effectTrigger, setEffectTrigger] = useState(false); //Trigger para efectos
 
   // Mapa de imágenes
@@ -694,6 +695,13 @@ const MiTankefCredito = (props) => {
               onAccept={() => [setModalVisible(false)]}
             />
           )}
+
+          <ModalAbonar
+            visible={modalAbonarVisible}
+            financeId={currentID}
+            onClose={() => [setModalAbonarVisible(false), resetTimeout()]}
+            flujo={"credit"}
+          />
         </>
       }
     </View>

@@ -18,6 +18,7 @@ import { UserContext } from "../hooks/UserContext";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
+import ModalAbonar from "./ModalAbonar";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -62,6 +63,7 @@ const MiTankefInversion = (props) => {
   const [effectTrigger, setEffectTrigger] = useState(false);
   const [currentID, setCurrentID] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalAbonarVisible, setModalAbonarVisible] = useState(false);
 
   // Mapa de imágenes
   const imageMap = {
@@ -487,14 +489,11 @@ const MiTankefInversion = (props) => {
           </>
         )}
       </View>
-      {investmentState !== "generating_profit" && (
+      {investmentState === "generating_profit" && (
         <TouchableOpacity
           style={[styles.botonAbonar, {}]}
           onPress={() => {
-            navigation.navigate("Crear", {
-              screen: "Abonar",
-              params: { flujo: "Inversión", idInversion: currentID },
-            });
+            [setModalAbonarVisible(true), resetTimeout()];
           }}
         >
           <Text style={[styles.textoBotonAbonar, {}]}>Abonar</Text>
@@ -643,6 +642,12 @@ const MiTankefInversion = (props) => {
               onAccept={() => [setModalVisible(false)]}
             />
           )}
+
+          <ModalAbonar
+            visible={modalAbonarVisible}
+            financeId={currentID}
+            onClose={() => [setModalAbonarVisible(false), resetTimeout()]}
+          />
         </>
       }
     </>

@@ -19,6 +19,7 @@ import { useInactivity } from "../hooks/InactivityContext";
 import { Ionicons, Entypo, AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
+import ModalAbonar from "./ModalAbonar";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -62,6 +63,7 @@ const MiTankefObligado = (props) => {
   const [montoAcumulado, setMontoAcumulado] = useState("");
   const [tasaOperacion, setTasaOperacion] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalAbonarVisible, setModalAbonarVisible] = useState(false);
 
   const imageMap = {
     MiRed: require("../../assets/images/MiRed.png"),
@@ -602,6 +604,12 @@ const MiTankefObligado = (props) => {
               onAccept={() => [setModalVisible(false)]}
             />
           )}
+
+          <ModalAbonar
+            visible={modalAbonarVisible}
+            financeId={currentID}
+            onClose={() => [setModalAbonarVisible(false), resetTimeout()]}
+          />
         </>
       }
     </View>
