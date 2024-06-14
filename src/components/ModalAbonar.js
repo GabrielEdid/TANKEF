@@ -178,10 +178,12 @@ const ModalAbonar = (props) => {
         <View style={styles.modalView}>
           <Text style={styles.titulo}>Abonar</Text>
 
-          <Text style={styles.text}>
-            Tu Kapital en Evolución, SAPI de CV SOFOM, ENR.{"\n"}Banco INBURSA
-            {"\n"}No. de cuenta 5005 7137 181
-          </Text>
+          {props.flujo === "credit" && (
+            <Text style={styles.text}>
+              Tu Kapital en Evolución, SAPI de CV SOFOM, ENR.{"\n"}Banco INBURSA
+              {"\n"}No. de cuenta 5005 7137 181
+            </Text>
+          )}
 
           <Text style={styles.text}>
             Beneficiario:{" "}
