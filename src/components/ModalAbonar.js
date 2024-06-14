@@ -18,7 +18,25 @@ import { useInactivity } from "../hooks/InactivityContext";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import { set } from "date-fns";
+
+/**
+ * `ModalAbonar` es un componente que muestra información para realizar un abono,
+ * como una tarjeta interactuable. Depenediendo de sus props sera el texto y la imagen mostrada.
+ *
+ * Props:
+ * - `visible`: booleano que indica si el modal esta visible o no.
+ * - `onClose`: función que se ejecuta para cerrar el modal.
+ * - `financeId`: id del flujo.
+ * - `flujo`: tipo de flujo.
+ *
+ * Ejemplo (o ver en MiTankefCredito.js):
+ *    <ModalAbonar
+ *      visible={modalAbonarVisible}
+ *      financeId={currentID}
+ *      onClose={() => [setModalAbonarVisible(false), resetTimeout()]}
+ *      flujo={"credit"}
+ *      />
+ */
 
 const screenWidth = Dimensions.get("window").width;
 
