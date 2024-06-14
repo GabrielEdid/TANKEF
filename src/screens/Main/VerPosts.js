@@ -57,6 +57,7 @@ const VerPosts = ({ route, navigation }) => {
   const [imageSize, setImageSize] = useState({ width: 332, height: 200 });
   const [showFullText, setShowFullText] = useState(false);
   const [comentario, setComentario] = useState("");
+  const inputRef = useRef(null);
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyingToId, setReplyingToId] = useState(null);
   const [like, setLike] = useState(liked);
@@ -219,9 +220,6 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
-  // Referencia para el input de comentarios (para enfocar el input al responder)
-  const inputRef = useRef(null);
-
   // Esta función se llama cuando se presiona "Contestar" en un comentario
   const handleReply = (comment) => {
     setReplyingTo(
@@ -359,6 +357,11 @@ const VerPosts = ({ route, navigation }) => {
     const date = parseISO(time);
     const timeAgo = formatDistanceToNow(date, { addSuffix: true, locale: es });
     return timeAgo;
+  };
+
+  // Función para limpiar el texto de espacios en blanco
+  const cleanText = (text) => {
+    return text.replace(/\s+/g, " ").trim();
   };
 
   // Componente visual
@@ -630,9 +633,10 @@ const VerPosts = ({ route, navigation }) => {
             }
             placeholderTextColor="#D5D5D5"
             multiline={true}
-            onChangeText={(text) => setComentario(text)}
+            keyboardType="twitter"
+            onChangeText={(text) => setComentario(cleanText(text))}
             value={comentario}
-            maxLength={300}
+            maxLength={250}
             onFocus={() => setIsFetchingMore(false)}
             onBlur={() => [
               setIsFetchingMore(true),
