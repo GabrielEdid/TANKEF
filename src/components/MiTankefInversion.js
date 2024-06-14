@@ -489,7 +489,7 @@ const MiTankefInversion = (props) => {
           </>
         )}
       </View>
-      {investmentState !== "generating_profit" && (
+      {investmentState === "generating_profit" && (
         <TouchableOpacity
           style={[styles.botonAbonar, {}]}
           onPress={() => {
