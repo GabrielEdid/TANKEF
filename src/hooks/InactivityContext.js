@@ -13,7 +13,7 @@ export const InactivityProvider = ({ children }) => {
     navigation.navigate("AuthPinPad", { modal: true });
   };
 
-  const resetTimeout = useInactivityTimer(300000, handleTimeout); // 300000 ms = 5 minutos
+  const resetTimeout = useInactivityTimer(600000, handleTimeout); // 300000 ms = 5 minutos || 600000 ms = 10 minutos
 
   return (
     <InactivityContext.Provider

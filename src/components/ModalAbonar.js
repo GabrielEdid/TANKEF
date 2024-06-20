@@ -21,7 +21,7 @@ import * as DocumentPicker from "expo-document-picker";
 
 /**
  * `ModalAbonar` es un componente que muestra información para realizar un abono,
- * como una tarjeta interactuable. Depenediendo de sus props sera el texto y la imagen mostrada.
+ * como una tarjeta interactuable. Depenediendo de sus props sera el texto y opciones mostradas.
  *
  * Props:
  * - `visible`: booleano que indica si el modal esta visible o no.

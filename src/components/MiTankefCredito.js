@@ -19,6 +19,7 @@ import { Ionicons, Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Movimiento from "./Movimiento";
 import ModalEstatus from "./ModalEstatus";
 import ModalAbonar from "./ModalAbonar";
+import ModalAceptarObligados from "./ModalAceptarObligados";
 
 const screenWidth = Dimensions.get("window").width;
 const widthThird = screenWidth / 3;
@@ -63,6 +64,8 @@ const MiTankefCredito = (props) => {
   const [aprovacion, setAprovacion] = useState(null); //Aprovacion de la crédito
   const [modalVisible, setModalVisible] = useState(false); //Modal de crédito
   const [modalAbonarVisible, setModalAbonarVisible] = useState(false); //Modal de abonar
+  const [modalAceptarObligadosVisible, setModalAceptarObligadosVisible] =
+    useState(false); //Modal de aceptar obligados
   const [effectTrigger, setEffectTrigger] = useState(false); //Trigger para efectos
 
   // Mapa de imágenes
@@ -499,6 +502,13 @@ const MiTankefCredito = (props) => {
                   de cuenta 5005 7137 181{"\n"}Clabe interbancaria 0361 8050
                   0571 3718 14
                 </Text>
+
+                <TouchableOpacity
+                  style={{ marginTop: 15 }}
+                  onPress={() => setModalAceptarObligadosVisible(true)}
+                >
+                  <Text>Activar Modal Aceptar Obligados Solidarios</Text>
+                </TouchableOpacity>
               </View>
             </>
           )}
@@ -701,6 +711,14 @@ const MiTankefCredito = (props) => {
             financeId={currentID}
             onClose={() => [setModalAbonarVisible(false), resetTimeout()]}
             flujo={"credit"}
+          />
+
+          <ModalAceptarObligados
+            visible={modalAceptarObligadosVisible}
+            onClose={() => [
+              setModalAceptarObligadosVisible(false),
+              resetTimeout(),
+            ]}
           />
         </>
       }
