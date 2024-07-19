@@ -55,6 +55,7 @@ const MontoyPlazoCredito = () => {
 
   // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
+    console.log(creditLimits);
     resetTimeout();
 
     // Remove all non-numeric characters except dot
@@ -163,18 +164,10 @@ const MontoyPlazoCredito = () => {
         network: { ...creditLimits.network },
       };
 
-      newCreditLimits.commite.min = formatMoney(
-        result.data.data[0].amount_minimum
-      );
-      newCreditLimits.commite.max = formatMoney(
-        result.data.data[0].amount_maximum
-      );
-      newCreditLimits.network.min = formatMoney(
-        result.data.data[1].amount_minimum
-      );
-      newCreditLimits.network.max = formatMoney(
-        result.data.data[1].amount_maximum
-      );
+      newCreditLimits.commite.min = result.data.data[0].amount_minimum;
+      newCreditLimits.commite.max = result.data.data[0].amount_maximum;
+      newCreditLimits.network.min = result.data.data[1].amount_minimum;
+      newCreditLimits.network.max = result.data.data[1].amount_maximum;
 
       setCreditLimits(newCreditLimits);
     }
@@ -238,7 +231,12 @@ const MontoyPlazoCredito = () => {
             <TouchableOpacity
               style={styles.buttonFocus}
               onPress={() => [
-                setFinance({ ...finance, focus: "committee" }),
+                setFinance({
+                  ...finance,
+                  focus: "committee",
+                  minMonto: creditLimits.commite.min,
+                  maxMonto: creditLimits.commite.max,
+                }),
                 resetTimeout(),
               ]}
               disabled={finance.paso > 2}
@@ -246,8 +244,8 @@ const MontoyPlazoCredito = () => {
               <View style={{ flex: 1 }}>
                 <Text style={styles.texto2}>Comité</Text>
                 <Text style={[styles.texto3, { fontFamily: "opensansbold" }]}>
-                  Mínimo: {creditLimits.commite.min} Máximo:{" "}
-                  {creditLimits.commite.max}
+                  Monto disponible: {formatMoney(creditLimits.commite.min)} -{" "}
+                  {formatMoney(creditLimits.commite.max)}
                 </Text>
                 <Text style={styles.texto3}>
                   Para solicitar un crédito con Tankef, es necesario presentar
@@ -279,7 +277,12 @@ const MontoyPlazoCredito = () => {
             <TouchableOpacity
               style={styles.buttonFocus}
               onPress={() => [
-                setFinance({ ...finance, focus: "network" }),
+                setFinance({
+                  ...finance,
+                  focus: "network",
+                  minMonto: creditLimits.network.min,
+                  maxMonto: creditLimits.network.max,
+                }),
                 resetTimeout(),
               ]}
               disabled={finance.paso > 2}
@@ -287,10 +290,8 @@ const MontoyPlazoCredito = () => {
               <View style={{ flex: 1 }}>
                 <Text style={styles.texto2}>Por Red Social</Text>
                 <Text style={[styles.texto3, { fontFamily: "opensansbold" }]}>
-                  Monto disponible: {creditLimits.network.min} -{" "}
-                  {creditLimits.network.max}
-                  {/* Mínimo: {creditLimits.network.min} Máximo:{" "}
-                  {creditLimits.network.max} */}
+                  Monto disponible: {formatMoney(creditLimits.network.min)} -{" "}
+                  {formatMoney(creditLimits.network.max)}
                 </Text>
                 <Text style={styles.texto3}>
                   Puedes solicitarlo a través de tu red social, la cual actuará

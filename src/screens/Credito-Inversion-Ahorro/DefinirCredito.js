@@ -91,7 +91,11 @@ const DefinirCredito = ({ navigation }) => {
         });
       }
     };
-    if (finance.plazo && finance.montoNumeric >= 10000) {
+    if (
+      finance.plazo &&
+      finance.montoNumeric >= finance.minMonto &&
+      finance.montoNumeric <= finance.maxMonto
+    ) {
       cotizar();
     }
   }, [finance.plazo, finance.montoNumeric]);
@@ -260,7 +264,8 @@ const DefinirCredito = ({ navigation }) => {
   }, [finance.obligados_solidarios]);*/
 
   const isAcceptable1 =
-    finance.montoNumeric >= 10000 &&
+    finance.montoNumeric >= finance.minMonto &&
+    finance.montoNumeric <= finance.maxMonto &&
     finance.plazo &&
     finance.condiciones &&
     finance.focus;

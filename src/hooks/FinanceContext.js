@@ -1,4 +1,5 @@
 // Importaciones de React
+import { max } from "date-fns";
 import React, { createContext, useState } from "react";
 
 // Creación del contexto UserContext
@@ -10,6 +11,8 @@ const initialState = {
   monto: "",
   montoNumeric: "",
   montoShow: "",
+  minMonto: "",
+  maxMonto: "",
   plazo: "",
   condiciones: false,
   CURP: "",
