@@ -1,4 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+// Importaciones de React Native y React
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,6 +17,8 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { ActivityIndicator } from "react-native-paper";
+import { useFocusEffect } from "@react-navigation/native";
+// Importaciones de Componentes y Hooks
 import ModalAmortizacion from "../../components/ModalAmortizacion";
 import { useInactivity } from "../../hooks/InactivityContext";
 import { FinanceContext } from "../../hooks/FinanceContext";
@@ -36,6 +39,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
     useState(false);
   const [loading, setLoading] = useState(false);
   const [pickerVisible, setPickerVisible] = useState(false);
+  const [dataMonto, setDataMonto] = useState([]);
   const [selectedLabel, setSelectedLabel] = useState("");
 
   useEffect(() => {
@@ -97,6 +101,36 @@ const DefinirCajaAhorro = ({ navigation }) => {
     }
   };
 
+  // Funcion para obtener los montos dinamicos de las cajas de ahorro
+  const fetchDynamicAmounts = async () => {
+    const url = `/api/v1/amounts_saving`;
+
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener los montos dinámicos del usuario:",
+        result.error
+      );
+    } else {
+      console.log("Montos dinámicos obtenidos:", result.data);
+      const transformedData = result.data.data.map((amount) => {
+        const formattedAmount = amount.toLocaleString("es-MX", {
+          style: "currency",
+          currency: "MXN",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+
+        return {
+          label: formattedAmount,
+          value: amount,
+        };
+      });
+      setDataMonto(transformedData);
+    }
+  };
+
   const handleCancelar = () => {
     resetTimeout();
     Alert.alert(
@@ -124,11 +158,18 @@ const DefinirCajaAhorro = ({ navigation }) => {
     );
   };
 
-  const [dataMonto] = useState([
-    { label: "$25,000.00 MXN", value: 25000 },
-    { label: "$50,000.00 MXN", value: 50000 },
-    { label: "$100,000.00 MXN", value: 100000 },
-  ]);
+  // Efecto para obtener los montos dinámicos al cargar la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      fetchDynamicAmounts();
+    }, [])
+  );
+
+  // const [dataMonto] = useState([
+  //   { label: "$25,000.00 MXN", value: 25000 },
+  //   { label: "$50,000.00 MXN", value: 50000 },
+  //   { label: "$100,000.00 MXN", value: 100000 },
+  // ]);
 
   const isAcceptable =
     finance.montoNumeric >= 25000 &&
