@@ -1,5 +1,5 @@
 // Importaciones de React Native y React
-import React, { useState, useContext } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,13 @@ import {
   TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 // Importaciones de Componentes y Contextos
 import { Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useInactivity } from "../hooks/InactivityContext";
 import { UserContext } from "../hooks/UserContext";
 import { FinanceContext } from "../hooks/FinanceContext";
+import { APIGet } from "../API/APIService";
 
 /**
  * `Conexion` es un componente que muestra información de una conexión específica,
@@ -46,6 +48,10 @@ const MontoyPlazoCredito = () => {
   const { resetTimeout } = useInactivity();
   const { user } = useContext(UserContext);
   const { finance, setFinance } = useContext(FinanceContext);
+  const [creditLimits, setCreditLimits] = useState({
+    commite: { min: 0, max: 0 },
+    network: { min: 0, max: 0 },
+  });
 
   // Function to manage input changes and format text
   const handleChangeText = (inputText) => {
@@ -126,6 +132,61 @@ const MontoyPlazoCredito = () => {
     });
   };
 
+  const formatMoney = (amount) => {
+    const numericAmount = Number(amount);
+    if (isNaN(numericAmount)) {
+      console.error("Invalid number input for formatting");
+      return "N/A";
+    }
+    return numericAmount.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  // Funcion para obtener los montos dinamicos de los créditos
+  const fetchDynamicAmounts = async () => {
+    const url = `/api/v1/amounts_credit`;
+    const result = await APIGet(url);
+
+    if (result.error) {
+      console.error(
+        "Error al obtener los montos dinámicos del usuario:",
+        result.error
+      );
+    } else {
+      console.log("Montos dinámicos obtenidos:", result.data);
+      const newCreditLimits = {
+        commite: { ...creditLimits.commite },
+        network: { ...creditLimits.network },
+      };
+
+      newCreditLimits.commite.min = formatMoney(
+        result.data.data[0].amount_minimum
+      );
+      newCreditLimits.commite.max = formatMoney(
+        result.data.data[0].amount_maximum
+      );
+      newCreditLimits.network.min = formatMoney(
+        result.data.data[1].amount_minimum
+      );
+      newCreditLimits.network.max = formatMoney(
+        result.data.data[1].amount_maximum
+      );
+
+      setCreditLimits(newCreditLimits);
+    }
+  };
+
+  // Efecto para obtener los montos dinámicos al cargar la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      fetchDynamicAmounts();
+    }, [])
+  );
+
   // Componente visual
   return (
     <>
@@ -168,16 +229,6 @@ const MontoyPlazoCredito = () => {
                 MXN
               </Text>
             </View>
-            <View style={styles.separacion} />
-            <Text style={[styles.concepto, { marginBottom: 15, fontSize: 12 }]}>
-              {`Monto mínimo $10,000.00, valor de la red ${user.valorRed.toLocaleString(
-                "es-MX",
-                {
-                  style: "currency",
-                  currency: "MXN",
-                }
-              )}MXN.`}
-            </Text>
           </View>
 
           <View style={styles.contenedores}>
@@ -194,9 +245,17 @@ const MontoyPlazoCredito = () => {
             >
               <View style={{ flex: 1 }}>
                 <Text style={styles.texto2}>Comité</Text>
+                <Text style={[styles.texto3, { fontFamily: "opensansbold" }]}>
+                  Mínimo: {creditLimits.commite.min} Máximo:{" "}
+                  {creditLimits.commite.max}
+                </Text>
                 <Text style={styles.texto3}>
-                  El crédito es solicitado a Tankef, requiere revisión en Buró
-                  de Crédito.
+                  Para solicitar un crédito con Tankef, es necesario presentar
+                  la solicitud al comité y someterse a una revisión en el{" "}
+                  <Text style={{ fontFamily: "opensansbold" }}>
+                    Buró de Crédito
+                  </Text>
+                  .
                 </Text>
               </View>
               {finance.focus === "committee" ? (
@@ -227,9 +286,15 @@ const MontoyPlazoCredito = () => {
             >
               <View style={{ flex: 1 }}>
                 <Text style={styles.texto2}>Por Red Social</Text>
+                <Text style={[styles.texto3, { fontFamily: "opensansbold" }]}>
+                  Monto disponible: {creditLimits.network.min} -{" "}
+                  {creditLimits.network.max}
+                  {/* Mínimo: {creditLimits.network.min} Máximo:{" "}
+                  {creditLimits.network.max} */}
+                </Text>
                 <Text style={styles.texto3}>
-                  El crédito es solicitado a las personas que selecciones como
-                  tus obligados solidarios.
+                  Puedes solicitarlo a través de tu red social, la cual actuará
+                  como tu aval solidario.
                 </Text>
               </View>
               {finance.focus === "network" ? (

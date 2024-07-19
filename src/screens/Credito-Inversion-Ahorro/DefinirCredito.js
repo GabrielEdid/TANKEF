@@ -509,8 +509,8 @@ const DefinirCredito = ({ navigation }) => {
                       <View>
                         <Text style={styles.texto2}>Por Red Social</Text>
                         <Text style={styles.texto3}>
-                          El crédito es solicitado a las personas que
-                          selecciones como tus obligados solidarios.
+                          Puedes solicitarlo a través de tu red social, la cual
+                          actuará como tu aval solidario.
                         </Text>
                       </View>
                     )}
