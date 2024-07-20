@@ -213,7 +213,7 @@ const InfoGeneral = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Titulo, Nombre de Pantalla y Campana */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -223,7 +223,7 @@ const InfoGeneral = ({ navigation }) => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text style={styles.tituloPantalla}>{flujo}</Text>
       </View>
 
@@ -294,9 +294,9 @@ const InfoGeneral = ({ navigation }) => {
             <View style={{ flex: 1 }}>
               <View
                 style={{
-                  marginTop: 5,
+                  marginTop: 3,
                   backgroundColor: "white",
-                  paddingTop: 15,
+                  paddingTop: 10,
                 }}
               >
                 {/* Campos para introducir de la información general */}
@@ -584,14 +584,15 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 85,
+    // marginRight: 85, // Descomentar si se regresa el titulo
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
   seccion: {
-    marginTop: 5,
+    marginTop: 3,
     backgroundColor: "white",
     alignItems: "center",
     padding: 15,

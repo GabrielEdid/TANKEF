@@ -694,7 +694,7 @@ const Documentacion = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Titulo, Nombre de Pantalla y Campana */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 0.6 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -704,18 +704,18 @@ const Documentacion = ({ navigation }) => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text
           style={[
             styles.tituloPantalla,
             {
               fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-              marginRight:
-                flujo === "Caja de ahorro"
-                  ? 55
-                  : flujo === "Crédito"
-                  ? -20
-                  : 10,
+              // marginRight:
+              //   flujo === "Caja de ahorro"
+              //     ? 55
+              //     : flujo === "Crédito"
+              //     ? -20
+              //     : 10, // Descomentar si se regresa el titulo
             },
           ]}
         >
@@ -743,7 +743,7 @@ const Documentacion = ({ navigation }) => {
             </View>
             <View
               style={{
-                marginTop: 5,
+                marginTop: 3,
                 backgroundColor: "white",
               }}
             >
@@ -1307,12 +1307,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 47,
     fontSize: 24,
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
   seccion: {
-    marginTop: 5,
+    marginTop: 3,
     backgroundColor: "white",
     alignItems: "center",
     padding: 15,

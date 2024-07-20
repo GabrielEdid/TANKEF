@@ -192,7 +192,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 0.6 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -202,7 +202,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
             end={{ x: 0, y: 0 }}
             style={{ flex: 1 }}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text style={styles.tituloPantalla}>Caja de ahorro</Text>
       </View>
       <ScrollView
@@ -457,7 +457,8 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 55,
+    // marginRight: 55, // Descomentar si se regresa el título
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 20,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

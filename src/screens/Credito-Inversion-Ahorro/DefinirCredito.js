@@ -327,7 +327,7 @@ const DefinirCredito = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Titulo, Nombre de Pantalla y Campana */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 0.6 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -337,7 +337,7 @@ const DefinirCredito = ({ navigation }) => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text style={styles.tituloPantalla}>Crédito</Text>
       </View>
       <ScrollView
@@ -860,7 +860,8 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginLeft: 5,
+    // marginLeft: 5, // Descomedtar si se regresa el titulo
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

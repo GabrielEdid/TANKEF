@@ -200,7 +200,7 @@ const DefinirInversion = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Titulo, Nombre de Pantalla y Campana */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 0.6 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -210,7 +210,7 @@ const DefinirInversion = ({ navigation }) => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text style={styles.tituloPantalla}>Inversión</Text>
       </View>
       <ScrollView
@@ -533,7 +533,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 47,
     fontSize: 24,
-    marginRight: 10,
+    // marginRight: 10, // Descomentar si se regresa el titulo
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",

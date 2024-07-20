@@ -91,7 +91,7 @@ const OrdenPago = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Titulo, Nombre de Pantalla y Campana */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 0.6 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -101,18 +101,18 @@ const OrdenPago = ({ navigation }) => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text
           style={[
             styles.tituloPantalla,
             {
               fontSize: flujo === "Caja de ahorro" ? 20 : 24,
-              marginRight:
-                flujo === "Caja de ahorro"
-                  ? 55
-                  : flujo === "Crédito"
-                  ? -20
-                  : 10,
+              // marginRight: // Descomentar si se regresa el titulo
+              //   flujo === "Caja de ahorro"
+              //     ? 55
+              //     : flujo === "Crédito"
+              //     ? -20
+              //     : 10,
             },
           ]}
         >
@@ -141,9 +141,8 @@ const OrdenPago = ({ navigation }) => {
             </View>
             <View
               style={{
-                marginTop: 5,
+                marginTop: 3,
                 backgroundColor: "white",
-                paddingTop: 15,
               }}
             >
               {/* Campos para introducir los datos bancarios */}
@@ -198,13 +197,14 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
     fontWeight: "bold",
   },
   seccion: {
-    marginTop: 5,
+    marginTop: 3,
     backgroundColor: "white",
     alignItems: "center",
     padding: 15,
