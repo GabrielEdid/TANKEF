@@ -376,7 +376,14 @@ const VerPosts = ({ route, navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       {/* Titulo y Boton de Notificaciones */}
-      <View style={styles.tituloContainer}>
+      <View
+        style={{
+          backgroundColor: "white",
+          paddingTop: 40,
+          paddingLeft: 20,
+          paddingBottom: 20,
+        }}
+      >
         {/* <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
@@ -384,18 +391,16 @@ const VerPosts = ({ route, navigation }) => {
           <LinearGradient
             colors={["#2FF690", "#21B6D5"]}
             start={{ x: 0.3, y: 0.3 }}
-            end={{ x: 0, y: 0 }}
+            end={{ x: 0.0, y: 0.0 }}
             style={StyleSheet.absoluteFill}
           />
         </MaskedView> */}
-        {/* <TouchableOpacity>
-          <Feather
-            name="bell"
-            size={25}
-            color="#060B4D"
-            style={{ marginTop: 50 }}
-          />
-        </TouchableOpacity> */}
+        <TouchableOpacity
+          onPress={() => [navigation.goBack(), resetTimeout()]}
+          style={{ top: 10 }}
+        >
+          <AntDesign name="arrowleft" size={30} color="#060B4D" />
+        </TouchableOpacity>
       </View>
       <View style={[styles.linea, { marginTop: 0 }]} />
 

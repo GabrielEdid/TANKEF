@@ -17,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { ActivityIndicator } from "react-native-paper";
 // Importaciones de Hooks y Componentes
-import { Feather, EvilIcons } from "@expo/vector-icons";
+import { Feather, EvilIcons, AntDesign } from "@expo/vector-icons";
 import { APIGet, APIPost, APIDelete } from "../../API/APIService";
 import { UserContext } from "../../hooks/UserContext";
 import { useInactivity } from "../../hooks/InactivityContext";
@@ -220,8 +220,15 @@ const VerPerfiles = ({ route }) => {
   return (
     <>
       {/* Titulo y Campanita */}
-      <View style={styles.tituloContainer}>
-        <MaskedView
+      <View
+        style={{
+          backgroundColor: "white",
+          paddingTop: 40,
+          paddingLeft: 20,
+          paddingBottom: 20,
+        }}
+      >
+        {/* <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -231,7 +238,13 @@ const VerPerfiles = ({ route }) => {
             end={{ x: 0.0, y: 0.0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
+        <TouchableOpacity
+          onPress={() => [navigation.goBack(), resetTimeout()]}
+          style={{ top: 10 }}
+        >
+          <AntDesign name="arrowleft" size={30} color="#060B4D" />
+        </TouchableOpacity>
       </View>
 
       {/* Scroll principal */}

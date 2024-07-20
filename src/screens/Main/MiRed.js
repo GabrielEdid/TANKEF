@@ -160,7 +160,7 @@ const MiRed = () => {
       <View style={{ flex: 1 }}>
         {/* Titulo, Nombre de Pantalla y Campana*/}
         <View style={styles.tituloContainer}>
-          <MaskedView
+          {/* <MaskedView
             style={{ flex: 1 }}
             maskElement={<Text style={styles.titulo}>tankef</Text>}
           >
@@ -170,7 +170,7 @@ const MiRed = () => {
               end={{ x: 0, y: 0 }}
               style={StyleSheet.absoluteFill}
             />
-          </MaskedView>
+          </MaskedView> */}
           <Text style={styles.tituloPantalla}>Mi Red</Text>
           {/* <TouchableOpacity>
             <Feather
@@ -484,7 +484,8 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 75,
+    // marginRight: 75, // Descomentar si se regresa el titulo
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",
