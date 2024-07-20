@@ -190,6 +190,14 @@ const Post = (props) => {
     });
   };
 
+  const reportar = () => {
+    Alert.alert(
+      "Publicación Reportada",
+      "Muchas gracias por tu reporte. Pronto revisaremos la publicación."
+    ),
+      resetTimeout();
+  };
+
   // Componente para manejar los enlaces en el texto
   const Link = (props) => (
     <Text style={{ fontFamily: "opensansbold", color: "#22BAD2", top: 4 }}>
@@ -452,10 +460,7 @@ const Post = (props) => {
             ) : (
               <TouchableOpacity
                 style={styles.buttonModal}
-                onPress={() => [
-                  console.log("Implementación de Reportar"),
-                  resetTimeout(),
-                ]}
+                onPress={() => reportar()}
               >
                 <Text style={{ color: "red" }}>Reportar Publicación</Text>
               </TouchableOpacity>

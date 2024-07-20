@@ -303,6 +303,14 @@ const VerPosts = ({ route, navigation }) => {
     }
   };
 
+  const reportar = () => {
+    Alert.alert(
+      "Publicación Reportada",
+      "Muchas gracias por tu reporte. Pronto revisaremos la publicación."
+    ),
+      resetTimeout();
+  };
+
   // Si el post fue eliminado, no se muestra nada
   if (!isVisible) {
     return null;
@@ -369,7 +377,7 @@ const VerPosts = ({ route, navigation }) => {
     <View style={{ flex: 1, backgroundColor: "white" }}>
       {/* Titulo y Boton de Notificaciones */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -379,7 +387,7 @@ const VerPosts = ({ route, navigation }) => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         {/* <TouchableOpacity>
           <Feather
             name="bell"
@@ -600,10 +608,7 @@ const VerPosts = ({ route, navigation }) => {
               {!personal ? (
                 <TouchableOpacity
                   style={styles.buttonModal}
-                  onPress={() => [
-                    console.log("Implementación de Reportar"),
-                    resetTimeout(),
-                  ]}
+                  onPress={() => reportar()}
                 >
                   <Text style={{ color: "red" }}>Reportar Publicación</Text>
                 </TouchableOpacity>
