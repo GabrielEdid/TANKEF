@@ -51,7 +51,7 @@ const AuthPinPad = ({ navigation, route }) => {
       setIsLoading(false);
       setPin("");
       navigation.navigate("MainFlow", {
-        screen: "Perfil",
+        screen: "Inicio",
       });
     }
   };
