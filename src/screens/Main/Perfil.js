@@ -118,7 +118,7 @@ const Perfil = () => {
     <>
       {/* Titulo, Nombre de la Pantalla, Notificación y Sliders */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -128,7 +128,7 @@ const Perfil = () => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text style={styles.tituloPantalla}>Perfil</Text>
         {/* <TouchableOpacity>
           <Feather
@@ -324,7 +324,9 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 35,
+    //marginRight: 35, // Descomentar si se regresa el titulo
+    marginLeft: 25, // Ajuste para centrar el título, eliminar si se regresa el titulo
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

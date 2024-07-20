@@ -127,7 +127,7 @@ const Inicio = () => {
     <>
       {/* Titulo, Nombre de Pantalla y Campana*/}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -137,7 +137,7 @@ const Inicio = () => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <Text style={styles.tituloPantalla}>Inicio</Text>
         {/* <TouchableOpacity>
           <Feather
@@ -285,7 +285,8 @@ const styles = StyleSheet.create({
   tituloPantalla: {
     flex: 1,
     marginTop: 47,
-    marginRight: 60,
+    //marginRight: 60, // Descomentar si se regresa el título
+    textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 24,
     color: "#060B4D",
     fontFamily: "opensanssemibold",

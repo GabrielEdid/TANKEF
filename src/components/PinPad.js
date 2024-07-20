@@ -1,5 +1,5 @@
 // Importaciones de React y React Native
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -9,6 +9,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { UserContext } from "../hooks/UserContext";
 
 /**
  * Componente PinPad: Permite al usuario ingresar un PIN.
@@ -31,6 +32,7 @@ const PinPad = ({
   id,
 }) => {
   const navigation = useNavigation();
+  const { resetUser } = useContext(UserContext);
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -47,6 +49,7 @@ const PinPad = ({
   };
 
   const onForgotPin = () => {
+    resetUser();
     Alert.alert(
       "Recuperación de PIN",
       "Por favor vuelve a iniciar sesión para recuperar tu PIN"
