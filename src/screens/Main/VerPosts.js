@@ -170,7 +170,7 @@ const VerPosts = ({ route, navigation }) => {
   const postComment = async () => {
     const url = "/api/v1/comments";
     const data = {
-      body: comentario,
+      body: cleanText(comentario),
       commentable_type: "Post",
       commentable_id: postId,
       user_id: user.userID,
@@ -215,7 +215,7 @@ const VerPosts = ({ route, navigation }) => {
       setReplyingTo(null);
       setReplyingToId(null);
       setComentario("");
-      setCommentCount((prevCount) => prevCount + 1);
+      //setCommentCount((prevCount) => prevCount + 1);
       fetchComments(page);
     }
   };
@@ -608,7 +608,9 @@ const VerPosts = ({ route, navigation }) => {
                   style={styles.buttonModal}
                   onPress={() => [deletePost(), resetTimeout()]}
                 >
-                  <Text style={{ color: "red" }}>Eliminar Publicación</Text>
+                  <Text style={{ color: "red", fontFamily: "opensans" }}>
+                    Eliminar Publicación
+                  </Text>
                 </TouchableOpacity>
               ) : null}
               {!personal ? (
@@ -616,14 +618,18 @@ const VerPosts = ({ route, navigation }) => {
                   style={styles.buttonModal}
                   onPress={() => reportar()}
                 >
-                  <Text style={{ color: "red" }}>Reportar Publicación</Text>
+                  <Text style={{ color: "red", fontFamily: "opensans" }}>
+                    Reportar Publicación
+                  </Text>
                 </TouchableOpacity>
               ) : null}
               <TouchableOpacity
                 style={{ marginTop: 10 }}
                 onPress={() => setModalVisible(false)}
               >
-                <Text>Cancelar</Text>
+                <Text style={{ fontFamily: "opensans", color: "#060B4D" }}>
+                  Cancelar
+                </Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -645,7 +651,7 @@ const VerPosts = ({ route, navigation }) => {
             placeholderTextColor="#D5D5D5"
             multiline={true}
             keyboardType="twitter"
-            onChangeText={(text) => setComentario(cleanText(text))}
+            onChangeText={(text) => setComentario(text)}
             value={comentario}
             maxLength={250}
             onFocus={() => setIsFetchingMore(false)}
@@ -827,9 +833,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 1,
+    shadowRadius: 6,
+    elevation: 10,
     position: "absolute",
     width: "100%",
     alignSelf: "center",

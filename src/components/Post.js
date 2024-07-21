@@ -456,21 +456,27 @@ const Post = (props) => {
                 style={styles.buttonModal}
                 onPress={() => deletePost()}
               >
-                <Text style={{ color: "red" }}>Eliminar Publicación</Text>
+                <Text style={{ fontFamily: "opensans", color: "red" }}>
+                  Eliminar Publicación
+                </Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 style={styles.buttonModal}
                 onPress={() => reportar()}
               >
-                <Text style={{ color: "red" }}>Reportar Publicación</Text>
+                <Text style={{ fontFamily: "opensans", color: "red" }}>
+                  Reportar Publicación
+                </Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
               style={{ marginTop: 10 }}
               onPress={() => [setModalVisible(false), resetTimeout()]}
             >
-              <Text>Cancelar</Text>
+              <Text style={{ fontFamily: "opensans", color: "#060B4D" }}>
+                Cancelar
+              </Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -586,9 +592,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 1,
+    shadowRadius: 6,
+    elevation: 10,
     position: "absolute",
     width: "100%",
     alignSelf: "center",

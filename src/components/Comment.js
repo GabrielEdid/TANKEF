@@ -105,7 +105,15 @@ const Comment = (props) => {
         : imageMap["Blank"]; // Usa el avatar del usuario de la respuesta
       // Se renderizan los replies
       return (
-        <View style={[styles.container, { marginLeft: 20 }]}>
+        <TouchableOpacity
+          style={[styles.container, { marginLeft: 20 }]}
+          onLongPress={() => [
+            setModalVisible(true),
+            setDeleteId(reply.id),
+            resetTimeout(),
+          ]}
+          activeOpacity={1} // Evita el efecto de opacidad al presionar
+        >
           <View style={[styles.header]}>
             <Image source={replyImageSource} style={styles.icon} />
             <View style={styles.contentContainer}>
@@ -115,8 +123,11 @@ const Comment = (props) => {
                 </Text>
                 <Text style={styles.textoBody}>{reply.body}</Text>
               </View>
-              <TouchableOpacity
-                style={{ alignItems: "center", justifyContent: "center" }}
+              {/* <TouchableOpacity
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
                 onPress={() => [
                   setModalVisible(true),
                   setDeleteId(reply.id),
@@ -124,17 +135,25 @@ const Comment = (props) => {
                 ]}
               >
                 <Text style={styles.tresPuntos}>...</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       );
     });
   };
 
   // Componente Visual
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onLongPress={() => [
+        setModalVisible(true),
+        setDeleteId(props.commentId),
+        resetTimeout(),
+      ]}
+      activeOpacity={1} // Evita el efecto de opacidad al presionar
+    >
       <View style={styles.header}>
         <Image source={imageSource} style={styles.icon} />
         <View style={styles.contentContainer}>
@@ -142,7 +161,7 @@ const Comment = (props) => {
             <Text style={styles.textoNombre}>{props.nombre}</Text>
             <Text style={styles.textoBody}>{props.body}</Text>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
             onPress={() => [
               setModalVisible(true),
@@ -151,7 +170,7 @@ const Comment = (props) => {
             ]}
           >
             <Text style={styles.tresPuntos}>...</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
       <View style={{ marginLeft: 50 }}>
@@ -187,7 +206,9 @@ const Comment = (props) => {
                   deleteComment();
                 }}
               >
-                <Text style={{ color: "red" }}>Eliminar Comentario</Text>
+                <Text style={{ color: "red", fontFamily: "opensans" }}>
+                  Eliminar Comentario
+                </Text>
               </TouchableOpacity>
             ) : null}
             {!props.personal ? (
@@ -198,19 +219,23 @@ const Comment = (props) => {
                   resetTimeout(),
                 ]}
               >
-                <Text style={{ color: "red" }}>Reportar Comentario</Text>
+                <Text style={{ color: "red", fontFamily: "opensans" }}>
+                  Reportar Comentario
+                </Text>
               </TouchableOpacity>
             ) : null}
             <TouchableOpacity
               style={{ marginTop: 10 }}
               onPress={() => [setModalVisible(false), resetTimeout()]}
             >
-              <Text>Cancelar</Text>
+              <Text style={{ fontFamily: "opensans", color: "#060B4D" }}>
+                Cancelar
+              </Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </Modal>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -236,7 +261,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     justifyContent: "center",
-    marginRight: 10,
+    marginRight: 20,
   },
   textoNombre: {
     fontSize: 12,
@@ -280,9 +305,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 1,
+    shadowRadius: 6,
+    elevation: 10,
     position: "absolute",
     width: "100%",
     alignSelf: "center",
