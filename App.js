@@ -17,7 +17,7 @@ import { setToken, getToken } from "./src/API/APIService";
 import LogIn from "./src/screens/LogIn/LogIn";
 import NumeroTelefonico from "./src/screens/LogIn/NumeroTelefonico";
 import ConfirmNumber from "./src/screens/LogIn/ConfirmNumber";
-import Registro3 from "./src/screens/LogIn/Registro3";
+// import Registro3 from "./src/screens/LogIn/Pantallas Login Dejadas/Registro3";
 import RegistroDatos from "./src/screens/LogIn/RegistroDatos";
 import SetPinPad from "./src/screens/LogIn/SetPinPad";
 import ConfirmSetPinPad from "./src/screens/LogIn/ConfirmSetPinPad";
@@ -27,7 +27,7 @@ import Inicio from "./src/screens/Main/Inicio";
 import MiRed from "./src/screens/Main/MiRed";
 import VerPerfiles from "./src/screens/Main/VerPerfiles";
 import VerPosts from "./src/screens/Main/VerPosts";
-import Crear from "./src/screens/Main/Pantallas Main Dejadas/Crear";
+// import Crear from "./src/screens/Main/Pantallas Main Dejadas/Crear";
 import CrearModal from "./src/components/CrearModal";
 import MiTankef from "./src/screens/Main/MiTankef";
 import Perfil from "./src/screens/Main/Perfil";
@@ -450,11 +450,11 @@ function LoginFlow() {
         component={ConfirmNumber}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Registro3"
         component={Registro3}
         options={{ headerShown: false }}
-      />
+      /> */}
       <Stack.Screen
         name="RegistroDatos"
         component={RegistroDatos}

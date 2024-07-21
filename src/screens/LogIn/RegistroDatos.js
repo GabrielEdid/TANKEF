@@ -162,7 +162,7 @@ const Registro4 = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Titulo, Nombre de Pantalla y Campana */}
       <View style={styles.tituloContainer}>
-        <MaskedView
+        {/* <MaskedView
           style={{ flex: 1 }}
           maskElement={<Text style={styles.titulo}>tankef</Text>}
         >
@@ -172,7 +172,7 @@ const Registro4 = ({ navigation }) => {
             end={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
-        </MaskedView>
+        </MaskedView> */}
         <TouchableOpacity onPress={() => handleCancelar()}>
           <Text style={[styles.bodySeccion, { marginTop: 50, fontSize: 20 }]}>
             Cancelar
@@ -198,9 +198,8 @@ const Registro4 = ({ navigation }) => {
         <View style={{ flex: 1 }}>
           <View
             style={{
-              marginTop: 5,
+              marginTop: 3,
               backgroundColor: "white",
-              paddingTop: 15,
             }}
           >
             {/* Campos para introducir de la información general */}
@@ -421,7 +420,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   seccion: {
-    marginTop: 5,
+    marginTop: 3,
     backgroundColor: "white",
     alignItems: "center",
     padding: 15,

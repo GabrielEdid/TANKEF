@@ -11,10 +11,10 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 // Importaciones de Hooks
-import { UserContext } from "../../hooks/UserContext";
-import { ChecarCURP } from "../../hooks/ChecarCURP";
+import { UserContext } from "../../../hooks/UserContext";
+import { ChecarCURP } from "../../../hooks/ChecarCURP";
 // Importaciones de Componentes
-import SpecialInput from "../../components/Componentes Olvidados/SpecialInput";
+import SpecialInput from "../../../components/Componentes Olvidados/SpecialInput";
 import { AntDesign } from "@expo/vector-icons";
 
 const Registro3 = ({ navigation }) => {

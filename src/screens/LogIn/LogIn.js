@@ -84,7 +84,6 @@ const LogIn = ({ navigation }) => {
         "Respuesta inesperada del servidor"
       );
     }
-
     setIsLoading(false);
   };
 
@@ -271,13 +270,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   logo: {
-    width: 175,
-    height: 70,
+    width: 180,
+    height: 122,
     alignSelf: "center",
   },
   title: {
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 40,
     fontSize: 20,
     color: "white",
     fontFamily: "opensans",
