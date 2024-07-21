@@ -308,7 +308,8 @@ const VerPosts = ({ route, navigation }) => {
       "Publicación Reportada",
       "Muchas gracias por tu reporte. Pronto revisaremos la publicación."
     ),
-      resetTimeout();
+      resetTimeout(),
+      setModalVisible(false);
   };
 
   // Si el post fue eliminado, no se muestra nada

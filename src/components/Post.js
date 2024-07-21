@@ -195,7 +195,8 @@ const Post = (props) => {
       "Publicación Reportada",
       "Muchas gracias por tu reporte. Pronto revisaremos la publicación."
     ),
-      resetTimeout();
+      resetTimeout(),
+      setModalVisible(false);
   };
 
   // Componente para manejar los enlaces en el texto
