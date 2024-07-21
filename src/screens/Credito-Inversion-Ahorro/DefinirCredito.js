@@ -362,12 +362,12 @@ const DefinirCredito = ({ navigation }) => {
               <Text
                 style={{
                   fontFamily: "opensansbold",
-                  fontSize: 16,
+                  fontSize: 20,
                   color: "#060B4D",
                   textAlign: "center",
                 }}
               >
-                Selecciona una de nuestras opciones para solicitar un crédito.
+                Simula tu Crédito
               </Text>
             </View>
           )}
@@ -435,7 +435,8 @@ const DefinirCredito = ({ navigation }) => {
           {/* Flujo de Mi Red */}
           {/* {focus === "Mi Red" && ( */}
 
-          <View
+          {/* Numeros del paso del Crédito */}
+          {/* <View
             style={[
               styles.contenedores,
               { flexDirection: "row", justifyContent: "center" },
@@ -457,7 +458,7 @@ const DefinirCredito = ({ navigation }) => {
                 ? "Revisión de Cotización"
                 : finance.paso === 3
                 ? "Proporciona información general"
-                : "Revisión y Validación de información"} */}
+                : "Revisión y Validación de información"} 
 
               {finance.paso === 1
                 ? "Solicitud del crédito"
@@ -465,7 +466,7 @@ const DefinirCredito = ({ navigation }) => {
                 ? "Revisión de Cotización"
                 : "Revisión del crédito"}
             </Text>
-          </View>
+          </View> */}
 
           <MontoyPlazoCredito />
 

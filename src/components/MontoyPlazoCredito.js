@@ -185,9 +185,11 @@ const MontoyPlazoCredito = () => {
     <>
       {finance.paso <= 2 && (
         <>
-          <View style={[styles.contenedores, { paddingBottom: 0 }]}>
+          <View
+            style={[styles.contenedores, { paddingBottom: 0, marginTop: 0 }]}
+          >
             <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-              Monto a solicitar
+              ¿Cuánto necesitas?
             </Text>
             <View style={styles.inputWrapper}>
               <Text
@@ -317,7 +319,7 @@ const MontoyPlazoCredito = () => {
           </View>
           <View style={styles.contenedores}>
             <Text style={[styles.texto, { fontFamily: "opensansbold" }]}>
-              ¿A qué plazo quieres pagarlo?
+              Elige el plazo de tu crédito
             </Text>
             <View
               style={{
