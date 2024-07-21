@@ -202,7 +202,9 @@ const LogIn = ({ navigation }) => {
           >
             <TouchableOpacity
               style={{ marginTop: 10, alignSelf: "center", marginRight: 7.5 }}
-              onPress={() => setCondiciones(!condiciones)}
+              onPress={() => {
+                setCondiciones(!condiciones), console.log(user);
+              }}
             >
               <Feather
                 name={condiciones ? "check-square" : "square"}

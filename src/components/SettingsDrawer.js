@@ -64,7 +64,7 @@ const SettingsDrawer = ({ navigation }) => {
     resetUser();
     // Espera a que el estado se actualice antes de guardar en AsyncStorage
     await AsyncStorage.setItem("userInfo", JSON.stringify(user));
-    console.log("Información reseteada y guardada con éxito");
+    console.log("Información reseteada y guardada con éxito: " + user.email);
     navigation.closeDrawer();
     navigation.navigate("LogIn");
   };
@@ -74,24 +74,40 @@ const SettingsDrawer = ({ navigation }) => {
       <Text style={styles.titulo}>Configuración</Text>
       <TouchableOpacity
         style={{ marginTop: 325 }}
-        onPress={() => [navigation.navigate("EditarPerfil"), resetTimeout()]}
+        onPress={() => [
+          navigation.navigate("EditarPerfil"),
+          navigation.closeDrawer(),
+          resetTimeout(),
+        ]}
       >
         <Text style={styles.texto}>Datos del Perfil</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          toggleModal();
+          navigation.closeDrawer(), toggleModal();
         }}
       >
         <Text style={styles.texto}>About</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => resetTimeout()}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.closeDrawer(), resetTimeout();
+        }}
+      >
         <Text style={styles.texto}>FAQs</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => resetTimeout()}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.closeDrawer(), resetTimeout();
+        }}
+      >
         <Text style={styles.texto}>Help</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => cerrarSesion()}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.closeDrawer(), cerrarSesion();
+        }}
+      >
         <Text style={styles.cerrarSesion}>Cerrar Sesión</Text>
       </TouchableOpacity>
 

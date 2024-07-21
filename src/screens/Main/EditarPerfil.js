@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { APIPut } from "../../API/APIService";
 import { useInactivity } from "../../hooks/InactivityContext";
 import { UserContext } from "../../hooks/UserContext";
-import { Feather, FontAwesome } from "@expo/vector-icons";
+import { Feather, FontAwesome, AntDesign } from "@expo/vector-icons";
 
 const EditarPerfil = ({ navigation }) => {
   // Estados locales
@@ -125,6 +125,12 @@ const EditarPerfil = ({ navigation }) => {
               style={StyleSheet.absoluteFill}
             />
           </MaskedView> */}
+          <TouchableOpacity
+            onPress={() => [navigation.goBack(), resetTimeout()]}
+            style={{ top: 50 }}
+          >
+            <AntDesign name="arrowleft" size={30} color="#060B4D" />
+          </TouchableOpacity>
           <Text style={styles.tituloPantalla}>Perfil</Text>
           {/* <TouchableOpacity>
             <Feather
@@ -206,6 +212,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 47,
     //marginLeft: -55, // Descomentar si se regresa el titulo
+    marginRight: 30, // Ajuste para centrar el título, eliminar si se regresa el titulo
     textAlign: "center", // Ajuste para centrar el título, eliminar si se regresa el titulo
     fontSize: 24,
     color: "#060B4D",
