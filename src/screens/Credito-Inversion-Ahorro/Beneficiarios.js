@@ -375,17 +375,7 @@ const Beneficiarios = ({ navigation }) => {
                 }}
               >
                 {/* Campos para introducir los datos del primer beneficiario */}
-                <Text
-                  style={{
-                    fontSize: 16,
-                    paddingLeft: 15,
-                    marginBottom: 10,
-                    color: "#060B4D",
-                    fontFamily: "opensanssemibold",
-                  }}
-                >
-                  Primer Beneficiario
-                </Text>
+                <Text style={styles.beneficiario}>Beneficiario 01</Text>
                 <View style={styles.separacion} />
 
                 <Text style={styles.tituloCampo}>Nombre(s)</Text>
@@ -516,28 +506,17 @@ const Beneficiarios = ({ navigation }) => {
                   dropDownContainerStyle={styles.DropDownContainer}
                   textStyle={styles.DropDownText}
                 />
-                <View style={styles.separacion} />
                 <View
                   style={[
                     styles.separacion,
-                    { backgroundColor: "#f2f2f2ff", height: 5 },
+                    { backgroundColor: "#f2f2f2ff", height: 3 },
                   ]}
                 />
 
                 {/* Opcion de introducir un Segundo Beneficiario */}
                 {segundoBeneficiaro === true && (
                   <View style={{ marginTop: 15 }}>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        paddingLeft: 15,
-                        marginBottom: 10,
-                        color: "#060B4D",
-                        fontFamily: "opensanssemibold",
-                      }}
-                    >
-                      Segundo Beneficiario
-                    </Text>
+                    <Text style={styles.beneficiario}>Beneficiario 02</Text>
                     <View style={styles.separacion} />
 
                     <Text style={styles.tituloCampo}>Nombre(s)</Text>
@@ -798,9 +777,16 @@ const styles = StyleSheet.create({
     fontFamily: "opensanssemibold",
     textAlign: "center",
   },
+  beneficiario: {
+    fontSize: 16,
+    paddingLeft: 15,
+    marginBottom: 10,
+    color: "#060B4D",
+    fontFamily: "opensansbold",
+  },
   tituloCampo: {
     marginTop: 10,
-    paddingLeft: 15,
+    paddingLeft: 20,
     marginBottom: 10,
     fontSize: 14,
     color: "#060B4D",
@@ -811,7 +797,7 @@ const styles = StyleSheet.create({
     width: "100%",
     color: "#060B4D",
     fontFamily: "opensanssemibold",
-    paddingLeft: 15,
+    paddingLeft: 20,
     marginBottom: 10,
   },
   countryCodeText: {
