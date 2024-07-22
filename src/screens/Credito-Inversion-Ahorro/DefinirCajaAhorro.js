@@ -172,11 +172,12 @@ const DefinirCajaAhorro = ({ navigation }) => {
   // ]);
 
   const isAcceptable =
-    finance.montoNumeric >= 25000 &&
+    finance.montoNumeric >= 2500 &&
     finance.nombreFinance &&
-    finance.condiciones;
+    finance.condiciones &&
+    finance.plazo;
 
-  const isTable = finance.monto >= 25000;
+  const isTable = finance.montoNumeric >= 2500 && finance.plazo;
 
   const handleValueChange = (itemValue, itemIndex) => {
     const selectedItem = dataMonto[itemIndex];
@@ -214,12 +215,7 @@ const DefinirCajaAhorro = ({ navigation }) => {
         scrollEventThrottle={400}
       >
         <View style={{ flex: 1 }}>
-          <View
-            style={[
-              styles.contenedores,
-              { marginTop: 3, paddingHorizontal: 20 },
-            ]}
-          >
+          <View style={[styles.contenedores, { paddingHorizontal: 20 }]}>
             <Text
               style={{
                 fontFamily: "opensansbold",
@@ -228,11 +224,11 @@ const DefinirCajaAhorro = ({ navigation }) => {
                 textAlign: "center",
               }}
             >
-              Ingresa los datos solicitados para iniciar tu caja de ahorro.
+              Simula tu caja de ahorro
             </Text>
           </View>
           <View style={[styles.contenedores, { marginTop: -10 }]}>
-            <Text style={styles.texto}>Nombre de la Caja de Ahorro</Text>
+            <Text style={styles.texto}>Nombre de la caja de ahorro</Text>
             <TextInput
               style={styles.inputNombre}
               value={finance.nombreFinance}
@@ -248,9 +244,14 @@ const DefinirCajaAhorro = ({ navigation }) => {
           </View>
 
           <View style={[styles.contenedores, { marginTop: -10 }]}>
-            <Text style={styles.texto}>Selecciona el monto a ahorrar</Text>
+            <Text style={styles.texto}>¿Cuánto quieres ahorrar?</Text>
             <TouchableOpacity onPress={() => setPickerVisible(true)}>
-              <Text style={styles.inputMonto}>
+              <Text
+                style={[
+                  styles.inputMonto,
+                  { fontSize: finance.monto ? 30 : 20 },
+                ]}
+              >
                 {finance.monto ? finance.monto : "Selecciona el monto"}
               </Text>
             </TouchableOpacity>
@@ -294,14 +295,38 @@ const DefinirCajaAhorro = ({ navigation }) => {
             </Modal>
           </View>
 
-          <View
-            style={[styles.contenedores, { marginTop: 3, paddingVertical: 10 }]}
-          >
+          <View style={[styles.contenedores]}>
+            <Text style={styles.texto}>Elige el plazo de tu caja</Text>
+            <TouchableOpacity
+              style={[
+                styles.tab,
+                {
+                  backgroundColor: finance.plazo === 36 ? "#2FF690" : "#F3F3F3",
+                  marginRight: 0,
+                },
+              ]}
+              onPress={() => [
+                setFinance({ ...finance, plazo: 36 }),
+                resetTimeout(),
+              ]}
+            >
+              <Text style={styles.textoTab}>36</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.regla}>
+              La tasa de interés es variable y se ajusta según el mercado.
+              Referencia la TIIE a 28 días, reportada en el DOF antes de la
+              fecha de cálculo. La tasa de impuestos aplicada es la actual y
+              puede cambiar.
+            </Text>
+          </View>
+
+          <View style={[styles.contenedores, { paddingVertical: 10 }]}>
             <Text style={styles.texto}>Resultados</Text>
             <View
               style={[
                 styles.contenedores,
-                { flexDirection: "row", marginTop: 3, paddingVertical: 5 },
+                { flexDirection: "row", paddingVertical: 5 },
               ]}
             >
               <View style={{ flex: 1 }}>
@@ -524,7 +549,7 @@ const styles = StyleSheet.create({
   tab: {
     marginTop: 10,
     padding: 10,
-    width: widthFourth,
+    width: "100%",
     borderRadius: 5,
     marginRight: 10,
   },
@@ -532,6 +557,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "opensanssemibold",
     fontSize: 18,
+  },
+  regla: {
+    fontFamily: "opensans",
+    fontSize: 12,
+    color: "#060B4D",
+    marginTop: 15,
   },
   botonContinuar: {
     marginVertical: 5,
