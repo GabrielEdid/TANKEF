@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
@@ -54,6 +54,7 @@ const Inicio = () => {
       );
 
       if (currentPage === 1) {
+        setPosts("");
         setPosts(newPosts);
       } else {
         // Filtra los posts que ya están presentes en el estado actual
@@ -92,9 +93,15 @@ const Inicio = () => {
   // Efecto para cargar los posts del feed al cargar la pantalla
   useFocusEffect(
     useCallback(() => {
-      fetchFeed(page);
-    }, [page])
+      setPage(1); // Reset to first page
+      fetchFeed(1); // Fetch the first page of posts
+    }, [])
   );
+
+  // Efecto para cargar los posts al cambiar de página
+  useEffect(() => {
+    fetchFeed(page);
+  }, [page]);
 
   // Función para convertir la primera letra de cada palabra en mayúscula y el resto minuscula
   function titleCase(str) {

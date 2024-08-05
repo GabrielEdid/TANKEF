@@ -8,7 +8,7 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -52,6 +52,7 @@ const Perfil = () => {
       );
 
       if (currentPage === 1) {
+        setPosts("");
         setPosts(newPosts);
       } else {
         // Filtra los posts que ya están presentes en el estado actual
@@ -80,9 +81,15 @@ const Perfil = () => {
   // Efecto para obtener los posts del usuario loggeado
   useFocusEffect(
     useCallback(() => {
-      fetchUserPosts(page);
-    }, [page])
+      setPage(1);
+      fetchUserPosts(1);
+    }, [])
   );
+
+  // Efecto para cargar los posts al cambiar de página
+  useEffect(() => {
+    fetchUserPosts(page);
+  }, [page]);
 
   // Función para manejar la carga de más posts
   const handleLoadMore = () => {
