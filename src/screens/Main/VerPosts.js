@@ -27,6 +27,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
 import { parseISO, formatDistanceToNow, set } from "date-fns";
 import { es } from "date-fns/locale";
+import { BlurView } from "expo-blur";
 // Importaciones de Hooks y Componentes
 import { UserContext } from "../../hooks/UserContext";
 import { useInactivity } from "../../hooks/InactivityContext";
@@ -69,6 +70,7 @@ const VerPosts = ({ route, navigation }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const { user, setUser } = useContext(UserContext); // Contexto del Usuario
@@ -477,15 +479,35 @@ const VerPosts = ({ route, navigation }) => {
             )}
             {/* Se evalua si se necesita el espacio para la imagen */}
             {imagen && (
-              <View style={styles.imageContainer}>
+              <View
+                style={[
+                  styles.imageContainer,
+                  { backgroundColor: isImageLoading ? "#f0f0f0" : "black" },
+                ]}
+              >
                 <Image
                   source={imageSource}
                   style={{
                     width: imageSize.width,
                     height: imageSize.height,
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
+                  imageStyle={{ borderRadius: 10 }}
+                  onLoadStart={() => setIsImageLoading(true)}
+                  onLoadEnd={() => setIsImageLoading(false)}
                   onLoad={onImageLoad}
                 />
+                {isLoading && (
+                  <BlurView
+                    intensity={50}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                    }}
+                  />
+                )}
               </View>
             )}
           </>

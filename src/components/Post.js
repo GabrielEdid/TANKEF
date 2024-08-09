@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  TextInput,
   Modal,
   Linking,
   Alert,
 } from "react-native";
+import { BlurView } from "expo-blur";
 import { parseISO, formatDistanceToNow, set } from "date-fns";
 import { es } from "date-fns/locale";
 import { useNavigation } from "@react-navigation/native";
@@ -71,6 +71,7 @@ const Post = (props) => {
   const [available, setAvailable] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, setUser } = useContext(UserContext); // Contexto de Usuario
 
   // Mapa para cargar todas las imagenes que se necesiten
@@ -322,12 +323,35 @@ const Post = (props) => {
           )}
           {/* Se evalua si se necesita el espacio para la imagen */}
           {props.imagen && (
-            <View style={styles.imageContainer}>
+            <View
+              style={[
+                styles.imageContainer,
+                { backgroundColor: isLoading ? "#f0f0f0" : "black" },
+              ]}
+            >
               <Image
                 source={imageSource}
-                style={{ width: imageSize.width, height: imageSize.height }}
+                style={{
+                  width: imageSize.width,
+                  height: imageSize.height,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                imageStyle={{ borderRadius: 10 }}
+                onLoadStart={() => setIsLoading(true)}
+                onLoadEnd={() => setIsLoading(false)}
                 onLoad={onImageLoad}
               />
+              {isLoading && (
+                <BlurView
+                  intensity={50}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                  }}
+                />
+              )}
             </View>
           )}
         </>
